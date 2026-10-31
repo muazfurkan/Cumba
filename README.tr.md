@@ -19,7 +19,8 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 - **Medya**: Spotify, Apple Music, YouTube ve YouTube Music tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
 - **Claude Code**: terminaldeki, IDE eklentilerindeki veya Claude masaüstü uygulamasındaki izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür. Bir oturum bitince veya hata verince de görürsünüz.
-- **Sekmelerde widget'lar**: takvim, zamanlayıcı, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Ayarlar'daki galeriden seçin, sürükleyerek sıralayın; yeni kurulum yalnızca üçüyle başlar.
+- **Sekmelerde widget'lar**: görüntülü görüşmeler için Katıl düğmeli takvim, zamanlayıcı, Pomodoro, notlar, pano geçmişi, uyanık tut, teleprompter, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Ayarlar'daki galeriden seçin, sürükleyerek sıralayın; yeni kurulum yalnızca üçüyle başlar.
+- **İsteğe bağlı ekstralar** (siz açana kadar kapalı): paneli istediğiniz ekranda gösterme, ses düzeyini notch'ta gösterme (isterseniz sistem göstergesinin yerine), mikrofon veya kamera kullanılırken bir nokta, toplantılardan önce geri sayım, medya kaynağı seçimi ve [kendi script'leriniz için bir API](#scriptler).
 - **Canlı etkinlikler**: çalışan zamanlayıcı, bekleyen Claude isteği, şarj veya çalan şarkı kapalı notch'un iki yanında görünür.
 - **Temalar**: Liquid Glass, düz siyah veya renkli cam; renkler, yazı tipi, panel boyutu, köşe yuvarlaklığı, gölge ve animasyon. Temaları JSON olarak içe/dışa aktarın.
 - **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda gizlenir ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
@@ -82,8 +83,10 @@ Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kul
 | Takvim (tam erişim) | Takvim widget'ı | Widget'ı kullandığınızda Ayarlar'dan istenir |
 | Kamera | Ayna widget'ı | Yalnızca panel onu gösterirken; hiçbir şey kaydedilmez |
 | `127.0.0.1` üzerinde yerel sunucu | YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
-| Özel Unix soketi | Claude Code hook'ları | Yalnızca hook'lar kuruluyken |
+| Özel Unix soketi | Claude Code hook'ları ve [script etkinlikleri](#scriptler) | Yalnızca hook'lar kuruluyken veya script etkinlikleri açıkken |
 | `~/.claude/settings.json` | Hook'ları kurmak ve kaldırmak | Yalnızca değişikliği gözden geçirdikten sonra; yedek alınır |
+| Erişilebilirlik | Ses tuşlarını yönetmek | Yalnızca "Sistemin ses göstergesinin yerine geç" açıksa |
+| Pano | Pano Geçmişi widget'ı | Yalnızca o widget paneldeyken |
 | Giriş öğesi | Oturum açıldığında başlatma | Siz açana kadar kapalı |
 | Ağ | Kapak görselleri, hava durumu, güncelleme kontrolü | Bkz. [Gizlilik](#gizlilik) |
 
@@ -107,6 +110,21 @@ Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin
 
 **Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır.** Ayarlar > Claude Code'dan notch'ta kabuk komutları dışındaki her şeye izin verilmesini seçebilir ya da İzin Ver'i tamamen kapatıp yalnızca Reddet ve Terminalde seçeneklerini bırakabilirsiniz. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
 
+<a name="scriptler"></a>
+
+## Script'ler
+
+Kendi script'lerinizin, Kısayollar'ın veya derleme araçlarınızın notch'un yanında kısa bir durum göstermesi için **Ayarlar > Bağlantılar > Script'ler**'i açın. **Örnek Komutu Kopyala**, token'ınızla çalışmaya hazır bir komut kopyalar:
+
+```bash
+curl -s --unix-socket "$HOME/Library/Application Support/ljaspNotch/hook.sock" \
+  -H "X-LjaspNotch-Token: <token>" -H "Content-Type: application/json" \
+  -d '{"id":"build","title":"Build done","symbol":"hammer","duration":5}' \
+  http://localhost/activity
+```
+
+Alanlar: `id` (harf, rakam, `.`, `_` ve `-`), `title` (en fazla 60 karakter), `symbol` (bir SF Symbol adı), `progress` (0 ile 1 arası, çubuk gösterir), `duration` (saniye, 1–3600) ve bir etkinliği kaldırmak için `"remove": true`. Etkinlikler yalnızca metindir, Claude Code istekleri gibi kaçışlanır ve içlerinde tıklanabilecek bir şey yoktur.
+
 ## Gizlilik
 
 Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, yalnızca siz kullanırken:
@@ -118,7 +136,7 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 | Hava durumu widget'ı | Seçtiğiniz konumun koordinatları `api.open-meteo.com`'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
 | Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi; Ayarlar > Genel'den kapatılabilir |
 
-Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar.
+Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar `~/Library/Application Support/ljaspNotch/notes.txt` içinde düz metin olarak saklanır. Pano Geçmişi kopyaladığınız son 20 metni yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; paneldeyken panonun değişip değişmediğini saniyede bir kontrol eder. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.
 
 Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca ljaspNotch eklentisini kabul eder ve Anahtar Zinciri'nde saklanan kendi token'ını ister.
 
@@ -127,12 +145,13 @@ Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnız
 1. Claude Code hook'larını kurduysanız önce **Ayarlar > Claude Code > Kaldır…** ile kaldırın. Uygulama silindikten sonra kalan hook'lar hiçbir şey yapmaz ama `~/.claude/settings.json` içinde kalır.
 2. Ayarlar > Genel'de **Oturum açıldığında başlat**'ı kapatın, menü çubuğundan ljaspNotch'tan çıkın ve uygulamayı Çöp Sepeti'ne taşıyın.
 3. Eklentiyi `chrome://extensions` sayfasından kaldırın.
-4. Verilerini de silmek için (temalar, düzen, tercihler ve token'lar):
+4. Verilerini de silmek için (temalar, düzen, notlar, tercihler ve token'lar):
    ```bash
    rm -rf ~/Library/Application\ Support/ljaspNotch
    defaults delete io.github.muazfurkan.ljaspnotch
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a scripts-token
    ```
    Hook kurulumunda alınan Claude Code ayar yedekleri `~/.claude/settings.json.bak-…` adıyla yanında durur; saklayabilir ya da silebilirsiniz.
 

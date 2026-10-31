@@ -52,9 +52,14 @@ private struct ClaudeCodeWidgetView: View {
             Button("Set Up…", action: setUp)
               .controlSize(.small)
           } else {
-            ForEach(service.sessions.prefix(3)) { session in
-              SessionRow(session: session)
+            ScrollView {
+              VStack(alignment: .leading, spacing: 6) {
+                ForEach(service.sessions) { session in
+                  SessionRow(session: session)
+                }
+              }
             }
+            .scrollIndicators(.never)
           }
         }
       }

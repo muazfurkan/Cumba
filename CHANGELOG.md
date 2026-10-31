@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- New widgets in the gallery: Notes (one quick note, saved as plain text), Clipboard History (last 20 copied texts, in memory only, passwords skipped), Keep Awake, Pomodoro and Teleprompter (scrolls a script under the camera and can hide the panel from screen sharing).
+- Calendar: a Join button for Zoom, Meet, Teams, Webex, FaceTime, Whereby and Jitsi links, and an optional countdown before the next event.
+- Settings > General: show the panel on the display with a notch, the main display or the display with the pointer; the volume level in the notch, optionally replacing the system volume indicator (needs Accessibility); a dot while the microphone or camera is in use; and the app's own CPU and memory use.
+- Media sources can be turned off one by one.
+- Script activities (Settings > Connections > Scripts): your own scripts can show a status or progress beside the notch through the private socket, with their own token.
+
 - Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
 - A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
 - Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
@@ -33,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
+- Script activities are off by default, use their own token on the private socket, are escaped like permission requests and can't be clicked. The volume key handling sees only media key events, never typing, and is off by default.
 - Nothing listens unless you use it: the extension server runs only while the extension connection is on, the hook socket only while hooks are installed.
 - The hooks and the extension have separate tokens, so the hook token in `~/.claude/settings.json` can't be used on the extension's port.
 - Allow from the notch can be limited, and the limit is enforced when the answer is sent, not only in the UI.

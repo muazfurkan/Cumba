@@ -20,6 +20,18 @@ final class AppSettings {
     static let hasSeenWelcome = "hasSeenWelcome"
     static let browserExtensionEnabled = "browserExtensionEnabled"
     static let notchApprovals = "notchApprovals"
+    static let panelScreen = "panelScreen"
+    static let showsVolumeChanges = "showsVolumeChanges"
+    static let replacesVolumeIndicator = "replacesVolumeIndicator"
+    static let showsPrivacyIndicators = "showsPrivacyIndicators"
+    static let scriptActivitiesEnabled = "scriptActivitiesEnabled"
+  }
+
+  /// Which display shows the panel.
+  enum PanelScreen: String, CaseIterable, Sendable {
+    case notched
+    case main
+    case pointer
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -46,6 +58,10 @@ final class AppSettings {
 
   var hidesInFullScreen: Bool {
     didSet { defaults.set(hidesInFullScreen, forKey: Key.hidesInFullScreen) }
+  }
+
+  var panelScreen: PanelScreen {
+    didSet { defaults.set(panelScreen.rawValue, forKey: Key.panelScreen) }
   }
 
   /// Draws a notch on the main screen when no screen has one.
@@ -82,6 +98,26 @@ final class AppSettings {
     didSet { defaults.set(notchApprovals.rawValue, forKey: Key.notchApprovals) }
   }
 
+  /// Shows the level beside the notch when the volume changes.
+  var showsVolumeChanges: Bool {
+    didSet { defaults.set(showsVolumeChanges, forKey: Key.showsVolumeChanges) }
+  }
+
+  /// Handles the volume keys so the system indicator doesn't appear (needs Accessibility).
+  var replacesVolumeIndicator: Bool {
+    didSet { defaults.set(replacesVolumeIndicator, forKey: Key.replacesVolumeIndicator) }
+  }
+
+  /// Shows a dot while any app uses a microphone or a camera.
+  var showsPrivacyIndicators: Bool {
+    didSet { defaults.set(showsPrivacyIndicators, forKey: Key.showsPrivacyIndicators) }
+  }
+
+  /// Lets local scripts show activities through `/activity` on the private socket.
+  var scriptActivitiesEnabled: Bool {
+    didSet { defaults.set(scriptActivitiesEnabled, forKey: Key.scriptActivitiesEnabled) }
+  }
+
   /// Set once the welcome window has been shown.
   var hasSeenWelcome: Bool {
     didSet { defaults.set(hasSeenWelcome, forKey: Key.hasSeenWelcome) }
@@ -114,6 +150,12 @@ final class AppSettings {
     browserExtensionEnabled = defaults.bool(forKey: Key.browserExtensionEnabled)
     notchApprovals =
       defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
+    panelScreen =
+      defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
+    showsVolumeChanges = defaults.bool(forKey: Key.showsVolumeChanges)
+    replacesVolumeIndicator = defaults.bool(forKey: Key.replacesVolumeIndicator)
+    showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
+    scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

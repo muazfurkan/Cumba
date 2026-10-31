@@ -15,6 +15,8 @@ final class HoverTracker {
   var onChange: ((Bool) -> Void)?
   /// Called for every pointer move that stays inside.
   var onMoveInside: (() -> Void)?
+  /// Called for every pointer move, inside or not.
+  var onMove: (() -> Void)?
   private(set) var isInside = false
   private var monitors: [Any] = []
   /// Drag pasteboard change count at the last mouse down; a new drag writes to it.
@@ -61,6 +63,9 @@ final class HoverTracker {
   }
 
   private func handle(_ type: NSEvent.EventType) {
+    if type != .leftMouseDown {
+      onMove?()
+    }
     switch type {
     case .leftMouseDown:
       dragChangeCountAtMouseDown = NSPasteboard(name: .drag).changeCount

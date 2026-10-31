@@ -11,22 +11,51 @@ final class MediaCoordinator {
   /// Latest command failure per source, e.g. denied Automation access.
   private(set) var failures: [NowPlaying.Source: AppleScriptRunner.Failure] = [:]
 
+  /// Sources turned off in Settings. Their updates are ignored and Spotify and Music get
+  /// no AppleScript.
+  var disabledSources: Set<NowPlaying.Source> = [] {
+    didSet {
+      defaults?.set(disabledSources.map(\.rawValue).sorted(), forKey: Self.disabledKey)
+      applyDisabledSources()
+    }
+  }
+
   @ObservationIgnored private var selection = MediaSelection()
   @ObservationIgnored private var providers: [any MediaProvider]
   @ObservationIgnored private var expiryTask: Task<Void, Never>?
+  @ObservationIgnored private let defaults: UserDefaults?
 
-  init(providers: [any MediaProvider]) {
+  private static let disabledKey = "media.disabledSources"
+
+  /// - Parameter defaults: Where the source choice is saved; `nil` keeps it in memory.
+  init(providers: [any MediaProvider], defaults: UserDefaults? = nil) {
     self.providers = providers
+    self.defaults = defaults
+    let saved = defaults?.stringArray(forKey: Self.disabledKey) ?? []
+    disabledSources = Set(saved.compactMap(NowPlaying.Source.init(rawValue:)))
   }
 
   static func standard() -> MediaCoordinator {
-    MediaCoordinator(providers: [
-      ScriptablePlayerProvider(adapter: SpotifyAdapter()),
-      ScriptablePlayerProvider(adapter: MusicAdapter()),
-    ])
+    MediaCoordinator(
+      providers: [
+        ScriptablePlayerProvider(adapter: SpotifyAdapter()),
+        ScriptablePlayerProvider(adapter: MusicAdapter()),
+      ], defaults: .standard)
+  }
+
+  private func applyDisabledSources() {
+    for provider in providers {
+      (provider as? ScriptablePlayerProvider)?.isEnabled =
+        !disabledSources.contains(provider.source)
+    }
+    for source in disabledSources {
+      selection.update(nil, for: source, at: Date())
+    }
+    refresh()
   }
 
   func start() {
+    applyDisabledSources()
     for provider in providers {
       let source = provider.source
       provider.onUpdate = { [weak self] nowPlaying in
@@ -69,7 +98,7 @@ final class MediaCoordinator {
   }
 
   func receive(_ nowPlaying: NowPlaying?, from source: NowPlaying.Source) {
-    selection.update(nowPlaying, for: source, at: Date())
+    selection.update(disabledSources.contains(source) ? nil : nowPlaying, for: source, at: Date())
     refresh()
   }
 

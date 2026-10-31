@@ -14,12 +14,14 @@ enum TokenStore {
   enum Kind: Sendable {
     case hooks
     case browserExtension
+    case scripts
 
     /// The hooks keep the original account, so hooks installed by 1.0 stay valid.
     fileprivate var account: String {
       switch self {
       case .hooks: "token"
       case .browserExtension: "extension-token"
+      case .scripts: "scripts-token"
       }
     }
   }

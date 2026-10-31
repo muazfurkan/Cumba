@@ -6,6 +6,7 @@ struct GeneralSettingsView: View {
   let updates: UpdateChecker
   let diagnostics: Diagnostics.Sources
   @State private var copiedDiagnostics = false
+  @State private var isTrusted = VolumeKeyTap.isTrusted
 
   var body: some View {
     Form {
@@ -23,6 +24,11 @@ struct GeneralSettingsView: View {
       }
 
       Section("Panel") {
+        Picker("Show on", selection: $settings.panelScreen) {
+          Text("The display with a notch").tag(AppSettings.PanelScreen.notched)
+          Text("The main display").tag(AppSettings.PanelScreen.main)
+          Text("The display with the pointer").tag(AppSettings.PanelScreen.pointer)
+        }
         Picker("Open the panel", selection: $settings.opensOnHover) {
           Text("When the pointer rests on the notch").tag(true)
           Text("Only on click").tag(false)
@@ -36,6 +42,24 @@ struct GeneralSettingsView: View {
         Toggle("Hide in full screen apps", isOn: $settings.hidesInFullScreen)
         Toggle("Show a virtual notch when no screen has one", isOn: $settings.usesVirtualNotch)
         Toggle("Haptic feedback when the panel opens", isOn: $settings.hapticFeedback)
+      }
+
+      Section("Indicators") {
+        Toggle("Show volume changes in the notch", isOn: $settings.showsVolumeChanges)
+        if settings.showsVolumeChanges {
+          Toggle("Replace the system volume indicator", isOn: replacesVolumeIndicator)
+          Text(
+            "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS."
+          )
+          .font(.callout)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
+          if settings.replacesVolumeIndicator && !isTrusted {
+            OpenPrivacySettings(pane: "Privacy_Accessibility")
+          }
+        }
+        Toggle(
+          "Show when the microphone or camera is in use", isOn: $settings.showsPrivacyIndicators)
       }
 
       Section("Updates") {
@@ -52,6 +76,7 @@ struct GeneralSettingsView: View {
 
       Section {
         LabeledContent("Version", value: "\(AppInfo.version) (\(AppInfo.build))")
+        LabeledContent("Resource use") { ResourceUsageLabel() }
         HStack {
           Button("Copy Diagnostics") {
             Task {
@@ -68,6 +93,23 @@ struct GeneralSettingsView: View {
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 600)
+    .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification))
+    { _ in
+      isTrusted = VolumeKeyTap.isTrusted
+    }
+  }
+
+  /// Turning it on without Accessibility access shows the system prompt first.
+  private var replacesVolumeIndicator: Binding<Bool> {
+    Binding(
+      get: { settings.replacesVolumeIndicator },
+      set: { isOn in
+        if isOn && !VolumeKeyTap.isTrusted {
+          VolumeKeyTap.requestAccess()
+        }
+        settings.replacesVolumeIndicator = isOn
+        isTrusted = VolumeKeyTap.isTrusted
+      })
   }
 
   @ViewBuilder private var updateStatus: some View {

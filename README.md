@@ -19,7 +19,8 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
 
 - **Media**: Spotify, Apple Music, YouTube and YouTube Music in one mini player with artwork, progress, seeking and controls. A small waveform beside the notch shows what's playing.
 - **Claude Code**: permission requests from the terminal, IDE extensions or the Claude desktop app show up in the notch with **Allow**, **Deny** and **In Terminal**. You also see when a session is done or fails.
-- **Widgets in tabs**: calendar, timer, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Pick them from a gallery in Settings and drag to reorder; a new installation starts with just three.
+- **Widgets in tabs**: calendar with a Join button for video calls, timer, Pomodoro, notes, clipboard history, keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Pick them from a gallery in Settings and drag to reorder; a new installation starts with just three.
+- **Optional extras**, off until you turn them on: show the panel on any display, the volume level in the notch (optionally instead of the system indicator), a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
 - **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
 - **Themes**: Liquid Glass, solid black or tinted glass; colors, font, panel size, corner radius, shadow and animation. Import and export themes as JSON.
 - **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
@@ -78,8 +79,10 @@ Everything below is off or unused until you turn on the feature that needs it. S
 | Calendar (full access) | Calendar widget | Asked from Settings when you use the widget |
 | Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
 | Local server on `127.0.0.1` | YouTube extension connection | Only after you turn it on in Settings > Connections |
-| Private Unix socket | Claude Code hooks | Only while the hooks are installed |
+| Private Unix socket | Claude Code hooks and [script activities](#scripts) | Only while the hooks are installed or script activities are on |
 | `~/.claude/settings.json` | Installing and removing the hooks | Only after you review the change; a backup is kept |
+| Accessibility | Handling the volume keys | Only if you turn on "Replace the system volume indicator" |
+| Clipboard | Clipboard History widget | Only while that widget is in the panel |
 | Login item | Launch at login | Off until you turn it on |
 | Network | Artwork, weather, update check | See [Privacy](#privacy) |
 
@@ -103,6 +106,19 @@ Permission requests from Claude Code (terminal, IDE extensions and the Claude de
 
 **Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Claude Code you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 
+## Scripts
+
+Turn on **Settings > Connections > Scripts** to let your own scripts, Shortcuts or build tools show a short status beside the notch. **Copy Example Command** copies a ready-to-run command with your token:
+
+```bash
+curl -s --unix-socket "$HOME/Library/Application Support/ljaspNotch/hook.sock" \
+  -H "X-LjaspNotch-Token: <token>" -H "Content-Type: application/json" \
+  -d '{"id":"build","title":"Build done","symbol":"hammer","duration":5}' \
+  http://localhost/activity
+```
+
+Fields: `id` (letters, digits, `.`, `_` and `-`), `title` (up to 60 characters), `symbol` (an SF Symbol name), `progress` (0 to 1, shows a bar), `duration` (seconds, 1 to 3600), and `"remove": true` to take an activity away. Activities are text only, escaped like Claude Code requests, and nothing in them can be clicked.
+
 ## Privacy
 
 No telemetry. Everything stays on your Mac. These features make network requests, and only while you use them:
@@ -114,7 +130,7 @@ No telemetry. Everything stays on your Mac. These features make network requests
 | Weather widget | The coordinates of the place you choose to `api.open-meteo.com`; the city you search for to `geocoding-api.open-meteo.com` |
 | Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
 
-The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac.
+The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes are saved as plain text in `~/Library/Application Support/ljaspNotch/notes.txt`. Clipboard History keeps your last 20 copied texts in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. The microphone and camera indicator reads only whether a device is in use, never audio or video.
 
 When turned on, the extension server listens only on `127.0.0.1`, accepts only the ljaspNotch extension and requires its own token, stored in your Keychain.
 
@@ -123,12 +139,13 @@ When turned on, the extension server listens only on `127.0.0.1`, accepts only t
 1. If you installed the Claude Code hooks, remove them first in **Settings > Claude Code > Remove…**. Hooks left behind do nothing once the app is gone, but they stay in `~/.claude/settings.json`.
 2. Turn off **Launch at login** in Settings > General, quit ljaspNotch from the menu bar and move it to the Trash.
 3. Remove the extension in `chrome://extensions`.
-4. To delete its data too (themes, layout, preferences and the tokens):
+4. To delete its data too (themes, layout, notes, preferences and the tokens):
    ```bash
    rm -rf ~/Library/Application\ Support/ljaspNotch
    defaults delete io.github.muazfurkan.ljaspnotch
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a scripts-token
    ```
    Backups of your Claude Code settings made during hook setup are next to it as `~/.claude/settings.json.bak-…`; keep or delete them.
 

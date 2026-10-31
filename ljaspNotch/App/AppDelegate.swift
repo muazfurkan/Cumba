@@ -15,6 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let welcomeWindow: WelcomeWindowController
   private let notchWindow: NotchWindowController
   private var menuBar: MenuBarController?
+  private let systemIndicators: SystemIndicators
 
   override init() {
     settings = AppSettings()
@@ -22,13 +23,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     liveActivities = LiveActivityCenter()
     media = MediaCoordinator.standard()
     claude = ClaudeCodeService(liveActivities: liveActivities)
+    systemIndicators = SystemIndicators(settings: settings, liveActivities: liveActivities)
     updates = UpdateChecker(settings: settings)
-    server = LocalServer(browserHub: BrowserMediaHub(), claude: claude)
+    server = LocalServer(
+      browserHub: BrowserMediaHub(), claude: claude, liveActivities: liveActivities)
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
+    let panelControl = PanelControl()
     registry = WidgetRegistry.standard(
       context: WidgetContext(
-        liveActivities: liveActivities, media: media, claude: claude,
+        liveActivities: liveActivities, media: media, claude: claude, panel: panelControl,
         openSettings: { settingsOpener.open($0) }))
     layoutStore = LayoutStore(
       knownKinds: registry.infos.map { ($0.kind, $0.size.units) },
@@ -40,7 +44,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       settingsWindow.show()
     }
     notchWindow = NotchWindowController(
-      settings: settings, themes: themes,
+      settings: settings, themes: themes, panelControl: panelControl,
       host: WidgetHost(
         layoutStore: layoutStore, registry: registry, liveActivities: liveActivities,
         claude: claude))
@@ -74,11 +78,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       let hooksPresent = await Task.detached {
         (try? HookInstaller.standard.status(token: token)).map { $0 != .notInstalled } ?? false
       }.value
-      if hooksPresent {
-        server.startHookServer()
-      }
+      server.setScriptsEnabled(settings.scriptActivitiesEnabled)
+      server.setHooksInstalled(hooksPresent)
     }
     notchWindow.start()
+    systemIndicators.start()
     Task { [themes, layoutStore] in
       await themes.load()
       await layoutStore.load()

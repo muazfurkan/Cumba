@@ -77,12 +77,32 @@
         }
       }
     },
+    "%lld min before" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dk önce"
+          }
+        }
+      }
+    },
     "%lld more requests waiting" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld istek daha bekliyor"
+          }
+        }
+      }
+    },
+    "%lld of %lld rounds" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld tur"
           }
         }
       }
@@ -138,12 +158,32 @@
         }
       }
     },
+    "A quick note that's always one hover away" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her zaman bir imleç uzağınızda duran hızlı bir not"
+          }
+        }
+      }
+    },
     "Accent" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vurgu"
+          }
+        }
+      }
+    },
+    "Accessibility" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erişilebilirlik"
           }
         }
       }
@@ -174,6 +214,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aşağıdaki galeriden widget ekleyin."
+          }
+        }
+      }
+    },
+    "Add your script in Settings > Widgets." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metninizi Ayarlar > Widget'lar'dan ekleyin."
           }
         }
       }
@@ -369,6 +419,26 @@
         }
       }
     },
+    "Back to Start" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başa Dön"
+          }
+        }
+      }
+    },
+    "Back to focus" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaklanma zamanı"
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "tr" : {
@@ -400,6 +470,16 @@
         }
       }
     },
+    "Break time" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mola zamanı"
+          }
+        }
+      }
+    },
     "Built-in themes can't be changed. Duplicate one to customize it." : {
       "localizations" : {
         "tr" : {
@@ -416,6 +496,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CPU"
+          }
+        }
+      }
+    },
+    "CPU %@ · Memory %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU %1$@ · Bellek %2$@"
           }
         }
       }
@@ -497,6 +587,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamera erişimi reddedildi. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Camera in use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera kullanılıyor"
           }
         }
       }
@@ -633,12 +733,52 @@
         }
       }
     },
+    "Clear History" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçmişi Temizle"
+          }
+        }
+      }
+    },
     "Clear Tray" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rafı Temizle"
+          }
+        }
+      }
+    },
+    "Click to write something down…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir şey yazmak için tıklayın…"
+          }
+        }
+      }
+    },
+    "Clipboard" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pano"
+          }
+        }
+      }
+    },
+    "Clipboard History" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pano Geçmişi"
           }
         }
       }
@@ -715,6 +855,26 @@
         }
       }
     },
+    "Copied" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopyalandı"
+          }
+        }
+      }
+    },
+    "Copied texts appear here." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopyaladığınız metinler burada görünür."
+          }
+        }
+      }
+    },
     "Copied. It contains no personal data." : {
       "localizations" : {
         "tr" : {
@@ -745,12 +905,42 @@
         }
       }
     },
+    "Copy Example Command" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek Komutu Kopyala"
+          }
+        }
+      }
+    },
     "Copy Hook Token" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook Token'ını Kopyala"
+          }
+        }
+      }
+    },
+    "Copy Token" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token'ı Kopyala"
+          }
+        }
+      }
+    },
+    "Copy again" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden kopyala"
           }
         }
       }
@@ -950,6 +1140,26 @@
         }
       }
     },
+    "Focus" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odak"
+          }
+        }
+      }
+    },
+    "Focus rounds with short and long breaks, counted per day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa ve uzun molalı odak turları, gün gün sayılır"
+          }
+        }
+      }
+    },
     "Fog" : {
       "comment" : "Weather",
       "localizations" : {
@@ -1013,6 +1223,16 @@
         }
       }
     },
+    "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses tuşlarını ljaspNotch yönetir, değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir; parlaklık tuşları macOS'ta kalır."
+          }
+        }
+      }
+    },
     "Haptic feedback when the panel opens" : {
       "localizations" : {
         "tr" : {
@@ -1060,6 +1280,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tam ekran uygulamalarda gizle"
+          }
+        }
+      }
+    },
+    "Hide the panel from screen sharing while it runs" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışırken paneli ekran paylaşımından gizle"
           }
         }
       }
@@ -1145,6 +1375,16 @@
         }
       }
     },
+    "Indicators" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Göstergeler"
+          }
+        }
+      }
+    },
     "Installed" : {
       "localizations" : {
         "tr" : {
@@ -1185,6 +1425,26 @@
         }
       }
     },
+    "Join" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Katıl"
+          }
+        }
+      }
+    },
+    "Keep Awake" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uyanık Tut"
+          }
+        }
+      }
+    },
     "Keep dropped files at hand or AirDrop them" : {
       "localizations" : {
         "tr" : {
@@ -1201,6 +1461,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oturum açıldığında başlat"
+          }
+        }
+      }
+    },
+    "Let scripts show activities in the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Script'lerin notch'ta etkinlik göstermesine izin ver"
           }
         }
       }
@@ -1231,6 +1501,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yerel Sunucu"
+          }
+        }
+      }
+    },
+    "Long Break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun Mola"
           }
         }
       }
@@ -1266,12 +1546,42 @@
         }
       }
     },
+    "Meeting reminder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplantı hatırlatması"
+          }
+        }
+      }
+    },
     "Memory" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bellek"
+          }
+        }
+      }
+    },
+    "Memory %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bellek %@"
+          }
+        }
+      }
+    },
+    "Microphone in use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon kullanılıyor"
           }
         }
       }
@@ -1482,6 +1792,16 @@
         }
       }
     },
+    "Notes" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar"
+          }
+        }
+      }
+    },
     "Nothing is playing." : {
       "localizations" : {
         "tr" : {
@@ -1508,6 +1828,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tamam"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı"
+          }
+        }
+      }
+    },
+    "On" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık"
           }
         }
       }
@@ -1608,6 +1948,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paneli aç"
+          }
+        }
+      }
+    },
+    "Optional: volume keys, when the notch replaces the system volume indicator" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsteğe bağlı: notch sistemin ses göstergesinin yerine geçtiğinde ses tuşları için"
           }
         }
       }
@@ -1724,6 +2074,16 @@
         }
       }
     },
+    "Pomodoro" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomodoro"
+          }
+        }
+      }
+    },
     "Port" : {
       "localizations" : {
         "tr" : {
@@ -1826,6 +2186,16 @@
         }
       }
     },
+    "Replace the system volume indicator" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistemin ses göstergesinin yerine geç"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "tr" : {
@@ -1842,6 +2212,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paneli Sıfırla"
+          }
+        }
+      }
+    },
+    "Resource use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaynak kullanımı"
           }
         }
       }
@@ -1942,6 +2322,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kaydetmek dosyayı standart bir biçimde de yeniden yazar (anahtarlar sıralı, iki boşluk girinti). İçerik yalnızca aşağıda gösterildiği kadar değişir."
+          }
+        }
+      }
+    },
+    "Script" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metin"
+          }
+        }
+      }
+    },
+    "Scripts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Script'ler"
+          }
+        }
+      }
+    },
+    "Scrolls your script under the camera while you talk" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siz konuşurken metninizi kameranın altında kaydırır"
           }
         }
       }
@@ -2057,6 +2467,16 @@
         }
       }
     },
+    "Short Break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa Mola"
+          }
+        }
+      }
+    },
     "Shortcuts" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -2108,6 +2528,36 @@
         }
       }
     },
+    "Show on" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gösterileceği ekran"
+          }
+        }
+      }
+    },
+    "Show volume changes in the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses değişikliklerini notch'ta göster"
+          }
+        }
+      }
+    },
+    "Show when the microphone or camera is in use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon veya kamera kullanılırken göster"
+          }
+        }
+      }
+    },
     "Showers" : {
       "comment" : "Weather",
       "localizations" : {
@@ -2125,6 +2575,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Boyut"
+          }
+        }
+      }
+    },
+    "Skip" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atla"
           }
         }
       }
@@ -2160,6 +2620,16 @@
         }
       }
     },
+    "Speed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hız"
+          }
+        }
+      }
+    },
     "Spotify, Music and YouTube with artwork and controls" : {
       "localizations" : {
         "tr" : {
@@ -2180,6 +2650,16 @@
         }
       }
     },
+    "Start the next round automatically" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki turu kendiliğinden başlat"
+          }
+        }
+      }
+    },
     "Status" : {
       "localizations" : {
         "tr" : {
@@ -2196,6 +2676,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durdu"
+          }
+        }
+      }
+    },
+    "Stops the Mac and its display from sleeping for a while" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac'in ve ekranın bir süre uyumasını engeller"
           }
         }
       }
@@ -2251,12 +2741,32 @@
         }
       }
     },
+    "Teleprompter" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teleprompter"
+          }
+        }
+      }
+    },
     "Text" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Metin"
+          }
+        }
+      }
+    },
+    "Text Size" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yazı Boyutu"
           }
         }
       }
@@ -2277,6 +2787,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claude Code soketi açılamadı."
+          }
+        }
+      }
+    },
+    "The display with a notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'lu ekran"
+          }
+        }
+      }
+    },
+    "The display with the pointer" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmlecin olduğu ekran"
+          }
+        }
+      }
+    },
+    "The main display" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana ekran"
           }
         }
       }
@@ -2423,6 +2963,16 @@
         }
       }
     },
+    "Today: %lld" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün: %lld"
+          }
+        }
+      }
+    },
     "Token" : {
       "localizations" : {
         "tr" : {
@@ -2464,6 +3014,26 @@
         }
       }
     },
+    "Turn Off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapat"
+          }
+        }
+      }
+    },
+    "Turn On" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aç"
+          }
+        }
+      }
+    },
     "Turn this on only if you use the extension. ljaspNotch then listens on this Mac (127.0.0.1) for the ljaspNotch extension; nothing is reachable from the network." : {
       "localizations" : {
         "tr" : {
@@ -2491,6 +3061,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Panelin sabitlemesini kaldır"
+          }
+        }
+      }
+    },
+    "Until Turned Off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapatılana Kadar"
           }
         }
       }
@@ -2542,6 +3122,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ sürümü çıktı"
+          }
+        }
+      }
+    },
+    "Volume" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses"
           }
         }
       }
@@ -2605,6 +3195,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İmleç notch'ta durunca"
+          }
+        }
+      }
+    },
+    "While this widget is in the panel, ljaspNotch checks once a second whether the clipboard changed and keeps your last %lld copied texts in memory. Passwords and other items apps mark as private are skipped, and nothing is saved to disk. macOS may ask once whether ljaspNotch may read what you copy." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu widget paneldeyken ljaspNotch panonun değişip değişmediğini saniyede bir kontrol eder ve kopyaladığınız son %lld metni bellekte tutar. Parolalar ve uygulamaların gizli olarak işaretlediği öğeler alınmaz, diske hiçbir şey kaydedilmez. macOS, ljaspNotch'un kopyaladıklarınızı okuyup okuyamayacağını bir kez sorabilir."
           }
         }
       }
@@ -2681,12 +3281,32 @@
         }
       }
     },
+    "Your last copied texts, kept in memory only" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son kopyaladığınız metinler, yalnızca bellekte"
+          }
+        }
+      }
+    },
     "Your notch is now a panel. Here's how to use it." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notch'unuz artık bir panel. Kullanımı şöyle:"
+          }
+        }
+      }
+    },
+    "Your own scripts, Shortcuts or build tools can show a short status or progress beside the notch through ljaspNotch's private socket. Only programs running as you can reach it, and they need this token. Activities are text only; nothing in them can be clicked." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kendi script'leriniz, Kısayollar veya derleme araçlarınız ljaspNotch'un özel soketi üzerinden notch'un yanında kısa bir durum ya da ilerleme gösterebilir. Ona yalnızca sizin hesabınızla çalışan programlar ulaşabilir ve bu token'a ihtiyaç duyarlar. Etkinlikler yalnızca metindir; içlerinde tıklanabilecek bir şey yoktur."
           }
         }
       }

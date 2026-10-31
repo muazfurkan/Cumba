@@ -9,6 +9,42 @@ struct CalendarEvent: Identifiable, Equatable, Sendable {
   let end: Date
   let isAllDay: Bool
   let color: HexColor?
+  /// Video call link found in the event's URL, location or notes.
+  var meetingURL: URL?
+}
+
+/// Finds a video call link in an event for the Join button. Only https links to known
+/// meeting services count, so a random link in the notes isn't offered.
+enum MeetingLink {
+  static let hosts = [
+    "zoom.us", "meet.google.com", "teams.microsoft.com", "teams.live.com", "webex.com",
+    "facetime.apple.com", "whereby.com", "meet.jit.si",
+  ]
+
+  static func find(url: URL?, texts: [String?]) -> URL? {
+    if let url, isMeeting(url) {
+      return url
+    }
+    guard
+      let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+    else { return nil }
+    for text in texts.compactMap(\.self) {
+      let range = NSRange(text.startIndex..., in: text)
+      for match in detector.matches(in: text, range: range) {
+        if let url = match.url, isMeeting(url) {
+          return url
+        }
+      }
+    }
+    return nil
+  }
+
+  static func isMeeting(_ url: URL) -> Bool {
+    guard url.scheme?.lowercased() == "https", let host = url.host()?.lowercased() else {
+      return false
+    }
+    return hosts.contains { host == $0 || host.hasSuffix("." + $0) }
+  }
 }
 
 /// Owns the EventKit store. Being an actor keeps every EventKit call off the main thread.
@@ -55,7 +91,8 @@ actor CalendarService {
           start: event.startDate,
           end: event.endDate,
           isAllDay: event.isAllDay,
-          color: event.calendar.flatMap { HexColor(cgColor: $0.cgColor) })
+          color: event.calendar.flatMap { HexColor(cgColor: $0.cgColor) },
+          meetingURL: MeetingLink.find(url: event.url, texts: [event.location, event.notes]))
       }
   }
 }
