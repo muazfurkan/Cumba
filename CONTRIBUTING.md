@@ -1,6 +1,6 @@
 # Contributing to ljaspNotch
 
-Thanks for your interest! This is a small personal project, so please open an issue to discuss larger changes before you start working on them.
+Thanks for your interest! This is a small personal project, so please open an issue to discuss larger changes before you start working on them. Questions and loose ideas go to [Discussions](https://github.com/muazfurkan/ljaspNotch/discussions).
 
 ## Setup
 
@@ -56,7 +56,7 @@ All user-facing text goes through `Localizable.xcstrings`. English is the develo
 
 - Branch off `main`, for example `feat/weather-units` or `fix/hover-delay`.
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `ci:`, `chore:`.
-- Pull requests are squash merged into `main` once CI is green.
+- Pull requests are squash merged into `main` once CI is green. `main` is protected: no direct pushes, and the **Build and test** check must pass.
 
 ## Pull request checklist
 

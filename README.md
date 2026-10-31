@@ -1,8 +1,15 @@
-<p align="center"><img src="docs/icon.png" width="128" alt="ljaspNotch icon"></p>
+<p align="center"><img src="docs/banner.png" alt="The ljaspNotch panel open below the notch, showing a mini player"></p>
 
-# ljaspNotch
+<h1 align="center">ljaspNotch</h1>
 
-[Türkçe](README.tr.md)
+<p align="center">
+  <a href="https://github.com/muazfurkan/ljaspNotch/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/ljaspNotch?label=download&color=DCB669" alt="Latest release"></a>
+  <a href="https://github.com/muazfurkan/ljaspNotch/actions/workflows/build.yml"><img src="https://github.com/muazfurkan/ljaspNotch/actions/workflows/build.yml/badge.svg?branch=main" alt="Build status"></a>
+  <img src="https://img.shields.io/badge/macOS-26%2B-111111?logo=apple" alt="macOS 26 or later">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/muazfurkan/ljaspNotch?color=111111" alt="MIT license"></a>
+</p>
+
+<p align="center"><a href="README.tr.md">Türkçe</a></p>
 
 A free, open source notch app for macOS. It turns the MacBook notch into a panel that grows out of the camera housing when you rest the pointer on it: music from Spotify, Apple Music and YouTube, Claude Code permission requests, and a set of widgets, all in a look you can make your own.
 
@@ -25,7 +32,13 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
    ```
 3. ljaspNotch lives in the menu bar. If the menu bar is crowded and its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
 
-Each release has SHA-256 checksums next to the files. After an update, macOS may ask again for permissions (Automation, Calendar, Camera) and Keychain access, because release builds are signed ad hoc.
+Each release has SHA-256 checksums next to the files. Releases after 1.0.0 are also immutable (their files and tag can't change once published) and carry signed build provenance, so you can check that a download was built by this repository's release workflow:
+
+```bash
+gh attestation verify ljaspNotch-vX.Y.Z.zip --repo muazfurkan/ljaspNotch
+```
+
+After an update, macOS may ask again for permissions (Automation, Calendar, Camera) and Keychain access, because release builds are signed ad hoc.
 
 ## Requirements
 
@@ -78,7 +91,7 @@ The extension server listens only on `127.0.0.1`, accepts only the ljaspNotch ex
 
 ## Contributing
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
+Questions and ideas are welcome in [Discussions](https://github.com/muazfurkan/ljaspNotch/discussions). Contributions are welcome too; please read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 

@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Release downloads carry signed build provenance; check them with `gh attestation verify`. Releases are immutable once published.
+- README banner, also used as the GitHub social preview, drawn by `scripts/make-banner.swift`.
+
+### Changed
+
+- Questions and ideas go to GitHub Discussions; issues are for bugs and concrete feature requests.
+
 ## [1.0.0] - 2026-10-31
 
 ### Added
