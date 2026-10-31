@@ -1,5 +1,7 @@
 # ljaspNotch
 
+[Türkçe](README.tr.md)
+
 A customizable notch app for macOS. It turns the MacBook notch into a panel that expands on hover.
 
 > **Status: work in progress.** Nothing to download yet. The roadmap and technical spec are in [docs/SPEC.md](docs/SPEC.md) (in Turkish).
@@ -18,9 +20,28 @@ A customizable notch app for macOS. It turns the MacBook notch into a panel that
 - A Mac with a notch
 - macOS 26 or later
 
+## Build from source
+
+You need Xcode 26 or later and [Homebrew](https://brew.sh).
+
+```bash
+brew install xcodegen
+git clone https://github.com/muazfurkan/ljaspNotch.git
+cd ljaspNotch
+cp Local.xcconfig.example Local.xcconfig   # then set your DEVELOPMENT_TEAM
+xcodegen generate
+open ljaspNotch.xcodeproj
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
 ## Privacy
 
 No telemetry. Everything stays on your Mac. Features that make network requests will be listed here.
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
