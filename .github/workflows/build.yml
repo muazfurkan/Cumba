@@ -50,4 +50,6 @@ jobs:
       - name: Show compiler errors
         if: failure()
         run: |
-          grep -E "(error|warning): " xcodebuild.log | sort -u | head -50 || true
+          grep -nE "(error|warning): |Stack dump|PLEASE submit|Assertion failed" xcodebuild.log | head -50 || true
+          echo "--- last lines ---"
+          tail -60 xcodebuild.log

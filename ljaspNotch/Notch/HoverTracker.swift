@@ -9,6 +9,8 @@ final class HoverTracker {
     didSet { update() }
   }
   var onChange: ((Bool) -> Void)?
+  /// Called for every pointer move that stays inside.
+  var onMoveInside: (() -> Void)?
   private(set) var isInside = false
   private var monitors: [Any] = []
 
@@ -19,7 +21,7 @@ final class HoverTracker {
     if let monitor = NSEvent.addGlobalMonitorForEvents(
       matching: events,
       handler: { [weak self] _ in
-        MainActor.assumeIsolated { self?.update() }
+        MainActor.assumeIsolated { self?.pointerMoved() }
       })
     {
       monitors.append(monitor)
@@ -27,7 +29,7 @@ final class HoverTracker {
     if let monitor = NSEvent.addLocalMonitorForEvents(
       matching: events,
       handler: { [weak self] event in
-        MainActor.assumeIsolated { self?.update() }
+        MainActor.assumeIsolated { self?.pointerMoved() }
         return event
       })
     {
@@ -46,6 +48,14 @@ final class HoverTracker {
 
   func update() {
     setInside(!monitors.isEmpty && rect.contains(NSEvent.mouseLocation))
+  }
+
+  private func pointerMoved() {
+    let wasInside = isInside
+    update()
+    if wasInside && isInside {
+      onMoveInside?()
+    }
   }
 
   private func setInside(_ inside: Bool) {

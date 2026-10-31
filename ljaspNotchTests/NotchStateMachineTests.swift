@@ -31,6 +31,19 @@ struct NotchStateMachineTests {
     #expect(machine.state == .closed)
   }
 
+  @Test func movingInsideRestartsTheOpenDelay() {
+    var machine = machine(after: [.pointerEntered])
+    #expect(machine.handle(.pointerMoved) == .startOpenTimer)
+    #expect(machine.state == .closed)
+  }
+
+  @Test func movingOutsideOrWhileOpenDoesNothing() {
+    var outside = NotchStateMachine()
+    #expect(outside.handle(.pointerMoved) == .none)
+    var open = machine(after: [.pointerEntered, .openDelayElapsed])
+    #expect(open.handle(.pointerMoved) == .none)
+  }
+
   @Test func leavingClosesAfterTheDelay() {
     var machine = machine(after: [.pointerEntered, .openDelayElapsed])
     #expect(machine.handle(.pointerExited) == .startCloseTimer)

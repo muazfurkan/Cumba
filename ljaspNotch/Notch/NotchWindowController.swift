@@ -9,6 +9,9 @@ final class NotchWindowController {
   private var panel: NotchPanel?
   private var observers: [NSObjectProtocol] = []
   private var pauseTask: Task<Void, Never>?
+  private var fullScreenTask: Task<Void, Never>?
+  /// A full screen app covers the notched screen, so the panel stays hidden (SPEC § 6).
+  private var isFullScreenActive = false
 
   init(settings: AppSettings) {
     self.settings = settings
@@ -18,11 +21,15 @@ final class NotchWindowController {
     hoverTracker.onChange = { [weak self] inside in
       self?.pointerInsideChanged(inside)
     }
+    hoverTracker.onMoveInside = { [weak self] in
+      self?.model.send(.pointerMoved)
+    }
     model.onStateChange = { [weak self] _ in
       self?.updateHoverArea()
     }
     observeSystemEvents()
     layoutPanel()
+    refreshFullScreenState()
   }
 
   /// Re-places the panel whenever the screen setup, sleep state, space or pause
@@ -36,10 +43,19 @@ final class NotchWindowController {
         forName: NSApplication.didChangeScreenParametersNotification, object: nil,
         queue: .main, using: relayout))
     let workspace = NSWorkspace.shared.notificationCenter
-    for name in [NSWorkspace.didWakeNotification, NSWorkspace.activeSpaceDidChangeNotification] {
-      observers.append(
-        workspace.addObserver(forName: name, object: nil, queue: .main, using: relayout))
-    }
+    observers.append(
+      workspace.addObserver(
+        forName: NSWorkspace.didWakeNotification, object: nil, queue: .main, using: relayout))
+    // Entering or leaving a full screen app switches spaces.
+    observers.append(
+      workspace.addObserver(
+        forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main
+      ) { [weak self] _ in
+        MainActor.assumeIsolated {
+          self?.layoutPanel()
+          self?.refreshFullScreenState()
+        }
+      })
     pauseTask = Task { [weak self, settings] in
       for await _ in Observations({ @MainActor in settings.isPaused }) {
         self?.layoutPanel()
@@ -47,9 +63,48 @@ final class NotchWindowController {
     }
   }
 
-  /// Puts the panel under the notch, or hides it when paused or no screen has a notch.
+  /// Reads the window list off the main thread: once right away and once more after the
+  /// space switch animation, when a new full screen window has settled.
+  private func refreshFullScreenState() {
+    fullScreenTask?.cancel()
+    fullScreenTask = Task { [weak self] in
+      for delay in [Duration.zero, .milliseconds(700)] {
+        do {
+          try await Task.sleep(for: delay)
+        } catch {
+          return
+        }
+        guard let screen = NSScreen.notched, let geometry = screen.notchGeometry() else {
+          self?.setFullScreenActive(false)
+          continue
+        }
+        let frame = screen.cgFrame
+        let notchHeight = geometry.notchRect.height
+        let ownPID = ProcessInfo.processInfo.processIdentifier
+        let isFullScreen = await Task.detached {
+          FullScreenDetector.isFullScreen(
+            windows: FullScreenDetector.currentWindows(excluding: ownPID),
+            screen: frame,
+            notchHeight: notchHeight)
+        }.value
+        guard !Task.isCancelled else { return }
+        self?.setFullScreenActive(isFullScreen)
+      }
+    }
+  }
+
+  private func setFullScreenActive(_ active: Bool) {
+    guard active != isFullScreenActive else { return }
+    isFullScreenActive = active
+    Log.notch.info("Full screen app on the notched screen: \(active, privacy: .public)")
+    layoutPanel()
+  }
+
+  /// Puts the panel under the notch, or hides it when paused, behind a full screen app or
+  /// when no screen has a notch.
   func layoutPanel() {
-    guard !settings.isPaused, let geometry = NSScreen.notched?.notchGeometry() else {
+    guard !settings.isPaused, !isFullScreenActive, let geometry = NSScreen.notched?.notchGeometry()
+    else {
       hidePanel()
       return
     }

@@ -5,6 +5,9 @@ struct NotchStateMachine: Sendable {
   enum Event: Sendable {
     case pointerEntered
     case pointerExited
+    /// The pointer moved while inside. Restarts the open delay, so the panel opens only
+    /// once the pointer rests on the notch instead of passing over it.
+    case pointerMoved
     case clicked
     case pinToggled
     case openDelayElapsed
@@ -47,6 +50,9 @@ struct NotchStateMachine: Sendable {
       case .expanded: return .startCloseTimer
       case .pinned: return .none
       }
+
+    case .pointerMoved:
+      return isPointerInside && !state.isOpen ? .startOpenTimer : .none
 
     case .clicked:
       guard !state.isOpen else { return .none }
