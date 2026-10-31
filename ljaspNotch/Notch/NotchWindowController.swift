@@ -7,6 +7,8 @@ final class NotchWindowController {
   private let model = NotchViewModel()
   private let hoverTracker = HoverTracker()
   private var panel: NotchPanel?
+  private var observers: [NSObjectProtocol] = []
+  private var pauseTask: Task<Void, Never>?
 
   init(settings: AppSettings) {
     self.settings = settings
@@ -19,7 +21,30 @@ final class NotchWindowController {
     model.onStateChange = { [weak self] _ in
       self?.updateHoverArea()
     }
+    observeSystemEvents()
     layoutPanel()
+  }
+
+  /// Re-places the panel whenever the screen setup, sleep state, space or pause
+  /// setting changes (SPEC § 6, N3).
+  private func observeSystemEvents() {
+    let relayout: @Sendable (Notification) -> Void = { [weak self] _ in
+      MainActor.assumeIsolated { self?.layoutPanel() }
+    }
+    observers.append(
+      NotificationCenter.default.addObserver(
+        forName: NSApplication.didChangeScreenParametersNotification, object: nil,
+        queue: .main, using: relayout))
+    let workspace = NSWorkspace.shared.notificationCenter
+    for name in [NSWorkspace.didWakeNotification, NSWorkspace.activeSpaceDidChangeNotification] {
+      observers.append(
+        workspace.addObserver(forName: name, object: nil, queue: .main, using: relayout))
+    }
+    pauseTask = Task { [weak self, settings] in
+      for await _ in Observations({ @MainActor in settings.isPaused }) {
+        self?.layoutPanel()
+      }
+    }
   }
 
   /// Puts the panel under the notch, or hides it when paused or no screen has a notch.
