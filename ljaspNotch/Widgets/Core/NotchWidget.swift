@@ -62,12 +62,32 @@ struct WidgetContext {
 
 /// Rounded card that every widget draws its content in.
 struct WidgetCard<Content: View>: View {
+  /// Optional color that glows from the top left, e.g. from album art.
+  var tint: Color?
   @ViewBuilder let content: Content
 
+  init(tint: Color? = nil, @ViewBuilder content: () -> Content) {
+    self.tint = tint
+    self.content = content()
+  }
+
   var body: some View {
+    let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
     content
       .padding(10)
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-      .background(.white.opacity(0.07), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+      .background {
+        ZStack {
+          shape.fill(.white.opacity(0.07))
+          if let tint {
+            shape.fill(
+              RadialGradient(
+                colors: [tint.opacity(0.45), tint.opacity(0)], center: .topLeading,
+                startRadius: 0, endRadius: 220))
+          }
+          shape.strokeBorder(.white.opacity(0.06), lineWidth: 1)
+        }
+        .animation(.smooth(duration: 0.6), value: tint)
+      }
   }
 }

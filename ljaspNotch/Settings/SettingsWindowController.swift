@@ -19,19 +19,21 @@ final class SettingsWindowController {
   private let layoutStore: LayoutStore
   private let registry: WidgetRegistry
   private let server: LocalServer
+  private let updates: UpdateChecker
   private var window: NSWindow?
   private var tabController: NSTabViewController?
   private var closeObserver: NSObjectProtocol?
 
   init(
     settings: AppSettings, themes: ThemeStore, layoutStore: LayoutStore,
-    registry: WidgetRegistry, server: LocalServer
+    registry: WidgetRegistry, server: LocalServer, updates: UpdateChecker
   ) {
     self.settings = settings
     self.themes = themes
     self.layoutStore = layoutStore
     self.registry = registry
     self.server = server
+    self.updates = updates
   }
 
   func show(tab: Tab? = nil) {
@@ -50,7 +52,10 @@ final class SettingsWindowController {
     tabs.tabStyle = .toolbar
     tabs.addTabViewItem(
       tab(
-        GeneralSettingsView(settings: settings),
+        GeneralSettingsView(
+          settings: settings, updates: updates,
+          diagnostics: Diagnostics.Sources(
+            settings: settings, themes: themes, layout: layoutStore, server: server)),
         label: String(localized: "General", comment: "Settings tab"),
         symbol: "gearshape"))
     tabs.addTabViewItem(

@@ -69,29 +69,32 @@ final class MediaWidget: NotchWidget {
   }
 }
 
-/// Album art from data (Music) or a URL (Spotify, YouTube), with a placeholder.
+/// Album art from data (Music) or a URL (Spotify, YouTube), decoded once per track by
+/// `ArtworkCache`, with a placeholder.
 struct ArtworkView: View {
   let nowPlaying: NowPlaying
   let size: CGFloat
   var cornerRadius: CGFloat = 8
+  @State private var entry: ArtworkCache.Entry?
 
   var body: some View {
     Group {
-      if let data = nowPlaying.artworkData, let image = NSImage(data: data) {
+      if let image = entry?.image {
         Image(nsImage: image).resizable().scaledToFill()
-      } else if let url = nowPlaying.artworkURL {
-        AsyncImage(url: url) { image in
-          image.resizable().scaledToFill()
-        } placeholder: {
-          placeholder
-        }
+          .transition(.opacity)
       } else {
         placeholder
       }
     }
     .frame(width: size, height: size)
     .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+    .shadow(color: .black.opacity(size > 30 ? 0.35 : 0), radius: 6, y: 3)
     .accessibilityHidden(true)
+    .task(id: ArtworkCache.key(for: nowPlaying)) {
+      entry = ArtworkCache.shared.cached(for: nowPlaying)
+      let loaded = await ArtworkCache.shared.load(for: nowPlaying)
+      withAnimation(.easeOut(duration: 0.2)) { entry = loaded }
+    }
   }
 
   private var placeholder: some View {

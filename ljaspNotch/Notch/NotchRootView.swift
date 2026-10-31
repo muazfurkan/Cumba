@@ -30,11 +30,17 @@ struct NotchRootView: View {
             sideWidth: geometry.layout.peekExtraWidth
           )
           .frame(height: geometry.notchRect.height)
-          .transition(.opacity)
+          .transition(.opacity.combined(with: .scale(scale: 0.8)))
         }
       }
       .frame(width: size.width, height: size.height, alignment: .top)
       .clipShape(shape)
+      .overlay {
+        if state.isOpen {
+          PanelEdge(shape: shape)
+            .transition(.opacity)
+        }
+      }
       .background {
         PanelBackground(
           shape: shape, material: material, theme: theme,
@@ -59,11 +65,9 @@ struct NotchRootView: View {
       : .spring(response: theme.spring.response * 0.85, dampingFraction: 1)
   }
 
-  /// Content fades in once the shape is mostly open and fades out quickly on close.
+  /// Content materializes once the shape is mostly open and fades out quickly on close.
   private static let contentTransition = AnyTransition.asymmetric(
-    insertion: .opacity
-      .combined(with: .scale(scale: 0.97, anchor: .top))
-      .animation(.easeOut(duration: 0.22).delay(0.12)),
+    insertion: .materialize.animation(.easeOut(duration: 0.26).delay(0.1)),
     removal: .opacity.animation(.easeIn(duration: 0.08)))
 }
 
@@ -107,10 +111,9 @@ private struct ExpandedPanelView: View {
           model.send(.pinToggled)
         } label: {
           Image(systemName: isPinned ? "pin.fill" : "pin")
-            .frame(width: 24, height: 24)
-            .contentShape(Rectangle())
+            .contentTransition(.symbolEffect(.replace))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PanelButtonStyle(isSelected: isPinned))
         .help(isPinned ? Text("Unpin panel") : Text("Pin panel"))
         .accessibilityLabel(isPinned ? Text("Unpin panel") : Text("Pin panel"))
       }

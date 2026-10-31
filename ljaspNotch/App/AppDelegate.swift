@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let media: MediaCoordinator
   private let server: LocalServer
   private let claude: ClaudeCodeService
+  private let updates: UpdateChecker
   private let registry: WidgetRegistry
   private let layoutStore: LayoutStore
   private let settingsWindow: SettingsWindowController
@@ -20,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     liveActivities = LiveActivityCenter()
     media = MediaCoordinator.standard()
     claude = ClaudeCodeService(liveActivities: liveActivities)
+    updates = UpdateChecker(settings: settings)
     server = LocalServer(browserHub: BrowserMediaHub(), claude: claude)
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
@@ -30,7 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     layoutStore = LayoutStore(knownKinds: registry.infos.map { ($0.kind, $0.size.units) })
     settingsWindow = SettingsWindowController(
       settings: settings, themes: themes, layoutStore: layoutStore, registry: registry,
-      server: server)
+      server: server, updates: updates)
     notchWindow = NotchWindowController(
       settings: settings, themes: themes,
       host: WidgetHost(
@@ -46,9 +48,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     NSApp.mainMenu = MainMenu.make()
-    menuBar = MenuBarController(settings: settings) { [settingsWindow] in
+    menuBar = MenuBarController(settings: settings, updates: updates) { [settingsWindow] in
       settingsWindow.show()
     }
+    updates.start()
+    observeUpdateSetting()
     media.start()
     media.add(server.browserHub.youtube)
     media.add(server.browserHub.youtubeMusic)
@@ -60,6 +64,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
+  }
+
+  private func observeUpdateSetting() {
+    withObservationTracking {
+      _ = settings.checksForUpdates
+    } onChange: { [weak self] in
+      Task { @MainActor in
+        guard let self else { return }
+        self.settings.checksForUpdates ? self.updates.start() : self.updates.stop()
+        self.observeUpdateSetting()
+      }
+    }
   }
 
   // Opening the app again from Finder or Spotlight shows Settings, because the

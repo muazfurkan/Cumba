@@ -14,6 +14,9 @@ final class AppSettings {
     static let hidesInFullScreen = "hidesInFullScreen"
     static let usesVirtualNotch = "usesVirtualNotch"
     static let serverPort = "serverPort"
+    static let checksForUpdates = "checksForUpdates"
+    static let includesPrereleases = "includesPrereleases"
+    static let hapticFeedback = "hapticFeedback"
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -52,6 +55,20 @@ final class AppSettings {
     didSet { defaults.set(Int(serverPort), forKey: Key.serverPort) }
   }
 
+  /// Asks GitHub Releases for a newer version at launch and once a day.
+  var checksForUpdates: Bool {
+    didSet { defaults.set(checksForUpdates, forKey: Key.checksForUpdates) }
+  }
+
+  var includesPrereleases: Bool {
+    didSet { defaults.set(includesPrereleases, forKey: Key.includesPrereleases) }
+  }
+
+  /// A light trackpad tap when the panel opens on hover.
+  var hapticFeedback: Bool {
+    didSet { defaults.set(hapticFeedback, forKey: Key.hapticFeedback) }
+  }
+
   /// True while the Appearance settings are visible; the panel stays open as a live preview.
   /// Not saved.
   var isPreviewingAppearance = false
@@ -72,6 +89,9 @@ final class AppSettings {
     usesVirtualNotch = defaults.bool(forKey: Key.usesVirtualNotch)
     let port = defaults.integer(forKey: Key.serverPort)
     serverPort = (1024...65535).contains(port) ? UInt16(port) : LocalServer.defaultPort
+    checksForUpdates = defaults.object(forKey: Key.checksForUpdates) as? Bool ?? true
+    includesPrereleases = defaults.bool(forKey: Key.includesPrereleases)
+    hapticFeedback = defaults.object(forKey: Key.hapticFeedback) as? Bool ?? true
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

@@ -391,6 +391,26 @@
         }
       }
     },
+    "Check Now" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi Denetle"
+          }
+        }
+      }
+    },
+    "Check for updates automatically" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncellemeleri otomatik denetle"
+          }
+        }
+      }
+    },
     "Choose Shortcuts" : {
       "localizations" : {
         "tr" : {
@@ -535,6 +555,16 @@
         }
       }
     },
+    "Copied. It contains no personal data." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopyalandı. Kişisel veri içermez."
+          }
+        }
+      }
+    },
     "Copy" : {
       "localizations" : {
         "tr" : {
@@ -545,12 +575,32 @@
         }
       }
     },
+    "Copy Diagnostics" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanılama Bilgisini Kopyala"
+          }
+        }
+      }
+    },
     "Corner radius" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Köşe yuvarlaklığı"
+          }
+        }
+      }
+    },
+    "Couldn't check for updates." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncellemeler denetlenemedi."
           }
         }
       }
@@ -753,6 +803,16 @@
         }
       }
     },
+    "Haptic feedback when the panel opens" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel açılınca dokunsal geri bildirim"
+          }
+        }
+      }
+    },
     "Heavy rain" : {
       "comment" : "Weather",
       "localizations" : {
@@ -841,6 +901,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terminalde"
+          }
+        }
+      }
+    },
+    "Include pre-releases" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön sürümleri dahil et"
           }
         }
       }
@@ -1975,6 +2045,27 @@
         }
       }
     },
+    "Update Available: %@…" : {
+      "comment" : "Menu item",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncelleme Var: %@…"
+          }
+        }
+      }
+    },
+    "Updates" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncellemeler"
+          }
+        }
+      }
+    },
     "Update…" : {
       "localizations" : {
         "tr" : {
@@ -1991,6 +2082,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sürüm"
+          }
+        }
+      }
+    },
+    "Version %@ is available" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sürümü çıktı"
           }
         }
       }
@@ -2126,6 +2227,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch (duraklatıldı)"
+          }
+        }
+      }
+    },
+    "ljaspNotch is up to date." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch güncel."
           }
         }
       }
