@@ -58,7 +58,7 @@ struct WidgetsSettingsView: View {
                   in: tab.id, from: IndexSet(integer: index),
                   to: offset < 0 ? index - 1 : index + 2)
               },
-              remove: { layoutStore.remove(kind) })
+              remove: { layoutStore.remove(kind, from: tab.id) })
           }
           .onMove { source, destination in
             layoutStore.moveWidgets(in: tab.id, from: source, to: destination)
@@ -74,13 +74,18 @@ struct WidgetsSettingsView: View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 10)], spacing: 10) {
           ForEach(registry.infos) { info in
             GalleryCard(
-              info: info, tabTitle: layoutStore.layout.tab(containing: info.kind)?.title,
+              info: info,
+              tabTitle: tab.flatMap { $0.widgets.contains(info.kind) ? $0.title : nil },
               add: {
                 if let tab {
                   layoutStore.add(info.kind, to: tab.id)
                 }
               },
-              remove: { layoutStore.remove(info.kind) })
+              remove: {
+                if let tab {
+                  layoutStore.remove(info.kind, from: tab.id)
+                }
+              })
           }
         }
         .padding(.vertical, 4)

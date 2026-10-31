@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Widgets can be added right in the panel: an empty tab, or the "+" tile where a tab has room, opens a gallery of the widgets not yet in the panel; one click adds one to the open tab. Right-click a widget to remove it.
 - While something plays, the closed notch shows larger artwork and a larger waveform, sized to the notch. The Mirror widget turns the camera on only when you click it.
 - Text size for the panel (Appearance > Colors > Text size), larger by default.
+- A widget can be in several tabs; adding it to one tab no longer takes it out of another.
 - Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
 - Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
 - Media reads whatever any app plays from the system's Now Playing: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. This uses the private MediaRemote framework through a small helper run by the system's perl; the README explains it. Turn off "Read media from every app" for the previous behavior. The YouTube extension is now optional.

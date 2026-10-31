@@ -296,5 +296,14 @@ struct WidgetGalleryTests {
     host.showGallery(true)
     host.panelOpenChanged(false)
     #expect(!host.isShowingGallery)
+
+    // The same widget can sit in another tab too.
+    let second = store.addTab(title: "Agents")
+    host.select(second)
+    #expect(host.addableInfos.contains { $0.kind == TimerWidget.kind })
+    host.add(TimerWidget.kind)
+    #expect(store.layout.tabs.filter { $0.widgets.contains(TimerWidget.kind) }.count == 2)
+    host.remove(TimerWidget.kind)
+    #expect(store.layout.tabs[0].widgets.contains(TimerWidget.kind))
   }
 }

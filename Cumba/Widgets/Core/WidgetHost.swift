@@ -64,14 +64,16 @@ final class WidgetHost {
     return max(0, WidgetLayout.unitsPerTab - used.reduce(0, +))
   }
 
-  /// Widgets that aren't in any tab yet.
+  /// Widgets that aren't in the open tab yet; they may be in other tabs.
   var addableInfos: [WidgetInfo] {
-    registry.infos.filter { !layoutStore.layout.contains($0.kind) }
+    let here = Set(selectedTab?.widgets ?? [])
+    return registry.infos.filter { !here.contains($0.kind) }
   }
 
-  /// Takes a widget out of the panel; the gallery can add it back.
+  /// Takes a widget out of the open tab; the gallery can add it back.
   func remove(_ kind: String) {
-    layoutStore.remove(kind)
+    guard let tab = selectedTab else { return }
+    layoutStore.remove(kind, from: tab.id)
   }
 
   /// Adds a widget to the open tab and closes the gallery.
