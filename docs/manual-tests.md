@@ -35,13 +35,13 @@ Otomatik testlerin ve CI'ın kapsayamadığı, gerçek donanım, izin pencereler
 22. İzni Sistem Ayarları > Gizlilik ve Güvenlik > Otomasyon'dan kapatın: widget'ta anlaşılır bir uyarı çıkmalı.
 
 ## YouTube (Chrome eklentisi)
-23. Ayarlar > Bağlantılar'da sunucu "çalışıyor" görünmeli. "Eklenti Klasörünü Göster" ile klasörü bulun, Chrome'da "Paketlenmemiş öğe yükle" ile ekleyin, seçeneklere port ve token'ı yapıştırın: durum "Uygulamaya bağlı" olmalı.
+23. Ayarlar > Bağlantılar'da sunucu "çalışıyor" görünmeli. Token'ı "Kopyala" ile alın (bir dakika sonra panodan kendiliğinden silinir). "Eklenti Klasörünü Göster" ile klasörü bulun, Chrome'da "Paketlenmemiş öğe yükle" ile ekleyin, seçeneklere port ve token'ı yapıştırın: durum "Uygulamaya bağlı" olmalı.
 24. YouTube Music'te ve YouTube'da bir şey çalın: notch'ta görünmeli, kontroller ve sarma çalışmalı. İki sekmede çalınca en son başlayan gösterilmeli.
 25. ljaspNotch'u kapatıp açın: eklenti birkaç saniye içinde kendiliğinden yeniden bağlanmalı.
 
 ## Claude Code
-26. Ayarlar > Claude Code > "Kur…": değişiklik farkı (diff) gösterilmeli. Kaydedince `~/.claude` içinde `settings.json.bak-…` yedeği oluşmalı.
-27. Terminalde Claude Code'da izin isteyen bir komut çalıştırın: notch'un yanında el simgesi çıkmalı. Panelde İzin Ver / Reddet / Terminalde çalışmalı. Ayrıca terminalde izin diyaloğunun aynı anda görünüp görünmediğini not edin (SPEC § 16-1).
+26. Ayarlar > Claude Code > "Kur…": değişiklik farkı (diff) gösterilmeli, token `••••••••` olarak maskelenmeli. Kaydedince `~/.claude` içinde `settings.json.bak-…` yedeği oluşmalı. "Soket" satırı "Dinliyor" göstermeli.
+27. Terminalde Claude Code'da izin isteyen bir komut çalıştırın: notch'un yanında el simgesi çıkmalı. Panelde komutun tamamı görünmeli; düğmeler kart çıktıktan kısa süre sonra etkinleşmeli. İzin Ver / Reddet / Terminalde çalışmalı. Ayrıca terminalde izin diyaloğunun aynı anda görünüp görünmediğini not edin (SPEC § 16-1).
 28. İş bitince "Bitti", hata olunca "Hata" göstergesi kısa süre görünmeli.
 29. ljaspNotch kapalıyken Claude Code normal çalışmalı (izni terminal sormalı).
 30. Claude masaüstü uygulamasındaki Code oturumunda da 27. maddeyi deneyin (SPEC § 16-6).

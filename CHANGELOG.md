@@ -23,7 +23,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
-- GitHub Actions pinned to a commit, checkout without persisted credentials, Dependabot for actions.
+Fixes from an independent security review:
+
+- Claude Code hooks now reach the app through a Unix socket in a folder only your account can open, using `command` hooks with curl, instead of HTTP on a TCP port. Another user or a sandboxed app could otherwise have taken the port while the app was closed and approved commands. Update the hooks in Settings > Claude Code.
+- The permission card shows the full request, makes control, direction and zero-width characters and long space runs visible, offers no Allow button for suspicious requests, and arms its buttons only after a short delay.
+- The extension socket accepts only the ljaspNotch extension (fixed extension ID) and closes on anything but a valid hello; the extension keeps the token away from content scripts.
+- Both local servers restart after a failure.
+- The hook installer recognizes only its own entries, resolves symlinks, refuses to touch a settings file it can't read, keeps backups private and masks the token in the diff.
+- The token is copied as concealed and cleared from the clipboard after a minute.
+- Artwork is fetched only from Spotify and YouTube image hosts, streamed with a size cap.
+- Release builds run without write access; only the publish step can write. FlyingFox and all actions are pinned to commits; checkout without persisted credentials; Dependabot for actions.
 
 ## [0.7.0] - 2026-10-31
 

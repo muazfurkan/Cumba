@@ -59,7 +59,7 @@ The extension has no permissions besides storage, reads only `youtube.com` and `
 
 ## Claude Code
 
-Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. See [docs/claude-code-setup.md](docs/claude-code-setup.md) to set it up by hand.
+Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. The card shows the full request with hidden characters made visible. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. Hooks reach the app through a private socket that only your user account can open, so nothing else can answer Claude Code in its place. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 
 ## Privacy
 
@@ -74,7 +74,7 @@ No telemetry. Everything stays on your Mac. These features make network requests
 
 The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac.
 
-The local server listens only on `127.0.0.1` and requires a token stored in your Keychain. Updating an ad-hoc signed build may make macOS ask once more for Keychain access.
+The extension server listens only on `127.0.0.1`, accepts only the ljaspNotch extension and requires a token stored in your Keychain. Updating an ad-hoc signed build may make macOS ask once more for Keychain access.
 
 ## Contributing
 
