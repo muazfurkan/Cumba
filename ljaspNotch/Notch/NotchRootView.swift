@@ -7,17 +7,16 @@ import SwiftUI
 struct NotchRootView: View {
   let model: NotchViewModel
 
-  // Critically damped, so the panel grows out of the notch without overshooting.
-  private static let openAnimation = Animation.spring(response: 0.36, dampingFraction: 1)
-  private static let closeAnimation = Animation.spring(response: 0.3, dampingFraction: 1)
-
   var body: some View {
     if let geometry = model.geometry {
       let state = model.state
+      let theme = model.theme
       let size = geometry.shapeSize(for: state)
       let canvas = geometry.shapeSize(for: .expanded)
       let shape = NotchShape(
-        topRadius: state.isOpen ? 14 : 6, bottomRadius: state.isOpen ? 24 : 10)
+        topRadius: state.isOpen ? 14 : 6, bottomRadius: state.isOpen ? theme.cornerRadius : 10)
+      // Over the hardware notch the closed shape is plain black so it blends in.
+      let material = state == .closed && !geometry.isVirtual ? .solid : theme.material
 
       ZStack(alignment: .top) {
         if state.isOpen {
@@ -27,19 +26,29 @@ struct NotchRootView: View {
         }
       }
       .frame(width: size.width, height: size.height, alignment: .top)
-      .background(.black)
       .clipShape(shape)
       .background {
-        shape
-          .fill(.black)
-          .shadow(color: .black.opacity(state.isOpen ? 0.45 : 0), radius: 18, y: 8)
+        PanelBackground(
+          shape: shape, material: material, theme: theme,
+          shadowOpacity: theme.shadow && state.isOpen ? 0.45 : 0)
       }
       .contentShape(shape)
       .onTapGesture { model.send(.clicked) }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-      .animation(state.isOpen ? Self.openAnimation : Self.closeAnimation, value: state)
+      .foregroundStyle(theme.foreground.color)
+      .tint(theme.accent.color)
+      .fontDesign(theme.fontDesign.swiftUI)
+      .animation(animation(for: state, theme: theme), value: state)
+      .animation(.smooth(duration: 0.25), value: theme)
       .environment(\.colorScheme, .dark)
     }
+  }
+
+  /// Opening uses the theme's spring; closing is always critically damped and a bit faster.
+  private func animation(for state: NotchState, theme: Theme) -> Animation {
+    state.isOpen
+      ? .spring(response: theme.spring.response, dampingFraction: theme.spring.damping)
+      : .spring(response: theme.spring.response * 0.85, dampingFraction: 1)
   }
 
   /// Content fades in once the shape is mostly open and fades out quickly on close.
@@ -48,6 +57,28 @@ struct NotchRootView: View {
       .combined(with: .scale(scale: 0.97, anchor: .top))
       .animation(.easeOut(duration: 0.22).delay(0.12)),
     removal: .opacity.animation(.easeIn(duration: 0.08)))
+}
+
+/// Fill of the panel shape for the theme's material.
+private struct PanelBackground: View {
+  let shape: NotchShape
+  let material: Theme.Material
+  let theme: Theme
+  let shadowOpacity: Double
+
+  var body: some View {
+    Group {
+      switch material {
+      case .solid:
+        shape.fill(theme.background.color)
+      case .glass:
+        Color.clear.glassEffect(.regular, in: shape)
+      case .tinted:
+        Color.clear.glassEffect(.regular.tint(theme.tint.color), in: shape)
+      }
+    }
+    .shadow(color: .black.opacity(shadowOpacity), radius: 18, y: 8)
+  }
 }
 
 /// Placeholder content until widgets arrive in Phase 3.
@@ -79,12 +110,22 @@ private struct ExpandedPanelView: View {
 
       Spacer()
       Text("Widgets are coming soon.")
-        .foregroundStyle(.secondary)
+        .foregroundStyle(model.theme.secondary.color)
       Spacer()
     }
-    .foregroundStyle(.white)
     .padding(.horizontal, 32)
     .padding(.bottom, 12)
+  }
+}
+
+extension Theme.FontDesign {
+  var swiftUI: Font.Design {
+    switch self {
+    case .default: .default
+    case .rounded: .rounded
+    case .monospaced: .monospaced
+    case .serif: .serif
+    }
   }
 }
 

@@ -1,19 +1,23 @@
 import AppKit
 
-/// Owns the notch panel: places it on the notched screen and connects it to the view model.
+/// Owns the notch panel: places it on the right screen and connects it to the view model,
+/// the settings and the current theme.
 @MainActor
 final class NotchWindowController {
   private let settings: AppSettings
+  private let themes: ThemeStore
   private let model = NotchViewModel()
   private let hoverTracker = HoverTracker()
   private var panel: NotchPanel?
   private var observers: [NSObjectProtocol] = []
   private var fullScreenTask: Task<Void, Never>?
-  /// A full screen app covers the notched screen, so the panel stays hidden (SPEC § 6).
+  /// A full screen app covers the panel's screen (SPEC § 6).
   private var isFullScreenActive = false
+  private var isPreviewing = false
 
-  init(settings: AppSettings) {
+  init(settings: AppSettings, themes: ThemeStore) {
     self.settings = settings
+    self.themes = themes
   }
 
   func start() {
@@ -27,12 +31,12 @@ final class NotchWindowController {
       self?.updateHoverArea()
     }
     observeSystemEvents()
-    layoutPanel()
+    observeSettings()
+    applySettings()
     refreshFullScreenState()
   }
 
-  /// Re-places the panel whenever the screen setup, sleep state, space or pause
-  /// setting changes (SPEC § 6, N3).
+  /// Re-places the panel whenever the screen setup, sleep state or space changes (N3).
   private func observeSystemEvents() {
     let relayout: @Sendable (Notification) -> Void = { [weak self] _ in
       MainActor.assumeIsolated { self?.layoutPanel() }
@@ -55,20 +59,60 @@ final class NotchWindowController {
           self?.refreshFullScreenState()
         }
       })
-    observePause()
   }
 
   /// Re-registers after every change, as `withObservationTracking` fires only once.
   /// (`Observations` would be simpler but crashes the Swift 6.2 compiler in CI.)
-  private func observePause() {
+  private func observeSettings() {
     withObservationTracking {
       _ = settings.isPaused
+      _ = settings.opensOnHover
+      _ = settings.openDelay
+      _ = settings.closeDelay
+      _ = settings.hidesInFullScreen
+      _ = settings.usesVirtualNotch
+      _ = settings.isPreviewingAppearance
+      _ = themes.current
     } onChange: { [weak self] in
       Task { @MainActor in
-        self?.layoutPanel()
-        self?.observePause()
+        self?.applySettings()
+        self?.observeSettings()
       }
     }
+  }
+
+  private func applySettings() {
+    model.theme = themes.current
+    model.opensOnHover = settings.opensOnHover
+    model.openDelay = .milliseconds(Int(settings.openDelay * 1000))
+    model.closeDelay = .milliseconds(Int(settings.closeDelay * 1000))
+    layoutPanel()
+    updatePreview()
+  }
+
+  /// Keeps the panel open while the Appearance settings are visible.
+  private func updatePreview() {
+    guard settings.isPreviewingAppearance != isPreviewing else { return }
+    isPreviewing = settings.isPreviewingAppearance
+    if isPreviewing {
+      model.send(.clicked)
+      if model.state == .expanded {
+        model.send(.pinToggled)
+      }
+    } else {
+      model.send(.reset)
+    }
+  }
+
+  /// The notched screen, or with the virtual notch setting the main screen when no screen
+  /// has a notch.
+  private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
+    let layout = NotchLayout(theme: themes.current)
+    if let screen = NSScreen.notched, let geometry = screen.notchGeometry(layout: layout) {
+      return (screen, geometry)
+    }
+    guard settings.usesVirtualNotch, let screen = NSScreen.screens.first else { return nil }
+    return (screen, screen.virtualNotchGeometry(layout: layout))
   }
 
   /// Reads the window list off the main thread: once right away and once more after the
@@ -82,12 +126,12 @@ final class NotchWindowController {
         } catch {
           return
         }
-        guard let screen = NSScreen.notched, let geometry = screen.notchGeometry() else {
+        guard let target = self?.targetScreen() else {
           self?.setFullScreenActive(false)
           continue
         }
-        let frame = screen.cgFrame
-        let notchHeight = geometry.notchRect.height
+        let frame = target.screen.cgFrame
+        let notchHeight = target.geometry.notchRect.height
         let ownPID = ProcessInfo.processInfo.processIdentifier
         let isFullScreen = await Task.detached {
           FullScreenDetector.isFullScreen(
@@ -104,26 +148,29 @@ final class NotchWindowController {
   private func setFullScreenActive(_ active: Bool) {
     guard active != isFullScreenActive else { return }
     isFullScreenActive = active
-    Log.notch.info("Full screen app on the notched screen: \(active, privacy: .public)")
+    Log.notch.info("Full screen app on the panel's screen: \(active, privacy: .public)")
     layoutPanel()
   }
 
   /// Puts the panel under the notch, or hides it when paused, behind a full screen app or
-  /// when no screen has a notch.
+  /// when there is no screen to show it on.
   func layoutPanel() {
-    guard !settings.isPaused, !isFullScreenActive, let geometry = NSScreen.notched?.notchGeometry()
-    else {
+    let hiddenByFullScreen = isFullScreenActive && settings.hidesInFullScreen
+    guard !settings.isPaused, !hiddenByFullScreen, let geometry = targetScreen()?.geometry else {
       hidePanel()
       return
     }
-    model.geometry = geometry
     let panel = panel ?? makePanel()
     self.panel = panel
-    panel.setFrame(geometry.windowFrame, display: true)
+    if model.geometry != geometry || !panel.isVisible {
+      model.geometry = geometry
+      panel.setFrame(geometry.windowFrame, display: true)
+      Log.notch.info(
+        "Panel placed at \(String(describing: geometry.windowFrame), privacy: .public)")
+    }
     panel.orderFrontRegardless()
     hoverTracker.start()
     updateHoverArea()
-    Log.notch.info("Panel placed at \(String(describing: geometry.windowFrame), privacy: .public)")
   }
 
   private func hidePanel() {

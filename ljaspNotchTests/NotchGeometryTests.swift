@@ -68,4 +68,20 @@ struct NotchGeometryTests {
     #expect(notch.minX == expectedMinX)
     #expect(notch.maxY == expectedMaxY)
   }
+
+  @Test func virtualNotchSitsInTheMiddleOfTheMenuBar() {
+    let geometry = NotchGeometry(virtualOn: screen, menuBarHeight: 24, width: 200)
+    #expect(geometry.isVirtual)
+    #expect(geometry.notchRect == CGRect(x: 656, y: 958, width: 200, height: 24))
+    #expect(geometry.shapeRect(for: .expanded).maxY == screen.maxY)
+  }
+
+  @Test func layoutFollowsTheTheme() {
+    var theme = Theme.classic
+    theme.expandedSize = .init(width: 800, height: 300)
+    theme.peekExtraWidth = 40
+    let layout = NotchLayout(theme: theme)
+    #expect(layout.expandedSize == CGSize(width: 800, height: 300))
+    #expect(layout.peekExtraWidth == 40)
+  }
 }
