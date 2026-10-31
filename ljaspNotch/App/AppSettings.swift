@@ -20,6 +20,14 @@ final class AppSettings {
     static let hasSeenWelcome = "hasSeenWelcome"
     static let browserExtensionEnabled = "browserExtensionEnabled"
     static let notchApprovals = "notchApprovals"
+    static let panelScreen = "panelScreen"
+  }
+
+  /// Which display shows the panel.
+  enum PanelScreen: String, CaseIterable, Sendable {
+    case notched
+    case main
+    case pointer
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -46,6 +54,10 @@ final class AppSettings {
 
   var hidesInFullScreen: Bool {
     didSet { defaults.set(hidesInFullScreen, forKey: Key.hidesInFullScreen) }
+  }
+
+  var panelScreen: PanelScreen {
+    didSet { defaults.set(panelScreen.rawValue, forKey: Key.panelScreen) }
   }
 
   /// Draws a notch on the main screen when no screen has one.
@@ -114,6 +126,8 @@ final class AppSettings {
     browserExtensionEnabled = defaults.bool(forKey: Key.browserExtensionEnabled)
     notchApprovals =
       defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
+    panelScreen =
+      defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

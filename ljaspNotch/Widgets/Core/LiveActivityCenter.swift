@@ -6,10 +6,16 @@ struct LiveActivity: Identifiable {
   /// Higher wins when several activities are active at once.
   enum Priority: Int, Comparable, Sendable {
     case media
+    case keepAwake
     case timerRunning
     case battery
+    case script
+    case calendar
     case claudeStatus
+    case privacy
     case timerFinished
+    /// A volume change, shown briefly right after a key press.
+    case volume
     case claudePermission
 
     static func < (lhs: Priority, rhs: Priority) -> Bool {

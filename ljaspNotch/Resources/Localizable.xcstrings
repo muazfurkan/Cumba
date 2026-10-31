@@ -87,6 +87,16 @@
         }
       }
     },
+    "%lld of %lld rounds" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld tur"
+          }
+        }
+      }
+    },
     "%lldm" : {
       "comment" : "Timer preset in minutes",
       "localizations" : {
@@ -369,6 +379,16 @@
         }
       }
     },
+    "Back to focus" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaklanma zamanı"
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "tr" : {
@@ -396,6 +416,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esneme"
+          }
+        }
+      }
+    },
+    "Break time" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mola zamanı"
           }
         }
       }
@@ -950,6 +980,26 @@
         }
       }
     },
+    "Focus" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odak"
+          }
+        }
+      }
+    },
+    "Focus rounds with short and long breaks, counted per day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa ve uzun molalı odak turları, gün gün sayılır"
+          }
+        }
+      }
+    },
     "Fog" : {
       "comment" : "Weather",
       "localizations" : {
@@ -1185,6 +1235,16 @@
         }
       }
     },
+    "Keep Awake" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uyanık Tut"
+          }
+        }
+      }
+    },
     "Keep dropped files at hand or AirDrop them" : {
       "localizations" : {
         "tr" : {
@@ -1231,6 +1291,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yerel Sunucu"
+          }
+        }
+      }
+    },
+    "Long Break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun Mola"
           }
         }
       }
@@ -1512,6 +1582,16 @@
         }
       }
     },
+    "On" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık"
+          }
+        }
+      }
+    },
     "Only on click" : {
       "localizations" : {
         "tr" : {
@@ -1720,6 +1800,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalıyor"
+          }
+        }
+      }
+    },
+    "Pomodoro" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomodoro"
           }
         }
       }
@@ -2057,6 +2147,16 @@
         }
       }
     },
+    "Short Break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa Mola"
+          }
+        }
+      }
+    },
     "Shortcuts" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -2108,6 +2208,16 @@
         }
       }
     },
+    "Show on" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gösterileceği ekran"
+          }
+        }
+      }
+    },
     "Showers" : {
       "comment" : "Weather",
       "localizations" : {
@@ -2125,6 +2235,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Boyut"
+          }
+        }
+      }
+    },
+    "Skip" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atla"
           }
         }
       }
@@ -2180,6 +2300,16 @@
         }
       }
     },
+    "Start the next round automatically" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki turu kendiliğinden başlat"
+          }
+        }
+      }
+    },
     "Status" : {
       "localizations" : {
         "tr" : {
@@ -2196,6 +2326,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durdu"
+          }
+        }
+      }
+    },
+    "Stops the Mac and its display from sleeping for a while" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac'in ve ekranın bir süre uyumasını engeller"
           }
         }
       }
@@ -2277,6 +2417,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claude Code soketi açılamadı."
+          }
+        }
+      }
+    },
+    "The display with a notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'lu ekran"
+          }
+        }
+      }
+    },
+    "The display with the pointer" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmlecin olduğu ekran"
+          }
+        }
+      }
+    },
+    "The main display" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana ekran"
           }
         }
       }
@@ -2423,6 +2593,16 @@
         }
       }
     },
+    "Today: %lld" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün: %lld"
+          }
+        }
+      }
+    },
     "Token" : {
       "localizations" : {
         "tr" : {
@@ -2464,6 +2644,26 @@
         }
       }
     },
+    "Turn Off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapat"
+          }
+        }
+      }
+    },
+    "Turn On" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aç"
+          }
+        }
+      }
+    },
     "Turn this on only if you use the extension. ljaspNotch then listens on this Mac (127.0.0.1) for the ljaspNotch extension; nothing is reachable from the network." : {
       "localizations" : {
         "tr" : {
@@ -2491,6 +2691,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Panelin sabitlemesini kaldır"
+          }
+        }
+      }
+    },
+    "Until Turned Off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapatılana Kadar"
           }
         }
       }

@@ -23,6 +23,11 @@ struct GeneralSettingsView: View {
       }
 
       Section("Panel") {
+        Picker("Show on", selection: $settings.panelScreen) {
+          Text("The display with a notch").tag(AppSettings.PanelScreen.notched)
+          Text("The main display").tag(AppSettings.PanelScreen.main)
+          Text("The display with the pointer").tag(AppSettings.PanelScreen.pointer)
+        }
         Picker("Open the panel", selection: $settings.opensOnHover) {
           Text("When the pointer rests on the notch").tag(true)
           Text("Only on click").tag(false)

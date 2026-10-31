@@ -21,7 +21,7 @@ final class WidgetRegistry {
       types: [
         MediaWidget.self, ClaudeCodeWidget.self, CalendarWidget.self, TimerWidget.self,
         BatteryWidget.self, TrayWidget.self, MirrorWidget.self, WeatherWidget.self,
-        ShortcutsWidget.self, SystemStatsWidget.self,
+        ShortcutsWidget.self, SystemStatsWidget.self, KeepAwakeWidget.self, PomodoroWidget.self,
       ])
   }
 

@@ -16,7 +16,8 @@ final class NotchWindowController {
   private var isFullScreenActive = false
   private var isPreviewing = false
   private var lastState = NotchState.closed
-  /// The notch's own right-click menu is open; leaving the notch then doesn't close it.
+  /// A menu of this app is open (the notch's right-click menu or a widget's menu); leaving
+  /// the notch then doesn't close the panel.
   private var isMenuOpen = false
   /// Opens the Settings window (set by the app delegate).
   var openSettings: (() -> Void)?
@@ -33,6 +34,9 @@ final class NotchWindowController {
     }
     hoverTracker.onMoveInside = { [weak self] in
       self?.model.send(.pointerMoved)
+    }
+    hoverTracker.onMove = { [weak self] in
+      self?.followPointerScreen()
     }
     model.onStateChange = { [weak self] state in
       self?.stateChanged(to: state)
@@ -122,6 +126,7 @@ final class NotchWindowController {
       _ = settings.closeDelay
       _ = settings.hidesInFullScreen
       _ = settings.usesVirtualNotch
+      _ = settings.panelScreen
       _ = settings.isPreviewingAppearance
       _ = themes.current
     } onChange: { [weak self] in
@@ -180,12 +185,12 @@ final class NotchWindowController {
       ClosureMenuItem(title: String(localized: "Quit ljaspNotch")) { NSApp.terminate(nil) })
     let center = NotificationCenter.default
     observers.append(
-      center.addObserver(forName: NSMenu.didBeginTrackingNotification, object: menu, queue: .main) {
+      center.addObserver(forName: NSMenu.didBeginTrackingNotification, object: nil, queue: .main) {
         [weak self] _ in
         MainActor.assumeIsolated { self?.isMenuOpen = true }
       })
     observers.append(
-      center.addObserver(forName: NSMenu.didEndTrackingNotification, object: menu, queue: .main) {
+      center.addObserver(forName: NSMenu.didEndTrackingNotification, object: nil, queue: .main) {
         [weak self] _ in
         MainActor.assumeIsolated { self?.menuClosed() }
       })
@@ -225,15 +230,42 @@ final class NotchWindowController {
     }
   }
 
-  /// The notched screen, or with the virtual notch setting the main screen when no screen
-  /// has a notch.
+  /// The screen chosen in Settings. "Notched" falls back to the main screen with the virtual
+  /// notch setting; the other choices draw a virtual notch where there is no real one.
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
     let layout = NotchLayout(theme: themes.current)
+    let chosen: NSScreen?
+    switch settings.panelScreen {
+    case .notched: chosen = nil
+    case .main: chosen = NSScreen.screens.first
+    case .pointer: chosen = Self.screenUnderPointer
+    }
+    if let chosen {
+      return (
+        chosen, chosen.notchGeometry(layout: layout) ?? chosen.virtualNotchGeometry(layout: layout)
+      )
+    }
     if let screen = NSScreen.notched, let geometry = screen.notchGeometry(layout: layout) {
       return (screen, geometry)
     }
     guard settings.usesVirtualNotch, let screen = NSScreen.screens.first else { return nil }
     return (screen, screen.virtualNotchGeometry(layout: layout))
+  }
+
+  private static var screenUnderPointer: NSScreen? {
+    let location = NSEvent.mouseLocation
+    return NSScreen.screens.first { NSMouseInRect(location, $0.frame, false) }
+  }
+
+  /// With "the display with the pointer", moves the panel when the pointer changes screens.
+  private func followPointerScreen() {
+    guard settings.panelScreen == .pointer, !model.state.isOpen,
+      let screen = Self.screenUnderPointer, let geometry = model.geometry,
+      !NSMouseInRect(
+        NSPoint(x: geometry.windowFrame.midX, y: geometry.windowFrame.midY),
+        screen.frame, false)
+    else { return }
+    layoutPanel()
   }
 
   /// Reads the window list off the main thread: once right away and once more after the
