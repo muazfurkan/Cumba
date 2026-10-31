@@ -54,6 +54,42 @@
           }
         }
       }
+    },
+    "NSLocationUsageDescription" : {
+      "comment" : "Privacy - Location Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The Weather widget shows the weather where you are. Your location is rounded to about 10 km first."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava Durumu widget'ı bulunduğunuz yerin havasını gösterir. Konumunuz önce yaklaşık 10 km'ye yuvarlanır."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location When In Use Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The Weather widget shows the weather where you are. Your location is rounded to about 10 km first."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava Durumu widget'ı bulunduğunuz yerin havasını gösterir. Konumunuz önce yaklaşık 10 km'ye yuvarlanır."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

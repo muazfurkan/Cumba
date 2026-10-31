@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import Testing
 
@@ -234,5 +235,66 @@ struct ScriptActivityTests {
     #expect(center.contains("script.a"))
     try #require(ScriptActivity(try message(#"{"id":"a","remove":true}"#))).apply(to: center)
     #expect(!center.contains("script.a"))
+  }
+}
+
+@MainActor
+struct WeatherLocationTests {
+  private let suiteName = "WeatherLocationTests-\(UUID().uuidString)"
+
+  @Test func roundsTheLocationToAboutTenKilometers() {
+    let rounded = LocationProvider.rounded(CLLocation(latitude: 41.0138, longitude: 28.9497))
+    #expect(rounded.coordinate.latitude == 41.0)
+    #expect(rounded.coordinate.longitude == 28.9)
+  }
+
+  @Test func usesTheMacsLocationUnlessAPlaceWasChosen() throws {
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+    #expect(WeatherWidget(context: makeContext(), defaults: defaults).usesCurrentLocation)
+
+    let place = WeatherService.Place(name: "İzmir", latitude: 38.4, longitude: 27.1)
+    defaults.set(try JSONEncoder().encode(place), forKey: "weather.place")
+    let widget = WeatherWidget(context: makeContext(), defaults: defaults)
+    #expect(!widget.usesCurrentLocation)
+    #expect(widget.place == place)
+  }
+}
+
+@MainActor
+struct WidgetGalleryTests {
+  @Test func addsToTheOpenTabWhileThereIsRoom() async throws {
+    let file = FileManager.default.temporaryDirectory
+      .appending(path: "WidgetGalleryTests-\(UUID().uuidString).json")
+    defer { try? FileManager.default.removeItem(at: file) }
+    let registry = WidgetRegistry(
+      context: makeContext(),
+      types: [TimerWidget.self, KeepAwakeWidget.self, TeleprompterWidget.self])
+    let store = LayoutStore(
+      fileURL: file, knownKinds: registry.infos.map { ($0.kind, $0.size.units) },
+      defaultKinds: [TimerWidget.kind])
+    await store.load()
+    let center = LiveActivityCenter()
+    let host = WidgetHost(
+      layoutStore: store, registry: registry, liveActivities: center,
+      claude: ClaudeCodeService(liveActivities: center))
+
+    #expect(host.freeUnits == WidgetLayout.unitsPerTab - 2)
+    #expect(host.addableInfos.map(\.kind) == [KeepAwakeWidget.kind, TeleprompterWidget.kind])
+    host.showGallery(true)
+    host.add(TeleprompterWidget.kind)
+    #expect(!host.isShowingGallery)
+    #expect(host.selectedTab?.widgets == [TimerWidget.kind, TeleprompterWidget.kind])
+    #expect(host.freeUnits == 1)
+    host.add(KeepAwakeWidget.kind)
+    #expect(host.freeUnits == 0)
+    #expect(host.addableInfos.isEmpty)
+    host.remove(TeleprompterWidget.kind)
+    #expect(host.freeUnits == 3)
+    #expect(host.addableInfos.map(\.kind) == [TeleprompterWidget.kind])
+
+    host.showGallery(true)
+    host.panelOpenChanged(false)
+    #expect(!host.isShowingGallery)
   }
 }

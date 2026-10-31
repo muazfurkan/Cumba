@@ -1,3 +1,4 @@
+import AppKit
 import EventKit
 import Observation
 import SwiftUI
@@ -32,8 +33,8 @@ final class CalendarWidget: NotchWidget {
   }
 
   @ObservationIgnored let service = CalendarService()
-  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
   @ObservationIgnored private let liveActivities: LiveActivityCenter
+  @ObservationIgnored private let panel: PanelControl
   @ObservationIgnored private var changeObserver: NSObjectProtocol?
   @ObservationIgnored private var reminderObserver: NSObjectProtocol?
   @ObservationIgnored private var reminderTask: Task<Void, Never>?
@@ -42,8 +43,8 @@ final class CalendarWidget: NotchWidget {
   private static let reminderActivityID = "calendar.reminder"
 
   required init(context: WidgetContext) {
-    openSettings = context.openSettings
     liveActivities = context.liveActivities
+    panel = context.panel
     reminderMinutes = UserDefaults.standard.integer(forKey: Self.reminderKey)
     updateReminderWatching()
   }
@@ -155,14 +156,18 @@ final class CalendarWidget: NotchWidget {
             .multilineTextAlignment(.trailing))))
   }
 
-  /// Asks for access; only called from the Settings window.
+  /// Shows the system prompt. Call it from a normal window, or through
+  /// `requestAccessFromPanel()`.
   func requestAccess() async {
+    NSApp.activate()
     _ = await service.requestAccess()
     reload()
   }
 
-  func showSettings() {
-    openSettings(.permissions)
+  /// Closes the panel first, so the prompt can't end up behind it.
+  func requestAccessFromPanel() {
+    panel.close()
+    Task { await requestAccess() }
   }
 }
 
@@ -176,11 +181,19 @@ private struct CalendarWidgetView: View {
           .font(.caption)
           .foregroundStyle(.secondary)
         if !widget.hasAccess {
-          Text("Allow calendar access in Settings to see your events.")
-            .font(.caption)
-            .fixedSize(horizontal: false, vertical: true)
-          Button("Open Settings") { widget.showSettings() }
-            .controlSize(.small)
+          if CalendarService.accessWasDenied {
+            Text("Calendar access is off. You can allow it in System Settings.")
+              .font(.caption)
+              .fixedSize(horizontal: false, vertical: true)
+            OpenPrivacySettings(pane: "Privacy_Calendars")
+              .controlSize(.small)
+          } else {
+            Text("See today's and tomorrow's events here.")
+              .font(.caption)
+              .fixedSize(horizontal: false, vertical: true)
+            Button("Allow Calendar Access") { widget.requestAccessFromPanel() }
+              .controlSize(.small)
+          }
         } else if widget.events.isEmpty {
           Text("Nothing planned for today and tomorrow.")
             .font(.caption)

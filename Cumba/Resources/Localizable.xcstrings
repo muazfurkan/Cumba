@@ -198,12 +198,32 @@
         }
       }
     },
+    "Add a Widget" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Ekle"
+          }
+        }
+      }
+    },
     "Add Tab" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sekme Ekle"
+          }
+        }
+      }
+    },
+    "Add Widget" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Ekle"
           }
         }
       }
@@ -288,16 +308,6 @@
         }
       }
     },
-    "Allow calendar access in Settings to see your events." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Etkinliklerinizi görmek için Ayarlar'dan takvim erişimine izin verin."
-          }
-        }
-      }
-    },
     "Allow control in Settings" : {
       "localizations" : {
         "tr" : {
@@ -334,6 +344,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez."
+          }
+        }
+      }
+    },
+    "Allow Location Access…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum Erişimine İzin Ver…"
           }
         }
       }
@@ -480,12 +500,73 @@
         }
       }
     },
-    "Built-in themes can't be changed. Duplicate one to customize it." : {
+    "Brightness" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hazır temalar değiştirilemez. Özelleştirmek için birini çoğaltın."
+            "value" : "Parlaklık"
+          }
+        }
+      }
+    },
+    "Browsers" : {
+      "comment" : "Media source",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarayıcılar"
+          }
+        }
+      }
+    },
+    "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazır temalar olduğu gibi kalır. Aşağıda bir şeyi değiştirdiğinizde değişiklik, adını değiştirebileceğiniz bir kopya olarak kaydedilir."
+          }
+        }
+      }
+    },
+    "Calendar access is off. You can allow it in System Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim erişimi kapalı. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Choose a City" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir Seç"
+          }
+        }
+      }
+    },
+    "Click to Show the Camera" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamerayı Göstermek İçin Tıklayın"
+          }
+        }
+      }
+    },
+    "Click to turn the camera off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamerayı kapatmak için tıklayın"
           }
         }
       }
@@ -975,12 +1056,13 @@
         }
       }
     },
-    "Current weather for a place you choose" : {
+    "Current weather where you are, or for a place you choose" : {
+      "comment" : "Widget description",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seçtiğiniz yerin anlık hava durumu"
+            "value" : "Bulunduğunuz yerin ya da seçtiğiniz bir yerin anlık hava durumu"
           }
         }
       }
@@ -1130,12 +1212,32 @@
         }
       }
     },
+    "Every widget is already in the panel." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm widget'lar zaten panelde."
+          }
+        }
+      }
+    },
     "Export…" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dışa Aktar…"
+          }
+        }
+      }
+    },
+    "Finding your location…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz bulunuyor…"
           }
         }
       }
@@ -1219,16 +1321,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cam"
-          }
-        }
-      }
-    },
-    "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ses tuşlarını Cumba yönetir, değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir; parlaklık tuşları macOS'ta kalır."
           }
         }
       }
@@ -1505,6 +1597,36 @@
         }
       }
     },
+    "Location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum"
+          }
+        }
+      }
+    },
+    "Location access is off for Cumba." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba için konum erişimi kapalı."
+          }
+        }
+      }
+    },
+    "Location access is off." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum erişimi kapalı."
+          }
+        }
+      }
+    },
     "Long Break" : {
       "localizations" : {
         "tr" : {
@@ -1690,6 +1812,17 @@
         }
       }
     },
+    "My Location" : {
+      "comment" : "Weather place without a name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumum"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "tr" : {
@@ -1748,6 +1881,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pil yok"
+          }
+        }
+      }
+    },
+    "No room in this tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sekmede yer yok"
           }
         }
       }
@@ -1862,6 +2005,16 @@
         }
       }
     },
+    "Only Spotify and Music, through AppleScript, and YouTube through the extension." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca AppleScript ile Spotify ve Müzik, eklentiyle de YouTube."
+          }
+        }
+      }
+    },
     "Only the Cumba extension with this token is accepted. This token is only for the extension; Claude Code hooks use their own. After regenerating it, paste the new token into the extension's options." : {
       "localizations" : {
         "tr" : {
@@ -1958,6 +2111,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İsteğe bağlı: notch sistemin ses göstergesinin yerine geçtiğinde ses tuşları için"
+          }
+        }
+      }
+    },
+    "Other Apps" : {
+      "comment" : "Media source",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer Uygulamalar"
           }
         }
       }
@@ -2136,6 +2300,16 @@
         }
       }
     },
+    "Read media from every app" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medyayı her uygulamadan oku"
+          }
+        }
+      }
+    },
     "Regenerate" : {
       "localizations" : {
         "tr" : {
@@ -2152,6 +2326,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kaldır"
+          }
+        }
+      }
+    },
+    "Remove %@" : {
+      "comment" : "Context menu item that takes a widget out of the panel; the argument is the widget's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Widget'ını Kaldır"
           }
         }
       }
@@ -2186,12 +2371,32 @@
         }
       }
     },
+    "Replace the system brightness indicator" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistemin parlaklık göstergesinin yerine geç"
+          }
+        }
+      }
+    },
     "Replace the system volume indicator" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sistemin ses göstergesinin yerine geç"
+          }
+        }
+      }
+    },
+    "Replacing handles those keys so only the notch shows the change. It needs Accessibility access." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerine geçmek, bu tuşları Cumba'nın işlemesi demektir; değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir."
           }
         }
       }
@@ -2376,6 +2581,16 @@
         }
       }
     },
+    "See today's and tomorrow's events here." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünün ve yarının etkinliklerini burada görün."
+          }
+        }
+      }
+    },
     "Select All" : {
       "localizations" : {
         "tr" : {
@@ -2498,6 +2713,16 @@
         }
       }
     },
+    "Show brightness changes in the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parlaklık değişikliklerini notch'ta göster"
+          }
+        }
+      }
+    },
     "Show Extension Folder" : {
       "localizations" : {
         "tr" : {
@@ -2565,6 +2790,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sağanak"
+          }
+        }
+      }
+    },
+    "Shows what any app plays, like Control Center: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. A small helper reads it through macOS's own perl." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denetim Merkezi gibi, hangi uygulama ne çalıyorsa gösterir: Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası; eklenti ya da Otomasyon izni gerekmez. Bunu küçük bir yardımcı, macOS'un kendi perl'ü üzerinden okur."
           }
         }
       }
@@ -2841,6 +3076,16 @@
         }
       }
     },
+    "The system's Now Playing can't be read on this Mac, so Cumba uses Spotify, Music and the YouTube extension." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Mac'te sistemin Şu An Çalan bilgisi okunamıyor; Cumba bu yüzden Spotify, Müzik ve YouTube eklentisini kullanıyor."
+          }
+        }
+      }
+    },
     "The theme file couldn't be used." : {
       "localizations" : {
         "tr" : {
@@ -2877,16 +3122,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu istekte gizli karakterler var veya güvenle gösterilemeyecek kadar uzun. Terminalde yanıtlayın."
-          }
-        }
-      }
-    },
-    "This tab is empty. Add widgets in Settings." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu sekme boş. Ayarlar'dan widget ekleyin."
           }
         }
       }
@@ -3034,16 +3269,6 @@
         }
       }
     },
-    "Turn this on only if you use the extension. Cumba then listens on this Mac (127.0.0.1) for the Cumba extension; nothing is reachable from the network." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yalnızca eklentiyi kullanıyorsanız açın. Cumba bu durumda bu Mac'te (127.0.0.1) Cumba eklentisini dinler; ağdan hiçbir şeye erişilemez."
-          }
-        }
-      }
-    },
     "Unknown" : {
       "comment" : "Weather",
       "localizations" : {
@@ -3106,6 +3331,36 @@
         }
       }
     },
+    "Use my current location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anki konumumu kullan"
+          }
+        }
+      }
+    },
+    "Use My Location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumumu Kullan"
+          }
+        }
+      }
+    },
+    "Usually not needed: the Media widget reads YouTube from every browser by itself. Turn this on only if you use the extension. Cumba then listens on this Mac (127.0.0.1) for the Cumba extension; nothing is reachable from the network." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genellikle gerekmez: Medya widget'ı YouTube'u her tarayıcıdan kendisi okur. Yalnızca eklentiyi kullanıyorsanız açın. Cumba bu durumda bu Mac'te (127.0.0.1) Cumba eklentisini dinler; ağdan hiçbir şeye erişilemez."
+          }
+        }
+      }
+    },
     "Version" : {
       "localizations" : {
         "tr" : {
@@ -3158,12 +3413,12 @@
         }
       }
     },
-    "Weather data comes from Open-Meteo. Only the coordinates of the place you choose are sent." : {
+    "Weather data comes from Open-Meteo. Your location is rounded to about 10 km before it's sent, and Apple Maps finds the city name. For a chosen city, only its coordinates are sent." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hava durumu verileri Open-Meteo'dan gelir. Yalnızca seçtiğiniz konumun koordinatları gönderilir."
+            "value" : "Hava durumu verileri Open-Meteo'dan gelir. Konumunuz gönderilmeden önce yaklaşık 10 km'ye yuvarlanır, şehir adını Apple Haritalar bulur. Seçtiğiniz bir şehir için yalnızca onun koordinatları gönderilir."
           }
         }
       }
@@ -3174,6 +3429,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hava durumu alınamadı."
+          }
+        }
+      }
+    },
+    "Weather widget: the weather where you are, rounded to about 10 km" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava Durumu widget'ı: bulunduğunuz yerin havası, yaklaşık 10 km'ye yuvarlanmış konumla"
           }
         }
       }
@@ -3287,6 +3552,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Son kopyaladığınız metinler, yalnızca bellekte"
+          }
+        }
+      }
+    },
+    "Your location couldn't be found." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz bulunamadı."
           }
         }
       }

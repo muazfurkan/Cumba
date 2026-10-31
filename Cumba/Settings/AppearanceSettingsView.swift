@@ -22,9 +22,7 @@ struct AppearanceSettingsView: View {
         }
         HStack {
           Button("Duplicate") {
-            themes.duplicate(
-              current,
-              name: String(localized: "\(current.displayName) Copy", comment: "Duplicated theme"))
+            themes.duplicate(current, name: copyName)
           }
           Button("Delete", role: .destructive) {
             themes.delete(current)
@@ -35,14 +33,15 @@ struct AppearanceSettingsView: View {
           Button("Export…", action: exportTheme)
         }
         if isBuiltIn {
-          Text("Built-in themes can't be changed. Duplicate one to customize it.")
-            .foregroundStyle(.secondary)
+          Text(
+            "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename."
+          )
+          .foregroundStyle(.secondary)
         } else {
           TextField("Name", text: themeBinding.name)
         }
       }
       ThemeEditorSections(theme: themeBinding)
-        .disabled(isBuiltIn)
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 620)
@@ -63,8 +62,13 @@ struct AppearanceSettingsView: View {
     Binding(get: { themes.selectedID }, set: { themes.select($0) })
   }
 
+  private var copyName: String {
+    String(localized: "\(current.displayName) Copy", comment: "Duplicated theme")
+  }
+
+  /// Edits to a built-in theme go to a new copy, which is then selected.
   private var themeBinding: Binding<Theme> {
-    Binding(get: { themes.current }, set: { themes.update($0) })
+    Binding(get: { themes.current }, set: { themes.edit($0, copyName: copyName) })
   }
 
   private func importTheme() {

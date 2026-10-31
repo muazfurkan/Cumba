@@ -13,7 +13,7 @@
 
 <p align="center"><a href="README.md">English</a></p>
 
-macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu, imleci üzerinde tuttuğunuzda kamera yuvasından büyüyen bir panele çevirir: Spotify, Apple Music ve YouTube'dan müzik, Claude Code izin istekleri ve bir dizi widget; hepsi size göre ayarlanabilen bir görünümle.
+macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu, imleci üzerinde tuttuğunuzda kamera yuvasından büyüyen bir panele çevirir: her uygulamadan müzik ve video, Claude Code izin istekleri ve bir dizi widget; hepsi size göre ayarlanabilen bir görünümle.
 
 *Cumba*, eski Türk evlerinin üst katından sokağa taşan küçük çıkmadır: oturup sokakta olup biteni izlediğiniz sakin bir köşe. Panel de aynısını ekranınızın tepesinden yapar.
 
@@ -21,10 +21,10 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 ## Özellikler
 
-- **Medya**: Spotify, Apple Music, YouTube ve YouTube Music tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
+- **Medya**: hangi uygulama ne çalıyorsa (Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası) tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller, eklenti ya da kurulum gerekmeden. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
 - **Claude Code**: terminaldeki, IDE eklentilerindeki veya Claude masaüstü uygulamasındaki izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür. Bir oturum bitince veya hata verince de görürsünüz.
 - **Sekmelerde widget'lar**: görüntülü görüşmeler için Katıl düğmeli takvim, zamanlayıcı, Pomodoro, notlar, pano geçmişi, uyanık tut, teleprompter, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Ayarlar'daki galeriden seçin, sürükleyerek sıralayın; yeni kurulum yalnızca üçüyle başlar.
-- **İsteğe bağlı ekstralar** (siz açana kadar kapalı): paneli istediğiniz ekranda gösterme, ses düzeyini notch'ta gösterme (isterseniz sistem göstergesinin yerine), mikrofon veya kamera kullanılırken bir nokta, toplantılardan önce geri sayım, medya kaynağı seçimi ve [kendi script'leriniz için bir API](#scriptler).
+- **İsteğe bağlı ekstralar** (siz açana kadar kapalı): paneli istediğiniz ekranda gösterme, ses ve parlaklık düzeyini notch'ta gösterme (isterseniz sistem göstergelerinin yerine), mikrofon veya kamera kullanılırken bir nokta, toplantılardan önce geri sayım, medya kaynağı seçimi ve [kendi script'leriniz için bir API](#scriptler).
 - **Canlı etkinlikler**: çalışan zamanlayıcı, bekleyen Claude isteği, şarj veya çalan şarkı kapalı notch'un iki yanında görünür.
 - **Temalar**: Liquid Glass, düz siyah veya renkli cam; renkler, yazı tipi, panel boyutu, köşe yuvarlaklığı, gölge ve animasyon. Temaları JSON olarak içe/dışa aktarın.
 - **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda gizlenir ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
@@ -53,7 +53,7 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 `xattr -dr com.apple.quarantine /Applications/Cumba.app` yalnızca bu uygulamadaki indirme işaretini kaldırır, Gatekeeper da sormayı bırakır. Bunu yalnızca 2. adımda doğruladığınız bir kopya için yapın.
 </details>
 
-**Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Kamera) ve Cumba'nın token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
+**Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Konum, Kamera) ve Cumba'nın token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
 
 **ljaspNotch'tan mı geçiyorsunuz?** Cumba aynı uygulamanın yeni adı. ljaspNotch'tan çıkın, `ljaspNotch.app`'i Çöp Sepeti'ne taşıyın ve Cumba'yı kurun; ayarlarınız, düzeniniz, notlarınız ve temalarınız aynen gelir. Claude Code hook'larını kullanıyorsanız Ayarlar > Claude Code'da bir kez **Güncelle…**'ye tıklayın. Chrome eklentisini kullanıyorsanız onu `chrome://extensions` sayfasından kaldırın, [YouTube ve YouTube Music](#youtube-ve-youtube-music) bölümündeki gibi yeni uygulamadan tekrar yükleyin ve token'ı yapıştırın.
 
@@ -85,24 +85,37 @@ Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kul
 
 | Ne | Neden | Ne zaman |
 |---|---|---|
-| Spotify ve Müzik için Otomasyon (Apple Events) | Çalan parçayı okumak; oynat, duraklat, atla, sar | Ayarlar'dan istenir; komutlar yalnızca o uygulama zaten açıkken gönderilir |
-| Takvim (tam erişim) | Takvim widget'ı | Widget'ı kullandığınızda Ayarlar'dan istenir |
+| Sistemin Şu An Çalan yardımcısı | Her uygulamadaki medya ve kontrolleri | Uygulama açıkken çalışır; yerine AppleScript kullanmak için "Medyayı her uygulamadan oku"yu kapatın. Bkz. [aşağısı](#medya-ve-ozel-apiler) |
+| Spotify ve Müzik için Otomasyon (Apple Events) | Çalan parçayı okumak; oynat, duraklat, atla, sar | Yalnızca "Medyayı her uygulamadan oku" kapalıyken; Ayarlar'dan istenir, komutlar yalnızca o uygulama zaten açıkken gönderilir |
+| Takvim (tam erişim) | Takvim widget'ı | Widget'ta veya Ayarlar'da İzin Ver'e tıkladığınızda istenir |
+| Konum | Hava durumu widget'ı, bulunduğunuz yerin havası için | Konumumu Kullan'a tıkladığınızda istenir; şehir seçerseniz kullanılmaz |
 | Kamera | Ayna widget'ı | Yalnızca panel onu gösterirken; hiçbir şey kaydedilmez |
-| `127.0.0.1` üzerinde yerel sunucu | YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
+| `127.0.0.1` üzerinde yerel sunucu | İsteğe bağlı YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
 | Özel Unix soketi | Claude Code hook'ları ve [script etkinlikleri](#scriptler) | Yalnızca hook'lar kuruluyken veya script etkinlikleri açıkken |
 | `~/.claude/settings.json` | Hook'ları kurmak ve kaldırmak | Yalnızca değişikliği gözden geçirdikten sonra; yedek alınır |
-| Erişilebilirlik | Ses tuşlarını yönetmek | Yalnızca "Sistemin ses göstergesinin yerine geç" açıksa |
+| Erişilebilirlik | Ses veya parlaklık tuşlarını yönetmek | Yalnızca "Sistemin ses göstergesinin yerine geç" veya "…parlaklık göstergesinin…" açıksa |
 | Pano | Pano Geçmişi widget'ı | Yalnızca o widget paneldeyken |
 | Giriş öğesi | Oturum açıldığında başlatma | Siz açana kadar kapalı |
 | Ağ | Kapak görselleri, hava durumu, güncelleme kontrolü | Bkz. [Gizlilik](#gizlilik) |
 
-App Sandbox kapalı: sandbox'taki bir uygulama Spotify ve Müzik'i komutla yönetmek, Claude Code hook'larının ulaştığı soketi çalıştırmak ve `~/.claude/settings.json` dosyasını düzenlemek için istisnalara ihtiyaç duyar. Hardened Runtime açık ve uygulamanın yalnızca [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) dosyasındaki yetkileri var (Apple Events, takvim, kamera).
+App Sandbox kapalı: sandbox'taki bir uygulama Spotify ve Müzik'i komutla yönetmek, Claude Code hook'larının ulaştığı soketi çalıştırmak ve `~/.claude/settings.json` dosyasını düzenlemek için istisnalara ihtiyaç duyar. Hardened Runtime açık ve uygulamanın yalnızca [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) dosyasındaki yetkileri var (Apple Events, takvim, konum, kamera).
 
-Cumba hiçbir zaman telemetri göndermez, Apple'ın özel API'lerini kullanmaz, yönetici parolası istemez, yardımcı araç, çekirdek veya sistem uzantısı kurmaz, sistem ayarlarını değiştirmez, kod indirmez ve kendini güncellemez. Tehdit modeli ve güvenlikle ilgili kodun haritası [SECURITY.md](SECURITY.md) dosyasında.
+Cumba hiçbir zaman telemetri göndermez, yönetici parolası istemez, yardımcı araç, çekirdek veya sistem uzantısı kurmaz, sistem ayarlarını değiştirmez, kod indirmez ve kendini güncellemez. Tehdit modeli ve güvenlikle ilgili kodun haritası [SECURITY.md](SECURITY.md) dosyasında.
 
-## YouTube ve YouTube Music
+<a name="medya-ve-ozel-apiler"></a>
 
-Küçük bir Chrome eklentisi (diğer Chromium tarayıcılarda da çalışır) YouTube sekmelerinde çalanı yerel bir bağlantı üzerinden uygulamaya gönderir; uygulama da oynat, duraklat, sonraki ve sarma komutlarını geri yollar.
+## Medya, parlaklık ve özel API'ler
+
+macOS'ta bir uygulamanın diğer uygulamaların ne çaldığını görmesinin ya da Apple silicon'da dahili ekranın parlaklığını okumasının açık bir yolu yok. Cumba yalnızca bunlar için iki özel Apple çerçevesi kullanır, başka hiçbir şey için değil:
+
+- **MediaRemote**, sistemin Şu An Çalan bilgisi (medya tuşlarının ve Denetim Merkezi'nin kullandığı). macOS bunu yalnızca Apple'ın kendi programlarına yanıtlar; bu yüzden Cumba kendi uygulama paketindeki küçük bir yardımcı kitaplığı ([kaynak](NowPlayingHelper/CumbaNowPlaying.m)) sistemin `/usr/bin/perl`'ü içinde, boş bir ortamla çalıştırır. Yardımcı yalnızca Şu An Çalan'ı okur ve oynat, duraklat, atla ve sar komutlarını iletir; hiçbir dosya ya da ağ bağlantısı açmaz ve Cumba kapanınca çıkar. Bunun yerine Spotify ve Müzik için AppleScript'i, YouTube için eklentiyi kullanmak isterseniz **Ayarlar > Widget'lar > Medya > Medyayı her uygulamadan oku**'yu kapatın.
+- **DisplayServices**, notch'taki parlaklık düzeyi için. Yalnızca Ayarlar > Genel'de parlaklık değişikliklerini açtığınızda yüklenir.
+
+Özel API'ler herhangi bir macOS güncellemesiyle değişebilir. Çalışmayı bırakırlarsa Cumba yukarıdaki açık yollara geri döner ve çalışmaya devam eder.
+
+## YouTube eklentisi (isteğe bağlı)
+
+Medya her uygulamadan okurken gerekmez. Küçük bir Chrome eklentisi (diğer Chromium tarayıcılarda da çalışır) YouTube sekmelerinde çalanı yerel bir bağlantı üzerinden uygulamaya gönderir; uygulama da oynat, duraklat, sonraki ve sarma komutlarını geri yollar.
 
 1. Cumba'da **Ayarlar > Bağlantılar**'ı açın, **YouTube eklentisini bağla**'yı açın ve **Eklenti Klasörünü Göster**'e tıklayın.
 2. Chrome'da `chrome://extensions` adresini açın, **Geliştirici modu**'nu etkinleştirin ve **Paketlenmemiş öğe yükle**'ye tıklayın. 1. adımdaki klasörü seçin.
@@ -139,7 +152,7 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 |---|---|
 | Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
 | YouTube ile medya widget'ı | YouTube'un görsel sunucularından küçük resim (sayfanın kendi kullandığı adres) |
-| Hava durumu widget'ı | Seçtiğiniz konumun koordinatları `api.open-meteo.com`'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
+| Hava durumu widget'ı | Yaklaşık 10 km'ye yuvarlanmış konumunuz (ya da seçtiğiniz şehrin koordinatları) `api.open-meteo.com`'a; konumunuzla birlikte şehir adı için aynı yuvarlanmış koordinatlar Apple Haritalar'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
 | Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi; Ayarlar > Genel'den kapatılabilir |
 
 Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar `~/Library/Application Support/Cumba/notes.txt` içinde düz metin olarak saklanır. Pano Geçmişi kopyaladığınız son 20 metni yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; paneldeyken panonun değişip değişmediğini saniyede bir kontrol eder. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.

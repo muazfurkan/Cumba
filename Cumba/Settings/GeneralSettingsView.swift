@@ -6,7 +6,7 @@ struct GeneralSettingsView: View {
   let updates: UpdateChecker
   let diagnostics: Diagnostics.Sources
   @State private var copiedDiagnostics = false
-  @State private var isTrusted = VolumeKeyTap.isTrusted
+  @State private var isTrusted = MediaKeyTap.isTrusted
 
   var body: some View {
     Form {
@@ -47,14 +47,22 @@ struct GeneralSettingsView: View {
       Section("Indicators") {
         Toggle("Show volume changes in the notch", isOn: $settings.showsVolumeChanges)
         if settings.showsVolumeChanges {
-          Toggle("Replace the system volume indicator", isOn: replacesVolumeIndicator)
+          Toggle("Replace the system volume indicator", isOn: replaces(\.replacesVolumeIndicator))
+        }
+        Toggle("Show brightness changes in the notch", isOn: $settings.showsBrightnessChanges)
+        if settings.showsBrightnessChanges {
+          Toggle(
+            "Replace the system brightness indicator",
+            isOn: replaces(\.replacesBrightnessIndicator))
+        }
+        if settings.showsVolumeChanges || settings.showsBrightnessChanges {
           Text(
-            "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS."
+            "Replacing handles those keys so only the notch shows the change. It needs Accessibility access."
           )
           .font(.callout)
           .foregroundStyle(.secondary)
           .fixedSize(horizontal: false, vertical: true)
-          if settings.replacesVolumeIndicator && !isTrusted {
+          if replacesAny && !isTrusted {
             OpenPrivacySettings(pane: "Privacy_Accessibility")
           }
         }
@@ -95,20 +103,25 @@ struct GeneralSettingsView: View {
     .frame(width: 520, height: 600)
     .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification))
     { _ in
-      isTrusted = VolumeKeyTap.isTrusted
+      isTrusted = MediaKeyTap.isTrusted
     }
   }
 
+  private var replacesAny: Bool {
+    (settings.showsVolumeChanges && settings.replacesVolumeIndicator)
+      || (settings.showsBrightnessChanges && settings.replacesBrightnessIndicator)
+  }
+
   /// Turning it on without Accessibility access shows the system prompt first.
-  private var replacesVolumeIndicator: Binding<Bool> {
+  private func replaces(_ setting: ReferenceWritableKeyPath<AppSettings, Bool>) -> Binding<Bool> {
     Binding(
-      get: { settings.replacesVolumeIndicator },
+      get: { settings[keyPath: setting] },
       set: { isOn in
-        if isOn && !VolumeKeyTap.isTrusted {
-          VolumeKeyTap.requestAccess()
+        if isOn && !MediaKeyTap.isTrusted {
+          MediaKeyTap.requestAccess()
         }
-        settings.replacesVolumeIndicator = isOn
-        isTrusted = VolumeKeyTap.isTrusted
+        settings[keyPath: setting] = isOn
+        isTrusted = MediaKeyTap.isTrusted
       })
   }
 

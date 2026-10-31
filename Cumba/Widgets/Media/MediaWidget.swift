@@ -67,11 +67,46 @@ final class MediaWidget: NotchWidget {
     liveActivities.show(
       LiveActivity(
         id: Self.activityID, priority: .media,
-        leading: AnyView(ArtworkView(nowPlaying: nowPlaying, size: 20, cornerRadius: 5)),
-        trailing: AnyView(
-          Image(systemName: "waveform")
-            .symbolEffect(.variableColor.iterative, options: .repeating)
-            .accessibilityLabel(Text("Playing")))))
+        leading: AnyView(PeekArtwork(nowPlaying: nowPlaying)),
+        trailing: AnyView(PeekNowPlaying(nowPlaying: nowPlaying)),
+        sideWidth: Self.peekSideWidth))
+  }
+
+  /// Room on each side of the closed notch for the artwork and the scrolling title.
+  static let peekSideWidth: CGFloat = 130
+}
+
+/// The artwork beside the closed notch, as tall as the notch allows.
+private struct PeekArtwork: View {
+  let nowPlaying: NowPlaying
+  @Environment(\.peekHeight) private var height
+
+  var body: some View {
+    HStack {
+      ArtworkView(nowPlaying: nowPlaying, size: max(18, height - 10), cornerRadius: 6)
+      Spacer(minLength: 0)
+    }
+    .padding(.leading, 12)
+  }
+}
+
+/// The title and artist scrolling like a ticker, and a waveform, beside the closed notch.
+private struct PeekNowPlaying: View {
+  let nowPlaying: NowPlaying
+  @Environment(\.peekHeight) private var height
+
+  var body: some View {
+    HStack(spacing: 8) {
+      MarqueeText(
+        text: [nowPlaying.title, nowPlaying.artist].compactMap { $0 }.joined(separator: " · ")
+      )
+      .font(.system(size: max(11, height * 0.34), weight: .medium))
+      Image(systemName: "waveform")
+        .font(.system(size: max(13, height * 0.46), weight: .semibold))
+        .symbolEffect(.variableColor.iterative, options: .repeating)
+        .accessibilityLabel(Text("Playing"))
+    }
+    .padding(.trailing, 12)
   }
 }
 
@@ -111,17 +146,44 @@ struct ArtworkView: View {
   }
 }
 
-/// Settings > Widgets > Media: which players to show, and Automation access.
+/// Settings > Widgets > Media: where media comes from, which players to show, and
+/// Automation access when AppleScript is used.
 private struct MediaSettingsView: View {
-  let media: MediaCoordinator
+  @Bindable var media: MediaCoordinator
 
   var body: some View {
-    ForEach(NowPlaying.Source.allCases, id: \.self) { source in
+    Toggle("Read media from every app", isOn: $media.usesSystemNowPlaying)
+    Group {
+      if media.usesSystemNowPlaying && media.systemNowPlayingFailed {
+        Text(
+          "The system's Now Playing can't be read on this Mac, so Cumba uses Spotify, Music and the YouTube extension."
+        )
+      } else if media.usesSystemNowPlaying {
+        Text(
+          "Shows what any app plays, like Control Center: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. A small helper reads it through macOS's own perl."
+        )
+      } else {
+        Text("Only Spotify and Music, through AppleScript, and YouTube through the extension.")
+      }
+    }
+    .font(.caption)
+    .foregroundStyle(.secondary)
+    .fixedSize(horizontal: false, vertical: true)
+    ForEach(sources, id: \.self) { source in
       Toggle(isOn: enabled(source)) {
         Label(source.displayName, systemImage: source.symbol)
       }
     }
-    MediaPermissionsView()
+    if !media.isUsingSystemNowPlaying {
+      MediaPermissionsView()
+    }
+  }
+
+  /// Browsers and other apps come only from the system's Now Playing.
+  private var sources: [NowPlaying.Source] {
+    NowPlaying.Source.allCases.filter {
+      media.isUsingSystemNowPlaying || ($0 != .browser && $0 != .otherApp)
+    }
   }
 
   private func enabled(_ source: NowPlaying.Source) -> Binding<Bool> {

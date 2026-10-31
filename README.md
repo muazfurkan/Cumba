@@ -21,10 +21,10 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 
 ## Features
 
-- **Media**: Spotify, Apple Music, YouTube and YouTube Music in one mini player with artwork, progress, seeking and controls. A small waveform beside the notch shows what's playing.
+- **Media**: whatever any app plays (Safari, Chrome, YouTube, Spotify, Music, podcasts and more) in one mini player with artwork, progress, seeking and controls, with no extension or setup. A small waveform beside the notch shows what's playing.
 - **Claude Code**: permission requests from the terminal, IDE extensions or the Claude desktop app show up in the notch with **Allow**, **Deny** and **In Terminal**. You also see when a session is done or fails.
 - **Widgets in tabs**: calendar with a Join button for video calls, timer, Pomodoro, notes, clipboard history, keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Pick them from a gallery in Settings and drag to reorder; a new installation starts with just three.
-- **Optional extras**, off until you turn them on: show the panel on any display, the volume level in the notch (optionally instead of the system indicator), a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
+- **Optional extras**, off until you turn them on: show the panel on any display, volume and brightness levels in the notch (optionally instead of the system indicators), a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
 - **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
 - **Themes**: Liquid Glass, solid black or tinted glass; colors, font, panel size, corner radius, shadow and animation. Import and export themes as JSON.
 - **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
@@ -51,7 +51,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 `xattr -dr com.apple.quarantine /Applications/Cumba.app` removes the download flag from this one app, so Gatekeeper stops asking. Only do this for a copy you checked in step 2.
 </details>
 
-**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
+**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Location, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
 
 **Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Claude Code. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
 
@@ -81,24 +81,37 @@ Everything below is off or unused until you turn on the feature that needs it. S
 
 | What | Why | When |
 |---|---|---|
-| Automation (Apple Events) for Spotify and Music | Read the current track; play, pause, skip, seek | Asked from Settings; scripts are sent only while that app is already running |
-| Calendar (full access) | Calendar widget | Asked from Settings when you use the widget |
+| System Now Playing helper | Media from every app, and its controls | Runs while the app runs; turn off "Read media from every app" to use AppleScript instead. See [below](#media-and-private-apis) |
+| Automation (Apple Events) for Spotify and Music | Read the current track; play, pause, skip, seek | Only with "Read media from every app" off; asked from Settings, scripts are sent only while that app is already running |
+| Calendar (full access) | Calendar widget | Asked when you click Allow in the widget or in Settings |
+| Location | Weather widget, for the weather where you are | Asked when you click Use My Location; off if you choose a city instead |
 | Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
-| Local server on `127.0.0.1` | YouTube extension connection | Only after you turn it on in Settings > Connections |
+| Local server on `127.0.0.1` | Optional YouTube extension connection | Only after you turn it on in Settings > Connections |
 | Private Unix socket | Claude Code hooks and [script activities](#scripts) | Only while the hooks are installed or script activities are on |
 | `~/.claude/settings.json` | Installing and removing the hooks | Only after you review the change; a backup is kept |
-| Accessibility | Handling the volume keys | Only if you turn on "Replace the system volume indicator" |
+| Accessibility | Handling the volume or brightness keys | Only if you turn on "Replace the system volume indicator" or "…brightness indicator" |
 | Clipboard | Clipboard History widget | Only while that widget is in the panel |
 | Login item | Launch at login | Off until you turn it on |
 | Network | Artwork, weather, update check | See [Privacy](#privacy) |
 
-The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) (Apple Events, calendars, camera).
+The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) (Apple Events, calendars, location, camera).
 
-Cumba never sends telemetry, uses no private Apple APIs, asks for no administrator password, installs no helper tools, kernel or system extensions, doesn't change system settings, and never downloads code or updates itself. [SECURITY.md](SECURITY.md) has the threat model and a map of the security-relevant code.
+Cumba never sends telemetry, asks for no administrator password, installs no helper tools, kernel or system extensions, doesn't change system settings, and never downloads code or updates itself. [SECURITY.md](SECURITY.md) has the threat model and a map of the security-relevant code.
 
-## YouTube and YouTube Music
+<a name="media-and-private-apis"></a>
 
-A small Chrome extension (also works in other Chromium browsers) sends what plays in YouTube tabs to the app over a local connection, and the app sends play, pause, next and seek back.
+## Media, brightness and private APIs
+
+macOS has no public way for an app to see what other apps play or to read the built-in display's brightness on Apple silicon. Cumba uses two private Apple frameworks for exactly these, and nothing else:
+
+- **MediaRemote**, the system's Now Playing (what the media keys and Control Center use). macOS answers it only for Apple's own programs, so Cumba runs a small helper library from its own app bundle ([source](NowPlayingHelper/CumbaNowPlaying.m)) inside the system's `/usr/bin/perl`, started with an empty environment. The helper only reads Now Playing and passes on play, pause, skip and seek; it opens no files or network connections and exits when Cumba quits. Turn off **Settings > Widgets > Media > Read media from every app** to use AppleScript for Spotify and Music and the extension for YouTube instead.
+- **DisplayServices**, for the brightness level in the notch. It's loaded only when you turn on brightness changes in Settings > General.
+
+Private APIs can change with any macOS update. If they stop working, Cumba falls back to the public ways above and keeps running.
+
+## YouTube extension (optional)
+
+Not needed while Media reads from every app. A small Chrome extension (also works in other Chromium browsers) sends what plays in YouTube tabs to the app over a local connection, and the app sends play, pause, next and seek back.
 
 1. In Cumba, open **Settings > Connections**, turn on **Connect the YouTube extension** and click **Show Extension Folder**.
 2. In Chrome, open `chrome://extensions`, turn on **Developer mode** and click **Load unpacked**. Choose the folder from step 1.
@@ -133,7 +146,7 @@ No telemetry. Everything stays on your Mac. These features make network requests
 |---|---|
 | Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
 | Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
-| Weather widget | The coordinates of the place you choose to `api.open-meteo.com`; the city you search for to `geocoding-api.open-meteo.com` |
+| Weather widget | Your location rounded to about 10 km (or the coordinates of the city you choose) to `api.open-meteo.com`; with your location, the same rounded coordinates to Apple Maps for the city name; a city you search for to `geocoding-api.open-meteo.com` |
 | Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
 
 The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes are saved as plain text in `~/Library/Application Support/Cumba/notes.txt`. Clipboard History keeps your last 20 copied texts in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. The microphone and camera indicator reads only whether a device is in use, never audio or video.

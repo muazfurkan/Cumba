@@ -28,7 +28,7 @@ struct NotchRootView: View {
         } else if state == .peek, let activity = host.liveActivities.current {
           PeekView(
             activity: activity, notchWidth: geometry.notchRect.width,
-            sideWidth: geometry.layout.peekExtraWidth
+            sideWidth: geometry.layout.peekExtraWidth, height: geometry.notchRect.height
           )
           .frame(height: geometry.notchRect.height)
           .transition(.opacity.combined(with: .scale(scale: 0.8)))
@@ -55,6 +55,7 @@ struct NotchRootView: View {
       .fontDesign(theme.fontDesign.swiftUI)
       .animation(animation(for: state, theme: theme), value: state)
       .animation(.smooth(duration: 0.25), value: theme)
+      .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
       .environment(\.colorScheme, .dark)
     }
   }
@@ -116,8 +117,21 @@ private struct ExpandedPanelView: View {
     VStack(spacing: 0) {
       // Top band beside the camera housing.
       HStack {
-        WidgetTabBar(host: host)
-        Spacer()
+        if host.isShowingGallery {
+          Text("Add a Widget")
+            .font(.headline)
+          Spacer()
+          Button("Done") {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+              host.showGallery(false)
+            }
+          }
+          .buttonStyle(.plain)
+          .foregroundStyle(model.theme.accent.color)
+        } else {
+          WidgetTabBar(host: host)
+          Spacer()
+        }
         Button {
           model.send(.pinToggled)
         } label: {
@@ -139,9 +153,14 @@ private struct ExpandedPanelView: View {
         .padding(10)
         .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
         .padding(.top, 8)
+      } else if host.isShowingGallery {
+        WidgetGallery(host: host, secondary: model.theme.secondary.color)
+          .padding(.top, 8)
+          .transition(.opacity)
       } else {
         WidgetRow(host: host, secondary: model.theme.secondary.color)
           .padding(.top, 8)
+          .transition(.opacity)
       }
     }
     .padding(.horizontal, 28)
@@ -162,8 +181,8 @@ extension Theme.FontDesign {
 
 /// Hosting view that reacts to the first click even though the panel never becomes key.
 final class NotchHostingView<Content: View>: NSHostingView<Content> {
-  /// Shown on right-click or Control-click anywhere on the notch.
-  var contextMenu: NSMenu?
+  /// Builds the menu shown on right-click or Control-click anywhere on the notch.
+  var makeContextMenu: (() -> NSMenu)?
 
   override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
     true
@@ -172,8 +191,19 @@ final class NotchHostingView<Content: View>: NSHostingView<Content> {
   /// Clicks on SwiftUI content don't make the panel key; only text views inside do.
   override var needsPanelToBecomeKey: Bool { false }
 
+  /// A SwiftUI context menu under the pointer (a widget's, or a tray file's) comes first,
+  /// followed by the notch's own items.
   override func menu(for event: NSEvent) -> NSMenu? {
-    contextMenu ?? super.menu(for: event)
+    let own = makeContextMenu?()
+    guard let content = super.menu(for: event), !content.items.isEmpty else { return own }
+    if let own {
+      content.addItem(.separator())
+      for item in own.items {
+        own.removeItem(item)
+        content.addItem(item)
+      }
+    }
+    return content
   }
 }
 

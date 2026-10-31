@@ -3,6 +3,10 @@ import Observation
 
 /// Combines all media providers into what the media widget shows. The progress
 /// bar is computed locally from the last known position, not by asking players.
+///
+/// By default everything comes from the system's Now Playing, which covers every app.
+/// With that turned off, or when it can't run, Spotify and Music are read with AppleScript
+/// and browsers through the extension.
 @MainActor
 @Observable
 final class MediaCoordinator {
@@ -20,19 +24,41 @@ final class MediaCoordinator {
     }
   }
 
+  /// Reads every app through the system's Now Playing; off uses Spotify, Music and the
+  /// browser extension.
+  var usesSystemNowPlaying: Bool {
+    didSet {
+      defaults?.set(usesSystemNowPlaying, forKey: Self.systemKey)
+      applyMode()
+    }
+  }
+  /// The system's Now Playing couldn't be read on this Mac, so the other sources are used.
+  private(set) var systemNowPlayingFailed = false
+
   @ObservationIgnored private var selection = MediaSelection()
   @ObservationIgnored private var providers: [any MediaProvider]
+  @ObservationIgnored private let system: SystemNowPlayingProvider?
+  @ObservationIgnored private var isStarted = false
+  @ObservationIgnored private var startedProviders = false
   @ObservationIgnored private var expiryTask: Task<Void, Never>?
   @ObservationIgnored private let defaults: UserDefaults?
 
   private static let disabledKey = "media.disabledSources"
+  private static let systemKey = "media.usesSystemNowPlaying"
 
-  /// - Parameter defaults: Where the source choice is saved; `nil` keeps it in memory.
-  init(providers: [any MediaProvider], defaults: UserDefaults? = nil) {
+  /// - Parameters:
+  ///   - system: Reads every app; `nil` uses only `providers`.
+  ///   - defaults: Where the source choice is saved; `nil` keeps it in memory.
+  init(
+    providers: [any MediaProvider], system: SystemNowPlayingProvider? = nil,
+    defaults: UserDefaults? = nil
+  ) {
     self.providers = providers
+    self.system = system
     self.defaults = defaults
     let saved = defaults?.stringArray(forKey: Self.disabledKey) ?? []
     disabledSources = Set(saved.compactMap(NowPlaying.Source.init(rawValue:)))
+    usesSystemNowPlaying = defaults?.object(forKey: Self.systemKey) as? Bool ?? true
   }
 
   static func standard() -> MediaCoordinator {
@@ -40,13 +66,18 @@ final class MediaCoordinator {
       providers: [
         ScriptablePlayerProvider(adapter: SpotifyAdapter()),
         ScriptablePlayerProvider(adapter: MusicAdapter()),
-      ], defaults: .standard)
+      ], system: SystemNowPlayingProvider(), defaults: .standard)
+  }
+
+  /// True while the system's Now Playing is the source of everything.
+  var isUsingSystemNowPlaying: Bool {
+    usesSystemNowPlaying && system != nil && !systemNowPlayingFailed
   }
 
   private func applyDisabledSources() {
     for provider in providers {
       (provider as? ScriptablePlayerProvider)?.isEnabled =
-        !disabledSources.contains(provider.source)
+        !isUsingSystemNowPlaying && !disabledSources.contains(provider.source)
     }
     for source in disabledSources {
       selection.update(nil, for: source, at: Date())
@@ -55,32 +86,63 @@ final class MediaCoordinator {
   }
 
   func start() {
-    applyDisabledSources()
     for provider in providers {
-      let source = provider.source
-      provider.onUpdate = { [weak self] nowPlaying in
-        self?.receive(nowPlaying, from: source)
-      }
-      if let scriptable = provider as? ScriptablePlayerProvider {
-        scriptable.onFailureChange = { [weak self] failure in
-          self?.failures[source] = failure
+      wire(provider)
+    }
+    system?.onUpdate = { [weak self] nowPlaying in
+      self?.receiveSystem(nowPlaying)
+    }
+    system?.onUnavailable = { [weak self] in
+      self?.systemNowPlayingFailed = true
+      self?.applyMode()
+    }
+    isStarted = true
+    applyMode()
+  }
+
+  /// Switches between the system's Now Playing and the other providers. Those start only
+  /// when first needed, so AppleScript never runs while the system covers everything.
+  private func applyMode() {
+    guard isStarted else { return }
+    selection = MediaSelection()
+    if isUsingSystemNowPlaying {
+      system?.start()
+    } else {
+      system?.stop()
+      if !startedProviders {
+        startedProviders = true
+        for provider in providers {
+          provider.start()
         }
       }
-      provider.start()
+    }
+    applyDisabledSources()
+  }
+
+  private func wire(_ provider: any MediaProvider) {
+    let source = provider.source
+    provider.onUpdate = { [weak self] nowPlaying in
+      self?.receive(nowPlaying, from: source)
+    }
+    if let scriptable = provider as? ScriptablePlayerProvider {
+      scriptable.onFailureChange = { [weak self] failure in
+        self?.failures[source] = failure
+      }
     }
   }
 
   /// Adds a provider later, e.g. the browser provider once the local server runs.
   func add(_ provider: any MediaProvider) {
     providers.append(provider)
-    let source = provider.source
-    provider.onUpdate = { [weak self] nowPlaying in
-      self?.receive(nowPlaying, from: source)
-    }
+    wire(provider)
     provider.start()
   }
 
   func send(_ command: MediaCommand) async {
+    if isUsingSystemNowPlaying {
+      system?.send(command)
+      return
+    }
     guard let source = current?.source,
       let provider = providers.first(where: { $0.source == source })
     else { return }
@@ -98,7 +160,23 @@ final class MediaCoordinator {
   }
 
   func receive(_ nowPlaying: NowPlaying?, from source: NowPlaying.Source) {
+    guard !isUsingSystemNowPlaying else { return }
     selection.update(disabledSources.contains(source) ? nil : nowPlaying, for: source, at: Date())
+    refresh()
+  }
+
+  /// The system reports one app at a time, and commands reach only that app, so it
+  /// replaces whatever was shown before.
+  func receiveSystem(_ nowPlaying: NowPlaying?) {
+    guard isUsingSystemNowPlaying else { return }
+    let now = Date()
+    for source in NowPlaying.Source.allCases where source != nowPlaying?.source {
+      selection.update(nil, for: source, at: now)
+    }
+    if let nowPlaying {
+      let shown = disabledSources.contains(nowPlaying.source) ? nil : nowPlaying
+      selection.update(shown, for: nowPlaying.source, at: now)
+    }
     refresh()
   }
 

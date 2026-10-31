@@ -29,7 +29,8 @@ What Cumba defends against:
 
 - **Nothing listens unless you use it.** The extension server starts only after you turn on the YouTube extension connection, and the hook socket only while Claude Code hooks are installed.
 - **Web pages** can't reach the local server: the extension socket requires our extension's exact Origin and a loopback `Host` header (DNS rebinding), and no CORS headers are sent.
-- **Optional features stay off.** Script activities, the volume key tap and the microphone/camera indicator start only after you turn them on. The key tap asks only for media key events (`NX_SYSDEFINED`), not keystrokes. Script activities are text only, escaped and never clickable.
+- **Private APIs are narrow and isolated.** Two private frameworks are used, only where macOS has no public API: MediaRemote for the system's Now Playing and DisplayServices for the built-in display's brightness. MediaRemote answers only Apple's programs, so a helper library from the signed app bundle ([source](NowPlayingHelper/CumbaNowPlaying.m)) runs inside `/usr/bin/perl` with an empty environment (no `PERL5OPT` or `PERL5LIB`). It reads Now Playing, forwards play, pause, skip and seek, opens no files or connections, and exits when its stdin closes. If either framework stops working, Cumba falls back to public APIs.
+- **Optional features stay off.** Script activities, the media key tap and the microphone/camera indicator start only after you turn them on. The key tap asks only for media key events (`NX_SYSDEFINED`: volume and brightness), not keystrokes. Script activities are text only, escaped and never clickable.
 - **Separate tokens.** The hooks, the extension and script activities each have their own 256-bit token in the Keychain. The hook token is written into `~/.claude/settings.json` (which other local accounts may be able to read), but it only opens the private socket, never the extension's TCP port.
 - **Other users on the same Mac and sandboxed apps** can't answer Claude Code in Cumba's place: hooks go through a Unix socket in a folder only your account can open, not through a TCP port that someone else could take while the app is closed.
 - **A misleading permission request** (prompt-injected text that hides part of a command) is shown in full with hidden characters made visible; suspicious requests get no Allow button, and buttons arm only after the request has been on screen briefly. Allow in the notch approves the tool call just like Allow in Claude Code, so Settings can limit it to everything except shell commands or turn it off. The limit is enforced where the answer is sent, not only by hiding the button.
@@ -69,7 +70,8 @@ The security-relevant code is small. Start here:
 | Area | Files |
 |---|---|
 | Local servers, tokens | `Cumba/Server/` (`LocalServer`, `RequestGuard`, `MediaSocket`, `TokenStore`, `ScriptActivityRoute`) |
-| Volume key tap, microphone/camera indicator | `Cumba/System/` |
+| Media key tap, brightness, microphone/camera indicator | `Cumba/System/` |
+| System Now Playing helper (private MediaRemote) | `NowPlayingHelper/`, `Cumba/Resources/now-playing.pl`, `Cumba/Media/Providers/SystemNowPlayingProvider.swift` |
 | Claude Code hooks and permission flow | `Cumba/Claude/` (`ClaudeHookRoute`, `PermissionBroker`, `NotchApprovals`, `SafeText`, `HookInstaller`) |
 | Permission card | `Cumba/Widgets/ClaudeCode/ClaudeCodeWidget.swift` (`PermissionCard`) |
 | AppleScript | `Cumba/Media/AppleScriptRunner.swift`, `Cumba/Media/Providers/` |
