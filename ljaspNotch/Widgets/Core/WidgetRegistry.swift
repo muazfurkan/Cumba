@@ -20,7 +20,8 @@ final class WidgetRegistry {
       context: context,
       types: [
         MediaWidget.self, ClaudeCodeWidget.self, CalendarWidget.self, TimerWidget.self,
-        BatteryWidget.self,
+        BatteryWidget.self, TrayWidget.self, MirrorWidget.self, WeatherWidget.self,
+        ShortcutsWidget.self, SystemStatsWidget.self,
       ])
   }
 
@@ -28,7 +29,7 @@ final class WidgetRegistry {
 
   /// Name and symbol of every widget kind, for Settings.
   var infos: [WidgetInfo] {
-    types.map { WidgetInfo(kind: $0.kind, title: $0.title, symbol: $0.symbol) }
+    types.map { WidgetInfo(kind: $0.kind, title: $0.title, symbol: $0.symbol, size: $0.size) }
   }
 
   func info(for kind: String) -> WidgetInfo? {
@@ -57,6 +58,7 @@ struct WidgetInfo: Identifiable, Equatable, Sendable {
   let kind: String
   let title: String
   let symbol: String
+  let size: WidgetSize
 
   var id: String { kind }
 }

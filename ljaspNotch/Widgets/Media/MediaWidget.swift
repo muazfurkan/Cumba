@@ -10,8 +10,8 @@ final class MediaWidget: NotchWidget {
   static let kind = "media"
   static var title: String { String(localized: "Media", comment: "Widget name") }
   static let symbol = "music.note"
+  static let size = WidgetSize.regular
 
-  let size = WidgetSize.regular
   let media: MediaCoordinator
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter

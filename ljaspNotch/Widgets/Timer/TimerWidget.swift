@@ -11,6 +11,7 @@ final class TimerWidget: NotchWidget {
   static let kind = "timer"
   static var title: String { String(localized: "Timer", comment: "Widget name") }
   static let symbol = "timer"
+  static let size = WidgetSize.regular
 
   enum Phase: Equatable {
     case idle
@@ -25,7 +26,6 @@ final class TimerWidget: NotchWidget {
   private(set) var phase = Phase.idle
   /// Length of the timer in seconds.
   private(set) var length: TimeInterval = 25 * 60
-  let size = WidgetSize.regular
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter
   @ObservationIgnored private var endTask: Task<Void, Never>?

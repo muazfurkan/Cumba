@@ -10,6 +10,7 @@ final class BatteryWidget: NotchWidget {
   static let kind = "battery"
   static var title: String { String(localized: "Battery", comment: "Widget name") }
   static let symbol = "battery.75percent"
+  static let size = WidgetSize.compact
 
   struct Status: Equatable, Sendable {
     var percent: Int
@@ -23,7 +24,6 @@ final class BatteryWidget: NotchWidget {
 
   /// Nil on Macs without a battery.
   private(set) var status: Status?
-  let size = WidgetSize.compact
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter
   @ObservationIgnored private var runLoopSource: CFRunLoopSource?

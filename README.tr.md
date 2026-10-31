@@ -59,6 +59,9 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 |---|---|
 | Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
 | YouTube ile medya widget'ı | YouTube'un görsel sunucularından küçük resim (sayfanın kendi kullandığı adres) |
+| Hava durumu widget'ı | Seçtiğiniz konumun koordinatları `api.open-meteo.com`'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
+
+Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar.
 
 Yerel sunucu yalnızca `127.0.0.1` adresini dinler ve Anahtar Zinciri'nde saklanan bir token ister. Ad-hoc imzalı bir sürümü güncelledikten sonra macOS bir kez daha Anahtar Zinciri erişimi sorabilir.
 

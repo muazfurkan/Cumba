@@ -27,17 +27,30 @@ struct WidgetLayout: Codable, Equatable, Sendable {
     "camera", "cloud.sun", "square.grid.2x2",
   ]
 
-  /// Adds kinds that are new in this app version to the first tab, so updates show their
-  /// new widgets once. Kinds the user removed stay removed.
-  mutating func adoptNewKinds(_ kinds: [String]) {
-    let new = kinds.filter { !seenKinds.contains($0) && !contains($0) }
-    if !new.isEmpty {
+  /// Width a tab holds before new widgets go to another tab, in size units.
+  static let unitsPerTab = 6
+
+  /// Adds kinds that are new in this app version, so updates show their new widgets once.
+  /// Each goes to the first tab with room, or to a new "More" tab. Kinds the user removed
+  /// stay removed.
+  /// - Parameter kinds: Kinds of this app version with their width in units, in order.
+  mutating func adoptNewKinds(_ kinds: [(kind: String, units: Int)]) {
+    let units = Dictionary(
+      kinds.map { ($0.kind, $0.units) }, uniquingKeysWith: { first, _ in first })
+    func used(_ tab: Tab) -> Int {
+      tab.widgets.reduce(0) { $0 + (units[$1] ?? 1) }
+    }
+    for (kind, width) in kinds where !seenKinds.contains(kind) && !contains(kind) {
       if tabs.isEmpty {
         tabs.append(Self.homeTab(widgets: []))
       }
-      tabs[0].widgets.append(contentsOf: new)
+      if let index = tabs.firstIndex(where: { used($0) + width <= Self.unitsPerTab }) {
+        tabs[index].widgets.append(kind)
+      } else {
+        tabs.append(Self.moreTab(number: tabs.count, widgets: [kind]))
+      }
     }
-    seenKinds = Array(Set(seenKinds).union(kinds)).sorted()
+    seenKinds = Array(Set(seenKinds).union(kinds.map(\.kind))).sorted()
   }
 
   /// Drops kinds this version doesn't know and duplicates across tabs.
@@ -56,6 +69,12 @@ struct WidgetLayout: Codable, Equatable, Sendable {
 
   func tab(containing kind: String) -> Tab? {
     tabs.first { $0.widgets.contains(kind) }
+  }
+
+  static func moreTab(number: Int, widgets: [String]) -> Tab {
+    Tab(
+      id: "more-\(number)", title: String(localized: "More", comment: "Extra panel tab"),
+      symbol: number > 1 ? "square.grid.3x3" : "square.grid.2x2", widgets: widgets)
   }
 
   static func homeTab(widgets: [String]) -> Tab {

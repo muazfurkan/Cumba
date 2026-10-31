@@ -1,0 +1,9 @@
+{
+  "latitude": 41.0,
+  "longitude": 28.94,
+  "timezone": "Europe/Istanbul",
+  "current_units": { "time": "iso8601", "temperature_2m": "°C", "weather_code": "wmo code", "is_day": "" },
+  "current": { "time": "2026-10-31T21:00", "interval": 900, "temperature_2m": 18.4, "weather_code": 2, "is_day": 1 },
+  "daily_units": { "time": "iso8601", "temperature_2m_max": "°C", "temperature_2m_min": "°C" },
+  "daily": { "time": ["2026-10-31"], "temperature_2m_max": [21.2], "temperature_2m_min": [12.7] }
+}

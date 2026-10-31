@@ -178,6 +178,16 @@
         }
       }
     },
+    "Allow Camera Access" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera Erişimine İzin Ver"
+          }
+        }
+      }
+    },
     "Allow calendar access in Settings to see your events." : {
       "localizations" : {
         "tr" : {
@@ -194,6 +204,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayarlar'dan kontrole izin ver"
+          }
+        }
+      }
+    },
+    "Allow in Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar'dan izin ver"
           }
         }
       }
@@ -290,6 +310,16 @@
         }
       }
     },
+    "CPU" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU"
+          }
+        }
+      }
+    },
     "Calendar" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -321,6 +351,36 @@
         }
       }
     },
+    "Camera access granted" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera erişimine izin verildi"
+          }
+        }
+      }
+    },
+    "Camera access was denied. You can allow it in System Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera erişimi reddedildi. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Camera mirror" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera aynası"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "tr" : {
@@ -331,12 +391,42 @@
         }
       }
     },
+    "Choose Shortcuts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısayol Seç"
+          }
+        }
+      }
+    },
+    "Choose a Place" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum Seç"
+          }
+        }
+      }
+    },
     "Chrome Extension" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chrome Eklentisi"
+          }
+        }
+      }
+    },
+    "City" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir"
           }
         }
       }
@@ -362,6 +452,27 @@
         }
       }
     },
+    "Clear" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık"
+          }
+        }
+      }
+    },
+    "Clear Tray" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rafı Temizle"
+          }
+        }
+      }
+    },
     "Close" : {
       "localizations" : {
         "tr" : {
@@ -378,6 +489,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kapanma gecikmesi"
+          }
+        }
+      }
+    },
+    "Cloudy" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulutlu"
           }
         }
       }
@@ -494,6 +616,27 @@
         }
       }
     },
+    "Drizzle" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çisenti"
+          }
+        }
+      }
+    },
+    "Drop files here" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosyaları buraya bırakın"
+          }
+        }
+      }
+    },
     "Duplicate" : {
       "localizations" : {
         "tr" : {
@@ -567,6 +710,17 @@
         }
       }
     },
+    "Fog" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sis"
+          }
+        }
+      }
+    },
     "Font" : {
       "localizations" : {
         "tr" : {
@@ -595,6 +749,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cam"
+          }
+        }
+      }
+    },
+    "Heavy rain" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şiddetli yağmur"
           }
         }
       }
@@ -771,6 +936,16 @@
         }
       }
     },
+    "Memory" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bellek"
+          }
+        }
+      }
+    },
     "Midnight" : {
       "comment" : "Built-in theme name",
       "localizations" : {
@@ -792,12 +967,34 @@
         }
       }
     },
+    "Mirror" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayna"
+          }
+        }
+      }
+    },
     "Monospaced" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eş aralıklı"
+          }
+        }
+      }
+    },
+    "More" : {
+      "comment" : "Extra panel tab",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha Fazla"
           }
         }
       }
@@ -895,6 +1092,16 @@
         }
       }
     },
+    "No shortcuts found." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısayol bulunamadı."
+          }
+        }
+      }
+    },
     "No widgets yet." : {
       "localizations" : {
         "tr" : {
@@ -961,6 +1168,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yalnızca tıklayınca"
+          }
+        }
+      }
+    },
+    "Open" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aç"
           }
         }
       }
@@ -1045,6 +1262,17 @@
         }
       }
     },
+    "Partly cloudy" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parçalı bulutlu"
+          }
+        }
+      }
+    },
     "Paste" : {
       "localizations" : {
         "tr" : {
@@ -1062,6 +1290,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duraklat"
+          }
+        }
+      }
+    },
+    "Pick up to %lld shortcuts to show in the panel." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panelde göstermek için en fazla %lld kısayol seçin."
           }
         }
       }
@@ -1147,6 +1385,17 @@
         }
       }
     },
+    "Rain" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yağmur"
+          }
+        }
+      }
+    },
     "Regenerate" : {
       "localizations" : {
         "tr" : {
@@ -1173,6 +1422,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sekmeyi Kaldır"
+          }
+        }
+      }
+    },
+    "Remove from Tray" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raftan Kaldır"
           }
         }
       }
@@ -1267,6 +1526,16 @@
         }
       }
     },
+    "Search" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ara"
+          }
+        }
+      }
+    },
     "Secondary text" : {
       "localizations" : {
         "tr" : {
@@ -1283,6 +1552,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tümünü Seç"
+          }
+        }
+      }
+    },
+    "Send All with AirDrop" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tümünü AirDrop ile Gönder"
+          }
+        }
+      }
+    },
+    "Send with AirDrop" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirDrop ile Gönder"
           }
         }
       }
@@ -1328,6 +1617,17 @@
         }
       }
     },
+    "Shortcuts" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısayollar"
+          }
+        }
+      }
+    },
     "Show" : {
       "localizations" : {
         "tr" : {
@@ -1358,12 +1658,44 @@
         }
       }
     },
+    "Show in Finder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finder'da Göster"
+          }
+        }
+      }
+    },
+    "Showers" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağanak"
+          }
+        }
+      }
+    },
     "Size" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Boyut"
+          }
+        }
+      }
+    },
+    "Snow" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kar"
           }
         }
       }
@@ -1428,6 +1760,17 @@
         }
       }
     },
+    "System" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem"
+          }
+        }
+      }
+    },
     "Tab" : {
       "localizations" : {
         "tr" : {
@@ -1454,6 +1797,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Metin"
+          }
+        }
+      }
+    },
+    "The search didn't work. Check your connection." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arama yapılamadı. Bağlantınızı kontrol edin."
           }
         }
       }
@@ -1504,6 +1857,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu sekme boş. Ayarlar'dan widget ekleyin."
+          }
+        }
+      }
+    },
+    "Thunderstorm" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gök gürültülü fırtına"
           }
         }
       }
@@ -1579,6 +1943,28 @@
         }
       }
     },
+    "Tray" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raf"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "comment" : "Weather",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilinmiyor"
+          }
+        }
+      }
+    },
     "Unpin panel" : {
       "localizations" : {
         "tr" : {
@@ -1616,6 +2002,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bekliyor"
+          }
+        }
+      }
+    },
+    "Weather" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava Durumu"
+          }
+        }
+      }
+    },
+    "Weather data comes from Open-Meteo. Only the coordinates of the place you choose are sent." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava durumu verileri Open-Meteo'dan gelir. Yalnızca seçtiğiniz konumun koordinatları gönderilir."
+          }
+        }
+      }
+    },
+    "Weather is unavailable." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava durumu alınamadı."
           }
         }
       }
@@ -1749,6 +2166,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "~/.claude/settings.json geçerli bir JSON değil. Önce onu düzeltin; hiçbir şey değiştirilmedi."
+          }
+        }
+      }
+    },
+    "↑%lld° ↓%lld°" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "↑%lld° ↓%lld°"
           }
         }
       }
