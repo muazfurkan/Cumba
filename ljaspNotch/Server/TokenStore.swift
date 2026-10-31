@@ -1,30 +1,44 @@
 import Foundation
 import Security
 
-/// The local server's shared secret: 32 random bytes as hex, kept in the login Keychain
-/// (SPEC § 12). Keychain calls block, so use these only off the main thread.
+/// The local servers' secrets: 32 random bytes as hex each, kept in the login Keychain
+/// (SPEC § 12). The hooks and the extension have separate tokens, so the one written into
+/// `~/.claude/settings.json` can't be used on the extension's TCP port. Keychain calls
+/// block, so use these only off the main thread.
 enum TokenStore {
   enum Failure: Error {
     case keychain(OSStatus)
     case randomness(OSStatus)
   }
 
-  private static let service = "io.github.muazfurkan.ljaspnotch.server"
-  private static let account = "token"
+  enum Kind: Sendable {
+    case hooks
+    case browserExtension
 
-  static func loadOrCreate() throws(Failure) -> String {
-    if let existing = try load() {
-      return existing
+    /// The hooks keep the original account, so hooks installed by 1.0 stay valid.
+    fileprivate var account: String {
+      switch self {
+      case .hooks: "token"
+      case .browserExtension: "extension-token"
+      }
     }
-    return try regenerate()
   }
 
-  /// Replaces the token. Hooks and the extension must be given the new one.
+  private static let service = "io.github.muazfurkan.ljaspnotch.server"
+
+  static func loadOrCreate(_ kind: Kind) throws(Failure) -> String {
+    if let existing = try load(kind) {
+      return existing
+    }
+    return try regenerate(kind)
+  }
+
+  /// Replaces a token. Whatever uses it (hooks or the extension) must be given the new one.
   @discardableResult
-  static func regenerate() throws(Failure) -> String {
+  static func regenerate(_ kind: Kind) throws(Failure) -> String {
     let token = try makeToken()
     let data = Data(token.utf8)
-    let query = baseQuery()
+    let query = baseQuery(kind)
     let status = SecItemUpdate(
       query as CFDictionary, [kSecValueData as String: data] as CFDictionary)
     if status == errSecItemNotFound {
@@ -39,8 +53,8 @@ enum TokenStore {
     return token
   }
 
-  private static func load() throws(Failure) -> String? {
-    var query = baseQuery()
+  private static func load(_ kind: Kind) throws(Failure) -> String? {
+    var query = baseQuery(kind)
     query[kSecReturnData as String] = true
     query[kSecMatchLimit as String] = kSecMatchLimitOne
     var result: CFTypeRef?
@@ -58,11 +72,11 @@ enum TokenStore {
     }
   }
 
-  private static func baseQuery() -> [String: Any] {
+  private static func baseQuery(_ kind: Kind) -> [String: Any] {
     [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrService as String: service,
-      kSecAttrAccount as String: account,
+      kSecAttrAccount as String: kind.account,
     ]
   }
 

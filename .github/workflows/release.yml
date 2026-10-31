@@ -9,9 +9,6 @@ on:
 permissions:
   contents: read
 
-env:
-  HOMEBREW_NO_AUTO_UPDATE: 1
-
 jobs:
   build:
     name: Build
@@ -43,15 +40,24 @@ jobs:
           json.dump(manifest, open(path, "w"), indent=2)
           PY
 
-      - name: Install tools
-        run: brew install xcodegen xcbeautify
+      # XcodeGen generates the project the app is built from, so it is a pinned, checksummed
+      # release instead of whatever Homebrew has today. Update both values together.
+      - name: Install XcodeGen
+        env:
+          XCODEGEN_VERSION: 2.46.0
+          XCODEGEN_SHA256: 4d9e34b62172d645eed6457cac13fc222569974098ef4ee9c3368bedf0196806
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/xcodegen.zip" \
+            "https://github.com/yonaskolb/XcodeGen/releases/download/$XCODEGEN_VERSION/xcodegen.zip"
+          echo "$XCODEGEN_SHA256  $RUNNER_TEMP/xcodegen.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/xcodegen/bin" >> "$GITHUB_PATH"
 
       - name: Generate Xcode project
         run: xcodegen generate
 
       - name: Build
         run: |
-          set -o pipefail
           xcodebuild build \
             -project ljaspNotch.xcodeproj \
             -scheme ljaspNotch \
@@ -61,7 +67,8 @@ jobs:
             MARKETING_VERSION="$MARKETING_VERSION" \
             CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" \
             CODE_SIGNING_ALLOWED=NO \
-            2>&1 | tee xcodebuild.log | xcbeautify --renderer github-actions
+            > xcodebuild.log 2>&1
+          tail -3 xcodebuild.log
 
       - name: Show compiler errors
         if: failure()

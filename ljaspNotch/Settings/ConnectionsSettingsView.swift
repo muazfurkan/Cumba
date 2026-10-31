@@ -1,7 +1,8 @@
 import AppKit
 import SwiftUI
 
-/// Local server status, port and token, and how to install the Chrome extension.
+/// The Chrome extension connection: on/off, how to install the extension, and the local
+/// server's status, port and token. The server runs only while the connection is on.
 struct ConnectionsSettingsView: View {
   let server: LocalServer
   @Bindable var settings: AppSettings
@@ -10,56 +11,80 @@ struct ConnectionsSettingsView: View {
 
   var body: some View {
     Form {
-      Section("Local Server") {
-        LabeledContent("Status") { status }
-        LabeledContent("Port") {
-          HStack {
-            TextField("Port", text: $portText)
-              .labelsHidden()
-              .frame(width: 80)
-              .onSubmit(applyPort)
-            Button("Apply", action: applyPort)
-              .disabled(UInt16(portText) == nil || UInt16(portText) == settings.serverPort)
-          }
-        }
-        LabeledContent("Token") {
-          HStack {
-            Text(showsToken ? server.token : String(repeating: "•", count: 12))
-              .font(.system(.caption, design: .monospaced))
-              .textSelection(.enabled)
-              .lineLimit(1)
-              .truncationMode(.middle)
-            Button(showsToken ? "Hide" : "Show") { showsToken.toggle() }
-            Button("Copy") { copyToken() }
-            Button("Regenerate") {
-              Task { await server.regenerateToken(port: settings.serverPort) }
-            }
-          }
-        }
+      Section("Chrome Extension") {
+        Toggle("Connect the YouTube extension", isOn: extensionEnabled)
         Text(
-          "The server only listens on this Mac (127.0.0.1) and accepts only requests that carry this token. After regenerating it, paste the new token into the Chrome extension and reinstall the Claude Code hooks."
+          "Turn this on only if you use the extension. ljaspNotch then listens on this Mac (127.0.0.1) for the ljaspNotch extension; nothing is reachable from the network."
         )
         .font(.callout)
         .foregroundStyle(.secondary)
         .fixedSize(horizontal: false, vertical: true)
+        if settings.browserExtensionEnabled {
+          Text(
+            "1. Open chrome://extensions and turn on Developer mode.\n2. Click “Load unpacked” and choose the extension folder.\n3. Open the extension's options and paste the port and the token."
+          )
+          .fixedSize(horizontal: false, vertical: true)
+          Button("Show Extension Folder") {
+            if let url = Bundle.main.url(forResource: "chrome", withExtension: nil) {
+              NSWorkspace.shared.activateFileViewerSelecting([url])
+            }
+          }
+          LabeledContent("Connected browsers", value: "\(server.browserHub.connectionCount)")
+        }
       }
 
-      Section("Chrome Extension") {
-        Text(
-          "1. Open chrome://extensions and turn on Developer mode.\n2. Click “Load unpacked” and choose the extension folder.\n3. Open the extension's options and paste the port and the token."
-        )
-        .fixedSize(horizontal: false, vertical: true)
-        Button("Show Extension Folder") {
-          if let url = Bundle.main.url(forResource: "chrome", withExtension: nil) {
-            NSWorkspace.shared.activateFileViewerSelecting([url])
+      if settings.browserExtensionEnabled {
+        Section("Local Server") {
+          LabeledContent("Status") { status }
+          LabeledContent("Port") {
+            HStack {
+              TextField("Port", text: $portText)
+                .labelsHidden()
+                .frame(width: 80)
+                .onSubmit(applyPort)
+              Button("Apply", action: applyPort)
+                .disabled(UInt16(portText) == nil || UInt16(portText) == settings.serverPort)
+            }
           }
+          LabeledContent("Token") {
+            HStack {
+              Text(showsToken ? server.extensionToken : String(repeating: "•", count: 12))
+                .font(.system(.caption, design: .monospaced))
+                .textSelection(.enabled)
+                .lineLimit(1)
+                .truncationMode(.middle)
+              Button(showsToken ? "Hide" : "Show") { showsToken.toggle() }
+              Button("Copy") { SecretCopy.copy(server.extensionToken) }
+              Button("Regenerate") {
+                Task { await server.regenerateExtensionToken(port: settings.serverPort) }
+              }
+            }
+          }
+          Text(
+            "Only the ljaspNotch extension with this token is accepted. This token is only for the extension; Claude Code hooks use their own. After regenerating it, paste the new token into the extension's options."
+          )
+          .font(.callout)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
         }
-        LabeledContent("Connected browsers", value: "\(server.browserHub.connectionCount)")
       }
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 520)
     .onAppear { portText = String(settings.serverPort) }
+  }
+
+  private var extensionEnabled: Binding<Bool> {
+    Binding(
+      get: { [settings] in settings.browserExtensionEnabled },
+      set: { [settings, server] enabled in
+        settings.browserExtensionEnabled = enabled
+        if enabled {
+          server.startExtensionServer(port: settings.serverPort)
+        } else {
+          server.stopExtensionServer()
+        }
+      })
   }
 
   @ViewBuilder private var status: some View {
@@ -76,25 +101,9 @@ struct ConnectionsSettingsView: View {
     }
   }
 
-  /// Copies the token marked as concealed, so clipboard managers and Universal Clipboard
-  /// skip it, and clears it again after a minute if nothing else was copied since.
-  private func copyToken() {
-    let pasteboard = NSPasteboard.general
-    pasteboard.clearContents()
-    pasteboard.setString(server.token, forType: .string)
-    pasteboard.setString("", forType: NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType"))
-    let changeCount = pasteboard.changeCount
-    Task {
-      try? await Task.sleep(for: .seconds(60))
-      if NSPasteboard.general.changeCount == changeCount {
-        NSPasteboard.general.clearContents()
-      }
-    }
-  }
-
   private func applyPort() {
     guard let port = UInt16(portText), port >= 1024 else { return }
     settings.serverPort = port
-    Task { await server.start(port: port) }
+    server.startExtensionServer(port: port)
   }
 }

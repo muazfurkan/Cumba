@@ -16,6 +16,8 @@ final class PermissionBroker {
     let detail: String
     /// Hidden characters or truncation found; Allow isn't offered then.
     let isSuspicious: Bool
+    /// False when the request is suspicious or Settings turn off Allow for this tool.
+    let canAllow: Bool
     let receivedAt: Date
   }
 
@@ -60,6 +62,9 @@ final class PermissionBroker {
   }
 
   func resolve(_ id: UUID, with decision: Decision) {
+    // Allow reaches Claude Code only for a request that offered it.
+    let canAllow = pending.first { $0.id == id }?.canAllow == true
+    let decision = decision == .allow && !canAllow ? .askInTerminal : decision
     pending.removeAll { $0.id == id }
     continuations.removeValue(forKey: id)?.resume(returning: decision)
   }

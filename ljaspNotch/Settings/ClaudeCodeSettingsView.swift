@@ -28,7 +28,7 @@ struct ClaudeCodeSettingsView: View {
         }
         HStack {
           Button(status == .outdated ? "Update…" : "Install…") { review(install: true) }
-            .disabled(server.token.isEmpty || status == .installed)
+            .disabled(server.hookToken.isEmpty || status == .installed)
           Button("Remove…", role: .destructive) { review(install: false) }
             .disabled(status == .notInstalled || status == nil)
         }
@@ -39,6 +39,19 @@ struct ClaudeCodeSettingsView: View {
             .fixedSize(horizontal: false, vertical: true)
         }
       }
+      Section("In the Notch") {
+        Picker("Allow from the notch", selection: $settings.notchApprovals) {
+          Text("All requests").tag(NotchApprovals.all)
+          Text("All except shell commands").tag(NotchApprovals.exceptShell)
+          Text("Never (only Deny and In Terminal)").tag(NotchApprovals.never)
+        }
+        Text(
+          "Allow in the notch is the same as Allow in Claude Code: the tool runs right away. Requests with hidden characters never get an Allow button."
+        )
+        .font(.callout)
+        .foregroundStyle(.secondary)
+        .fixedSize(horizontal: false, vertical: true)
+      }
       Section {
         Text(
           "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to ljaspNotch through a private socket that only your user account can open. Permission requests then appear in the notch. When ljaspNotch isn't running, Claude Code carries on as usual. Session data stays in memory."
@@ -46,15 +59,20 @@ struct ClaudeCodeSettingsView: View {
         .font(.callout)
         .foregroundStyle(.secondary)
         .fixedSize(horizontal: false, vertical: true)
-        Link(
-          "Set up by hand",
-          destination: URL(
-            string: "https://github.com/muazfurkan/ljaspNotch/blob/main/docs/claude-code-setup.md")
-            ?? URL(filePath: "/"))
+        HStack {
+          Link(
+            "Set up by hand",
+            destination: URL(
+              string: "https://github.com/muazfurkan/ljaspNotch/blob/main/docs/claude-code-setup.md"
+            ) ?? URL(filePath: "/"))
+          Spacer()
+          Button("Copy Hook Token") { SecretCopy.copy(server.hookToken) }
+            .disabled(server.hookToken.isEmpty)
+        }
       }
     }
     .formStyle(.grouped)
-    .frame(width: 520, height: 420)
+    .frame(width: 520, height: 540)
     .task { await refresh() }
     .sheet(item: $plan) { plan in
       DiffSheet(plan: plan) {
@@ -93,7 +111,7 @@ struct ClaudeCodeSettingsView: View {
 
   private func refresh() async {
     let installer = installer
-    let token = server.token
+    let token = server.hookToken
     let result = await Task.detached { () -> (HookInstaller.Status?, Bool) in
       let status = try? installer.status(token: token)
       let disabled = (try? installer.hooksAreDisabled()) ?? false
@@ -101,6 +119,12 @@ struct ClaudeCodeSettingsView: View {
     }.value
     status = result.0
     hooksDisabled = result.1
+    // The socket runs only while hooks are installed.
+    switch result.0 {
+    case .notInstalled: server.stopHookServer()
+    case .installed, .outdated: server.startHookServer()
+    case nil: break
+    }
     if result.0 == nil {
       message = String(
         localized: "~/.claude/settings.json isn't valid JSON. Fix it first; nothing was changed.")
@@ -109,7 +133,7 @@ struct ClaudeCodeSettingsView: View {
 
   private func review(install: Bool) {
     let installer = installer
-    let token = server.token
+    let token = server.hookToken
     Task {
       let result = await Task.detached { () -> Result<HookInstaller.Plan, HookInstaller.Failure> in
         do throws(HookInstaller.Failure) {
@@ -182,6 +206,15 @@ private struct DiffSheet: View {
       Text("A backup of the current file is made before saving.")
         .font(.callout)
         .foregroundStyle(.secondary)
+      if plan.reformats {
+        Label(
+          "Saving also rewrites the file in a standard format (keys sorted, two-space indents). Its contents change only as shown below.",
+          systemImage: "info.circle"
+        )
+        .font(.callout)
+        .foregroundStyle(.secondary)
+        .fixedSize(horizontal: false, vertical: true)
+      }
       ScrollView {
         VStack(alignment: .leading, spacing: 0) {
           ForEach(plan.diff) { line in

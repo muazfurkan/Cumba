@@ -6,7 +6,9 @@ ljaspNotch receives [Claude Code hooks](https://code.claude.com/docs/en/hooks) o
 
 Open **ljaspNotch > Settings > Claude Code** and click **Install…**. You see the exact change to `~/.claude/settings.json` before anything is written (the token is masked in that view). The current file is backed up next to it as `settings.json.bak-YYYYMMDD-HHMMSS`, readable only by you. Your other settings and hooks are kept, and a symlinked `settings.json` stays a symlink.
 
-**Remove…** deletes only ljaspNotch's entries. After regenerating the token in **Settings > Connections**, the status shows **Out of date**; click **Update…**.
+**Remove…** deletes only ljaspNotch's entries. If the status shows **Out of date** (for example after an update changed the hook format), click **Update…**.
+
+ljaspNotch's socket runs only while hooks are installed. In **Settings > Claude Code** you also choose what can be allowed from the notch: everything, everything except shell commands, or nothing (only Deny and In Terminal). Allow in the notch is the same as Allow in Claude Code.
 
 ## How it works
 
@@ -22,7 +24,7 @@ Each hook is a `command` hook that pipes the event to the app with curl:
 
 ## By hand
 
-Copy the token from **Settings > Connections**. Then add one entry per event to `~/.claude/settings.json`, keeping anything already there. Use the command above with the matching timeout, and set curl's `--max-time` one second lower:
+Copy the token with **Copy Hook Token** in **Settings > Claude Code**. It's separate from the Chrome extension's token. After saving the file, open **Settings > Claude Code** once (or restart ljaspNotch) so the socket starts. Then add one entry per event to `~/.claude/settings.json`, keeping anything already there. Use the command above with the matching timeout, and set curl's `--max-time` one second lower:
 
 | Event | `timeout` |
 |---|---|

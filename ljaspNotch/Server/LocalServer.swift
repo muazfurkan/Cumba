@@ -2,12 +2,13 @@ import FlyingFox
 import Foundation
 import Observation
 
-/// The app's two local servers (SPEC § 12):
+/// The app's two local servers (SPEC § 12). Each runs only while its feature is in use:
 /// - HTTP/WebSocket on 127.0.0.1 for the Chrome extension (`/media`), checking Host,
-///   Origin and the token.
-/// - HTTP on a Unix socket for Claude Code hooks (`/claude/hook`). The socket's folder is
-///   readable only by this user, so no other user or app can answer Claude Code in the
-///   app's place, not even while the app is closed.
+///   Origin and the extension token. Only while turned on in Settings > Connections.
+/// - HTTP on a Unix socket for Claude Code hooks (`/claude/hook`), checking the hook token.
+///   Only while the hooks are installed. The socket's folder is readable only by this user,
+///   so no other user or app can answer Claude Code in the app's place, not even while the
+///   app is closed.
 /// Both restart on their own after a failure.
 @MainActor
 @Observable
@@ -34,8 +35,10 @@ final class LocalServer {
   private(set) var status = Status.stopped
   /// The Claude Code socket; `.running(port: 0)` while listening.
   private(set) var hookStatus = Status.stopped
-  /// Empty until the Keychain has been read.
-  private(set) var token = ""
+  /// Written into `~/.claude/settings.json` by the hook installer. Empty until read.
+  private(set) var hookToken = ""
+  /// Pasted into the Chrome extension's options. Empty until read.
+  private(set) var extensionToken = ""
   let browserHub: BrowserMediaHub
   let claude: ClaudeCodeService
 
@@ -47,45 +50,26 @@ final class LocalServer {
     self.claude = claude
   }
 
-  func start(port: UInt16) async {
-    stop()
+  /// Reads both tokens from the Keychain; the servers start only after this.
+  func loadTokens() async {
     do {
-      token = try await Task.detached { try TokenStore.loadOrCreate() }.value
+      (hookToken, extensionToken) = try await Task.detached {
+        (try TokenStore.loadOrCreate(.hooks), try TokenStore.loadOrCreate(.browserExtension))
+      }.value
     } catch {
       status = .failed(String(localized: "The token couldn't be read from the Keychain."))
       hookStatus = status
       Log.server.error("Token unavailable: \(String(describing: error), privacy: .public)")
-      return
     }
-    listen(on: port)
   }
 
-  func stop() {
-    mediaTask?.cancel()
-    hookTask?.cancel()
-    mediaTask = nil
-    hookTask = nil
-    status = .stopped
-    hookStatus = .stopped
-  }
-
-  /// New token; the extension and the hooks need it again.
-  func regenerateToken(port: UInt16) async {
-    do {
-      token = try await Task.detached { try TokenStore.regenerate() }.value
-    } catch {
-      Log.server.error("Token regeneration failed: \(String(describing: error), privacy: .public)")
-      return
-    }
-    stop()
-    listen(on: port)
-  }
-
-  private func listen(on port: UInt16) {
-    let token = token
+  /// Starts the extension server on `port`, or restarts it there.
+  func startExtensionServer(port: UInt16) {
+    stopExtensionServer()
+    guard !extensionToken.isEmpty else { return }
+    let token = extensionToken
     let hub = browserHub
-    let claude = claude
-    let makeMediaServer: @MainActor () async throws -> HTTPServer = {
+    let make: @MainActor () async throws -> HTTPServer = {
       let server = HTTPServer(
         address: try sockaddr_in.inet(ip4: "127.0.0.1", port: port),
         timeout: Self.requestTimeout, logger: .disabled)
@@ -93,7 +77,26 @@ final class LocalServer {
         "GET /media", to: MediaSocketRoute(port: port, token: token, hub: hub))
       return server
     }
-    let makeHookServer: @MainActor () async throws -> HTTPServer = {
+    mediaTask = supervise(
+      running: .running(port: port),
+      failure: String(
+        localized: "Port \(String(port)) is in use or unavailable. Choose another port.",
+        comment: "Local server error"),
+      update: { [weak self] in self?.status = $0 }, make: make)
+  }
+
+  func stopExtensionServer() {
+    mediaTask?.cancel()
+    mediaTask = nil
+    status = .stopped
+  }
+
+  /// Starts the hook socket unless it already runs.
+  func startHookServer() {
+    guard hookTask == nil, !hookToken.isEmpty else { return }
+    let token = hookToken
+    let claude = claude
+    let make: @MainActor () async throws -> HTTPServer = {
       let path = try await Task.detached { try Self.prepareHookSocket() }.value
       let server = HTTPServer(
         address: sockaddr_un.unix(path: path), timeout: Self.requestTimeout, logger: .disabled)
@@ -101,18 +104,30 @@ final class LocalServer {
         "POST /claude/hook", to: ClaudeHookRoute(token: token, service: claude))
       return server
     }
-    mediaTask = supervise(
-      running: .running(port: port),
-      failure: String(
-        localized: "Port \(String(port)) is in use or unavailable. Choose another port.",
-        comment: "Local server error"),
-      update: { [weak self] in self?.status = $0 },
-      make: makeMediaServer)
     hookTask = supervise(
       running: .running(port: 0),
       failure: String(localized: "The Claude Code socket couldn't be opened."),
-      update: { [weak self] in self?.hookStatus = $0 },
-      make: makeHookServer)
+      update: { [weak self] in self?.hookStatus = $0 }, make: make)
+  }
+
+  func stopHookServer() {
+    hookTask?.cancel()
+    hookTask = nil
+    hookStatus = .stopped
+  }
+
+  /// New extension token; the extension needs it pasted again.
+  func regenerateExtensionToken(port: UInt16) async {
+    do {
+      extensionToken = try await Task.detached { try TokenStore.regenerate(.browserExtension) }
+        .value
+    } catch {
+      Log.server.error("Token regeneration failed: \(String(describing: error), privacy: .public)")
+      return
+    }
+    if mediaTask != nil {
+      startExtensionServer(port: port)
+    }
   }
 
   /// Runs a server and starts it again after a failure, waiting longer each time (up to a

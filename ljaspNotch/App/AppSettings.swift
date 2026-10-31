@@ -18,6 +18,8 @@ final class AppSettings {
     static let includesPrereleases = "includesPrereleases"
     static let hapticFeedback = "hapticFeedback"
     static let hasSeenWelcome = "hasSeenWelcome"
+    static let browserExtensionEnabled = "browserExtensionEnabled"
+    static let notchApprovals = "notchApprovals"
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -51,7 +53,12 @@ final class AppSettings {
     didSet { defaults.set(usesVirtualNotch, forKey: Key.usesVirtualNotch) }
   }
 
-  /// Port of the local server for the Chrome extension and Claude Code hooks.
+  /// Runs the local server for the Chrome extension. Off until the user sets it up.
+  var browserExtensionEnabled: Bool {
+    didSet { defaults.set(browserExtensionEnabled, forKey: Key.browserExtensionEnabled) }
+  }
+
+  /// Port of the local server for the Chrome extension.
   var serverPort: UInt16 {
     didSet { defaults.set(Int(serverPort), forKey: Key.serverPort) }
   }
@@ -68,6 +75,11 @@ final class AppSettings {
   /// A light trackpad tap when the panel opens on hover.
   var hapticFeedback: Bool {
     didSet { defaults.set(hapticFeedback, forKey: Key.hapticFeedback) }
+  }
+
+  /// Which Claude Code requests can be allowed from the notch.
+  var notchApprovals: NotchApprovals {
+    didSet { defaults.set(notchApprovals.rawValue, forKey: Key.notchApprovals) }
   }
 
   /// Set once the welcome window has been shown.
@@ -99,6 +111,9 @@ final class AppSettings {
     includesPrereleases = defaults.bool(forKey: Key.includesPrereleases)
     hapticFeedback = defaults.object(forKey: Key.hapticFeedback) as? Bool ?? true
     hasSeenWelcome = defaults.bool(forKey: Key.hasSeenWelcome)
+    browserExtensionEnabled = defaults.bool(forKey: Key.browserExtensionEnabled)
+    notchApprovals =
+      defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
   }
 
   /// Registers or removes the login item. Runs off the main thread because it
