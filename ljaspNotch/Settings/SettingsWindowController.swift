@@ -12,6 +12,7 @@ final class SettingsWindowController {
     case widgets
     case connections
     case claudeCode
+    case permissions
   }
 
   private let settings: AppSettings
@@ -21,7 +22,7 @@ final class SettingsWindowController {
   private let server: LocalServer
   private let updates: UpdateChecker
   private var window: NSWindow?
-  private var tabController: NSTabViewController?
+  private var tabController: SettingsTabViewController?
   private var closeObserver: NSObjectProtocol?
 
   init(
@@ -48,7 +49,7 @@ final class SettingsWindowController {
   }
 
   private func makeWindow() -> NSWindow {
-    let tabs = NSTabViewController()
+    let tabs = SettingsTabViewController()
     tabs.tabStyle = .toolbar
     tabs.addTabViewItem(
       tab(
@@ -78,10 +79,17 @@ final class SettingsWindowController {
         ClaudeCodeSettingsView(server: server, settings: settings),
         label: "Claude Code",
         symbol: "terminal"))
+    tabs.addTabViewItem(
+      tab(
+        PermissionsSettingsView(),
+        label: String(localized: "Permissions", comment: "Settings tab"),
+        symbol: "hand.raised"))
+    tabs.restoreSelection()
     tabController = tabs
 
     let window = NSWindow(contentViewController: tabs)
-    window.styleMask = [.titled, .closable, .miniaturizable]
+    // Settings windows have no minimize button (HIG).
+    window.styleMask = [.titled, .closable]
     window.toolbarStyle = .preference
     window.isReleasedWhenClosed = false
     // While this app is active, pointer moves reach the notch hover tracker only
@@ -105,5 +113,22 @@ final class SettingsWindowController {
     item.label = label
     item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: nil)
     return item
+  }
+}
+
+/// Remembers the last pane, so Settings reopens where it was left (HIG).
+final class SettingsTabViewController: NSTabViewController {
+  private static let key = "settingsSelectedTab"
+
+  func restoreSelection() {
+    let index = UserDefaults.standard.integer(forKey: Self.key)
+    if tabViewItems.indices.contains(index) {
+      selectedTabViewItemIndex = index
+    }
+  }
+
+  override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
+    super.tabView(tabView, didSelect: tabViewItem)
+    UserDefaults.standard.set(selectedTabViewItemIndex, forKey: Self.key)
   }
 }

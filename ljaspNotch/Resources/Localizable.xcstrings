@@ -278,6 +278,16 @@
         }
       }
     },
+    "Allow…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin Ver…"
+          }
+        }
+      }
+    },
     "Animation" : {
       "localizations" : {
         "tr" : {
@@ -315,6 +325,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uygula"
+          }
+        }
+      }
+    },
+    "Automation" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomasyon"
           }
         }
       }
@@ -397,6 +417,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Takvim erişimi reddedildi. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Calendar widget: today's and tomorrow's events" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim widget'ı: bugünün ve yarının etkinlikleri"
+          }
+        }
+      }
+    },
+    "Camera" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera"
           }
         }
       }
@@ -1178,6 +1218,16 @@
         }
       }
     },
+    "Mirror widget, only while the panel shows it" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayna widget'ı, yalnızca panel onu gösterirken"
+          }
+        }
+      }
+    },
     "Monospaced" : {
       "localizations" : {
         "tr" : {
@@ -1452,6 +1502,16 @@
         }
       }
     },
+    "Open System Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem Ayarları'nı Aç"
+          }
+        }
+      }
+    },
     "Open delay" : {
       "localizations" : {
         "tr" : {
@@ -1520,6 +1580,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duraklat"
+          }
+        }
+      }
+    },
+    "Permissions" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzinler"
           }
         }
       }
@@ -1682,6 +1752,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sıfırla"
+          }
+        }
+      }
+    },
+    "Reset Panel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paneli Sıfırla"
           }
         }
       }
@@ -2488,6 +2568,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch (duraklatıldı)"
+          }
+        }
+      }
+    },
+    "ljaspNotch asks for a permission only when you use the feature that needs it. Everything here can be changed again in System Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch bir izni yalnızca onu gerektiren özelliği kullandığınızda ister. Buradaki her şeyi Sistem Ayarları'ndan yeniden değiştirebilirsiniz."
           }
         }
       }

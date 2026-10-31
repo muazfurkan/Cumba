@@ -16,6 +16,10 @@ final class NotchWindowController {
   private var isFullScreenActive = false
   private var isPreviewing = false
   private var lastState = NotchState.closed
+  /// The notch's own right-click menu is open; leaving the notch then doesn't close it.
+  private var isMenuOpen = false
+  /// Opens the Settings window (set by the app delegate).
+  var openSettings: (() -> Void)?
 
   init(settings: AppSettings, themes: ThemeStore, host: WidgetHost) {
     self.settings = settings
@@ -88,6 +92,11 @@ final class NotchWindowController {
     observers.append(
       workspace.addObserver(
         forName: NSWorkspace.didWakeNotification, object: nil, queue: .main, using: relayout))
+    // Back from fast user switching.
+    observers.append(
+      workspace.addObserver(
+        forName: NSWorkspace.sessionDidBecomeActiveNotification, object: nil, queue: .main,
+        using: relayout))
     // Entering or leaving a full screen app switches spaces.
     observers.append(
       workspace.addObserver(
@@ -138,6 +147,56 @@ final class NotchWindowController {
   /// Closes the panel, e.g. before Settings opens to ask for a permission.
   func collapse() {
     model.send(.reset)
+  }
+
+  /// Throws the panel away and builds it again, in case it ever ends up in a bad place.
+  func resetPanel() {
+    hidePanel()
+    panel?.close()
+    panel = nil
+    model.geometry = nil
+    layoutPanel()
+  }
+
+  /// Settings and Quit on the notch itself, for when the menu bar icon is hidden behind it.
+  private func makeContextMenu() -> NSMenu {
+    let menu = NSMenu()
+    menu.addItem(
+      ClosureMenuItem(
+        title: String(localized: "Settings…", comment: "Menu item that opens the Settings window")
+      ) { [weak self] in
+        self?.model.send(.reset)
+        self?.openSettings?()
+      })
+    menu.addItem(
+      ClosureMenuItem(
+        title: String(localized: "Reset Panel", comment: "Menu item that rebuilds the notch panel")
+      ) { [weak self] in self?.resetPanel() })
+    menu.addItem(.separator())
+    menu.addItem(
+      ClosureMenuItem(title: String(localized: "Quit ljaspNotch")) { NSApp.terminate(nil) })
+    let center = NotificationCenter.default
+    observers.append(
+      center.addObserver(forName: NSMenu.didBeginTrackingNotification, object: menu, queue: .main) {
+        [weak self] _ in
+        MainActor.assumeIsolated { self?.isMenuOpen = true }
+      })
+    observers.append(
+      center.addObserver(forName: NSMenu.didEndTrackingNotification, object: menu, queue: .main) {
+        [weak self] _ in
+        MainActor.assumeIsolated { self?.menuClosed() }
+      })
+    return menu
+  }
+
+  /// The pointer may have left while the menu was open; close the panel then.
+  private func menuClosed() {
+    isMenuOpen = false
+    hoverTracker.update()
+    if !hoverTracker.isInside {
+      panel?.ignoresMouseEvents = true
+      model.send(.pointerExited)
+    }
   }
 
   private func applySettings() {
@@ -242,6 +301,9 @@ final class NotchWindowController {
   /// The panel takes mouse events only while the pointer is over its shape; everywhere
   /// else clicks go through to the menu bar.
   private func pointerInsideChanged(_ inside: Bool) {
+    if !inside && isMenuOpen {
+      return
+    }
     panel?.ignoresMouseEvents = !inside
     model.send(inside ? .pointerEntered : .pointerExited)
   }
@@ -255,6 +317,7 @@ final class NotchWindowController {
     let hostingView = NotchHostingView(rootView: NotchRootView(model: model, host: host))
     // The window size is fixed; SwiftUI must not resize it.
     hostingView.sizingOptions = []
+    hostingView.contextMenu = makeContextMenu()
     panel.contentView = hostingView
     return panel
   }

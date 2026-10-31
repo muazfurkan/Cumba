@@ -51,6 +51,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    notchWindow.openSettings = { [settingsWindow] in settingsWindow.show() }
     NSApp.mainMenu = MainMenu.make()
     menuBar = MenuBarController(settings: settings, updates: updates) { [settingsWindow] in
       settingsWindow.show()
