@@ -350,8 +350,12 @@ Referans: https://code.claude.com/docs/en/hooks (alan adları ve davranışlar u
 | `StopFailure` | Hata bildirimi (rate limit, sunucu hatası vb.) | 5 |
 | `SessionEnd` | Oturumu listeden kaldır | 2 |
 
-Notlar:
+Notlar (Faz 6'da belgelerden doğrulandı):
 - `SessionStart` HTTP hook desteklemediği için kullanılmaz; oturum ilk `UserPromptSubmit`'te oluşturulur.
+- `SessionEnd` hook'larının toplam bütçesi varsayılan 1,5 sn'dir; açık `timeout` bütçeyi yükseltir, bu yüzden 2 sn yazılır.
+- HTTP hook'ları asenkron çalışamaz; Claude Code cevap gelene veya süre dolana kadar bekler.
+- 2xx dışı yanıt, bağlantı hatası ve süre aşımı engelleyici olmayan hatadır (varsayılan `onFailure: "continue"`).
+- `UserPromptSubmit` zamanlanmış görevler, `/loop` ve alt ajan raporlarında da tetiklenir.
 - `UserPromptSubmit` modeli bloklar; sunucu bu olaya **anında** boş 200 döner.
 - `Notification` içindeki `permission_prompt` türü, zaten bekleyen bir `PermissionRequest` varsa arayüzde tekrar gösterilmez.
 - **Hiçbir hook'ta `onFailure: "block"` kullanılmaz.** Uygulama kapalıysa bağlantı hatası Claude Code tarafında engelleyici olmayan bir hata sayılır ve normal akış (terminaldeki izin diyaloğu) devam eder.
@@ -374,6 +378,9 @@ Notlar:
 | Süre doldu | Hook timeout'undan 10 sn önce boş gövdeli 200 döner |
 
 4. Aynı anda birden fazla istek varsa sırayla gösterilir, notch'ta bekleyen sayısı rozet olarak görünür.
+5. Aynı oturumdan sonraki bir olay (`UserPromptSubmit`, `Stop`, `StopFailure`, `SessionEnd`) gelirse o oturumun bekleyen istekleri terminale bırakılmış sayılır ve listeden düşer (kullanıcı terminalde yanıtlamış demektir).
+6. Claude Code widget'ı görünen sekmede değilse, bekleyen istek panelde widget'ların üstünde bir kart olarak gösterilir.
+7. Reddetmede `decision.message` olarak "Denied in ljaspNotch." döner.
 
 ### Kurulum yardımcısı (`HookInstaller`)
 - Ayarlar → Claude Code sekmesi: durum (kurulu / değil / güncel değil), **Kur** ve **Kaldır** butonları.
@@ -381,6 +388,8 @@ Notlar:
 - **Kaldır:** Yalnızca ljaspNotch'un eklediği girdiler (URL'si `/claude/hook` ile biten ve portu eşleşen) silinir.
 - Token header'a düz metin olarak yazılır. Gerekçe: masaüstü uygulamalar kabuk ortam değişkenlerini (`.zshrc`) devralmaz, `$VAR` kullanılırsa Claude masaüstü uygulamasında hook'lar sessizce başarısız olur.
 - Ayarlarda `allowedHttpHookUrls` tanımlıysa ve ljaspNotch'un adresini içermiyorsa kullanıcı uyarılır.
+- Dosya geçerli bir JSON nesnesi değilse hiçbir şey yazılmaz. Diff gösterildikten sonra dosya değiştiyse yazma iptal edilir ve yeniden inceleme istenir. Aynı saniyedeki yedekler `-2`, `-3` ekiyle ayrılır.
+- Çıktı anahtarlar sıralı, girintili JSON'dur; diff bu biçimlendirme değişikliğini de gösterir.
 - Elle kurmak isteyenler için `docs/claude-code-setup.md` aynı yapılandırmayı anlatır.
 
 ### Örnek yapılandırma

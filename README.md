@@ -47,6 +47,10 @@ A small Chrome extension (also works in other Chromium browsers) sends what play
 
 The extension has no permissions besides storage, reads only `youtube.com` and `music.youtube.com`, and talks only to `127.0.0.1`.
 
+## Claude Code
+
+Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. See [docs/claude-code-setup.md](docs/claude-code-setup.md) to set it up by hand.
+
 ## Privacy
 
 No telemetry. Everything stays on your Mac. These features make network requests, and only while you use them:

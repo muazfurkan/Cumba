@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-31
+
+### Added
+
+- Claude Code integration: permission requests appear in the notch with Allow, Deny and In Terminal; sessions show working, waiting, done and error states; finishing and failing show briefly beside the notch.
+- Claude Code widget, plus a permission card above the widgets when the widget isn't in the visible tab.
+- Settings > Claude Code installs, updates and removes the hooks in ~/.claude/settings.json after showing a diff, with a backup, and warns when `allowedHttpHookUrls` would block them.
+- docs/claude-code-setup.md for setting the hooks up by hand.
+
 ## [0.5.0] - 2026-10-31
 
 ### Added
@@ -60,7 +69,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.2.0...v0.3.0
