@@ -15,10 +15,10 @@ struct MediaWidgetView: View {
             ArtworkView(nowPlaying: nowPlaying, size: 40)
             VStack(alignment: .leading, spacing: 1) {
               Text(nowPlaying.title)
-                .font(.callout.weight(.semibold))
+                .panelFont(.callout, weight: .semibold)
                 .lineLimit(1)
               Text(nowPlaying.artist ?? nowPlaying.sourceName)
-                .font(.caption)
+                .panelFont(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
             }
@@ -36,10 +36,10 @@ struct MediaWidgetView: View {
       } else {
         VStack(alignment: .leading, spacing: 6) {
           Label("Media", systemImage: "music.note")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           Text("Nothing is playing.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
         }
       }
@@ -76,7 +76,7 @@ struct MediaWidgetView: View {
       Task { await action() }
     } label: {
       Image(systemName: symbol)
-        .font(.body)
+        .panelFont(.body)
         .contentTransition(.symbolEffect(.replace))
     }
     .buttonStyle(PanelButtonStyle(size: 30))
@@ -129,7 +129,7 @@ private struct ProgressBar: View {
             Spacer()
             Text(Duration.seconds(duration), format: .time(pattern: .minuteSecond))
           }
-          .font(.system(size: 9).monospacedDigit())
+          .panelFont(size: 9, monospacedDigit: true)
           .foregroundStyle(.secondary)
         }
       }
@@ -154,12 +154,12 @@ private struct FailureNote: View {
       Text(
         "Cumba may not control \(source.displayName). Allow it in System Settings > Privacy & Security > Automation."
       )
-      .font(.caption2)
+      .panelFont(.caption2)
       .foregroundStyle(.orange)
       .fixedSize(horizontal: false, vertical: true)
     case .needsPermission:
       Button("Allow control in Settings", action: openSettings)
-        .font(.caption2)
+        .panelFont(.caption2)
         .buttonStyle(.link)
     case .notRunning, .scriptError:
       EmptyView()

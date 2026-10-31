@@ -124,7 +124,7 @@ private struct ShortcutsView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("Shortcuts", systemImage: "square.stack.3d.up")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         if widget.favorites.isEmpty {
           Button("Choose Shortcuts") { widget.showSettings() }
@@ -141,7 +141,7 @@ private struct ShortcutsView: View {
                   }
                   Text(name).lineLimit(1)
                 }
-                .font(.caption)
+                .panelFont(.caption)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 5)
                 .background(

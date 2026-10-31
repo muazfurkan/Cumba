@@ -74,7 +74,7 @@ private struct SystemStatsView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("System", systemImage: "cpu")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         HStack(alignment: .firstTextBaseline) {
           stat(
@@ -92,10 +92,10 @@ private struct SystemStatsView: View {
   private func stat(title: Text, value: Double) -> some View {
     VStack(alignment: .leading, spacing: 0) {
       title
-        .font(.caption2)
+        .panelFont(.caption2)
         .foregroundStyle(.secondary)
       Text(value, format: .percent.precision(.fractionLength(0)))
-        .font(.system(size: 18, weight: .semibold).monospacedDigit())
+        .panelFont(size: 18, weight: .semibold, monospacedDigit: true)
         .contentTransition(.numericText())
     }
     .accessibilityElement(children: .combine)

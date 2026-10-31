@@ -105,16 +105,16 @@ private struct NotesView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("Notes", systemImage: "note.text")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         TextEditor(text: $widget.text)
-          .font(.callout)
+          .panelFont(.callout)
           .scrollContentBackground(.hidden)
           .scrollIndicators(.never)
           .overlay(alignment: .topLeading) {
             if widget.text.isEmpty {
               Text("Click to write something down…")
-                .font(.callout)
+                .panelFont(.callout)
                 .foregroundStyle(.tertiary)
                 .padding(.leading, 5)
                 .allowsHitTesting(false)

@@ -22,7 +22,7 @@ struct WeatherSettingsView: View {
       Text(
         "Weather data comes from Open-Meteo. Your location is rounded to about 10 km before it's sent, and Apple Maps finds the city name. For a chosen city, only its coordinates are sent."
       )
-      .font(.caption)
+      .panelFont(.caption)
       .foregroundStyle(.secondary)
       .fixedSize(horizontal: false, vertical: true)
     }

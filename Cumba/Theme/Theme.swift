@@ -40,6 +40,8 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   /// Saved as `animation`; renamed in Swift because `Binding` has an `animation` method.
   var spring = Spring(response: 0.36, damping: 1)
   var fontDesign = FontDesign.default
+  /// Size of text in the panel, as a factor of the macOS text styles.
+  var textScale = 1.2
   var shadow = true
 
   init(id: String, name: String) {
@@ -56,6 +58,7 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
     theme.peekExtraWidth = peekExtraWidth.clamped(to: Self.peekWidthRange)
     theme.spring.response = spring.response.clamped(to: Self.responseRange)
     theme.spring.damping = spring.damping.clamped(to: Self.dampingRange)
+    theme.textScale = textScale.clamped(to: Self.textScaleRange)
     return theme
   }
 
@@ -66,12 +69,13 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   static let responseRange = 0.1...1.2
   /// Below 0.7 the panel wobbles past the notch, which reads as cheap rather than lively.
   static let dampingRange = 0.7...1.0
+  static let textScaleRange = 0.9...1.6
 }
 
 extension Theme {
   private enum CodingKeys: String, CodingKey {
     case id, name, material, tint, background, foreground, secondary, accent, cornerRadius,
-      expandedSize, peekExtraWidth, fontDesign, shadow
+      expandedSize, peekExtraWidth, fontDesign, textScale, shadow
     case spring = "animation"
   }
 
@@ -96,6 +100,7 @@ extension Theme {
     peekExtraWidth = value(.peekExtraWidth, defaults.peekExtraWidth)
     spring = value(.spring, defaults.spring)
     fontDesign = value(.fontDesign, defaults.fontDesign)
+    textScale = value(.textScale, defaults.textScale)
     shadow = value(.shadow, defaults.shadow)
     self = normalized()
   }

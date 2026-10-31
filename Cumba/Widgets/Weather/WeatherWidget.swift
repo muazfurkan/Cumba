@@ -167,21 +167,21 @@ private struct WeatherView: View {
       VStack(alignment: .leading, spacing: 4) {
         if let place = widget.place {
           Text(place.name)
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
             .lineLimit(1)
           if let forecast = widget.forecast {
             ForecastView(forecast: forecast)
           } else if widget.failed {
             Text("Weather is unavailable.")
-              .font(.caption)
+              .panelFont(.caption)
               .foregroundStyle(.secondary)
           } else {
             ProgressView().controlSize(.small)
           }
         } else {
           Label("Weather", systemImage: "cloud.sun")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           setup
         }
@@ -201,13 +201,13 @@ private struct WeatherView: View {
         chooseCity
       case .denied:
         Text("Location access is off.")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         chooseCity
       case .allowed:
         if widget.failed {
           Text("Your location couldn't be found.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           chooseCity
         } else {
@@ -220,7 +220,7 @@ private struct WeatherView: View {
   private var chooseCity: some View {
     Button("Choose a City") { widget.showSettings() }
       .buttonStyle(.plain)
-      .font(.caption2)
+      .panelFont(.caption2)
       .foregroundStyle(.secondary)
   }
 }
@@ -232,16 +232,16 @@ private struct ForecastView: View {
     let condition = WeatherService.condition(for: forecast.code, isDay: forecast.isDay)
     Image(systemName: condition.symbol)
       .symbolRenderingMode(.multicolor)
-      .font(.title2)
+      .panelFont(.title2)
       .accessibilityLabel(Text(condition.text))
     Text(
       Measurement(value: forecast.temperature, unit: unit),
       format: .measurement(width: .narrow, numberFormatStyle: .number.precision(.fractionLength(0)))
     )
-    .font(.system(size: 22, weight: .semibold).monospacedDigit())
+    .panelFont(size: 22, weight: .semibold, monospacedDigit: true)
     if let high = forecast.high, let low = forecast.low {
       Text("↑\(Int(high.rounded()))° ↓\(Int(low.rounded()))°")
-        .font(.caption2.monospacedDigit())
+        .panelFont(.caption2, monospacedDigit: true)
         .foregroundStyle(.secondary)
     }
   }

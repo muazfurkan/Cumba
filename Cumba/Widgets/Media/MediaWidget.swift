@@ -166,7 +166,7 @@ private struct MediaSettingsView: View {
         Text("Only Spotify and Music, through AppleScript, and YouTube through the extension.")
       }
     }
-    .font(.caption)
+    .panelFont(.caption)
     .foregroundStyle(.secondary)
     .fixedSize(horizontal: false, vertical: true)
     ForEach(sources, id: \.self) { source in

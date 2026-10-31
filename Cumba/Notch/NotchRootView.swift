@@ -53,6 +53,7 @@ struct NotchRootView: View {
       .foregroundStyle(theme.foreground.color)
       .tint(theme.accent.color)
       .fontDesign(theme.fontDesign.swiftUI)
+      .environment(\.panelTextScale, theme.textScale)
       .animation(animation(for: state, theme: theme), value: state)
       .animation(.smooth(duration: 0.25), value: theme)
       .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
@@ -119,7 +120,7 @@ private struct ExpandedPanelView: View {
       HStack {
         if host.isShowingGallery {
           Text("Add a Widget")
-            .font(.headline)
+            .panelFont(.headline)
           Spacer()
           Button("Done") {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {

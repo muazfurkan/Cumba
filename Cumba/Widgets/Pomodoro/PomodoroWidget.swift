@@ -177,7 +177,7 @@ final class PomodoroWidget: NotchWidget {
       LiveActivity(
         id: Self.endedActivityID, priority: .timerFinished,
         leading: AnyView(Image(systemName: round.symbol).foregroundStyle(.orange)),
-        trailing: AnyView(text.font(.caption.bold()))),
+        trailing: AnyView(text.panelFont(.caption, weight: .bold))),
       for: .seconds(8))
     if continuesAutomatically {
       start()
@@ -211,7 +211,7 @@ final class PomodoroWidget: NotchWidget {
         leading: AnyView(Image(systemName: round.symbol)),
         trailing: AnyView(
           Text(timerInterval: Date()...endsAt, countsDown: true)
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .multilineTextAlignment(.trailing))))
   }
 
@@ -230,7 +230,7 @@ private struct PomodoroView: View {
       VStack(alignment: .leading, spacing: 8) {
         HStack {
           Label(widget.round.name, systemImage: widget.round.symbol)
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           Spacer()
           HStack(spacing: 4) {
@@ -249,7 +249,7 @@ private struct PomodoroView: View {
               comment: "Pomodoro progress"))
         }
         countdown
-          .font(.system(size: 30, weight: .semibold).monospacedDigit())
+          .panelFont(size: 30, weight: .semibold, monospacedDigit: true)
         HStack(spacing: 6) {
           controlButton(
             isRunning ? "pause.fill" : "play.fill",
@@ -261,7 +261,7 @@ private struct PomodoroView: View {
           controlButton("arrow.counterclockwise", label: Text("Reset")) { widget.reset() }
           Spacer()
           Text("Today: \(widget.finishedToday)", comment: "Finished pomodoro rounds today")
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .foregroundStyle(.secondary)
         }
       }

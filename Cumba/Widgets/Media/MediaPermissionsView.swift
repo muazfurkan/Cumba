@@ -23,7 +23,7 @@ struct MediaPermissionsView: View {
       Text(
         "To show artwork and use the controls, Cumba needs Automation access to each player. Open the player, then allow it here."
       )
-      .font(.callout)
+      .panelFont(.callout)
       .foregroundStyle(.secondary)
       .fixedSize(horizontal: false, vertical: true)
       ForEach(players) { player in

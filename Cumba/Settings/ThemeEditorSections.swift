@@ -30,6 +30,9 @@ struct ThemeEditorSections: View {
         Text("Monospaced").tag(Theme.FontDesign.monospaced)
         Text("Serif").tag(Theme.FontDesign.serif)
       }
+      ValueSlider(
+        title: "Text size", value: $theme.textScale, range: Theme.textScaleRange,
+        fractionDigits: 2)
     }
 
     Section("Size") {

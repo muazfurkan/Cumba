@@ -152,7 +152,7 @@ final class CalendarWidget: NotchWidget {
             .foregroundStyle(event.color?.color ?? .accentColor)),
         trailing: AnyView(
           Text(timerInterval: Date()...event.start, countsDown: true)
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .multilineTextAlignment(.trailing))))
   }
 
@@ -178,25 +178,25 @@ private struct CalendarWidgetView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("Calendar", systemImage: "calendar")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         if !widget.hasAccess {
           if CalendarService.accessWasDenied {
             Text("Calendar access is off. You can allow it in System Settings.")
-              .font(.caption)
+              .panelFont(.caption)
               .fixedSize(horizontal: false, vertical: true)
             OpenPrivacySettings(pane: "Privacy_Calendars")
               .controlSize(.small)
           } else {
             Text("See today's and tomorrow's events here.")
-              .font(.caption)
+              .panelFont(.caption)
               .fixedSize(horizontal: false, vertical: true)
             Button("Allow Calendar Access") { widget.requestAccessFromPanel() }
               .controlSize(.small)
           }
         } else if widget.events.isEmpty {
           Text("Nothing planned for today and tomorrow.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
         } else {
           ForEach(widget.events.prefix(3)) { event in
@@ -218,10 +218,10 @@ private struct EventRow: View {
         .frame(width: 3, height: 26)
       VStack(alignment: .leading, spacing: 0) {
         Text(event.title)
-          .font(.caption.weight(.medium))
+          .panelFont(.caption, weight: .medium)
           .lineLimit(1)
         Text(timeText)
-          .font(.caption2)
+          .panelFont(.caption2)
           .foregroundStyle(.secondary)
           .lineLimit(1)
       }

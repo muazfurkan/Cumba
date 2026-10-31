@@ -134,10 +134,10 @@ private struct MirrorView: View {
         WidgetCard {
           VStack(spacing: 6) {
             Image(systemName: "web.camera")
-              .font(.title2)
+              .panelFont(.title2)
               .accessibilityHidden(true)
             Text("Click to Show the Camera")
-              .font(.caption)
+              .panelFont(.caption)
               .multilineTextAlignment(.center)
           }
           .foregroundStyle(.secondary)
@@ -150,7 +150,7 @@ private struct MirrorView: View {
       WidgetCard {
         VStack(alignment: .leading, spacing: 6) {
           Label("Mirror", systemImage: "web.camera")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           Button("Allow in Settings") { widget.showSettings() }
             .controlSize(.small)

@@ -79,7 +79,7 @@ private struct TrayView: View {
       VStack(alignment: .leading, spacing: 6) {
         HStack {
           Label("Tray", systemImage: "tray")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           Spacer()
           if !tray.items.isEmpty {
@@ -107,7 +107,7 @@ private struct TrayView: View {
             .foregroundStyle(.secondary.opacity(isTargeted ? 1 : 0.5))
             .overlay {
               Text("Drop files here")
-                .font(.caption)
+                .panelFont(.caption)
                 .foregroundStyle(.secondary)
             }
         } else {
@@ -140,7 +140,7 @@ private struct TrayItem: View {
         .resizable()
         .frame(width: 36, height: 36)
       Text(url.lastPathComponent)
-        .font(.system(size: 9))
+        .panelFont(size: 9)
         .lineLimit(1)
         .truncationMode(.middle)
         .frame(width: 56)

@@ -111,11 +111,11 @@ private struct ClipboardView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 4) {
         Label("Clipboard", systemImage: "doc.on.clipboard")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         if widget.entries.isEmpty {
           Text("Copied texts appear here.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
         } else {
           ScrollView {
@@ -135,7 +135,7 @@ private struct ClipboardView: View {
                         .accessibilityLabel(Text("Copied"))
                     }
                   }
-                  .font(.caption)
+                  .panelFont(.caption)
                   .padding(.vertical, 3)
                   .padding(.horizontal, 4)
                   .contentShape(Rectangle())
@@ -159,7 +159,7 @@ private struct ClipboardSettingsView: View {
     Text(
       "While this widget is in the panel, Cumba checks once a second whether the clipboard changed and keeps your last \(ClipboardHistoryWidget.maxEntries) copied texts in memory. Passwords and other items apps mark as private are skipped, and nothing is saved to disk. macOS may ask once whether Cumba may read what you copy."
     )
-    .font(.callout)
+    .panelFont(.callout)
     .foregroundStyle(.secondary)
     .fixedSize(horizontal: false, vertical: true)
     Button("Clear History", role: .destructive) { widget.clear() }

@@ -110,7 +110,8 @@ final class TimerWidget: NotchWidget {
       LiveActivity(
         id: Self.finishedActivityID, priority: .timerFinished,
         leading: AnyView(Image(systemName: "timer").foregroundStyle(.orange)),
-        trailing: AnyView(Text("Done", comment: "Timer finished").font(.caption.bold()))),
+        trailing: AnyView(
+          Text("Done", comment: "Timer finished").panelFont(.caption, weight: .bold))),
       for: .seconds(10))
   }
 
@@ -121,7 +122,7 @@ final class TimerWidget: NotchWidget {
         leading: AnyView(Image(systemName: "timer")),
         trailing: AnyView(
           Text(timerInterval: Date()...endsAt, countsDown: true)
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .multilineTextAlignment(.trailing))))
   }
 }
@@ -133,10 +134,10 @@ private struct TimerWidgetView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 8) {
         Label("Timer", systemImage: "timer")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         countdown
-          .font(.system(size: 30, weight: .semibold).monospacedDigit())
+          .panelFont(size: 30, weight: .semibold, monospacedDigit: true)
         HStack(spacing: 6) {
           if timer.isActive {
             controlButton(
@@ -152,7 +153,7 @@ private struct TimerWidgetView: View {
                 timer.select(minutes: minutes)
               } label: {
                 Text("\(minutes)m", comment: "Timer preset in minutes")
-                  .font(.caption.monospacedDigit())
+                  .panelFont(.caption, monospacedDigit: true)
                   .padding(.horizontal, 6)
                   .padding(.vertical, 3)
                   .background(

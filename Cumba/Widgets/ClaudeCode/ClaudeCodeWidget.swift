@@ -42,11 +42,11 @@ private struct ClaudeCodeWidgetView: View {
       } else {
         VStack(alignment: .leading, spacing: 6) {
           Label("Claude Code", systemImage: "terminal")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           if service.sessions.isEmpty {
             Text("No sessions yet. Claude Code shows up here once its hooks are installed.")
-              .font(.caption)
+              .panelFont(.caption)
               .foregroundStyle(.secondary)
               .fixedSize(horizontal: false, vertical: true)
             Button("Set Up…", action: setUp)
@@ -77,10 +77,10 @@ private struct SessionRow: View {
         .frame(width: 14)
       VStack(alignment: .leading, spacing: 0) {
         Text(session.project)
-          .font(.caption.weight(.medium))
+          .panelFont(.caption, weight: .medium)
           .lineLimit(1)
         Text(session.detail ?? stateText)
-          .font(.caption2)
+          .panelFont(.caption2)
           .foregroundStyle(.secondary)
           .lineLimit(1)
       }
@@ -145,12 +145,12 @@ struct PermissionCard: View {
         Image(systemName: "hand.raised.fill")
           .foregroundStyle(.orange)
         Text("\(request.project) wants to use \(request.toolName)", comment: "Permission request")
-          .font(.caption.weight(.semibold))
+          .panelFont(.caption, weight: .semibold)
           .lineLimit(1)
         Spacer(minLength: 0)
         if waiting > 0 {
           Text("+\(waiting)")
-            .font(.caption2.weight(.bold))
+            .panelFont(.caption2, weight: .bold)
             .padding(.horizontal, 5)
             .background(.orange.opacity(0.3), in: Capsule())
             .accessibilityLabel(Text("\(waiting) more requests waiting"))
@@ -158,7 +158,7 @@ struct PermissionCard: View {
       }
       ScrollView {
         Text(request.detail)
-          .font(.system(.caption, design: .monospaced))
+          .panelFont(.caption, design: .monospaced)
           .textSelection(.enabled)
           .frame(maxWidth: .infinity, alignment: .leading)
       }
@@ -170,12 +170,12 @@ struct PermissionCard: View {
           "This request has hidden characters or is too long to show safely. Answer it in the terminal.",
           systemImage: "exclamationmark.triangle.fill"
         )
-        .font(.caption2)
+        .panelFont(.caption2)
         .foregroundStyle(.orange)
         .fixedSize(horizontal: false, vertical: true)
       } else if !request.canAllow {
         Text("Allowing this from the notch is turned off in Settings.")
-          .font(.caption2)
+          .panelFont(.caption2)
           .foregroundStyle(.secondary)
           .fixedSize(horizontal: false, vertical: true)
       }

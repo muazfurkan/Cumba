@@ -124,7 +124,7 @@ struct WidgetTabBar: View {
       }
     } else {
       Text("Cumba")
-        .font(.headline)
+        .panelFont(.headline)
     }
   }
 }
@@ -196,8 +196,10 @@ struct PeekView: View {
         .frame(width: sideWidth)
         .clipped()
     }
-    .font(.caption)
+    .panelFont(.caption)
     .environment(\.peekHeight, height)
+    // Beside the notch there is no room to grow, so the text size setting doesn't apply.
+    .environment(\.panelTextScale, 1)
     .accessibilityElement(children: .combine)
   }
 }

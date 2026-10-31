@@ -14,7 +14,7 @@ struct AddWidgetTile: View {
           .font(.system(size: fillsTab ? 20 : 15, weight: .semibold))
         if fillsTab {
           Text("Add Widget")
-            .font(.callout)
+            .panelFont(.callout)
         }
       }
       .foregroundStyle(.white.opacity(isHovered ? 0.85 : 0.5))
@@ -75,7 +75,7 @@ private struct GalleryCard: View {
       VStack(alignment: .leading, spacing: 4) {
         HStack {
           Image(systemName: info.symbol)
-            .font(.title3)
+            .panelFont(.title3)
           Spacer()
           if fits {
             Image(systemName: "plus.circle.fill")
@@ -83,10 +83,10 @@ private struct GalleryCard: View {
           }
         }
         Text(info.title)
-          .font(.callout.weight(.semibold))
+          .panelFont(.callout, weight: .semibold)
           .lineLimit(1)
         Text(fits ? info.summary : String(localized: "No room in this tab"))
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(secondary)
           .lineLimit(2)
           .fixedSize(horizontal: false, vertical: true)

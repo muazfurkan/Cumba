@@ -65,13 +65,14 @@ struct ThemeTests {
 
   @Test func outOfRangeNumbersAreClamped() throws {
     let theme = try decode(
-      #"{ "cornerRadius": 900, "expandedSize": { "width": 10, "height": 5000 }, "animation": { "response": -1, "damping": 3 } }"#
+      #"{ "cornerRadius": 900, "expandedSize": { "width": 10, "height": 5000 }, "animation": { "response": -1, "damping": 3 }, "textScale": 9 }"#
     )
     #expect(theme.cornerRadius == Theme.cornerRadiusRange.upperBound)
     #expect(theme.expandedSize.width == Theme.widthRange.lowerBound)
     #expect(theme.expandedSize.height == Theme.heightRange.upperBound)
     #expect(theme.spring.response == Theme.responseRange.lowerBound)
     #expect(theme.spring.damping == Theme.dampingRange.upperBound)
+    #expect(theme.textScale == Theme.textScaleRange.upperBound)
   }
 
   @Test func notJSONObjectFails() {

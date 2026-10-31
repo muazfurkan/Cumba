@@ -3006,6 +3006,16 @@
         }
       }
     },
+    "Text size" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yazı boyutu"
+          }
+        }
+      }
+    },
     "That's the panel" : {
       "localizations" : {
         "tr" : {
