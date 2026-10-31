@@ -11,12 +11,22 @@ struct NotchLayout: Equatable, Sendable {
   var hoverMargin: CGFloat = 8
 }
 
+extension NotchLayout {
+  init(theme: Theme) {
+    self.init()
+    expandedSize = CGSize(width: theme.expandedSize.width, height: theme.expandedSize.height)
+    peekExtraWidth = theme.peekExtraWidth
+  }
+}
+
 /// Notch position and panel frames for one screen. A pure value so it can be unit tested.
 /// All rects are in AppKit screen coordinates (origin at the bottom left).
 struct NotchGeometry: Equatable, Sendable {
   let screenFrame: CGRect
   let notchRect: CGRect
   let layout: NotchLayout
+  /// Drawn by the app on a screen without a camera housing.
+  let isVirtual: Bool
 
   /// Returns nil when the screen has no notch.
   init?(
@@ -35,6 +45,20 @@ struct NotchGeometry: Equatable, Sendable {
       width: notchWidth,
       height: safeAreaTop)
     self.layout = layout
+    isVirtual = false
+  }
+
+  /// A notch drawn in the middle of the menu bar, for screens without one.
+  init(
+    virtualOn screenFrame: CGRect, menuBarHeight: CGFloat, width: CGFloat = 200,
+    layout: NotchLayout = NotchLayout()
+  ) {
+    self.screenFrame = screenFrame
+    notchRect = CGRect(
+      x: screenFrame.midX - width / 2, y: screenFrame.maxY - menuBarHeight, width: width,
+      height: menuBarHeight)
+    self.layout = layout
+    isVirtual = true
   }
 
   /// The window never changes size: it fits the largest shape plus its shadow and is

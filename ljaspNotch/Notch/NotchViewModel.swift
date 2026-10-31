@@ -8,18 +8,24 @@ final class NotchViewModel {
   private(set) var state = NotchState.closed
   /// Size of the hardware notch on the current screen; the view sizes its shapes from it.
   var geometry: NotchGeometry?
+  var theme = Theme.classic
 
   /// Called after every state change, e.g. to update the hover area.
   @ObservationIgnored var onStateChange: ((NotchState) -> Void)?
 
   @ObservationIgnored private var machine = NotchStateMachine()
   @ObservationIgnored private var timer: Task<Void, Never>?
-  @ObservationIgnored private let openDelay: Duration
-  @ObservationIgnored private let closeDelay: Duration
+  @ObservationIgnored var openDelay: Duration
+  @ObservationIgnored var closeDelay: Duration
 
   init(openDelay: Duration = .milliseconds(150), closeDelay: Duration = .milliseconds(400)) {
     self.openDelay = openDelay
     self.closeDelay = closeDelay
+  }
+
+  var opensOnHover: Bool {
+    get { machine.opensOnHover }
+    set { machine.opensOnHover = newValue }
   }
 
   func send(_ event: NotchStateMachine.Event) {

@@ -120,11 +120,12 @@ ljaspNotch/
 │   ├── Media/        # NowPlaying, MediaProvider, MediaCoordinator, Providers/
 │   ├── Claude/       # ClaudeCodeService, HookPayload, PermissionBroker, HookInstaller
 │   ├── Server/       # LocalServer, TokenStore, Routes
-│   ├── Theme/        # Theme, ThemeStore, BuiltInThemes/
+│   ├── Theme/        # Theme, HexColor, ThemeStore, ThemeFiles, BuiltInThemes
 │   ├── Settings/     # SettingsWindowController ve sekmeler (GeneralSettingsView, ...)
 │   └── Resources/    # Assets.xcassets, Localizable.xcstrings, Info.plist, ljaspNotch.entitlements
 ├── ljaspNotchTests/
 │   └── Fixtures/     # gerçek hook payload örnekleri (kişisel veriden arındırılmış)
+├── scripts/          # check-strings.py (eksik çeviri), make-icon.swift (ikon)
 └── extensions/
     └── chrome/       # manifest.json, background.js, content.js, selectors.js, options.html, options.js
 ```
@@ -416,7 +417,10 @@ Tüm olaylar tek endpoint'e gelir; sunucu `hook_event_name` alanına göre dağ�
 - Hazır temalar: **Classic** (solid), **Glass** (glass), **Midnight** (tinted). Uygulama paketinde gelir, değiştirilemez; kopyalanıp düzenlenebilir.
 - Kullanıcı temaları: `~/Library/Application Support/ljaspNotch/Themes/*.json`. İçe/dışa aktarma Ayarlar'dan.
 - Decode toleranslı: bilinmeyen alan yok sayılır, eksik alan varsayılan değeri alır. Böylece eski temalar yeni sürümlerde bozulmaz.
-- Ayarlardaki her değişiklik panelde **canlı önizlenir**.
+- Ayarlardaki her değişiklik panelde **canlı önizlenir**: Görünüm sekmesi açıkken panel açık ve sabit kalır.
+- Renkler bayt (0-255) olarak saklanır, böylece kaydet/yükle kayıpsızdır. JSON anahtarı `animation`, Swift'te `spring` (SwiftUI `Binding.animation` ile çakışmasın diye).
+- Kullanıcı temaları düzenlendikçe 0,5 sn gecikmeyle kaydedilir; dosya adı temanın kimliğidir.
+- Hazır tema adları arayüzde çevrilir (Klasik, Cam, Gece Yarısı).
 
 ## 11. Fazlar ve kabul kriterleri
 

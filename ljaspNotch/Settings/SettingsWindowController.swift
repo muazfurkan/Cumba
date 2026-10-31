@@ -7,10 +7,13 @@ import SwiftUI
 @MainActor
 final class SettingsWindowController {
   private let settings: AppSettings
+  private let themes: ThemeStore
   private var window: NSWindow?
+  private var closeObserver: NSObjectProtocol?
 
-  init(settings: AppSettings) {
+  init(settings: AppSettings, themes: ThemeStore) {
     self.settings = settings
+    self.themes = themes
   }
 
   func show() {
@@ -29,6 +32,11 @@ final class SettingsWindowController {
         GeneralSettingsView(settings: settings),
         label: String(localized: "General", comment: "Settings tab"),
         symbol: "gearshape"))
+    tabs.addTabViewItem(
+      tab(
+        AppearanceSettingsView(themes: themes, settings: settings),
+        label: String(localized: "Appearance", comment: "Settings tab"),
+        symbol: "paintpalette"))
 
     let window = NSWindow(contentViewController: tabs)
     window.styleMask = [.titled, .closable, .miniaturizable]
@@ -39,6 +47,12 @@ final class SettingsWindowController {
     window.acceptsMouseMovedEvents = true
     window.center()
     window.setFrameAutosaveName("SettingsWindow")
+    // SwiftUI doesn't always report onDisappear when the window closes; end the preview here.
+    closeObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification, object: window, queue: .main
+    ) { [settings] _ in
+      MainActor.assumeIsolated { settings.isPreviewingAppearance = false }
+    }
     return window
   }
 

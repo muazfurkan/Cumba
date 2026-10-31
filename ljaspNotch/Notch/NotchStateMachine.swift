@@ -27,6 +27,8 @@ struct NotchStateMachine: Sendable {
   private(set) var state = NotchState.closed
   private(set) var isPointerInside = false
   private(set) var hasLiveActivity = false
+  /// When false only a click opens the panel.
+  var opensOnHover = true
 
   /// Where the panel goes when it closes.
   private var restingState: NotchState {
@@ -38,7 +40,7 @@ struct NotchStateMachine: Sendable {
     case .pointerEntered:
       isPointerInside = true
       switch state {
-      case .closed, .peek: return .startOpenTimer
+      case .closed, .peek: return opensOnHover ? .startOpenTimer : .none
       case .expanded: return .cancelTimer
       case .pinned: return .none
       }
@@ -52,7 +54,7 @@ struct NotchStateMachine: Sendable {
       }
 
     case .pointerMoved:
-      return isPointerInside && !state.isOpen ? .startOpenTimer : .none
+      return isPointerInside && !state.isOpen && opensOnHover ? .startOpenTimer : .none
 
     case .clicked:
       guard !state.isOpen else { return .none }

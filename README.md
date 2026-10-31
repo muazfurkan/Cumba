@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/icon.png" width="128" alt="ljaspNotch icon"></p>
+
 # ljaspNotch
 
 [Türkçe](README.tr.md)

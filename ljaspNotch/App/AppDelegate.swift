@@ -3,14 +3,16 @@ import AppKit
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
   private let settings: AppSettings
+  private let themes: ThemeStore
   private let settingsWindow: SettingsWindowController
   private let notchWindow: NotchWindowController
   private var menuBar: MenuBarController?
 
   override init() {
     settings = AppSettings()
-    settingsWindow = SettingsWindowController(settings: settings)
-    notchWindow = NotchWindowController(settings: settings)
+    themes = ThemeStore()
+    settingsWindow = SettingsWindowController(settings: settings, themes: themes)
+    notchWindow = NotchWindowController(settings: settings, themes: themes)
     super.init()
   }
 
@@ -20,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       settingsWindow.show()
     }
     notchWindow.start()
+    Task { [themes] in await themes.load() }
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
   }

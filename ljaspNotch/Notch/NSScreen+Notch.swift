@@ -23,4 +23,11 @@ extension NSScreen {
       rightAreaWidth: right.width,
       layout: layout)
   }
+
+  /// A drawn notch centered in this screen's menu bar.
+  func virtualNotchGeometry(layout: NotchLayout = NotchLayout()) -> NotchGeometry {
+    let menuBarHeight = frame.maxY - visibleFrame.maxY
+    return NotchGeometry(
+      virtualOn: frame, menuBarHeight: menuBarHeight > 0 ? menuBarHeight : 24, layout: layout)
+  }
 }

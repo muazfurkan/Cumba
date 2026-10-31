@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-31
+
+### Added
+
+- Themes: Classic, Glass and Midnight built in, plus your own themes with material (Liquid Glass, solid, tinted glass), colors, font, panel size, corner radius, shadow and animation. Changes preview live in the notch.
+- Import and export themes as JSON. Broken theme files are skipped instead of crashing the app.
+- Panel settings: open on hover or only on click, open and close delays, hide in full screen apps, and a virtual notch for screens without one.
+- CI checks that every string in the code is in the string catalog.
+
+### Changed
+
+- New app and menu bar icon: the "L | J" mark.
+
 ## [0.1.0] - 2026-10-31
 
 ### Added
@@ -21,5 +34,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/muazfurkan/ljaspNotch/releases/tag/v0.1.0

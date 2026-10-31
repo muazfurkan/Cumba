@@ -59,6 +59,16 @@ struct NotchStateMachineTests {
     #expect(machine.state == .expanded)
   }
 
+  @Test func clickOnlyModeIgnoresHover() {
+    var machine = NotchStateMachine()
+    machine.opensOnHover = false
+    #expect(machine.handle(.pointerEntered) == .none)
+    #expect(machine.handle(.pointerMoved) == .none)
+    _ = machine.handle(.clicked)
+    #expect(machine.state == .expanded)
+    #expect(machine.handle(.pointerExited) == .startCloseTimer)
+  }
+
   @Test func clickOpensImmediately() {
     var machine = machine(after: [.pointerEntered])
     #expect(machine.handle(.clicked) == .cancelTimer)
