@@ -3,7 +3,9 @@ import Observation
 import SwiftUI
 
 /// Today's and tomorrow's events. Reads EventKit only while the widget is on screen and
-/// reloads when the calendar database changes.
+/// reloads when the calendar database changes. With a meeting reminder turned on it also
+/// keeps the next event in mind while the panel is closed: one task sleeps until the
+/// reminder is due and a live activity counts down to the start.
 @MainActor
 @Observable
 final class CalendarWidget: NotchWidget {
@@ -16,15 +18,40 @@ final class CalendarWidget: NotchWidget {
   }
   static let addedByDefault = true
 
+  /// Reminder choices in minutes before a meeting; 0 is off.
+  static let reminderChoices = [0, 5, 10, 15]
+
   private(set) var events: [CalendarEvent] = []
   private(set) var hasAccess = CalendarService.hasAccess
+  /// Minutes before an event's start to show a countdown; 0 turns it off.
+  var reminderMinutes: Int {
+    didSet {
+      UserDefaults.standard.set(reminderMinutes, forKey: Self.reminderKey)
+      updateReminderWatching()
+    }
+  }
 
   @ObservationIgnored let service = CalendarService()
   @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  @ObservationIgnored private let liveActivities: LiveActivityCenter
   @ObservationIgnored private var changeObserver: NSObjectProtocol?
+  @ObservationIgnored private var reminderObserver: NSObjectProtocol?
+  @ObservationIgnored private var reminderTask: Task<Void, Never>?
+
+  private static let reminderKey = "calendar.reminderMinutes"
+  private static let reminderActivityID = "calendar.reminder"
 
   required init(context: WidgetContext) {
     openSettings = context.openSettings
+    liveActivities = context.liveActivities
+    reminderMinutes = UserDefaults.standard.integer(forKey: Self.reminderKey)
+    updateReminderWatching()
+  }
+
+  /// Removed from the panel: stops watching but keeps the reminder setting.
+  func shutdown() {
+    deactivate()
+    stopReminder()
   }
 
   func makeView() -> AnyView {
@@ -59,7 +86,73 @@ final class CalendarWidget: NotchWidget {
     }
     Task {
       events = await service.upcomingEvents()
+      scheduleReminder()
     }
+  }
+
+  // MARK: - Meeting reminder
+
+  /// Watches the calendar while a reminder is set, even when the widget is off screen.
+  private func updateReminderWatching() {
+    if reminderMinutes > 0 {
+      if reminderObserver == nil {
+        reminderObserver = NotificationCenter.default.addObserver(
+          forName: .EKEventStoreChanged, object: nil, queue: .main
+        ) { [weak self] _ in
+          MainActor.assumeIsolated { self?.reload() }
+        }
+      }
+      reload()
+    } else {
+      stopReminder()
+    }
+  }
+
+  private func stopReminder() {
+    if let reminderObserver {
+      NotificationCenter.default.removeObserver(reminderObserver)
+    }
+    reminderObserver = nil
+    reminderTask?.cancel()
+    reminderTask = nil
+    liveActivities.dismiss(Self.reminderActivityID)
+  }
+
+  /// Sleeps until the next timed event's reminder, shows the countdown until it starts,
+  /// then reloads, which schedules the one after.
+  private func scheduleReminder() {
+    reminderTask?.cancel()
+    guard reminderMinutes > 0,
+      let next = events.first(where: { !$0.isAllDay && $0.start > .now })
+    else { return }
+    let lead = TimeInterval(reminderMinutes * 60)
+    reminderTask = Task { [weak self] in
+      do {
+        let wait = next.start.addingTimeInterval(-lead).timeIntervalSinceNow
+        if wait > 0 {
+          try await Task.sleep(for: .seconds(wait))
+        }
+        self?.showReminder(for: next)
+        try await Task.sleep(for: .seconds(max(0, next.start.timeIntervalSinceNow)))
+      } catch {
+        return
+      }
+      self?.liveActivities.dismiss(Self.reminderActivityID)
+      self?.reload()
+    }
+  }
+
+  private func showReminder(for event: CalendarEvent) {
+    liveActivities.show(
+      LiveActivity(
+        id: Self.reminderActivityID, priority: .calendar,
+        leading: AnyView(
+          Image(systemName: event.meetingURL == nil ? "calendar" : "video.fill")
+            .foregroundStyle(event.color?.color ?? .accentColor)),
+        trailing: AnyView(
+          Text(timerInterval: Date()...event.start, countsDown: true)
+            .font(.caption.monospacedDigit())
+            .multilineTextAlignment(.trailing))))
   }
 
   /// Asks for access; only called from the Settings window.
@@ -119,8 +212,20 @@ private struct EventRow: View {
           .foregroundStyle(.secondary)
           .lineLimit(1)
       }
+      if canJoin, let url = event.meetingURL {
+        Spacer(minLength: 4)
+        Button("Join") { NSWorkspace.shared.open(url) }
+          .controlSize(.mini)
+          .buttonStyle(.borderedProminent)
+          .help(Text(url.host() ?? ""))
+      }
     }
     .accessibilityElement(children: .combine)
+  }
+
+  /// Join appears from 15 minutes before the start until the end.
+  private var canJoin: Bool {
+    event.meetingURL != nil && event.start.addingTimeInterval(-15 * 60) <= .now && event.end > .now
   }
 
   private var timeText: String {
@@ -137,12 +242,21 @@ private struct EventRow: View {
 
 /// Shown in Settings: grants calendar access from a normal window.
 private struct CalendarAccessView: View {
-  let widget: CalendarWidget
+  @Bindable var widget: CalendarWidget
 
   var body: some View {
     if widget.hasAccess {
       Label("Calendar access granted", systemImage: "checkmark.circle.fill")
         .foregroundStyle(.green)
+      Picker("Meeting reminder", selection: $widget.reminderMinutes) {
+        ForEach(CalendarWidget.reminderChoices, id: \.self) { minutes in
+          if minutes == 0 {
+            Text("Off").tag(minutes)
+          } else {
+            Text("\(minutes) min before", comment: "Meeting reminder time").tag(minutes)
+          }
+        }
+      }
     } else if CalendarService.accessWasDenied {
       VStack(alignment: .leading, spacing: 6) {
         Text("Calendar access was denied. You can allow it in System Settings.")

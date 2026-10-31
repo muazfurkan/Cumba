@@ -10,6 +10,8 @@ final class ScriptablePlayerProvider: MediaProvider {
   /// The last failure of a command, e.g. denied Automation access. Cleared on success.
   private(set) var lastFailure: AppleScriptRunner.Failure?
   var onFailureChange: ((AppleScriptRunner.Failure?) -> Void)?
+  /// Off when the source is turned off in Settings: no AppleScript is sent then.
+  var isEnabled = true
 
   private let runner: AppleScriptRunner
   private var observers: [NSObjectProtocol] = []
@@ -69,6 +71,7 @@ final class ScriptablePlayerProvider: MediaProvider {
   /// Reads the full state, e.g. at launch or after a command. Quietly does nothing without
   /// permission or when the player isn't running.
   func refreshFromScript() {
+    guard isEnabled else { return }
     let adapter = adapter
     Task {
       let state = try? await runner.run(adapter.stateScript, in: adapter.bundleID) { descriptor in
@@ -80,6 +83,7 @@ final class ScriptablePlayerProvider: MediaProvider {
   }
 
   private func received(_ nowPlaying: NowPlaying?, fetchDetails: Bool = true) {
+    guard isEnabled || nowPlaying == nil else { return }
     var nowPlaying = nowPlaying
     // Keep artwork already fetched for this track.
     if let previous = current, var track = nowPlaying, track.isSameTrack(as: previous) {

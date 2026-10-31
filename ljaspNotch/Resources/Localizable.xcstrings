@@ -77,6 +77,16 @@
         }
       }
     },
+    "%lld min before" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dk önce"
+          }
+        }
+      }
+    },
     "%lld more requests waiting" : {
       "localizations" : {
         "tr" : {
@@ -1345,6 +1355,16 @@
         }
       }
     },
+    "Join" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Katıl"
+          }
+        }
+      }
+    },
     "Keep Awake" : {
       "localizations" : {
         "tr" : {
@@ -1442,6 +1462,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medya"
+          }
+        }
+      }
+    },
+    "Meeting reminder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplantı hatırlatması"
           }
         }
       }
@@ -1698,6 +1728,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tamam"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı"
           }
         }
       }

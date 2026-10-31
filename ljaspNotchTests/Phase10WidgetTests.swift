@@ -137,3 +137,37 @@ struct NotesTests {
     #expect(again.text == "Buy milk")
   }
 }
+
+struct MeetingLinkTests {
+  @Test func findsKnownMeetingServices() throws {
+    let zoom = try #require(URL(string: "https://us02web.zoom.us/j/123?pwd=x"))
+    #expect(MeetingLink.find(url: zoom, texts: []) == zoom)
+    let found = MeetingLink.find(
+      url: nil, texts: [nil, "Room 4", "Join: https://meet.google.com/abc-defg-hij thanks"])
+    #expect(found?.host() == "meet.google.com")
+  }
+
+  @Test func ignoresOtherOrInsecureLinks() throws {
+    #expect(MeetingLink.find(url: nil, texts: ["See https://example.com/zoom.us"]) == nil)
+    let insecure = try #require(URL(string: "http://zoom.us/j/1"))
+    #expect(MeetingLink.find(url: insecure, texts: []) == nil)
+    #expect(MeetingLink.find(url: nil, texts: ["https://evilzoom.us/j/1"]) == nil)
+  }
+}
+
+@MainActor
+struct MediaSourceTests {
+  @Test func disabledSourcesArePersistedAndIgnored() throws {
+    let suite = "MediaSourceTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suite))
+    defer { defaults.removePersistentDomain(forName: suite) }
+    let media = MediaCoordinator(providers: [], defaults: defaults)
+    media.disabledSources = [.spotify]
+    media.receive(
+      NowPlaying(
+        source: .spotify, title: "Song", duration: 200, position: 10, positionTimestamp: .now,
+        isPlaying: true), from: .spotify)
+    #expect(media.current == nil)
+    #expect(MediaCoordinator(providers: [], defaults: defaults).disabledSources == [.spotify])
+  }
+}

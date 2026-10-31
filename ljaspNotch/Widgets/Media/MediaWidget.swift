@@ -38,7 +38,7 @@ final class MediaWidget: NotchWidget {
   }
 
   func makeSettingsView() -> AnyView? {
-    AnyView(MediaPermissionsView())
+    AnyView(MediaSettingsView(media: media))
   }
 
   func shutdown() {
@@ -108,5 +108,31 @@ struct ArtworkView: View {
       .font(.system(size: size * 0.45))
       .frame(width: size, height: size)
       .background(.white.opacity(0.12))
+  }
+}
+
+/// Settings > Widgets > Media: which players to show, and Automation access.
+private struct MediaSettingsView: View {
+  let media: MediaCoordinator
+
+  var body: some View {
+    ForEach(NowPlaying.Source.allCases, id: \.self) { source in
+      Toggle(isOn: enabled(source)) {
+        Label(source.displayName, systemImage: source.symbol)
+      }
+    }
+    MediaPermissionsView()
+  }
+
+  private func enabled(_ source: NowPlaying.Source) -> Binding<Bool> {
+    Binding(
+      get: { [media] in !media.disabledSources.contains(source) },
+      set: { [media] isOn in
+        if isOn {
+          media.disabledSources.remove(source)
+        } else {
+          media.disabledSources.insert(source)
+        }
+      })
   }
 }
