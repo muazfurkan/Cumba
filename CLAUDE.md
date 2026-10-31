@@ -34,6 +34,9 @@ pkill -x ljaspNotch; open build/Build/Products/Debug/ljaspNotch.app
 # Testler
 xcodebuild -project ljaspNotch.xcodeproj -scheme ljaspNotch -derivedDataPath build test
 
+# Biçim kontrolü (CI da çalıştırır)
+xcrun swift-format lint --strict --recursive ljaspNotch ljaspNotchTests
+
 # Logları izle
 log stream --predicate 'subsystem == "io.github.muazfurkan.ljaspnotch"' --level debug
 ```

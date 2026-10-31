@@ -82,6 +82,7 @@ Temel ilkeler:
 - **Görünüm ile veri ayrı:** Widget'lar servisleri dinler, servisler widget'ları bilmez.
 - **Olay tabanlı:** Servisler `@Observable` modeller yayınlar; zamanlayıcıyla yoklama yalnızca son çare.
 - **Gevşek bağlı sağlayıcılar:** Yeni bir medya kaynağı eklemek için yalnızca `MediaProvider` protokolünü uygulamak yeterli.
+- **AppKit yaşam döngüsü:** Giriş noktası `@main` + `NSApplication`. SwiftUI `Settings` sahnesi kullanılmaz, çünkü menü çubuğundan açmak belgelenmemiş bir selector gerektirir. Ayarlar penceresi `NSTabViewController` (toolbar stili) içinde SwiftUI sekmelerinden oluşur.
 
 ## 5. Repo yapısı
 
@@ -97,6 +98,7 @@ ljaspNotch/
 ├── CODE_OF_CONDUCT.md         # Contributor Covenant
 ├── project.yml                # XcodeGen
 ├── Local.xcconfig.example     # DEVELOPMENT_TEAM buraya, kopyası gitignore'da
+├── Config/Base.xcconfig       # Local.xcconfig'i varsa dahil eder (CI'da yoktur)
 ├── .editorconfig              # indent_size = 2
 ├── .swift-format              # indentation: 2 spaces
 ├── .gitignore
@@ -109,7 +111,7 @@ ljaspNotch/
 │   ├── SPEC.md
 │   └── claude-code-setup.md
 ├── ljaspNotch/
-│   ├── App/          # LjaspNotchApp, AppDelegate, MenuBarController, AppSettings
+│   ├── App/          # LjaspNotchApp, AppDelegate, MenuBarController, MainMenu, AppSettings, AppInfo, Log
 │   ├── Notch/        # NotchPanel, NotchWindowController, NotchGeometry, NotchViewModel, HoverTracker
 │   ├── Widgets/
 │   │   ├── Core/     # NotchWidget, WidgetRegistry, LayoutStore, LiveActivity, LiveActivityCenter
@@ -119,7 +121,7 @@ ljaspNotch/
 │   ├── Claude/       # ClaudeCodeService, HookPayload, PermissionBroker, HookInstaller
 │   ├── Server/       # LocalServer, TokenStore, Routes
 │   ├── Theme/        # Theme, ThemeStore, BuiltInThemes/
-│   ├── Settings/     # SettingsView ve sekmeleri
+│   ├── Settings/     # SettingsWindowController ve sekmeler (GeneralSettingsView, ...)
 │   └── Resources/    # Assets.xcassets, Localizable.xcstrings, Info.plist, ljaspNotch.entitlements
 ├── ljaspNotchTests/
 │   └── Fixtures/     # gerçek hook payload örnekleri (kişisel veriden arındırılmış)
@@ -489,14 +491,14 @@ App Sandbox kapalı, Hardened Runtime açık. Tüm izin istekleri kullanıcını
 - **İmzalama:** Katkıcılar kendi ücretsiz Personal Team'leriyle `Local.xcconfig` üzerinden derler.
 - **Sürümleme:** SemVer. Etiket `vX.Y.Z` → `MARKETING_VERSION`; build numarası CI çalışma numarası. Faz N sonu `v0.N.0`, Faz 8 sonu `v1.0.0`.
 - **Release iş akışı (`release.yml`, `v*` etiketiyle tetiklenir):**
-  1. Xcode 26 içeren macOS runner'da `xcodegen generate` + Release derlemesi.
-  2. Uygulamaya **ad-hoc imza** (`codesign --force --deep --sign -`). Apple Silicon'da hiç imzası olmayan uygulama çalışmaz; ad-hoc imza yeterli.
+  1. Xcode 26 veya üstünü içeren macOS runner'da (`macos-26`) `xcodegen generate` + Release derlemesi.
+  2. Uygulamaya **ad-hoc imza** (`codesign --force --deep --options runtime --entitlements … --sign -`). Apple Silicon'da hiç imzası olmayan uygulama çalışmaz; ad-hoc imza yeterli. Hardened Runtime ve entitlement'lar korunur.
   3. `ljaspNotch-vX.Y.Z.zip` (uygulama) ve `ljaspNotch-chrome-extension-vX.Y.Z.zip` (eklenti) üretilir, SHA-256 değerleri hesaplanır.
-  4. GitHub Release oluşturulur: notlar CHANGELOG'dan, `v0.x` sürümleri "pre-release" işaretli, dosyalar ve SHA-256 değerleri eklenir.
+  4. GitHub Release oluşturulur: notlar CHANGELOG'dan, `v0.x` sürümleri "pre-release" işaretli, dosyalar ve SHA-256 değerleri eklenir. `-test` içeren etiketler (örn. `v0.0.1-test`) yalnızca bakımcının gördüğü taslak (draft) release oluşturur.
 - **Kullanıcının indirip açması:** Uygulama Developer ID ile imzalı ve notarize edilmiş olmadığı için Gatekeeper uyarı verir. README iki yol anlatır: Sistem Ayarları → Gizlilik ve Güvenlik → "Yine de Aç", ya da `xattr -dr com.apple.quarantine /Applications/ljaspNotch.app`. Ad-hoc imzalı sürümlerde macOS izinleri (otomasyon, takvim) güncellemeden sonra yeniden isteyebilir; README'de belirtilir.
 - **Notarization (ileride):** Developer ID imzası ve notarization ücretli Apple Developer Program üyeliği gerektirir. Üyelik alınırsa release iş akışına eklenir, ardından Homebrew cask değerlendirilir.
 - **Güncelleme kontrolü (v1.0):** Uygulama açılışta ve günde bir kez GitHub Releases API'sinden son sürümü sorgular, yeni sürüm varsa menü çubuğunda ve Ayarlar'da bildirir, indirme sayfasını açar. Otomatik indirme/kurulum yok (Sparkle notarization sonrası değerlendirilir). Ön sürümleri dahil etme ayarı vardır.
-- **CI (`build.yml`):** Her push ve PR'da `xcodegen generate` → derleme → test, imzasız (`CODE_SIGNING_ALLOWED=NO`). PR'lar CI yeşil olmadan merge edilmez.
+- **CI (`build.yml`):** Her push ve PR'da `xcodegen generate` → `swift-format lint` → derleme → test, imzasız (`CODE_SIGNING_ALLOWED=NO`). PR'lar CI yeşil olmadan merge edilmez.
 - **README içeriği:** Özellikler, ekran görüntüleri/GIF, gereksinimler, kaynaktan kurulum, Chrome eklentisi kurulumu, Claude Code entegrasyonu, gizlilik, katkı, lisans.
 - **CONTRIBUTING:** Kurulum adımları, kod stili (2 boşluk, swift-format), dal ve commit formatı, PR kontrol listesi (derleme, test, Türkçe çeviri, README gizlilik bölümü, CHANGELOG).
 - **SECURITY.md:** Lokal sunucu ve hook entegrasyonu nedeniyle güvenlik açıkları herkese açık issue yerine GitHub'ın özel güvenlik bildirimi (Security Advisories) ile bildirilir.
