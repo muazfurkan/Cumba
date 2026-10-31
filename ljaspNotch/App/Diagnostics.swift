@@ -2,7 +2,7 @@ import AVFoundation
 import AppKit
 import EventKit
 
-/// Text for bug reports (SPEC § 14): versions, Mac model, screens, permission states and
+/// Text for bug reports: versions, Mac model, screens, permission states and
 /// enabled widgets. Never includes tokens, file paths, Claude Code content or other
 /// personal data.
 @MainActor

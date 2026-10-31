@@ -1,8 +1,8 @@
 import Foundation
 import Security
 
-/// The local servers' secrets: 32 random bytes as hex each, kept in the login Keychain
-/// (SPEC § 12). The hooks and the extension have separate tokens, so the one written into
+/// The local servers' secrets: 32 random bytes as hex each, kept in the login Keychain.
+/// The hooks and the extension have separate tokens, so the one written into
 /// `~/.claude/settings.json` can't be used on the extension's TCP port. Keychain calls
 /// block, so use these only off the main thread.
 enum TokenStore {

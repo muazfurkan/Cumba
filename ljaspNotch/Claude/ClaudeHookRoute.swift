@@ -2,7 +2,7 @@ import FlyingFox
 import Foundation
 
 /// `POST /claude/hook` on the app's private Unix socket: every Claude Code hook event
-/// arrives here and is dispatched by `hook_event_name` (SPEC § 9). Only processes of this
+/// arrives here and is dispatched by `hook_event_name`. Only processes of this
 /// user can reach the socket; the token is still required, and any browser Origin is
 /// rejected. Claude Code treats every failure as non-blocking, so Claude keeps working
 /// when the app is closed or a request is rejected.

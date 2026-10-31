@@ -1,6 +1,6 @@
 import Foundation
 
-/// Tabs and the widgets in them, saved as layout.json (SPEC § 7). Each widget kind
+/// Tabs and the widgets in them, saved as layout.json. Each widget kind
 /// appears in at most one tab.
 struct WidgetLayout: Codable, Equatable, Sendable {
   struct Tab: Codable, Equatable, Identifiable, Sendable {

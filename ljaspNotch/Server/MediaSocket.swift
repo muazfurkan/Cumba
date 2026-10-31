@@ -3,7 +3,7 @@ import Foundation
 
 /// `GET /media`: WebSocket for the Chrome extension. The handshake needs our extension's
 /// Origin and a loopback Host; the first message must be a `hello` with the token, sent
-/// within 5 seconds. Anything else closes the connection at once (SPEC § 12).
+/// within 5 seconds. Anything else closes the connection at once.
 struct MediaSocketRoute: HTTPHandler {
   let port: UInt16
   let token: String

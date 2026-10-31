@@ -1,6 +1,6 @@
 import Foundation
 
-/// A Claude Code hook event as posted to `/claude/hook` (SPEC § 9). Only the fields the
+/// A Claude Code hook event as posted to `/claude/hook`. Only the fields the
 /// app uses are decoded; everything is optional so new or missing fields never fail.
 /// Payloads stay in memory and are never logged or written to disk.
 struct HookPayload: Decodable, Sendable {

@@ -48,7 +48,7 @@ final class AppSettings {
     didSet { defaults.set(hidesInFullScreen, forKey: Key.hidesInFullScreen) }
   }
 
-  /// Draws a notch on the main screen when no screen has one (SPEC § 6).
+  /// Draws a notch on the main screen when no screen has one.
   var usesVirtualNotch: Bool {
     didSet { defaults.set(usesVirtualNotch, forKey: Key.usesVirtualNotch) }
   }

@@ -1,6 +1,6 @@
 import Foundation
 
-/// What a player is playing (SPEC § 8).
+/// What a player is playing.
 struct NowPlaying: Equatable, Sendable {
   enum Source: String, CaseIterable, Sendable {
     case spotify
@@ -47,7 +47,7 @@ enum MediaCommand: Equatable, Sendable {
   case seek(TimeInterval)
 }
 
-/// A source of `NowPlaying` updates that can be controlled (SPEC § 8). Adding a source means
+/// A source of `NowPlaying` updates that can be controlled. Adding a source means
 /// implementing this protocol and registering it with the `MediaCoordinator`.
 @MainActor
 protocol MediaProvider: AnyObject {

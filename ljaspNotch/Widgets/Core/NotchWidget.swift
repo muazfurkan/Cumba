@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Width of a widget in the panel, in units of the tab's row (SPEC § 7).
+/// Width of a widget in the panel, in units of the tab's row.
 enum WidgetSize: String, Codable, Sendable {
   case compact
   case regular

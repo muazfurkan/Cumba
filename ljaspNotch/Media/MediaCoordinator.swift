@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// Combines all media providers into what the media widget shows (SPEC § 8). The progress
+/// Combines all media providers into what the media widget shows. The progress
 /// bar is computed locally from the last known position, not by asking players.
 @MainActor
 @Observable

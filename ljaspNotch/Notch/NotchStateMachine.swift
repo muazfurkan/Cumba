@@ -1,4 +1,4 @@
-/// Pure transition logic for the notch panel (SPEC § 6). It knows nothing about time:
+/// Pure transition logic for the notch panel. It knows nothing about time:
 /// it asks for timers through `Effect` and is told when they fire, which keeps it
 /// deterministic and easy to test.
 struct NotchStateMachine: Sendable {

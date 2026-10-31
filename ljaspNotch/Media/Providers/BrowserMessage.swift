@@ -1,7 +1,6 @@
 import Foundation
 
-/// Messages between the Chrome extension and the app over `ws://127.0.0.1:<port>/media`
-/// (SPEC § 8).
+/// Messages between the Chrome extension and the app over `ws://127.0.0.1:<port>/media`.
 enum BrowserMessage: Equatable, Sendable {
   struct TabState: Codable, Equatable, Sendable {
     var tabId: Int

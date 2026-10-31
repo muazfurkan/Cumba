@@ -1,6 +1,6 @@
 import Foundation
 
-/// Adds ljaspNotch's hooks to `~/.claude/settings.json` and removes them again (SPEC § 9).
+/// Adds ljaspNotch's hooks to `~/.claude/settings.json` and removes them again.
 ///
 /// The hooks are `command` hooks that pipe the event to the app's Unix socket with curl.
 /// The socket lives in a folder only this user can open, so no other user or sandboxed app
@@ -44,7 +44,7 @@ struct HookInstaller: Sendable {
     }
   }
 
-  /// Events, with timeouts in seconds (SPEC § 9). SessionEnd needs an explicit timeout;
+  /// Events, with timeouts in seconds. SessionEnd needs an explicit timeout;
   /// without one Claude Code gives all SessionEnd hooks 1.5 s together.
   static let events: [(name: String, timeout: Int)] = [
     ("UserPromptSubmit", 5), ("PermissionRequest", 300), ("Notification", 5), ("Stop", 5),

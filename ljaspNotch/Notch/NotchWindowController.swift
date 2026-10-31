@@ -12,7 +12,7 @@ final class NotchWindowController {
   private var panel: NotchPanel?
   private var observers: [NSObjectProtocol] = []
   private var fullScreenTask: Task<Void, Never>?
-  /// A full screen app covers the panel's screen (SPEC § 6).
+  /// A full screen app covers the panel's screen.
   private var isFullScreenActive = false
   private var isPreviewing = false
   private var lastState = NotchState.closed

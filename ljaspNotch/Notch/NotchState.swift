@@ -1,4 +1,4 @@
-/// Visual state of the notch panel (SPEC § 6).
+/// Visual state of the notch panel.
 enum NotchState: CaseIterable, Sendable {
   /// Notch-sized and practically invisible.
   case closed
