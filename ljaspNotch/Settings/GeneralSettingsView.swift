@@ -10,7 +10,7 @@ struct GeneralSettingsView: View {
   var body: some View {
     Form {
       Section {
-        Toggle("Launch at login", isOn: launchAtLogin)
+        Toggle("Launch at login", isOn: .launchAtLogin(settings))
         if settings.launchAtLogin == .requiresApproval {
           VStack(alignment: .leading, spacing: 8) {
             Text("ljaspNotch needs your approval in System Settings to launch at login.")
@@ -81,15 +81,14 @@ struct GeneralSettingsView: View {
         .foregroundStyle(.secondary)
     }
   }
+}
 
-  private var launchAtLogin: Binding<Bool> {
+extension Binding where Value == Bool {
+  /// On while the login item is registered, including while it waits for approval.
+  @MainActor static func launchAtLogin(_ settings: AppSettings) -> Binding<Bool> {
     Binding(
-      get: { [settings] in
-        settings.launchAtLogin == .enabled || settings.launchAtLogin == .requiresApproval
-      },
-      set: { [settings] enabled in
-        Task { await settings.setLaunchAtLogin(enabled) }
-      })
+      get: { settings.launchAtLogin == .enabled || settings.launchAtLogin == .requiresApproval },
+      set: { enabled in Task { await settings.setLaunchAtLogin(enabled) } })
   }
 }
 

@@ -534,6 +534,16 @@
         }
       }
     },
+    "Connect your apps" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamalarınızı bağlayın"
+          }
+        }
+      }
+    },
     "Connected browsers" : {
       "localizations" : {
         "tr" : {
@@ -781,6 +791,16 @@
         }
       }
     },
+    "Free and open source. No telemetry." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ücretsiz ve açık kaynak. Telemetri yok."
+          }
+        }
+      }
+    },
     "General" : {
       "comment" : "Settings tab",
       "localizations" : {
@@ -788,6 +808,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Genel"
+          }
+        }
+      }
+    },
+    "Get Started" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlayalım"
           }
         }
       }
@@ -881,6 +911,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook'lar terminaldeki, IDE eklentilerindeki ve Claude masaüstü uygulamasındaki Claude Code olaylarını yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ljaspNotch'a gönderir. İzin istekleri böylece notch'ta görünür. ljaspNotch çalışmıyorsa Claude Code her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
+          }
+        }
+      }
+    },
+    "If the icon hides behind the notch, open ljaspNotch again from Finder or Spotlight." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simge notch'un arkasında kalırsa ljaspNotch'u Finder'dan veya Spotlight'tan yeniden açın."
           }
         }
       }
@@ -1095,6 +1135,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yukarı Taşı"
+          }
+        }
+      }
+    },
+    "Move ljaspNotch to your Applications folder: quit it, drag it there in Finder and open it again. Otherwise macOS may forget its permissions and the Chrome extension folder can move." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch'u Uygulamalar klasörüne taşıyın: uygulamadan çıkın, Finder'da oraya sürükleyin ve yeniden açın. Aksi halde macOS izinleri unutabilir ve Chrome eklentisinin klasörü değişebilir."
           }
         }
       }
@@ -1536,6 +1586,16 @@
         }
       }
     },
+    "Rest the pointer on the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmleci notch'un üzerinde tutun"
+          }
+        }
+      }
+    },
     "Resume" : {
       "localizations" : {
         "tr" : {
@@ -1676,6 +1736,16 @@
         }
       }
     },
+    "Settings are in the menu bar" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar menü çubuğunda"
+          }
+        }
+      }
+    },
     "Settings…" : {
       "comment" : "Menu item that opens the Settings window",
       "localizations" : {
@@ -1800,6 +1870,16 @@
         }
       }
     },
+    "Spotify and Music work right away. YouTube needs the Chrome extension and Claude Code needs its hooks; Settings walks you through both." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spotify ve Müzik hemen çalışır. YouTube için Chrome eklentisi, Claude Code için hook'lar gerekir; Ayarlar ikisini de adım adım anlatır."
+          }
+        }
+      }
+    },
     "Start" : {
       "localizations" : {
         "tr" : {
@@ -1897,6 +1977,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claude Code soketi açılamadı."
+          }
+        }
+      }
+    },
+    "The panel opens; move away and it closes. Delays and a click-only mode are in Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel açılır; imleci uzaklaştırınca kapanır. Gecikmeleri ve yalnızca tıklamayla açmayı Ayarlar'da bulabilirsiniz."
           }
         }
       }
@@ -2178,6 +2268,17 @@
         }
       }
     },
+    "Welcome to ljaspNotch" : {
+      "comment" : "Welcome window title",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch'a hoş geldiniz"
+          }
+        }
+      }
+    },
     "When the pointer rests on the notch" : {
       "localizations" : {
         "tr" : {
@@ -2236,6 +2337,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalışıyor"
+          }
+        }
+      }
+    },
+    "Your notch is now a panel. Here's how to use it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'unuz artık bir panel. Kullanımı şöyle:"
           }
         }
       }

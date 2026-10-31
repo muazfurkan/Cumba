@@ -25,12 +25,12 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 ## İndirme
 
-1. [Releases](https://github.com/muazfurkan/ljaspNotch/releases) sayfasından `ljaspNotch-vX.Y.Z.zip` dosyasını indirin ve `ljaspNotch.app`'i Uygulamalar klasörüne taşıyın.
+1. [Son sürümden](https://github.com/muazfurkan/ljaspNotch/releases/latest) `ljaspNotch-vX.Y.Z.dmg` dosyasını indirin, açın ve ljaspNotch'u Uygulamalar klasörüne sürükleyin. Aynı sayfada `.zip` de var.
 2. Uygulama ücretsizdir ve Apple tarafından notarize edilmemiştir, bu yüzden macOS ilk açılışta uyarır. Bir kez açmayı deneyin, ardından **Sistem Ayarları > Gizlilik ve Güvenlik**'te **Yine de Aç**'a tıklayın. Ya da şunu çalıştırın:
    ```bash
    xattr -dr com.apple.quarantine /Applications/ljaspNotch.app
    ```
-3. ljaspNotch menü çubuğunda yaşar. Menü çubuğu kalabalıksa ve simgesi notch'un arkasında kalırsa, Ayarlar'a ulaşmak için uygulamayı Finder'dan veya Spotlight'tan yeniden açın.
+3. İlk açılışta kısa bir karşılama penceresi temel kullanımı anlatır. ljaspNotch menü çubuğunda yaşar. Menü çubuğu kalabalıksa ve simgesi notch'un arkasında kalırsa, Ayarlar'a ulaşmak için uygulamayı Finder'dan veya Spotlight'tan yeniden açın.
 
 Her sürümde dosyaların yanında SHA-256 değerleri vardır. 1.0.0'dan sonraki sürümler ayrıca değiştirilemezdir (yayımlandıktan sonra dosyaları ve etiketi değişemez) ve imzalı derleme kaynağı (build provenance) taşır; indirdiğiniz dosyanın bu reponun yayın iş akışında derlendiğini şöyle doğrulayabilirsiniz:
 
@@ -88,6 +88,19 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar.
 
 Eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca ljaspNotch eklentisini kabul eder ve Anahtar Zinciri'nde saklanan bir token ister. Ad-hoc imzalı bir sürümü güncelledikten sonra macOS bir kez daha Anahtar Zinciri erişimi sorabilir.
+
+## Kaldırma
+
+1. Claude Code hook'larını kurduysanız önce **Ayarlar > Claude Code > Kaldır…** ile kaldırın. Uygulama silindikten sonra kalan hook'lar hiçbir şey yapmaz ama `~/.claude/settings.json` içinde kalır.
+2. Ayarlar > Genel'de **Oturum açıldığında başlat**'ı kapatın, menü çubuğundan ljaspNotch'tan çıkın ve uygulamayı Çöp Sepeti'ne taşıyın.
+3. Eklentiyi `chrome://extensions` sayfasından kaldırın.
+4. Verilerini de silmek için (temalar, düzen, tercihler ve eklenti token'ı):
+   ```bash
+   rm -rf ~/Library/Application\ Support/ljaspNotch
+   defaults delete io.github.muazfurkan.ljaspnotch
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server
+   ```
+   Hook kurulumunda alınan Claude Code ayar yedekleri `~/.claude/settings.json.bak-…` adıyla yanında durur; saklayabilir ya da silebilirsiniz.
 
 ## Katkı
 

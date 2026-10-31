@@ -7,6 +7,7 @@ import SwiftUI
 struct NotchRootView: View {
   let model: NotchViewModel
   let host: WidgetHost
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
   var body: some View {
     if let geometry = model.geometry {
@@ -59,8 +60,12 @@ struct NotchRootView: View {
   }
 
   /// Opening uses the theme's spring; closing is always critically damped and a bit faster.
+  /// With Reduce Motion on, both are a short ease without any bounce.
   private func animation(for state: NotchState, theme: Theme) -> Animation {
-    state.isOpen
+    if reduceMotion {
+      return .easeOut(duration: 0.18)
+    }
+    return state.isOpen
       ? .spring(response: theme.spring.response, dampingFraction: theme.spring.damping)
       : .spring(response: theme.spring.response * 0.85, dampingFraction: 1)
   }
