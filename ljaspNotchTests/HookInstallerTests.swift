@@ -172,6 +172,23 @@ struct HookInstallerTests {
     #expect(throws: HookInstaller.Failure.changedSinceReview) { try installer.apply(plan) }
   }
 
+  @Test func flagsReformatting() throws {
+    defer { cleanUp() }
+    try write(#"{"model":"opus"}"#)
+    let plan = try installer.planInstall(token: token)
+    #expect(plan.reformats)
+    try installer.apply(plan)
+    #expect(!(try installer.planUninstall()).reformats)
+  }
+
+  @Test func formattingChangesAfterReviewAreNotOverwritten() throws {
+    defer { cleanUp() }
+    try write(#"{ "model": "opus" }"#)
+    let plan = try installer.planInstall(token: token)
+    try write(#"{"model": "opus"}"#)
+    #expect(throws: HookInstaller.Failure.changedSinceReview) { try installer.apply(plan) }
+  }
+
   @Test func diffMasksTheToken() throws {
     defer { cleanUp() }
     let plan = try installer.planInstall(token: token)

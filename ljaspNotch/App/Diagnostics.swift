@@ -18,7 +18,7 @@ enum Diagnostics {
     let spotify = await AppleScriptRunner.shared.permission(
       for: SpotifyAdapter().bundleID, ask: false)
     let music = await AppleScriptRunner.shared.permission(for: MusicAdapter().bundleID, ask: false)
-    let token = sources.server.token
+    let token = sources.server.hookToken
     let hooks = await Task.detached {
       (try? HookInstaller.standard.status(token: token)).map { "\($0)" } ?? "unreadable"
     }.value

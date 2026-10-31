@@ -44,10 +44,10 @@ struct HookPayloadTests {
 
 @MainActor
 struct PermissionBrokerTests {
-  private func request(session: String = "s") -> PermissionBroker.Request {
+  private func request(session: String = "s", canAllow: Bool = true) -> PermissionBroker.Request {
     PermissionBroker.Request(
       id: UUID(), sessionID: session, project: "demo", toolName: "Bash", detail: "ls",
-      isSuspicious: false, receivedAt: .now)
+      isSuspicious: false, canAllow: canAllow, receivedAt: .now)
   }
 
   @Test func userDecisionIsReturned() async {
@@ -60,6 +60,25 @@ struct PermissionBrokerTests {
     broker.resolve(request.id, with: .allow)
     #expect(await decision == .allow)
     #expect(broker.pending.isEmpty)
+  }
+
+  @Test func allowIsRefusedWhenTheRequestDidNotOfferIt() async {
+    let broker = PermissionBroker()
+    let request = request(canAllow: false)
+    async let decision = broker.decide(request)
+    while broker.pending.isEmpty {
+      await Task.yield()
+    }
+    broker.resolve(request.id, with: .allow)
+    #expect(await decision == .askInTerminal)
+  }
+
+  @Test(arguments: [
+    (NotchApprovals.all, "Bash", true), (.all, "Edit", true), (.exceptShell, "Bash", false),
+    (.exceptShell, "Edit", true), (.never, "Edit", false),
+  ])
+  func approvalPolicy(policy: NotchApprovals, tool: String, allowed: Bool) {
+    #expect(policy.allows(toolName: tool) == allowed)
   }
 
   @Test func timeoutFallsBackToTheTerminal() async {

@@ -54,8 +54,8 @@ struct DiagnosticsTests {
     #expect(report.contains("ljaspNotch"))
     #expect(report.contains("macOS"))
     #expect(!report.contains(NSHomeDirectory()))
-    if !server.token.isEmpty {
-      #expect(!report.contains(server.token))
+    for token in [server.hookToken, server.extensionToken] where !token.isEmpty {
+      #expect(!report.contains(token))
     }
   }
 }

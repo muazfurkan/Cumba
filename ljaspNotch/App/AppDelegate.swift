@@ -60,7 +60,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     media.start()
     media.add(server.browserHub.youtube)
     media.add(server.browserHub.youtubeMusic)
-    Task { [server, settings] in await server.start(port: settings.serverPort) }
+    observeApprovals()
+    Task { [server, settings] in
+      await server.loadTokens()
+      if settings.browserExtensionEnabled {
+        server.startExtensionServer(port: settings.serverPort)
+      }
+      // The hook socket runs only while hooks are installed (or left over from an update).
+      let token = server.hookToken
+      let hooksPresent = await Task.detached {
+        (try? HookInstaller.standard.status(token: token)).map { $0 != .notInstalled } ?? false
+      }.value
+      if hooksPresent {
+        server.startHookServer()
+      }
+    }
     notchWindow.start()
     Task { [themes, layoutStore] in
       await themes.load()
@@ -69,6 +83,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     welcomeWindow.showIfFirstLaunch()
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
+  }
+
+  private func observeApprovals() {
+    claude.notchApprovals = settings.notchApprovals
+    withObservationTracking {
+      _ = settings.notchApprovals
+    } onChange: { [weak self] in
+      Task { @MainActor in self?.observeApprovals() }
+    }
   }
 
   private func observeUpdateSetting() {

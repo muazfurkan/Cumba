@@ -114,7 +114,8 @@ private struct SessionRow: View {
 ///
 /// Safety: the full request is shown, escaped (`SafeText`). Buttons stay disabled for a
 /// moment whenever a new request appears, so a click aimed at something else or a double
-/// click can't approve it unseen. Suspicious requests get no Allow button at all.
+/// click can't approve it unseen. Suspicious requests, and tools Settings exclude, get no
+/// Allow button at all.
 struct PermissionCard: View {
   let request: PermissionBroker.Request
   /// Requests waiting behind this one.
@@ -159,9 +160,14 @@ struct PermissionCard: View {
         .font(.caption2)
         .foregroundStyle(.orange)
         .fixedSize(horizontal: false, vertical: true)
+      } else if !request.canAllow {
+        Text("Allowing this from the notch is turned off in Settings.")
+          .font(.caption2)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
       }
       HStack(spacing: 6) {
-        if !request.isSuspicious {
+        if request.canAllow {
           Button("Allow") { answer(.allow) }
             .buttonStyle(.borderedProminent)
             .tint(.green)

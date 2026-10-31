@@ -35,20 +35,24 @@ Otomatik testlerin ve CI'ın kapsayamadığı, gerçek donanım, izin pencereler
 22. İzni Sistem Ayarları > Gizlilik ve Güvenlik > Otomasyon'dan kapatın: widget'ta anlaşılır bir uyarı çıkmalı.
 
 ## YouTube (Chrome eklentisi)
-23. Ayarlar > Bağlantılar'da sunucu "çalışıyor" görünmeli. Token'ı "Kopyala" ile alın (bir dakika sonra panodan kendiliğinden silinir). "Eklenti Klasörünü Göster" ile klasörü bulun, Chrome'da "Paketlenmemiş öğe yükle" ile ekleyin, seçeneklere port ve token'ı yapıştırın: durum "Uygulamaya bağlı" olmalı.
+23. Ayarlar > Bağlantılar'da "YouTube eklentisini bağla"yı açın: sunucu "çalışıyor" görünmeli (kapalıyken hiçbir port dinlenmemeli). Token'ı "Kopyala" ile alın (bir dakika sonra panodan kendiliğinden silinir). "Eklenti Klasörünü Göster" ile klasörü bulun, Chrome'da "Paketlenmemiş öğe yükle" ile ekleyin, seçeneklere port ve token'ı yapıştırın: durum "Uygulamaya bağlı" olmalı.
 24. YouTube Music'te ve YouTube'da bir şey çalın: notch'ta görünmeli, kontroller ve sarma çalışmalı. İki sekmede çalınca en son başlayan gösterilmeli.
 25. ljaspNotch'u kapatıp açın: eklenti birkaç saniye içinde kendiliğinden yeniden bağlanmalı.
 
 ## Claude Code
-26. Ayarlar > Claude Code > "Kur…": değişiklik farkı (diff) gösterilmeli, token `••••••••` olarak maskelenmeli. Kaydedince `~/.claude` içinde `settings.json.bak-…` yedeği oluşmalı. "Soket" satırı "Dinliyor" göstermeli.
+26. Ayarlar > Claude Code > "Kur…": değişiklik farkı (diff) gösterilmeli, token `••••••••` olarak maskelenmeli. Dosyanız farklı biçimdeyse "yeniden biçimlenecek" notu görünmeli. Kaydedince `~/.claude` içinde `settings.json.bak-…` yedeği oluşmalı. "Soket" satırı "Dinliyor" göstermeli (hook'lar kurulu değilken "Durdu").
 27. Terminalde Claude Code'da izin isteyen bir komut çalıştırın: notch'un yanında el simgesi çıkmalı. Panelde komutun tamamı görünmeli; düğmeler kart çıktıktan kısa süre sonra etkinleşmeli. İzin Ver / Reddet / Terminalde çalışmalı. Ayrıca terminalde izin diyaloğunun aynı anda görünüp görünmediğini not edin (SPEC § 16-1).
 28. İş bitince "Bitti", hata olunca "Hata" göstergesi kısa süre görünmeli.
 29. ljaspNotch kapalıyken Claude Code normal çalışmalı (izni terminal sormalı).
 30. Claude masaüstü uygulamasındaki Code oturumunda da 27. maddeyi deneyin (SPEC § 16-6).
-31. "Kaldır…": yalnızca ljaspNotch girdileri silinmeli, diğer hook'larınız kalmalı.
+31. "Kaldır…": yalnızca ljaspNotch girdileri silinmeli, diğer hook'larınız kalmalı; "Soket" satırı "Durdu"ya dönmeli.
+31a. "Notch'tan izin ver" = "Kabuk komutları dışında hepsi": Bash isteğinde İzin Ver düğmesi olmamalı, kartta "kapalı" notu görünmeli; Edit gibi bir istekte İzin Ver görünmeli. "Hiçbiri"nde hiçbir istekte İzin Ver olmamalı.
 
 ## Genel
 32. Ayarlar > Genel > "Şimdi Denetle": güncel sürümde "ljaspNotch güncel." yazmalı.
 33. "Tanılama Bilgisini Kopyala": panodaki metinde token, dosya yolu veya kişisel veri olmamalı.
 34. Sistem dilini Türkçe/İngilizce yapın: tüm metinler çevrilmiş olmalı.
 35. VoiceOver'ı açın (⌘F5): panel düğmeleri anlamlı adlarla okunmalı.
+36. `defaults delete io.github.muazfurkan.ljaspnotch hasSeenWelcome` sonrası uygulamayı açın: karşılama penceresi bir kez görünmeli; Uygulamalar dışından açıldıysa sarı taşıma uyarısı olmalı.
+37. Sistem Ayarları > Erişilebilirlik > Ekran > "Hareketi azalt" açıkken panel yaylanmadan açılıp kapanmalı.
+38. Yeni bir sürümün `.dmg` dosyasını indirin: `shasum -a 256` değeri `SHA256SUMS.txt` ile, `gh attestation verify` başarılı olmalı; disk görüntüsünde Uygulamalar kısayolu olmalı.

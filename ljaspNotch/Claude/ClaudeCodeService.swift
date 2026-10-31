@@ -28,6 +28,8 @@ final class ClaudeCodeService {
   /// Most recently updated first.
   private(set) var sessions: [Session] = []
   let permissions: PermissionBroker
+  /// From Settings > Claude Code; applies to requests that arrive afterwards.
+  var notchApprovals = NotchApprovals.all
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter
   @ObservationIgnored private var removalTasks: [String: Task<Void, Never>] = [:]
@@ -87,10 +89,12 @@ final class ClaudeCodeService {
   /// Shows the request in the notch and waits for the user's decision.
   func requestPermission(_ payload: HookPayload) async -> PermissionBroker.Decision {
     let detail = payload.permissionDetail
+    let toolName = SafeText(payload.toolName ?? "?").text
     let request = PermissionBroker.Request(
-      id: UUID(), sessionID: payload.sessionID, project: payload.project,
-      toolName: SafeText(payload.toolName ?? "?").text, detail: detail.text,
-      isSuspicious: detail.isSuspicious, receivedAt: Date())
+      id: UUID(), sessionID: payload.sessionID, project: payload.project, toolName: toolName,
+      detail: detail.text, isSuspicious: detail.isSuspicious,
+      canAllow: !detail.isSuspicious && notchApprovals.allows(toolName: toolName),
+      receivedAt: Date())
     update(payload.sessionID, project: payload.project, state: .waitingPermission, detail: nil)
     let decision = await permissions.decide(request)
     if !permissions.hasPending(in: payload.sessionID) {

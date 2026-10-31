@@ -28,11 +28,20 @@ struct HookInstaller: Sendable {
 
   /// What a change would do, shown to the user before anything is written.
   struct Plan: Equatable, Sendable {
+    /// The file exactly as it was when reviewed; saving fails if it changed since.
+    let fileText: String
+    /// Old and new content in the standard format the file is written in.
     let oldText: String
     let newText: String
     /// Line diff with tokens masked, for display.
     let diff: [DiffLine]
     var hasChanges: Bool { oldText != newText }
+    /// True when saving also changes the file's formatting or key order, which the diff of
+    /// the standard renderings doesn't show line by line.
+    var reformats: Bool {
+      hasChanges && !fileText.isEmpty
+        && fileText.trimmingCharacters(in: .whitespacesAndNewlines) != oldText
+    }
   }
 
   /// Events, with timeouts in seconds (SPEC § 9). SessionEnd needs an explicit timeout;
@@ -67,21 +76,21 @@ struct HookInstaller: Sendable {
   }
 
   func planInstall(token: String) throws(Failure) -> Plan {
-    let settings = try readSettings()
+    let (text, settings) = try readFile()
     return Self.plan(
-      from: settings, to: Self.installing(socketPath: socketPath, token: token, into: settings))
+      file: text, from: settings,
+      to: Self.installing(socketPath: socketPath, token: token, into: settings))
   }
 
   func planUninstall() throws(Failure) -> Plan {
-    let settings = try readSettings()
-    return Self.plan(from: settings, to: Self.removingOurs(from: settings))
+    let (text, settings) = try readFile()
+    return Self.plan(file: text, from: settings, to: Self.removingOurs(from: settings))
   }
 
   /// Writes the reviewed plan. Backs up the old file first; returns the backup's URL.
   @discardableResult
   func apply(_ plan: Plan, now: Date = .now) throws(Failure) -> URL? {
-    let current = try readSettings()
-    guard Self.render(current) == plan.oldText else { throw .changedSinceReview }
+    guard try readFile().text == plan.fileText else { throw .changedSinceReview }
     let target = resolvedURL
     let manager = FileManager.default
     do {
@@ -115,21 +124,26 @@ struct HookInstaller: Sendable {
     }
   }
 
-  /// A missing file counts as empty; any other read error is a failure, so a file we
-  /// can't read (e.g. owned by root) is never replaced.
   private func readSettings() throws(Failure) -> [String: Any] {
+    try readFile().object
+  }
+
+  /// The file's text and parsed content. A missing file counts as empty; any other read
+  /// error is a failure, so a file we can't read (e.g. owned by root) is never replaced.
+  private func readFile() throws(Failure) -> (text: String, object: [String: Any]) {
     let url = resolvedURL
     guard FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) else {
-      return [:]
+      return ("", [:])
     }
     guard let data = try? Data(contentsOf: url) else { throw .unreadable }
+    let text = String(decoding: data, as: UTF8.self)
     if data.allSatisfy({ $0 == 0x20 || $0 == 0x0A || $0 == 0x0D || $0 == 0x09 }) {
-      return [:]
+      return (text, [:])
     }
     guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
       throw .unreadable
     }
-    return object
+    return (text, object)
   }
 
   // MARK: - Pure transformations
@@ -256,11 +270,11 @@ struct HookInstaller: Sendable {
       with: "\(RequestGuard.tokenHeader)$1••••••••", options: .regularExpression)
   }
 
-  static func plan(from old: [String: Any], to new: [String: Any]) -> Plan {
+  static func plan(file: String, from old: [String: Any], to new: [String: Any]) -> Plan {
     let oldText = render(old)
     let newText = render(new)
     return Plan(
-      oldText: oldText, newText: newText,
+      fileText: file, oldText: oldText, newText: newText,
       diff: DiffLine.lines(from: maskingTokens(in: oldText), to: maskingTokens(in: newText)))
   }
 }

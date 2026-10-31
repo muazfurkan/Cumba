@@ -158,6 +158,26 @@
         }
       }
     },
+    "All except shell commands" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kabuk komutları dışında hepsi"
+          }
+        }
+      }
+    },
+    "All requests" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm istekler"
+          }
+        }
+      }
+    },
     "Allow" : {
       "localizations" : {
         "tr" : {
@@ -208,6 +228,16 @@
         }
       }
     },
+    "Allow from the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'tan izin ver"
+          }
+        }
+      }
+    },
     "Allow in Settings" : {
       "localizations" : {
         "tr" : {
@@ -218,12 +248,32 @@
         }
       }
     },
+    "Allow in the notch is the same as Allow in Claude Code: the tool runs right away. Requests with hidden characters never get an Allow button." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez."
+          }
+        }
+      }
+    },
     "Allowed" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "İzin verildi"
+          }
+        }
+      }
+    },
+    "Allowing this from the notch is turned off in Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunun notch'tan onaylanması Ayarlar'da kapalı."
           }
         }
       }
@@ -534,6 +584,16 @@
         }
       }
     },
+    "Connect the YouTube extension" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube eklentisini bağla"
+          }
+        }
+      }
+    },
     "Connect your apps" : {
       "localizations" : {
         "tr" : {
@@ -591,6 +651,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tanılama Bilgisini Kopyala"
+          }
+        }
+      }
+    },
+    "Copy Hook Token" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hook Token'ını Kopyala"
           }
         }
       }
@@ -945,6 +1015,16 @@
         }
       }
     },
+    "In the Notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'ta"
+          }
+        }
+      }
+    },
     "Include pre-releases" : {
       "localizations" : {
         "tr" : {
@@ -1181,6 +1261,16 @@
         }
       }
     },
+    "Never (only Deny and In Terminal)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbiri (yalnızca Reddet ve Terminalde)"
+          }
+        }
+      }
+    },
     "New Tab" : {
       "comment" : "Default name of a new panel tab",
       "localizations" : {
@@ -1298,6 +1388,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yalnızca tıklayınca"
+          }
+        }
+      }
+    },
+    "Only the ljaspNotch extension with this token is accepted. This token is only for the extension; Claude Code hooks use their own. After regenerating it, paste the new token into the extension's options." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca bu token'ı taşıyan ljaspNotch eklentisi kabul edilir. Bu token yalnızca eklenti içindir; Claude Code hook'ları kendi token'ını kullanır. Yeniledikten sonra yeni token'ı eklentinin seçeneklerine yapıştırın."
           }
         }
       }
@@ -1666,6 +1766,16 @@
         }
       }
     },
+    "Saving also rewrites the file in a standard format (keys sorted, two-space indents). Its contents change only as shown below." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydetmek dosyayı standart bir biçimde de yeniden yazar (anahtarlar sıralı, iki boşluk girinti). İçerik yalnızca aşağıda gösterildiği kadar değişir."
+          }
+        }
+      }
+    },
     "Search" : {
       "localizations" : {
         "tr" : {
@@ -2001,16 +2111,6 @@
         }
       }
     },
-    "The server only listens on this Mac (127.0.0.1) and accepts only requests that carry this token. After regenerating it, paste the new token into the Chrome extension and reinstall the Claude Code hooks." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sunucu yalnızca bu Mac'i (127.0.0.1) dinler ve yalnızca bu token'ı taşıyan istekleri kabul eder. Token'ı yeniledikten sonra yenisini Chrome eklentisine yapıştırın ve Claude Code hook'larını yeniden kurun."
-          }
-        }
-      }
-    },
     "The theme file couldn't be used." : {
       "localizations" : {
         "tr" : {
@@ -2150,6 +2250,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Raf"
+          }
+        }
+      }
+    },
+    "Turn this on only if you use the extension. ljaspNotch then listens on this Mac (127.0.0.1) for the ljaspNotch extension; nothing is reachable from the network." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca eklentiyi kullanıyorsanız açın. ljaspNotch bu durumda bu Mac'te (127.0.0.1) ljaspNotch eklentisini dinler; ağdan hiçbir şeye erişilemez."
           }
         }
       }

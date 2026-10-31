@@ -6,8 +6,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-10-31
-
 ### Added
 
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
@@ -15,11 +13,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - README sections on uninstalling.
 - Release downloads carry signed build provenance; check them with `gh attestation verify`. Releases are immutable once published.
 - README banner, also used as the GitHub social preview, drawn by `scripts/make-banner.swift`.
+- Settings > Claude Code: choose what can be allowed from the notch (everything, everything except shell commands, or nothing), and copy the hook token for manual setup.
+- README sections on project status, verifying a download before opening it, and the permissions the app uses and when; SECURITY.md explains how releases are built and maps the security-relevant code.
 
 ### Changed
 
+- The Chrome extension connection is off until you turn it on in Settings > Connections; if you use the extension, turn it on and paste the new extension token into its options.
 - With Reduce Motion turned on in System Settings, the panel opens and closes with a short ease instead of a spring.
 - Questions and ideas go to GitHub Discussions; issues are for bugs and concrete feature requests.
+
+### Security
+
+- Nothing listens unless you use it: the extension server runs only while the extension connection is on, the hook socket only while hooks are installed.
+- The hooks and the extension have separate tokens, so the hook token in `~/.claude/settings.json` can't be used on the extension's port.
+- Allow from the notch can be limited, and the limit is enforced when the answer is sent, not only in the UI.
+- The hook installer refuses to save if the settings file changed in any byte since the review, and says when saving will also reformat it.
+- The release build uses a pinned, checksummed XcodeGen instead of the latest Homebrew version.
 
 ## [1.0.0] - 2026-10-31
 
@@ -38,7 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
-Fixes from an independent security review:
+Fixes from a security review of the code, done with AI assistance (not an external audit):
 
 - Claude Code hooks now reach the app through a Unix socket in a folder only your account can open, using `command` hooks with curl, instead of HTTP on a TCP port. Another user or a sandboxed app could otherwise have taken the port while the app was closed and approved commands. Update the hooks in Settings > Claude Code.
 - The permission card shows the full request, makes control, direction and zero-width characters and long space runs visible, offers no Allow button for suspicious requests, and arms its buttons only after a short delay.
@@ -126,8 +135,7 @@ Fixes from an independent security review:
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/muazfurkan/ljaspNotch/compare/v1.0.0...v1.1.0
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...v0.6.0

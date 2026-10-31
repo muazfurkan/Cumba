@@ -13,6 +13,8 @@
 
 A free, open source notch app for macOS. It turns the MacBook notch into a panel that grows out of the camera housing when you rest the pointer on it: music from Spotify, Apple Music and YouTube, Claude Code permission requests, and a set of widgets, all in a look you can make your own.
 
+> **Project status:** ljaspNotch is new (first release October 2026) and made by one maintainer with AI assistance (Claude Code). It hasn't had an external security audit. The code is small and open, releases are built by GitHub Actions from tagged commits, and [what it can access](#permissions-and-what-runs) and [how to check a download](#download-and-install) are listed below.
+
 ## Features
 
 - **Media**: Spotify, Apple Music, YouTube and YouTube Music in one mini player with artwork, progress, seeking and controls. A small waveform beside the notch shows what's playing.
@@ -23,22 +25,28 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
 - **Stays out of the way**: clicks pass through to the menu bar, the panel hides in full screen apps, idle CPU use is zero.
 - English and Turkish interface.
 
-## Download
+## Download and install
 
-1. Get `ljaspNotch-vX.Y.Z.dmg` from the [latest release](https://github.com/muazfurkan/ljaspNotch/releases/latest), open it and drag ljaspNotch to Applications. A `.zip` is there too.
-2. The app is free and not notarized by Apple, so macOS warns the first time you open it. Open it once, then go to **System Settings > Privacy & Security** and click **Open Anyway**. Or run:
+1. Get `ljaspNotch-vX.Y.Z.dmg` (or the `.zip`) from the [latest release](https://github.com/muazfurkan/ljaspNotch/releases/latest).
+2. **Check the download before opening it.** Its SHA-256 must match the one in `SHA256SUMS.txt` on the release page:
    ```bash
-   xattr -dr com.apple.quarantine /Applications/ljaspNotch.app
+   shasum -a 256 ~/Downloads/ljaspNotch-vX.Y.Z.dmg
    ```
-3. A short welcome explains the basics on first launch. ljaspNotch lives in the menu bar; if the menu bar is crowded and its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
+   From 1.1.0 on, releases are also immutable (files and tag can't change after publishing) and carry signed build provenance. With the [GitHub CLI](https://cli.github.com) you can confirm the file was built from this repository by its release workflow:
+   ```bash
+   gh attestation verify ~/Downloads/ljaspNotch-vX.Y.Z.dmg --repo muazfurkan/ljaspNotch
+   ```
+3. Open the disk image and drag ljaspNotch to Applications.
+4. ljaspNotch isn't notarized by Apple, because that needs a paid developer account, so macOS blocks the first launch. Open it once, then click **Open Anyway** in **System Settings > Privacy & Security**. If you'd rather not run a downloaded build at all, [build it from source](#build-from-source).
+5. A short welcome explains the basics. ljaspNotch lives in the menu bar; if its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
 
-Each release has SHA-256 checksums next to the files. Releases after 1.0.0 are also immutable (their files and tag can't change once published) and carry signed build provenance, so you can check that a download was built by this repository's release workflow:
+<details>
+<summary>Terminal alternative to Open Anyway</summary>
 
-```bash
-gh attestation verify ljaspNotch-vX.Y.Z.zip --repo muazfurkan/ljaspNotch
-```
+`xattr -dr com.apple.quarantine /Applications/ljaspNotch.app` removes the download flag from this one app, so Gatekeeper stops asking. Only do this for a copy you checked in step 2.
+</details>
 
-After an update, macOS may ask again for permissions (Automation, Calendar, Camera) and Keychain access, because release builds are signed ad hoc.
+**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Camera) and for Keychain access to ljaspNotch's tokens. Check the new download first, then allow.
 
 ## Requirements
 
@@ -60,19 +68,40 @@ open ljaspNotch.xcodeproj
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
+## Permissions and what runs
+
+Everything below is off or unused until you turn on the feature that needs it.
+
+| What | Why | When |
+|---|---|---|
+| Automation (Apple Events) for Spotify and Music | Read the current track; play, pause, skip, seek | Asked from Settings; scripts are sent only while that app is already running |
+| Calendar (full access) | Calendar widget | Asked from Settings when you use the widget |
+| Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
+| Local server on `127.0.0.1` | YouTube extension connection | Only after you turn it on in Settings > Connections |
+| Private Unix socket | Claude Code hooks | Only while the hooks are installed |
+| `~/.claude/settings.json` | Installing and removing the hooks | Only after you review the change; a backup is kept |
+| Login item | Launch at login | Off until you turn it on |
+| Network | Artwork, weather, update check | See [Privacy](#privacy) |
+
+The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [ljaspNotch.entitlements](ljaspNotch/Resources/ljaspNotch.entitlements) (Apple Events, calendars, camera).
+
+ljaspNotch never sends telemetry, uses no private Apple APIs, asks for no administrator password, installs no helper tools, kernel or system extensions, doesn't change system settings, and never downloads code or updates itself. [SECURITY.md](SECURITY.md) has the threat model and a map of the security-relevant code.
+
 ## YouTube and YouTube Music
 
 A small Chrome extension (also works in other Chromium browsers) sends what plays in YouTube tabs to the app over a local connection, and the app sends play, pause, next and seek back.
 
-1. In ljaspNotch, open **Settings > Connections** and click **Show Extension Folder**.
+1. In ljaspNotch, open **Settings > Connections**, turn on **Connect the YouTube extension** and click **Show Extension Folder**.
 2. In Chrome, open `chrome://extensions`, turn on **Developer mode** and click **Load unpacked**. Choose the folder from step 1.
 3. Open the extension's **Details > Extension options**, paste the port and the token from **Settings > Connections**, and save.
 
-The extension has no permissions besides storage, reads only `youtube.com` and `music.youtube.com`, and talks only to `127.0.0.1`.
+Chrome will say the extension can read and change your data on `youtube.com` and `music.youtube.com`: it reads the player (title, artwork, progress) and presses play, pause, next and seek there. It runs on no other site, its only other permission is storage (for the port and token), and it talks only to `127.0.0.1`.
 
 ## Claude Code
 
-Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. The card shows the full request with hidden characters made visible. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. Hooks reach the app through a private socket that only your user account can open, so nothing else can answer Claude Code in its place. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
+Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. The card shows the full request with hidden characters made visible. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. Hooks reach the app through a private socket that only your user account can open, so nothing else can answer Claude Code in its place; they use their own token, separate from the extension's.
+
+**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Claude Code you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 
 ## Privacy
 
@@ -87,18 +116,19 @@ No telemetry. Everything stays on your Mac. These features make network requests
 
 The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac.
 
-The extension server listens only on `127.0.0.1`, accepts only the ljaspNotch extension and requires a token stored in your Keychain. Updating an ad-hoc signed build may make macOS ask once more for Keychain access.
+When turned on, the extension server listens only on `127.0.0.1`, accepts only the ljaspNotch extension and requires its own token, stored in your Keychain.
 
 ## Uninstall
 
 1. If you installed the Claude Code hooks, remove them first in **Settings > Claude Code > Remove…**. Hooks left behind do nothing once the app is gone, but they stay in `~/.claude/settings.json`.
 2. Turn off **Launch at login** in Settings > General, quit ljaspNotch from the menu bar and move it to the Trash.
 3. Remove the extension in `chrome://extensions`.
-4. To delete its data too (themes, layout, preferences and the extension token):
+4. To delete its data too (themes, layout, preferences and the tokens):
    ```bash
    rm -rf ~/Library/Application\ Support/ljaspNotch
    defaults delete io.github.muazfurkan.ljaspnotch
-   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a token
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
    ```
    Backups of your Claude Code settings made during hook setup are next to it as `~/.claude/settings.json.bak-…`; keep or delete them.
 

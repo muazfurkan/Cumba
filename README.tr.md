@@ -13,6 +13,8 @@
 
 macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu, imleci üzerinde tuttuğunuzda kamera yuvasından büyüyen bir panele çevirir: Spotify, Apple Music ve YouTube'dan müzik, Claude Code izin istekleri ve bir dizi widget; hepsi size göre ayarlanabilen bir görünümle.
 
+> **Proje durumu:** ljaspNotch yeni (ilk sürüm Ekim 2026) ve tek bir geliştirici tarafından yapay zeka desteğiyle (Claude Code) geliştiriliyor. Bağımsız bir güvenlik denetiminden geçmedi. Kod küçük ve açık, sürümler etiketli commit'lerden GitHub Actions'ta derleniyor; [nelere erişebildiği](#izinler) ve [indirilen dosyanın nasıl doğrulanacağı](#indirme) aşağıda.
+
 ## Özellikler
 
 - **Medya**: Spotify, Apple Music, YouTube ve YouTube Music tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
@@ -23,22 +25,30 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 - **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, panel tam ekran uygulamalarda gizlenir, boşta CPU kullanımı sıfırdır.
 - Türkçe ve İngilizce arayüz.
 
-## İndirme
+<a name="indirme"></a>
 
-1. [Son sürümden](https://github.com/muazfurkan/ljaspNotch/releases/latest) `ljaspNotch-vX.Y.Z.dmg` dosyasını indirin, açın ve ljaspNotch'u Uygulamalar klasörüne sürükleyin. Aynı sayfada `.zip` de var.
-2. Uygulama ücretsizdir ve Apple tarafından notarize edilmemiştir, bu yüzden macOS ilk açılışta uyarır. Bir kez açmayı deneyin, ardından **Sistem Ayarları > Gizlilik ve Güvenlik**'te **Yine de Aç**'a tıklayın. Ya da şunu çalıştırın:
+## İndirme ve kurulum
+
+1. [Son sürümden](https://github.com/muazfurkan/ljaspNotch/releases/latest) `ljaspNotch-vX.Y.Z.dmg` (ya da `.zip`) dosyasını indirin.
+2. **Açmadan önce dosyayı doğrulayın.** SHA-256 değeri, sürüm sayfasındaki `SHA256SUMS.txt` ile aynı olmalı:
    ```bash
-   xattr -dr com.apple.quarantine /Applications/ljaspNotch.app
+   shasum -a 256 ~/Downloads/ljaspNotch-vX.Y.Z.dmg
    ```
-3. İlk açılışta kısa bir karşılama penceresi temel kullanımı anlatır. ljaspNotch menü çubuğunda yaşar. Menü çubuğu kalabalıksa ve simgesi notch'un arkasında kalırsa, Ayarlar'a ulaşmak için uygulamayı Finder'dan veya Spotlight'tan yeniden açın.
+   1.1.0'dan itibaren sürümler ayrıca değiştirilemezdir (yayımlandıktan sonra dosyaları ve etiketi değişemez) ve imzalı derleme kaynağı (build provenance) taşır. [GitHub CLI](https://cli.github.com) ile dosyanın bu reponun yayın iş akışında derlendiğini doğrulayabilirsiniz:
+   ```bash
+   gh attestation verify ~/Downloads/ljaspNotch-vX.Y.Z.dmg --repo muazfurkan/ljaspNotch
+   ```
+3. Disk görüntüsünü açın ve ljaspNotch'u Uygulamalar klasörüne sürükleyin.
+4. ljaspNotch Apple tarafından notarize edilmedi, çünkü bu ücretli bir geliştirici hesabı gerektiriyor; bu yüzden macOS ilk açılışı engeller. Bir kez açmayı deneyin, ardından **Sistem Ayarları > Gizlilik ve Güvenlik**'te **Yine de Aç**'a tıklayın. İndirilmiş bir derlemeyi hiç çalıştırmak istemezseniz [kaynaktan derleyin](#kaynaktan-derleme).
+5. Kısa bir karşılama penceresi temel kullanımı anlatır. ljaspNotch menü çubuğunda yaşar; simgesi notch'un arkasında kalırsa Ayarlar'a ulaşmak için uygulamayı Finder'dan veya Spotlight'tan yeniden açın.
 
-Her sürümde dosyaların yanında SHA-256 değerleri vardır. 1.0.0'dan sonraki sürümler ayrıca değiştirilemezdir (yayımlandıktan sonra dosyaları ve etiketi değişemez) ve imzalı derleme kaynağı (build provenance) taşır; indirdiğiniz dosyanın bu reponun yayın iş akışında derlendiğini şöyle doğrulayabilirsiniz:
+<details>
+<summary>Yine de Aç yerine Terminal</summary>
 
-```bash
-gh attestation verify ljaspNotch-vX.Y.Z.zip --repo muazfurkan/ljaspNotch
-```
+`xattr -dr com.apple.quarantine /Applications/ljaspNotch.app` yalnızca bu uygulamadaki indirme işaretini kaldırır, Gatekeeper da sormayı bırakır. Bunu yalnızca 2. adımda doğruladığınız bir kopya için yapın.
+</details>
 
-Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS izinleri (Otomasyon, Takvim, Kamera) ve Anahtar Zinciri erişimini yeniden sorabilir.
+**Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Kamera) ve ljaspNotch'un token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
 
 ## Gereksinimler
 
@@ -60,19 +70,42 @@ open ljaspNotch.xcodeproj
 
 Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
+<a name="izinler"></a>
+
+## İzinler ve neler çalışır
+
+Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kullanılmaz.
+
+| Ne | Neden | Ne zaman |
+|---|---|---|
+| Spotify ve Müzik için Otomasyon (Apple Events) | Çalan parçayı okumak; oynat, duraklat, atla, sar | Ayarlar'dan istenir; komutlar yalnızca o uygulama zaten açıkken gönderilir |
+| Takvim (tam erişim) | Takvim widget'ı | Widget'ı kullandığınızda Ayarlar'dan istenir |
+| Kamera | Ayna widget'ı | Yalnızca panel onu gösterirken; hiçbir şey kaydedilmez |
+| `127.0.0.1` üzerinde yerel sunucu | YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
+| Özel Unix soketi | Claude Code hook'ları | Yalnızca hook'lar kuruluyken |
+| `~/.claude/settings.json` | Hook'ları kurmak ve kaldırmak | Yalnızca değişikliği gözden geçirdikten sonra; yedek alınır |
+| Giriş öğesi | Oturum açıldığında başlatma | Siz açana kadar kapalı |
+| Ağ | Kapak görselleri, hava durumu, güncelleme kontrolü | Bkz. [Gizlilik](#gizlilik) |
+
+App Sandbox kapalı: sandbox'taki bir uygulama Spotify ve Müzik'i komutla yönetmek, Claude Code hook'larının ulaştığı soketi çalıştırmak ve `~/.claude/settings.json` dosyasını düzenlemek için istisnalara ihtiyaç duyar. Hardened Runtime açık ve uygulamanın yalnızca [ljaspNotch.entitlements](ljaspNotch/Resources/ljaspNotch.entitlements) dosyasındaki yetkileri var (Apple Events, takvim, kamera).
+
+ljaspNotch hiçbir zaman telemetri göndermez, Apple'ın özel API'lerini kullanmaz, yönetici parolası istemez, yardımcı araç, çekirdek veya sistem uzantısı kurmaz, sistem ayarlarını değiştirmez, kod indirmez ve kendini güncellemez. Tehdit modeli ve güvenlikle ilgili kodun haritası [SECURITY.md](SECURITY.md) dosyasında.
+
 ## YouTube ve YouTube Music
 
 Küçük bir Chrome eklentisi (diğer Chromium tarayıcılarda da çalışır) YouTube sekmelerinde çalanı yerel bir bağlantı üzerinden uygulamaya gönderir; uygulama da oynat, duraklat, sonraki ve sarma komutlarını geri yollar.
 
-1. ljaspNotch'ta **Ayarlar > Bağlantılar**'ı açın ve **Eklenti Klasörünü Göster**'e tıklayın.
+1. ljaspNotch'ta **Ayarlar > Bağlantılar**'ı açın, **YouTube eklentisini bağla**'yı açın ve **Eklenti Klasörünü Göster**'e tıklayın.
 2. Chrome'da `chrome://extensions` adresini açın, **Geliştirici modu**'nu etkinleştirin ve **Paketlenmemiş öğe yükle**'ye tıklayın. 1. adımdaki klasörü seçin.
 3. Eklentinin **Ayrıntılar > Eklenti seçenekleri** sayfasını açın, **Ayarlar > Bağlantılar**'daki portu ve token'ı yapıştırıp kaydedin.
 
-Eklentinin depolama dışında izni yoktur, yalnızca `youtube.com` ve `music.youtube.com` sayfalarını okur ve yalnızca `127.0.0.1` ile konuşur.
+Chrome, eklentinin `youtube.com` ve `music.youtube.com` üzerindeki verilerinizi okuyup değiştirebileceğini söyler: eklenti oynatıcıyı okur (başlık, kapak, ilerleme) ve orada oynat, duraklat, sonraki ve sarma düğmelerine basar. Başka hiçbir sitede çalışmaz, tek diğer izni depolamadır (port ve token için) ve yalnızca `127.0.0.1` ile konuşur.
 
 ## Claude Code
 
-Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür; bir oturum bitince veya hata verince de görürsünüz. Kart, isteğin tamamını gizli karakterleri görünür hale getirerek gösterir. Hook'ları **Ayarlar > Claude Code**'dan kurun; `~/.claude/settings.json` değişikliğini önce siz görürsünüz ve yedek alınır. Hook'lar uygulamaya yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ulaşır; böylece başka hiçbir şey Claude Code'a uygulama adına cevap veremez. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
+Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür; bir oturum bitince veya hata verince de görürsünüz. Kart, isteğin tamamını gizli karakterleri görünür hale getirerek gösterir. Hook'ları **Ayarlar > Claude Code**'dan kurun; `~/.claude/settings.json` değişikliğini önce siz görürsünüz ve yedek alınır. Hook'lar uygulamaya yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ulaşır; böylece başka hiçbir şey Claude Code'a uygulama adına cevap veremez; hook'lar eklentininkinden ayrı, kendi token'larını kullanır.
+
+**Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır.** Ayarlar > Claude Code'dan notch'ta kabuk komutları dışındaki her şeye izin verilmesini seçebilir ya da İzin Ver'i tamamen kapatıp yalnızca Reddet ve Terminalde seçeneklerini bırakabilirsiniz. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
 
 ## Gizlilik
 
@@ -87,18 +120,19 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 
 Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar.
 
-Eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca ljaspNotch eklentisini kabul eder ve Anahtar Zinciri'nde saklanan bir token ister. Ad-hoc imzalı bir sürümü güncelledikten sonra macOS bir kez daha Anahtar Zinciri erişimi sorabilir.
+Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca ljaspNotch eklentisini kabul eder ve Anahtar Zinciri'nde saklanan kendi token'ını ister.
 
 ## Kaldırma
 
 1. Claude Code hook'larını kurduysanız önce **Ayarlar > Claude Code > Kaldır…** ile kaldırın. Uygulama silindikten sonra kalan hook'lar hiçbir şey yapmaz ama `~/.claude/settings.json` içinde kalır.
 2. Ayarlar > Genel'de **Oturum açıldığında başlat**'ı kapatın, menü çubuğundan ljaspNotch'tan çıkın ve uygulamayı Çöp Sepeti'ne taşıyın.
 3. Eklentiyi `chrome://extensions` sayfasından kaldırın.
-4. Verilerini de silmek için (temalar, düzen, tercihler ve eklenti token'ı):
+4. Verilerini de silmek için (temalar, düzen, tercihler ve token'lar):
    ```bash
    rm -rf ~/Library/Application\ Support/ljaspNotch
    defaults delete io.github.muazfurkan.ljaspnotch
-   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a token
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
    ```
    Hook kurulumunda alınan Claude Code ayar yedekleri `~/.claude/settings.json.bak-…` adıyla yanında durur; saklayabilir ya da silebilirsiniz.
 

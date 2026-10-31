@@ -403,6 +403,9 @@ Her olay için bir `command` hook (zaman aşımları yukarıdaki tabloda; curl'�
 ```
 Tüm olaylar tek endpoint'e gelir; sunucu `hook_event_name` alanına göre dağıtır. Soket rotası herhangi bir `Origin` başlığını reddeder ve token ister. Eski sürümlerin HTTP hook'ları (`X-LjaspNotch-Token` başlıklı) "güncel değil" sayılır ve Güncelle ile değiştirilir; başka araçların hook'larına dokunulmaz.
 
+### Notch'tan izin verme politikası
+Ayarlar > Claude Code > "Notch'tan izin ver": Tüm istekler (varsayılan) / Kabuk komutları (`Bash`) dışında hepsi / Hiçbiri. İstek gelirken `canAllow` hesaplanır (şüpheli değil ve politika izin veriyor); İzin Ver düğmesi yalnızca o zaman gösterilir ve `PermissionBroker.resolve` da `canAllow` olmayan bir isteğe gelen "allow"u "terminalde sor"a çevirir.
+
 ### İzin kartı güvenliği
 - İstek tam gösterilir: Bash için komutun tamamı, düzenlemeler için `..` çözülmüş yol, bilinmeyen/MCP araçları için tüm `tool_input` JSON olarak. Uzun içerik kaydırılabilir alanda.
 - Kontrol, yön (bidi), sıfır genişlik ve satır/paragraf ayırıcı karakterleri `⟨U+XXXX⟩`, 12'den uzun boşluk dizileri `⟨N spaces⟩` olarak gösterilir; bir karakterde 3'ten fazla birleşik işaret kesilir; içerik 4000 Unicode skalerle sınırlıdır (`SafeText`). Bunlardan biri olduysa istek şüpheli sayılır ve yalnızca Reddet / Terminalde sunulur.
@@ -507,13 +510,14 @@ Her faz sonunda: derleme temiz, testler yeşil, kabul kriterleri kontrol edildi,
 - Video önizleme (§ 8, deneysel), Lyrics widget'ı, AirPods araştırması, Jira widget'ı, Safari eklentisi.
 
 ## 12. Lokal sunucu, güvenlik ve gizlilik
+- Sunucular yalnızca kullanılırken çalışır: eklenti sunucusu Ayarlar > Bağlantılar'daki "YouTube eklentisini bağla" açıkken (varsayılan kapalı), hook soketi yalnızca hook'lar kuruluyken (açılışta ve Claude Code ayarları her açıldığında `HookInstaller.status` ile kontrol edilir).
 - Eklenti sunucusu yalnızca `127.0.0.1` adresini dinler (IPv4 açıkça verilir; FlyingFox'un `.loopback` adresi IPv6 `::1`'dir). Varsayılan port `47823`, Ayarlar > Bağlantılar'dan değiştirilebilir. Port doluysa kullanıcıya açık bir hata gösterilir. Claude hook'ları bu portu kullanmaz (§ 9, Unix soketi).
 - İki sunucu da hata verirse kendini 2 sn'den başlayıp 60 sn'ye kadar artan aralıklarla yeniden başlatır (ör. dosya tanımlayıcıları tükenince).
 - WebSocket yalnızca bizim eklentimizin Origin'ini kabul eder: `manifest.json`'daki açık `key` eklenti kimliğini sabitler (`chrome-extension://cleojjpnnopjeiedakghnnlilblgploj`). Gizli anahtar saklanmaz; yalnızca kimlik için gerekir.
 - Bilinen sınır: FlyingFox başlık sayısı/boyutu, WebSocket çerçeve boyutu ve bağlantı sayısı için sınır koymaz. Kimlik doğrulamadan önce yerel bir süreç bellek veya dosya tanımlayıcısı tüketebilir; etkisi yerel hizmet reddi ile sınırlıdır ve sunucu yeniden başlar.
 - Her istekte `Host` başlığı `127.0.0.1:<port>` veya `localhost:<port>` olmalıdır (DNS rebinding koruması).
 - Sunucunun istek zaman aşımı 310 sn (bekletilen izin istekleri için); FlyingFox günlüğü kapalıdır.
-- Token: ilk açılışta 32 bayt rastgele üretilir (`SecRandomCopyBytes`, 64 hex karakter), **Keychain**'de saklanır (eski login keychain; `kSecAttrAccessible` orada etkisiz olabilir, ad-hoc imzalı güncellemeler erişim sorabilir). Kopyalama panoya "concealed" türüyle yapılır ve 60 sn sonra temizlenir. Eklenti token'ı `chrome.storage.local`'da, içerik betiklerine kapalı (`TRUSTED_CONTEXTS`) tutar. Ayarlar'da göster / kopyala / yenile. Yenilenince hook yapılandırmasının güncellenmesi gerektiği söylenir. Karşılaştırma sabit sürelidir.
+- Token'lar ayrıdır: hook token'ı (Keychain hesabı `token`, 1.0'daki hook'lar geçerli kalsın diye) ve eklenti token'ı (`extension-token`). Hook token'ı `~/.claude/settings.json` içine düz metin yazılır ve yalnızca 0700 klasördeki soketi açar; eklentinin TCP portunda geçmez. Her token ilk açılışta 32 bayt rastgele üretilir (`SecRandomCopyBytes`, 64 hex karakter), **Keychain**'de saklanır (eski login keychain; `kSecAttrAccessible` orada etkisiz olabilir, ad-hoc imzalı güncellemeler erişim sorabilir). Kopyalama panoya "concealed" türüyle yapılır ve 60 sn sonra temizlenir. Eklenti token'ı `chrome.storage.local`'da, içerik betiklerine kapalı (`TRUSTED_CONTEXTS`) tutar. Eklenti token'ı Ayarlar > Bağlantılar'da gösterilir / kopyalanır / yenilenir; hook token'ı elle kurulum için Ayarlar > Claude Code'dan kopyalanır. Karşılaştırma sabit sürelidir.
 - HTTP: `X-LjaspNotch-Token` header'ı zorunlu, yanlışsa 401. CORS header'ı dönülmez; böylece web sayfalarından gelen JSON istekleri tarayıcıda takılır.
 - WebSocket: el sıkışmada `Origin` bir `chrome-extension://` adresi olmalı, ilk mesaj geçerli token içeren `hello` olmalı ve 5 sn içinde gelmeli. Aksi halde bağlantı `1008` ile kapatılır. Mesajlar en fazla 16 KB, metin alanları 300 karakterle sınırlıdır; kapak adresi yalnızca `https` ise kullanılır.
 - Telemetri yok. Dışarı giden istekler yalnızca kullanıcının açtığı özelliklerden gelir (kapak görselleri, Open-Meteo, LRCLIB, GitHub Releases güncelleme kontrolü) ve README'de listelenir. Güncelleme kontrolü Ayarlar'dan kapatılabilir.
@@ -537,7 +541,7 @@ App Sandbox kapalı, Hardened Runtime açık. Tüm izin istekleri kullanıcını
 - **İmzalama:** Katkıcılar kendi ücretsiz Personal Team'leriyle `Local.xcconfig` üzerinden derler.
 - **Sürümleme:** SemVer. Etiket `vX.Y.Z` → `MARKETING_VERSION`; build numarası CI çalışma numarası. Faz N sonu `v0.N.0`, Faz 8 sonu `v1.0.0`.
 - **Release iş akışı (`release.yml`, `v*` etiketiyle tetiklenir):**
-  1. Xcode 26 veya üstünü içeren macOS runner'da (`macos-26`) `xcodegen generate` + Release derlemesi.
+  1. Xcode 26 veya üstünü içeren macOS runner'da (`macos-26`) sabit sürümlü ve SHA-256'sı doğrulanan XcodeGen ile `xcodegen generate` + Release derlemesi.
   2. Uygulamaya **ad-hoc imza** (`codesign --force --deep --options runtime --entitlements … --sign -`). Apple Silicon'da hiç imzası olmayan uygulama çalışmaz; ad-hoc imza yeterli. Hardened Runtime ve entitlement'lar korunur.
   3. `ljaspNotch-vX.Y.Z.dmg` (Uygulamalar kısayollu disk görüntüsü), `ljaspNotch-vX.Y.Z.zip` (uygulama) ve `ljaspNotch-chrome-extension-vX.Y.Z.zip` (eklenti) üretilir, SHA-256 değerleri hesaplanır. Yayınlama işi bu dosyalar için imzalı derleme kaynağı (build provenance) üretir; repo ayarlarında sürümler değiştirilemez (immutable releases).
   4. GitHub Release oluşturulur: notlar CHANGELOG'dan, `v0.x` sürümleri "pre-release" işaretli, dosyalar ve SHA-256 değerleri eklenir. `-test` içeren etiketler (örn. `v0.0.1-test`) yalnızca bakımcının gördüğü taslak (draft) release oluşturur.
