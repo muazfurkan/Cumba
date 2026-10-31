@@ -294,6 +294,8 @@ Not: Bildirimler zaten ana thread'de geldiği için sağlayıcılar `@MainActor`
   - **Tüm DOM seçicileri `selectors.js` içinde tek yerde** durur; YouTube arayüzü değişince yalnızca o dosya güncellenir.
 - `background.js` (service worker): Sekmelerden gelen durumları toplar, uygulamaya tek bir WebSocket bağlantısıyla iletir. Bağlantı koparsa artan aralıklarla yeniden bağlanır, 20 sn'de bir ping atar.
 - `options.html`: Port ve token girişi.
+- Eklentinin `storage` dışında izni yoktur (`host_permissions` yok); içerik betiği yalnızca iki YouTube alan adında çalışır. Eklenti klasörü uygulama paketine de kopyalanır, Ayarlar > Bağlantılar onu Finder'da gösterir.
+- `content.js` tüm belgeyi izlemez: `<title>` değişimi, `yt-navigate-finish` olayı ve `<video>` olayları; `timeupdate` en fazla 5 sn'de bir gönderilir. Kayıp `<video>` için 2 sn'lik hafif bir kontrol vardır.
 - Kurulum v1.0'da "Paketlenmemiş öğe yükle" ile yapılır (README'de anlatılır). Chrome Web Store ayrı bir karardır.
 
 **Mesaj protokolü** (`ws://127.0.0.1:<port>/media`, JSON)
@@ -494,10 +496,12 @@ Her faz sonunda: derleme temiz, testler yeşil, kabul kriterleri kontrol edildi,
 - Video önizleme (§ 8, deneysel), Lyrics widget'ı, AirPods araştırması, Jira widget'ı, Safari eklentisi.
 
 ## 12. Lokal sunucu, güvenlik ve gizlilik
-- Sunucu yalnızca `127.0.0.1` adresini dinler. Varsayılan port `47823`, Ayarlar'dan değiştirilebilir. Port doluysa kullanıcıya açık bir hata gösterilir.
-- Token: ilk açılışta 32 bayt rastgele üretilir, **Keychain**'de saklanır. Ayarlar'da göster / kopyala / yenile. Yenilenince hook yapılandırmasının güncellenmesi gerektiği söylenir.
+- Sunucu yalnızca `127.0.0.1` adresini dinler (IPv4 açıkça verilir; FlyingFox'un `.loopback` adresi IPv6 `::1`'dir). Varsayılan port `47823`, Ayarlar > Bağlantılar'dan değiştirilebilir. Port doluysa kullanıcıya açık bir hata gösterilir.
+- Her istekte `Host` başlığı `127.0.0.1:<port>` veya `localhost:<port>` olmalıdır (DNS rebinding koruması).
+- Sunucunun istek zaman aşımı 310 sn (bekletilen izin istekleri için); FlyingFox günlüğü kapalıdır.
+- Token: ilk açılışta 32 bayt rastgele üretilir (`SecRandomCopyBytes`, 64 hex karakter), **Keychain**'de `AfterFirstUnlockThisDeviceOnly` ile saklanır. Ayarlar'da göster / kopyala / yenile. Yenilenince hook yapılandırmasının güncellenmesi gerektiği söylenir. Karşılaştırma sabit sürelidir.
 - HTTP: `X-LjaspNotch-Token` header'ı zorunlu, yanlışsa 401. CORS header'ı dönülmez; böylece web sayfalarından gelen JSON istekleri tarayıcıda takılır.
-- WebSocket: el sıkışmada `Origin` bir `chrome-extension://` adresi olmalı, ilk mesaj geçerli token içeren `hello` olmalı. Aksi halde bağlantı kapatılır.
+- WebSocket: el sıkışmada `Origin` bir `chrome-extension://` adresi olmalı, ilk mesaj geçerli token içeren `hello` olmalı ve 5 sn içinde gelmeli. Aksi halde bağlantı `1008` ile kapatılır. Mesajlar en fazla 16 KB, metin alanları 300 karakterle sınırlıdır; kapak adresi yalnızca `https` ise kullanılır.
 - Telemetri yok. Dışarı giden istekler yalnızca kullanıcının açtığı özelliklerden gelir (kapak görselleri, Open-Meteo, LRCLIB, GitHub Releases güncelleme kontrolü) ve README'de listelenir. Güncelleme kontrolü Ayarlar'dan kapatılabilir.
 - Claude Code verileri (komutlar, dosya yolları, mesajlar) yalnızca bellekte tutulur. Gerçek payload'ları kaydeden bir hata ayıklama modu olabilir; varsayılan kapalıdır ve açıkken Ayarlar'da uyarı gösterilir.
 

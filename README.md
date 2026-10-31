@@ -37,6 +37,16 @@ open ljaspNotch.xcodeproj
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
+## YouTube and YouTube Music
+
+A small Chrome extension (also works in other Chromium browsers) sends what plays in YouTube tabs to the app over a local connection, and the app sends play, pause, next and seek back.
+
+1. In ljaspNotch, open **Settings > Connections** and click **Show Extension Folder**.
+2. In Chrome, open `chrome://extensions`, turn on **Developer mode** and click **Load unpacked**. Choose the folder from step 1.
+3. Open the extension's **Details > Extension options**, paste the port and the token from **Settings > Connections**, and save.
+
+The extension has no permissions besides storage, reads only `youtube.com` and `music.youtube.com`, and talks only to `127.0.0.1`.
+
 ## Privacy
 
 No telemetry. Everything stays on your Mac. These features make network requests, and only while you use them:
@@ -44,6 +54,9 @@ No telemetry. Everything stays on your Mac. These features make network requests
 | Feature | Request |
 |---|---|
 | Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
+| Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
+
+The local server listens only on `127.0.0.1` and requires a token stored in your Keychain. Updating an ad-hoc signed build may make macOS ask once more for Keychain access.
 
 ## Contributing
 
