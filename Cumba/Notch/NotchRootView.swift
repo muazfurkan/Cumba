@@ -181,8 +181,8 @@ extension Theme.FontDesign {
 
 /// Hosting view that reacts to the first click even though the panel never becomes key.
 final class NotchHostingView<Content: View>: NSHostingView<Content> {
-  /// Shown on right-click or Control-click anywhere on the notch.
-  var contextMenu: NSMenu?
+  /// Builds the menu shown on right-click or Control-click anywhere on the notch.
+  var makeContextMenu: (() -> NSMenu)?
 
   override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
     true
@@ -191,8 +191,19 @@ final class NotchHostingView<Content: View>: NSHostingView<Content> {
   /// Clicks on SwiftUI content don't make the panel key; only text views inside do.
   override var needsPanelToBecomeKey: Bool { false }
 
+  /// A SwiftUI context menu under the pointer (a widget's, or a tray file's) comes first,
+  /// followed by the notch's own items.
   override func menu(for event: NSEvent) -> NSMenu? {
-    contextMenu ?? super.menu(for: event)
+    let own = makeContextMenu?()
+    guard let content = super.menu(for: event), !content.items.isEmpty else { return own }
+    if let own {
+      content.addItem(.separator())
+      for item in own.items {
+        own.removeItem(item)
+        content.addItem(item)
+      }
+    }
+    return content
   }
 }
 

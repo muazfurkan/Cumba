@@ -31,7 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **ljaspNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
-- Widgets can be added right in the panel: an empty tab, or the "+" tile where a tab has room, opens a gallery of the widgets not yet in the panel; one click adds one to the open tab.
+- Widgets can be added right in the panel: an empty tab, or the "+" tile where a tab has room, opens a gallery of the widgets not yet in the panel; one click adds one to the open tab. Right-click a widget to remove it.
 - While something plays, the closed notch shows larger artwork, a larger waveform and the title scrolling like a ticker. The Mirror widget turns the camera on only when you click it.
 - Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
 - Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
@@ -44,6 +44,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The Chrome extension connection is off until you turn it on in Settings > Connections; if you use the extension, turn it on and paste the new extension token into its options.
 - With Reduce Motion turned on in System Settings, the panel opens and closes with a short ease instead of a spring.
 - Questions and ideas go to GitHub Discussions; issues are for bugs and concrete feature requests.
+
+### Fixed
+
+- Context menus inside the panel (e.g. on files in the tray) now open; the notch's own menu used to replace them.
 
 ### Security
 

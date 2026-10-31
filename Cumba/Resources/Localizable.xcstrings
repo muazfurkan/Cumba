@@ -2330,6 +2330,17 @@
         }
       }
     },
+    "Remove %@" : {
+      "comment" : "Context menu item that takes a widget out of the panel; the argument is the widget's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Widget'ını Kaldır"
+          }
+        }
+      }
+    },
     "Remove Tab" : {
       "localizations" : {
         "tr" : {

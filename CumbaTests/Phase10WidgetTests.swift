@@ -289,6 +289,9 @@ struct WidgetGalleryTests {
     host.add(KeepAwakeWidget.kind)
     #expect(host.freeUnits == 0)
     #expect(host.addableInfos.isEmpty)
+    host.remove(TeleprompterWidget.kind)
+    #expect(host.freeUnits == 3)
+    #expect(host.addableInfos.map(\.kind) == [TeleprompterWidget.kind])
 
     host.showGallery(true)
     host.panelOpenChanged(false)

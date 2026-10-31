@@ -69,6 +69,11 @@ final class WidgetHost {
     registry.infos.filter { !layoutStore.layout.contains($0.kind) }
   }
 
+  /// Takes a widget out of the panel; the gallery can add it back.
+  func remove(_ kind: String) {
+    layoutStore.remove(kind)
+  }
+
   /// Adds a widget to the open tab and closes the gallery.
   func add(_ kind: String) {
     guard let tab = selectedTab else { return }
@@ -150,6 +155,14 @@ struct WidgetRow: View {
             if let widget = host.registry.widget(kind), let info = host.registry.info(for: kind) {
               widget.makeView()
                 .frame(width: unitWidth * CGFloat(info.size.units))
+                .contextMenu {
+                  Button("Remove \(info.title)") {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+                      host.remove(kind)
+                    }
+                  }
+                }
+                .accessibilityAction(named: Text("Remove \(info.title)")) { host.remove(kind) }
             }
           }
           if showsAdd {
