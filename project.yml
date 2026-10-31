@@ -50,6 +50,13 @@ targets:
         buildPhase: resources
     dependencies:
       - package: FlyingFox
+      # Copied into Contents/Frameworks and run inside /usr/bin/perl, never linked by the app.
+      - target: CumbaNowPlaying
+        embed: true
+        link: false
+        codeSign: true
+        copy:
+          destination: frameworks
     info:
       path: Cumba/Resources/Info.plist
       properties:
@@ -93,6 +100,26 @@ targets:
     scheme:
       testTargets:
         - CumbaTests
+
+  # Reads the system's Now Playing. macOS answers that private API (MediaRemote) only for
+  # Apple's own programs, so the app runs this library inside the system perl. See
+  # NowPlayingHelper/CumbaNowPlaying.m and SECURITY.md.
+  CumbaNowPlaying:
+    type: library.dynamic
+    platform: macOS
+    sources:
+      - path: NowPlayingHelper
+    dependencies:
+      - sdk: AppKit.framework
+    settings:
+      base:
+        PRODUCT_NAME: CumbaNowPlaying
+        EXECUTABLE_PREFIX: lib
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch.nowplaying
+        CLANG_ENABLE_OBJC_ARC: YES
+        SKIP_INSTALL: YES
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: Apple Development
 
   CumbaTests:
     type: bundle.unit-test

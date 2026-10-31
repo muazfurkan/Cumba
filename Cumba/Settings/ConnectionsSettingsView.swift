@@ -14,7 +14,7 @@ struct ConnectionsSettingsView: View {
       Section("Chrome Extension") {
         Toggle("Connect the YouTube extension", isOn: extensionEnabled)
         Text(
-          "Turn this on only if you use the extension. Cumba then listens on this Mac (127.0.0.1) for the Cumba extension; nothing is reachable from the network."
+          "Usually not needed: the Media widget reads YouTube from every browser by itself. Turn this on only if you use the extension. Cumba then listens on this Mac (127.0.0.1) for the Cumba extension; nothing is reachable from the network."
         )
         .font(.callout)
         .foregroundStyle(.secondary)

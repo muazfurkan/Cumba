@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Brightness changes in the notch (Settings > General > Indicators), optionally replacing the system brightness indicator. It uses the private DisplayServices framework, since Apple silicon has no public brightness API.
 - New widgets in the gallery: Notes (one quick note, saved as plain text), Clipboard History (last 20 copied texts, in memory only, passwords skipped), Keep Awake, Pomodoro and Teleprompter (scrolls a script under the camera and can hide the panel from screen sharing).
 - Calendar: a Join button for Zoom, Meet, Teams, Webex, FaceTime, Whereby and Jitsi links, and an optional countdown before the next event.
 - Settings > General: show the panel on the display with a notch, the main display or the display with the pointer; the volume level in the notch, optionally replacing the system volume indicator (needs Accessibility); a dot while the microphone or camera is in use; and the app's own CPU and memory use.
@@ -32,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
 - Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
 - Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
+- Media reads whatever any app plays from the system's Now Playing: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. This uses the private MediaRemote framework through a small helper run by the system's perl; the README explains it. Turn off "Read media from every app" for the previous behavior. The YouTube extension is now optional.
 - New installations start with Media, Calendar and Timer; the other widgets, and widgets added in later versions, wait in the gallery. Installing the Claude Code hooks adds the Claude Code widget.
 - Dragging a window or a browser tab past the notch no longer opens the panel; dragging files still does.
 - Settings has no minimize button, reopens on the last pane and shows the pane's name as its title.

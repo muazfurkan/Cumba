@@ -17,7 +17,7 @@ struct MediaWidgetView: View {
               Text(nowPlaying.title)
                 .font(.callout.weight(.semibold))
                 .lineLimit(1)
-              Text(nowPlaying.artist ?? nowPlaying.source.displayName)
+              Text(nowPlaying.artist ?? nowPlaying.sourceName)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)

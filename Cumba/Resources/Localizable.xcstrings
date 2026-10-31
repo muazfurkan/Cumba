@@ -480,6 +480,27 @@
         }
       }
     },
+    "Brightness" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parlaklık"
+          }
+        }
+      }
+    },
+    "Browsers" : {
+      "comment" : "Media source",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarayıcılar"
+          }
+        }
+      }
+    },
     "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename." : {
       "localizations" : {
         "tr" : {
@@ -1254,16 +1275,6 @@
         }
       }
     },
-    "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ses tuşlarını Cumba yönetir, değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir; parlaklık tuşları macOS'ta kalır."
-          }
-        }
-      }
-    },
     "Haptic feedback when the panel opens" : {
       "localizations" : {
         "tr" : {
@@ -1934,6 +1945,16 @@
         }
       }
     },
+    "Only Spotify and Music, through AppleScript, and YouTube through the extension." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca AppleScript ile Spotify ve Müzik, eklentiyle de YouTube."
+          }
+        }
+      }
+    },
     "Only the Cumba extension with this token is accepted. This token is only for the extension; Claude Code hooks use their own. After regenerating it, paste the new token into the extension's options." : {
       "localizations" : {
         "tr" : {
@@ -2030,6 +2051,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İsteğe bağlı: notch sistemin ses göstergesinin yerine geçtiğinde ses tuşları için"
+          }
+        }
+      }
+    },
+    "Other Apps" : {
+      "comment" : "Media source",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer Uygulamalar"
           }
         }
       }
@@ -2208,6 +2240,16 @@
         }
       }
     },
+    "Read media from every app" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medyayı her uygulamadan oku"
+          }
+        }
+      }
+    },
     "Regenerate" : {
       "localizations" : {
         "tr" : {
@@ -2258,12 +2300,32 @@
         }
       }
     },
+    "Replace the system brightness indicator" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistemin parlaklık göstergesinin yerine geç"
+          }
+        }
+      }
+    },
     "Replace the system volume indicator" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sistemin ses göstergesinin yerine geç"
+          }
+        }
+      }
+    },
+    "Replacing handles those keys so only the notch shows the change. It needs Accessibility access." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerine geçmek, bu tuşları Cumba'nın işlemesi demektir; değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir."
           }
         }
       }
@@ -2580,6 +2642,16 @@
         }
       }
     },
+    "Show brightness changes in the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parlaklık değişikliklerini notch'ta göster"
+          }
+        }
+      }
+    },
     "Show Extension Folder" : {
       "localizations" : {
         "tr" : {
@@ -2647,6 +2719,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sağanak"
+          }
+        }
+      }
+    },
+    "Shows what any app plays, like Control Center: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. A small helper reads it through macOS's own perl." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denetim Merkezi gibi, hangi uygulama ne çalıyorsa gösterir: Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası; eklenti ya da Otomasyon izni gerekmez. Bunu küçük bir yardımcı, macOS'un kendi perl'ü üzerinden okur."
           }
         }
       }
@@ -2923,6 +3005,16 @@
         }
       }
     },
+    "The system's Now Playing can't be read on this Mac, so Cumba uses Spotify, Music and the YouTube extension." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Mac'te sistemin Şu An Çalan bilgisi okunamıyor; Cumba bu yüzden Spotify, Müzik ve YouTube eklentisini kullanıyor."
+          }
+        }
+      }
+    },
     "The theme file couldn't be used." : {
       "localizations" : {
         "tr" : {
@@ -3116,16 +3208,6 @@
         }
       }
     },
-    "Turn this on only if you use the extension. Cumba then listens on this Mac (127.0.0.1) for the Cumba extension; nothing is reachable from the network." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yalnızca eklentiyi kullanıyorsanız açın. Cumba bu durumda bu Mac'te (127.0.0.1) Cumba eklentisini dinler; ağdan hiçbir şeye erişilemez."
-          }
-        }
-      }
-    },
     "Unknown" : {
       "comment" : "Weather",
       "localizations" : {
@@ -3204,6 +3286,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konumumu Kullan"
+          }
+        }
+      }
+    },
+    "Usually not needed: the Media widget reads YouTube from every browser by itself. Turn this on only if you use the extension. Cumba then listens on this Mac (127.0.0.1) for the Cumba extension; nothing is reachable from the network." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genellikle gerekmez: Medya widget'ı YouTube'u her tarayıcıdan kendisi okur. Yalnızca eklentiyi kullanıyorsanız açın. Cumba bu durumda bu Mac'te (127.0.0.1) Cumba eklentisini dinler; ağdan hiçbir şeye erişilemez."
           }
         }
       }

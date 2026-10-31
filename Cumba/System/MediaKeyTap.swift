@@ -1,15 +1,21 @@
 import AppKit
 import ApplicationServices
 
-/// Optional: handles the volume keys itself so the notch shows the change instead of the
-/// system indicator. It needs Accessibility access for an event tap, which sees only the
-/// media key events it asks for (`NX_SYSDEFINED`), never typing. Keys it can't handle,
-/// e.g. on an output without volume control, pass through to macOS unchanged.
+/// Optional: handles the volume and brightness keys itself so the notch shows the change
+/// instead of the system indicator. It needs Accessibility access for an event tap, which
+/// sees only the media key events it asks for (`NX_SYSDEFINED`), never typing. Keys it
+/// can't handle, e.g. on an output without volume control, pass through to macOS unchanged.
 @MainActor
-final class VolumeKeyTap {
+final class MediaKeyTap {
   private let volume: VolumeMonitor
+  private let brightness: BrightnessMonitor
   private var tap: CFMachPort?
   private var source: CFRunLoopSource?
+  /// Which keys to handle; the others pass through to macOS.
+  var handlesVolume = false
+  var handlesBrightness = false
+  /// Called with the new brightness after a brightness key.
+  var onBrightnessChange: ((Float) -> Void)?
 
   /// `NX_SYSDEFINED`, the event type of media keys.
   private static let systemDefinedType = CGEventType(rawValue: 14)
@@ -17,11 +23,15 @@ final class VolumeKeyTap {
   private static let soundUp = 0
   private static let soundDown = 1
   private static let mute = 7
-  /// macOS changes the volume in sixteenths, and in quarters of that with Shift-Option.
+  private static let brightnessUp = 2
+  private static let brightnessDown = 3
+  /// macOS changes volume and brightness in sixteenths, and in quarters of that with
+  /// Shift-Option.
   private static let step: Float = 1 / 16
 
-  init(volume: VolumeMonitor) {
+  init(volume: VolumeMonitor, brightness: BrightnessMonitor) {
     self.volume = volume
+    self.brightness = brightness
   }
 
   static var isTrusted: Bool { AXIsProcessTrusted() }
@@ -41,7 +51,7 @@ final class VolumeKeyTap {
     // The tap's run loop source is on the main run loop, so this runs on the main thread.
     let callback: CGEventTapCallBack = { _, type, event, refcon in
       guard let refcon else { return Unmanaged.passUnretained(event) }
-      let tap = Unmanaged<VolumeKeyTap>.fromOpaque(refcon).takeUnretainedValue()
+      let tap = Unmanaged<MediaKeyTap>.fromOpaque(refcon).takeUnretainedValue()
       nonisolated(unsafe) let unsafeEvent = event
       let swallow = MainActor.assumeIsolated { tap.handle(type: type, event: unsafeEvent) }
       return swallow ? nil : Unmanaged.passUnretained(event)
@@ -82,21 +92,34 @@ final class VolumeKeyTap {
       return false
     }
     guard type == Self.systemDefinedType, let nsEvent = NSEvent(cgEvent: event),
-      nsEvent.subtype.rawValue == Self.auxControlButtons, volume.canSetVolume
+      nsEvent.subtype.rawValue == Self.auxControlButtons
     else { return false }
     let keyCode = (nsEvent.data1 & 0xFFFF_0000) >> 16
     let isDown = (nsEvent.data1 & 0xFF00) >> 8 == 0xA
-    guard [Self.soundUp, Self.soundDown, Self.mute].contains(keyCode) else { return false }
-    if isDown, let level = volume.level {
-      let fine = nsEvent.modifierFlags.contains([.shift, .option])
-      let step = fine ? Self.step / 4 : Self.step
-      switch keyCode {
-      case Self.soundUp: volume.setVolume(level.volume + step)
-      case Self.soundDown: volume.setVolume(level.volume - step)
-      default: volume.setMuted(!level.isMuted)
-      }
-    }
+    let fine = nsEvent.modifierFlags.contains([.shift, .option])
+    let step = fine ? Self.step / 4 : Self.step
     // Swallow both key down and up, so the system indicator doesn't appear.
-    return true
+    switch keyCode {
+    case Self.soundUp, Self.soundDown, Self.mute:
+      guard handlesVolume, volume.canSetVolume else { return false }
+      if isDown, let level = volume.level {
+        switch keyCode {
+        case Self.soundUp: volume.setVolume(level.volume + step)
+        case Self.soundDown: volume.setVolume(level.volume - step)
+        default: volume.setMuted(!level.isMuted)
+        }
+      }
+      return true
+    case Self.brightnessUp, Self.brightnessDown:
+      guard handlesBrightness, let level = brightness.level else { return false }
+      if isDown {
+        let target = min(max(level + (keyCode == Self.brightnessUp ? step : -step), 0), 1)
+        brightness.setLevel(target)
+        onBrightnessChange?(target)
+      }
+      return true
+    default:
+      return false
+    }
   }
 }

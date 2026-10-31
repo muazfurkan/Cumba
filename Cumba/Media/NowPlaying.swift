@@ -7,6 +7,10 @@ struct NowPlaying: Equatable, Sendable {
     case appleMusic
     case youtube
     case youtubeMusic
+    /// Any browser, from the system's Now Playing.
+    case browser
+    /// Any other app, from the system's Now Playing (Podcasts, TV, VLC…).
+    case otherApp
   }
 
   var source: Source
@@ -20,6 +24,11 @@ struct NowPlaying: Equatable, Sendable {
   /// The progress bar advances locally from this moment instead of asking the player.
   var positionTimestamp: Date
   var isPlaying: Bool
+  /// The app that plays it, when the system's Now Playing reports it.
+  var appName: String? = nil
+
+  /// The app's name, or the source's.
+  var sourceName: String { appName ?? source.displayName }
 
   /// Position now, estimated from the last known position while playing.
   func currentPosition(at date: Date = .now) -> TimeInterval? {
@@ -65,6 +74,8 @@ extension NowPlaying.Source {
     case .appleMusic: String(localized: "Music", comment: "Apple Music app name")
     case .youtube: "YouTube"
     case .youtubeMusic: "YouTube Music"
+    case .browser: String(localized: "Browsers", comment: "Media source")
+    case .otherApp: String(localized: "Other Apps", comment: "Media source")
     }
   }
 
@@ -74,6 +85,8 @@ extension NowPlaying.Source {
     case .appleMusic: "music.note"
     case .youtube: "play.rectangle"
     case .youtubeMusic: "music.note.tv"
+    case .browser: "globe"
+    case .otherApp: "play.circle"
     }
   }
 }

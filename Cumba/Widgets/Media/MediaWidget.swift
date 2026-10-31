@@ -111,17 +111,44 @@ struct ArtworkView: View {
   }
 }
 
-/// Settings > Widgets > Media: which players to show, and Automation access.
+/// Settings > Widgets > Media: where media comes from, which players to show, and
+/// Automation access when AppleScript is used.
 private struct MediaSettingsView: View {
-  let media: MediaCoordinator
+  @Bindable var media: MediaCoordinator
 
   var body: some View {
-    ForEach(NowPlaying.Source.allCases, id: \.self) { source in
+    Toggle("Read media from every app", isOn: $media.usesSystemNowPlaying)
+    Group {
+      if media.usesSystemNowPlaying && media.systemNowPlayingFailed {
+        Text(
+          "The system's Now Playing can't be read on this Mac, so Cumba uses Spotify, Music and the YouTube extension."
+        )
+      } else if media.usesSystemNowPlaying {
+        Text(
+          "Shows what any app plays, like Control Center: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. A small helper reads it through macOS's own perl."
+        )
+      } else {
+        Text("Only Spotify and Music, through AppleScript, and YouTube through the extension.")
+      }
+    }
+    .font(.caption)
+    .foregroundStyle(.secondary)
+    .fixedSize(horizontal: false, vertical: true)
+    ForEach(sources, id: \.self) { source in
       Toggle(isOn: enabled(source)) {
         Label(source.displayName, systemImage: source.symbol)
       }
     }
-    MediaPermissionsView()
+    if !media.isUsingSystemNowPlaying {
+      MediaPermissionsView()
+    }
+  }
+
+  /// Browsers and other apps come only from the system's Now Playing.
+  private var sources: [NowPlaying.Source] {
+    NowPlaying.Source.allCases.filter {
+      media.isUsingSystemNowPlaying || ($0 != .browser && $0 != .otherApp)
+    }
   }
 
   private func enabled(_ source: NowPlaying.Source) -> Binding<Bool> {

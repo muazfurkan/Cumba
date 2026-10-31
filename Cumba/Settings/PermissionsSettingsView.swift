@@ -8,7 +8,7 @@ import SwiftUI
 struct PermissionsSettingsView: View {
   @State private var calendar = EKEventStore.authorizationStatus(for: .event)
   @State private var camera = AVCaptureDevice.authorizationStatus(for: .video)
-  @State private var accessibility = VolumeKeyTap.isTrusted
+  @State private var accessibility = MediaKeyTap.isTrusted
   @State private var location = LocationProvider()
   @State private var locationAccess = LocationProvider.Access.notAsked
 
@@ -118,7 +118,7 @@ struct PermissionsSettingsView: View {
   private func refresh() {
     calendar = EKEventStore.authorizationStatus(for: .event)
     camera = AVCaptureDevice.authorizationStatus(for: .video)
-    accessibility = VolumeKeyTap.isTrusted
+    accessibility = MediaKeyTap.isTrusted
     locationAccess = location.access
   }
 }

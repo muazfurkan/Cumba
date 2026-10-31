@@ -23,6 +23,8 @@ final class AppSettings {
     static let panelScreen = "panelScreen"
     static let showsVolumeChanges = "showsVolumeChanges"
     static let replacesVolumeIndicator = "replacesVolumeIndicator"
+    static let showsBrightnessChanges = "showsBrightnessChanges"
+    static let replacesBrightnessIndicator = "replacesBrightnessIndicator"
     static let showsPrivacyIndicators = "showsPrivacyIndicators"
     static let scriptActivitiesEnabled = "scriptActivitiesEnabled"
   }
@@ -108,6 +110,17 @@ final class AppSettings {
     didSet { defaults.set(replacesVolumeIndicator, forKey: Key.replacesVolumeIndicator) }
   }
 
+  /// Shows the level beside the notch when the built-in display's brightness changes.
+  var showsBrightnessChanges: Bool {
+    didSet { defaults.set(showsBrightnessChanges, forKey: Key.showsBrightnessChanges) }
+  }
+
+  /// Handles the brightness keys so the system indicator doesn't appear (needs
+  /// Accessibility).
+  var replacesBrightnessIndicator: Bool {
+    didSet { defaults.set(replacesBrightnessIndicator, forKey: Key.replacesBrightnessIndicator) }
+  }
+
   /// Shows a dot while any app uses a microphone or a camera.
   var showsPrivacyIndicators: Bool {
     didSet { defaults.set(showsPrivacyIndicators, forKey: Key.showsPrivacyIndicators) }
@@ -154,6 +167,8 @@ final class AppSettings {
       defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
     showsVolumeChanges = defaults.bool(forKey: Key.showsVolumeChanges)
     replacesVolumeIndicator = defaults.bool(forKey: Key.replacesVolumeIndicator)
+    showsBrightnessChanges = defaults.bool(forKey: Key.showsBrightnessChanges)
+    replacesBrightnessIndicator = defaults.bool(forKey: Key.replacesBrightnessIndicator)
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
     scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
   }

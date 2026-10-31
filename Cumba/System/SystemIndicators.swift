@@ -1,27 +1,30 @@
 import AppKit
 import SwiftUI
 
-/// The optional system indicators, each on only while its setting is: volume changes in
-/// the notch (optionally handling the volume keys instead of macOS), and a dot while a
-/// microphone or camera is in use.
+/// The optional system indicators, each on only while its setting is: volume and brightness
+/// changes in the notch (optionally handling those keys instead of macOS), and a dot while
+/// a microphone or camera is in use.
 @MainActor
 final class SystemIndicators {
   private let settings: AppSettings
   private let liveActivities: LiveActivityCenter
   private let volume = VolumeMonitor()
-  private let keyTap: VolumeKeyTap
+  private let brightness = BrightnessMonitor()
+  private let keyTap: MediaKeyTap
   private let privacy = PrivacyIndicatorMonitor()
   private var lastLevel: VolumeMonitor.Level?
   private var isKeyTapRunning = false
   private var activeObserver: NSObjectProtocol?
 
   private static let volumeActivityID = "volume"
+  private static let brightnessActivityID = "brightness"
   private static let privacyActivityID = "privacy"
 
   init(settings: AppSettings, liveActivities: LiveActivityCenter) {
     self.settings = settings
     self.liveActivities = liveActivities
-    keyTap = VolumeKeyTap(volume: volume)
+    keyTap = MediaKeyTap(volume: volume, brightness: brightness)
+    keyTap.onBrightnessChange = { [weak self] level in self?.brightnessChanged(level) }
   }
 
   func start() {
@@ -39,6 +42,8 @@ final class SystemIndicators {
     withObservationTracking {
       _ = settings.showsVolumeChanges
       _ = settings.replacesVolumeIndicator
+      _ = settings.showsBrightnessChanges
+      _ = settings.replacesBrightnessIndicator
       _ = settings.showsPrivacyIndicators
     } onChange: { [weak self] in
       Task { @MainActor in
@@ -61,7 +66,18 @@ final class SystemIndicators {
       lastLevel = nil
       liveActivities.dismiss(Self.volumeActivityID)
     }
-    let wantsKeyTap = settings.showsVolumeChanges && settings.replacesVolumeIndicator
+    if settings.showsBrightnessChanges {
+      brightness.onChange = { [weak self] level in self?.brightnessChanged(level) }
+      brightness.start()
+    } else {
+      brightness.stop()
+      brightness.onChange = nil
+      liveActivities.dismiss(Self.brightnessActivityID)
+    }
+    keyTap.handlesVolume = settings.showsVolumeChanges && settings.replacesVolumeIndicator
+    keyTap.handlesBrightness =
+      settings.showsBrightnessChanges && settings.replacesBrightnessIndicator
+    let wantsKeyTap = keyTap.handlesVolume || keyTap.handlesBrightness
     if wantsKeyTap && !isKeyTapRunning {
       isKeyTapRunning = keyTap.start()
     } else if !wantsKeyTap && isKeyTapRunning {
@@ -90,7 +106,19 @@ final class SystemIndicators {
           Image(systemName: Self.speakerSymbol(shown))
             .contentTransition(.symbolEffect(.replace))
             .accessibilityLabel(Text("Volume"))),
-        trailing: AnyView(VolumeBar(level: shown))),
+        trailing: AnyView(LevelBar(level: shown, label: Text("Volume")))),
+      for: .seconds(1.5))
+  }
+
+  private func brightnessChanged(_ level: Float) {
+    liveActivities.show(
+      LiveActivity(
+        id: Self.brightnessActivityID, priority: .volume,
+        leading: AnyView(
+          Image(systemName: level < 0.5 ? "sun.min.fill" : "sun.max.fill")
+            .contentTransition(.symbolEffect(.replace))
+            .accessibilityLabel(Text("Brightness"))),
+        trailing: AnyView(LevelBar(level: level, label: Text("Brightness")))),
       for: .seconds(1.5))
   }
 
@@ -135,9 +163,10 @@ final class SystemIndicators {
   }
 }
 
-/// The volume level as a short bar beside the notch.
-private struct VolumeBar: View {
+/// A volume or brightness level as a short bar beside the notch.
+private struct LevelBar: View {
   let level: Float
+  let label: Text
 
   var body: some View {
     Capsule()
@@ -149,6 +178,7 @@ private struct VolumeBar: View {
           .frame(width: 44 * CGFloat(min(max(level, 0), 1)), height: 5)
       }
       .animation(.easeOut(duration: 0.12), value: level)
+      .accessibilityLabel(label)
       .accessibilityValue(Text(Double(level), format: .percent.precision(.fractionLength(0))))
   }
 }
