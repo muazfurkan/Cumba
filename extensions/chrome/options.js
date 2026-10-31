@@ -1,11 +1,11 @@
-// Saves the port and token for the WebSocket to the ljaspNotch app.
+// Saves the port and token for the WebSocket to the Cumba app.
 "use strict";
 
 const TR = navigator.language.startsWith("tr");
 const TEXT = {
   hint: TR
-    ? "Portu ve token'ı ljaspNotch > Ayarlar > Bağlantılar'dan kopyalayın."
-    : "Copy the port and token from ljaspNotch > Settings > Connections.",
+    ? "Portu ve token'ı Cumba > Ayarlar > Bağlantılar'dan kopyalayın."
+    : "Copy the port and token from Cumba > Settings > Connections.",
   port: "Port",
   token: "Token",
   save: TR ? "Kaydet" : "Save",

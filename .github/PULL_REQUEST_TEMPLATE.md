@@ -9,7 +9,7 @@
 ## Checklist
 
 - [ ] Builds and tests pass locally
-- [ ] `xcrun swift-format lint --strict --recursive ljaspNotch ljaspNotchTests` passes
+- [ ] `xcrun swift-format lint --strict --recursive Cumba CumbaTests` passes
 - [ ] New user-facing strings are in `Localizable.xcstrings` with Turkish translations
 - [ ] Features that make network requests are listed in the README privacy section
 - [ ] `CHANGELOG.md` updated under "Unreleased"

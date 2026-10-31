@@ -1,4 +1,4 @@
-// Bridges YouTube tabs and the ljaspNotch app over one WebSocket to 127.0.0.1.
+// Bridges YouTube tabs and the Cumba app over one WebSocket to 127.0.0.1.
 // Nothing is sent anywhere else.
 "use strict";
 

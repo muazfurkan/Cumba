@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting! **Please do not paste tokens, Claude Code payloads (commands, file contents, messages) or personal file paths.** Security issues go through [private reporting](https://github.com/muazfurkan/ljaspNotch/security/advisories/new), not public issues.
+        Thanks for reporting! **Please do not paste tokens, Claude Code payloads (commands, file contents, messages) or personal file paths.** Security issues go through [private reporting](https://github.com/muazfurkan/Cumba/security/advisories/new), not public issues.
   - type: textarea
     id: description
     attributes:

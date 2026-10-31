@@ -3,7 +3,7 @@
 (() => {
   "use strict";
 
-  const SELECTORS = globalThis.LJASP_SELECTORS;
+  const SELECTORS = globalThis.CUMBA_SELECTORS;
   const SITE = location.hostname === "music.youtube.com" ? "youtubeMusic" : "youtube";
   // Position is extrapolated by the app; while playing, resend at most every 5 seconds to
   // correct drift.
