@@ -9,6 +9,8 @@ struct PermissionsSettingsView: View {
   @State private var calendar = EKEventStore.authorizationStatus(for: .event)
   @State private var camera = AVCaptureDevice.authorizationStatus(for: .video)
   @State private var accessibility = VolumeKeyTap.isTrusted
+  @State private var location = LocationProvider()
+  @State private var locationAccess = LocationProvider.Access.notAsked
 
   var body: some View {
     Form {
@@ -29,6 +31,12 @@ struct PermissionsSettingsView: View {
         } label: {
           Label("Calendar", systemImage: "calendar")
           Text("Calendar widget: today's and tomorrow's events")
+        }
+        LabeledContent {
+          locationControl
+        } label: {
+          Label("Location", systemImage: "location")
+          Text("Weather widget: the weather where you are, rounded to about 10 km")
         }
         LabeledContent {
           cameraControl
@@ -74,6 +82,22 @@ struct PermissionsSettingsView: View {
     }
   }
 
+  @ViewBuilder private var locationControl: some View {
+    switch locationAccess {
+    case .allowed:
+      PermissionGranted()
+    case .notAsked:
+      Button("Allow…") {
+        Task {
+          NSApp.activate()
+          locationAccess = await location.requestAccess()
+        }
+      }
+    case .denied:
+      OpenPrivacySettings(pane: "Privacy_LocationServices")
+    }
+  }
+
   @ViewBuilder private var cameraControl: some View {
     switch camera {
     case .authorized:
@@ -95,6 +119,7 @@ struct PermissionsSettingsView: View {
     calendar = EKEventStore.authorizationStatus(for: .event)
     camera = AVCaptureDevice.authorizationStatus(for: .video)
     accessibility = VolumeKeyTap.isTrusted
+    locationAccess = location.access
   }
 }
 

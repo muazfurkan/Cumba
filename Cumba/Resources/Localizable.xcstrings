@@ -288,16 +288,6 @@
         }
       }
     },
-    "Allow calendar access in Settings to see your events." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Etkinliklerinizi görmek için Ayarlar'dan takvim erişimine izin verin."
-          }
-        }
-      }
-    },
     "Allow control in Settings" : {
       "localizations" : {
         "tr" : {
@@ -334,6 +324,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez."
+          }
+        }
+      }
+    },
+    "Allow Location Access…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum Erişimine İzin Ver…"
           }
         }
       }
@@ -486,6 +486,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hazır temalar olduğu gibi kalır. Aşağıda bir şeyi değiştirdiğinizde değişiklik, adını değiştirebileceğiniz bir kopya olarak kaydedilir."
+          }
+        }
+      }
+    },
+    "Calendar access is off. You can allow it in System Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim erişimi kapalı. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Choose a City" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir Seç"
           }
         }
       }
@@ -975,12 +995,13 @@
         }
       }
     },
-    "Current weather for a place you choose" : {
+    "Current weather where you are, or for a place you choose" : {
+      "comment" : "Widget description",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seçtiğiniz yerin anlık hava durumu"
+            "value" : "Bulunduğunuz yerin ya da seçtiğiniz bir yerin anlık hava durumu"
           }
         }
       }
@@ -1136,6 +1157,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dışa Aktar…"
+          }
+        }
+      }
+    },
+    "Finding your location…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz bulunuyor…"
           }
         }
       }
@@ -1505,6 +1536,36 @@
         }
       }
     },
+    "Location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum"
+          }
+        }
+      }
+    },
+    "Location access is off for Cumba." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba için konum erişimi kapalı."
+          }
+        }
+      }
+    },
+    "Location access is off." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum erişimi kapalı."
+          }
+        }
+      }
+    },
     "Long Break" : {
       "localizations" : {
         "tr" : {
@@ -1686,6 +1747,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Müzik"
+          }
+        }
+      }
+    },
+    "My Location" : {
+      "comment" : "Weather place without a name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumum"
           }
         }
       }
@@ -2372,6 +2444,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İkincil metin"
+          }
+        }
+      }
+    },
+    "See today's and tomorrow's events here." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünün ve yarının etkinliklerini burada görün."
           }
         }
       }
@@ -3106,6 +3188,26 @@
         }
       }
     },
+    "Use my current location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anki konumumu kullan"
+          }
+        }
+      }
+    },
+    "Use My Location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumumu Kullan"
+          }
+        }
+      }
+    },
     "Version" : {
       "localizations" : {
         "tr" : {
@@ -3158,12 +3260,12 @@
         }
       }
     },
-    "Weather data comes from Open-Meteo. Only the coordinates of the place you choose are sent." : {
+    "Weather data comes from Open-Meteo. Your location is rounded to about 10 km before it's sent, and Apple Maps finds the city name. For a chosen city, only its coordinates are sent." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hava durumu verileri Open-Meteo'dan gelir. Yalnızca seçtiğiniz konumun koordinatları gönderilir."
+            "value" : "Hava durumu verileri Open-Meteo'dan gelir. Konumunuz gönderilmeden önce yaklaşık 10 km'ye yuvarlanır, şehir adını Apple Haritalar bulur. Seçtiğiniz bir şehir için yalnızca onun koordinatları gönderilir."
           }
         }
       }
@@ -3174,6 +3276,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hava durumu alınamadı."
+          }
+        }
+      }
+    },
+    "Weather widget: the weather where you are, rounded to about 10 km" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hava Durumu widget'ı: bulunduğunuz yerin havası, yaklaşık 10 km'ye yuvarlanmış konumla"
           }
         }
       }
@@ -3287,6 +3399,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Son kopyaladığınız metinler, yalnızca bellekte"
+          }
+        }
+      }
+    },
+    "Your location couldn't be found." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz bulunamadı."
           }
         }
       }

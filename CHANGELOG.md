@@ -30,6 +30,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **ljaspNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
+- Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
+- Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
 - New installations start with Media, Calendar and Timer; the other widgets, and widgets added in later versions, wait in the gallery. Installing the Claude Code hooks adds the Claude Code widget.
 - Dragging a window or a browser tab past the notch no longer opens the panel; dragging files still does.
 - Settings has no minimize button, reopens on the last pane and shows the pane's name as its title.

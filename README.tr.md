@@ -53,7 +53,7 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 `xattr -dr com.apple.quarantine /Applications/Cumba.app` yalnızca bu uygulamadaki indirme işaretini kaldırır, Gatekeeper da sormayı bırakır. Bunu yalnızca 2. adımda doğruladığınız bir kopya için yapın.
 </details>
 
-**Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Kamera) ve Cumba'nın token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
+**Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Konum, Kamera) ve Cumba'nın token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
 
 **ljaspNotch'tan mı geçiyorsunuz?** Cumba aynı uygulamanın yeni adı. ljaspNotch'tan çıkın, `ljaspNotch.app`'i Çöp Sepeti'ne taşıyın ve Cumba'yı kurun; ayarlarınız, düzeniniz, notlarınız ve temalarınız aynen gelir. Claude Code hook'larını kullanıyorsanız Ayarlar > Claude Code'da bir kez **Güncelle…**'ye tıklayın. Chrome eklentisini kullanıyorsanız onu `chrome://extensions` sayfasından kaldırın, [YouTube ve YouTube Music](#youtube-ve-youtube-music) bölümündeki gibi yeni uygulamadan tekrar yükleyin ve token'ı yapıştırın.
 
@@ -86,7 +86,8 @@ Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kul
 | Ne | Neden | Ne zaman |
 |---|---|---|
 | Spotify ve Müzik için Otomasyon (Apple Events) | Çalan parçayı okumak; oynat, duraklat, atla, sar | Ayarlar'dan istenir; komutlar yalnızca o uygulama zaten açıkken gönderilir |
-| Takvim (tam erişim) | Takvim widget'ı | Widget'ı kullandığınızda Ayarlar'dan istenir |
+| Takvim (tam erişim) | Takvim widget'ı | Widget'ta veya Ayarlar'da İzin Ver'e tıkladığınızda istenir |
+| Konum | Hava durumu widget'ı, bulunduğunuz yerin havası için | Konumumu Kullan'a tıkladığınızda istenir; şehir seçerseniz kullanılmaz |
 | Kamera | Ayna widget'ı | Yalnızca panel onu gösterirken; hiçbir şey kaydedilmez |
 | `127.0.0.1` üzerinde yerel sunucu | YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
 | Özel Unix soketi | Claude Code hook'ları ve [script etkinlikleri](#scriptler) | Yalnızca hook'lar kuruluyken veya script etkinlikleri açıkken |
@@ -96,7 +97,7 @@ Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kul
 | Giriş öğesi | Oturum açıldığında başlatma | Siz açana kadar kapalı |
 | Ağ | Kapak görselleri, hava durumu, güncelleme kontrolü | Bkz. [Gizlilik](#gizlilik) |
 
-App Sandbox kapalı: sandbox'taki bir uygulama Spotify ve Müzik'i komutla yönetmek, Claude Code hook'larının ulaştığı soketi çalıştırmak ve `~/.claude/settings.json` dosyasını düzenlemek için istisnalara ihtiyaç duyar. Hardened Runtime açık ve uygulamanın yalnızca [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) dosyasındaki yetkileri var (Apple Events, takvim, kamera).
+App Sandbox kapalı: sandbox'taki bir uygulama Spotify ve Müzik'i komutla yönetmek, Claude Code hook'larının ulaştığı soketi çalıştırmak ve `~/.claude/settings.json` dosyasını düzenlemek için istisnalara ihtiyaç duyar. Hardened Runtime açık ve uygulamanın yalnızca [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) dosyasındaki yetkileri var (Apple Events, takvim, konum, kamera).
 
 Cumba hiçbir zaman telemetri göndermez, Apple'ın özel API'lerini kullanmaz, yönetici parolası istemez, yardımcı araç, çekirdek veya sistem uzantısı kurmaz, sistem ayarlarını değiştirmez, kod indirmez ve kendini güncellemez. Tehdit modeli ve güvenlikle ilgili kodun haritası [SECURITY.md](SECURITY.md) dosyasında.
 
@@ -139,7 +140,7 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 |---|---|
 | Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
 | YouTube ile medya widget'ı | YouTube'un görsel sunucularından küçük resim (sayfanın kendi kullandığı adres) |
-| Hava durumu widget'ı | Seçtiğiniz konumun koordinatları `api.open-meteo.com`'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
+| Hava durumu widget'ı | Yaklaşık 10 km'ye yuvarlanmış konumunuz (ya da seçtiğiniz şehrin koordinatları) `api.open-meteo.com`'a; konumunuzla birlikte şehir adı için aynı yuvarlanmış koordinatlar Apple Haritalar'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
 | Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi; Ayarlar > Genel'den kapatılabilir |
 
 Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar `~/Library/Application Support/Cumba/notes.txt` içinde düz metin olarak saklanır. Pano Geçmişi kopyaladığınız son 20 metni yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; paneldeyken panonun değişip değişmediğini saniyede bir kontrol eder. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.

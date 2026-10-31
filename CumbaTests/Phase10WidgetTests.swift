@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import Testing
 
@@ -234,5 +235,28 @@ struct ScriptActivityTests {
     #expect(center.contains("script.a"))
     try #require(ScriptActivity(try message(#"{"id":"a","remove":true}"#))).apply(to: center)
     #expect(!center.contains("script.a"))
+  }
+}
+
+@MainActor
+struct WeatherLocationTests {
+  private let suiteName = "WeatherLocationTests-\(UUID().uuidString)"
+
+  @Test func roundsTheLocationToAboutTenKilometers() {
+    let rounded = LocationProvider.rounded(CLLocation(latitude: 41.0138, longitude: 28.9497))
+    #expect(rounded.coordinate.latitude == 41.0)
+    #expect(rounded.coordinate.longitude == 28.9)
+  }
+
+  @Test func usesTheMacsLocationUnlessAPlaceWasChosen() throws {
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+    #expect(WeatherWidget(context: makeContext(), defaults: defaults).usesCurrentLocation)
+
+    let place = WeatherService.Place(name: "İzmir", latitude: 38.4, longitude: 27.1)
+    defaults.set(try JSONEncoder().encode(place), forKey: "weather.place")
+    let widget = WeatherWidget(context: makeContext(), defaults: defaults)
+    #expect(!widget.usesCurrentLocation)
+    #expect(widget.place == place)
   }
 }

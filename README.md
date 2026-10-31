@@ -51,7 +51,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 `xattr -dr com.apple.quarantine /Applications/Cumba.app` removes the download flag from this one app, so Gatekeeper stops asking. Only do this for a copy you checked in step 2.
 </details>
 
-**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
+**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Location, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
 
 **Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Claude Code. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
 
@@ -82,7 +82,8 @@ Everything below is off or unused until you turn on the feature that needs it. S
 | What | Why | When |
 |---|---|---|
 | Automation (Apple Events) for Spotify and Music | Read the current track; play, pause, skip, seek | Asked from Settings; scripts are sent only while that app is already running |
-| Calendar (full access) | Calendar widget | Asked from Settings when you use the widget |
+| Calendar (full access) | Calendar widget | Asked when you click Allow in the widget or in Settings |
+| Location | Weather widget, for the weather where you are | Asked when you click Use My Location; off if you choose a city instead |
 | Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
 | Local server on `127.0.0.1` | YouTube extension connection | Only after you turn it on in Settings > Connections |
 | Private Unix socket | Claude Code hooks and [script activities](#scripts) | Only while the hooks are installed or script activities are on |
@@ -92,7 +93,7 @@ Everything below is off or unused until you turn on the feature that needs it. S
 | Login item | Launch at login | Off until you turn it on |
 | Network | Artwork, weather, update check | See [Privacy](#privacy) |
 
-The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) (Apple Events, calendars, camera).
+The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) (Apple Events, calendars, location, camera).
 
 Cumba never sends telemetry, uses no private Apple APIs, asks for no administrator password, installs no helper tools, kernel or system extensions, doesn't change system settings, and never downloads code or updates itself. [SECURITY.md](SECURITY.md) has the threat model and a map of the security-relevant code.
 
@@ -133,7 +134,7 @@ No telemetry. Everything stays on your Mac. These features make network requests
 |---|---|
 | Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
 | Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
-| Weather widget | The coordinates of the place you choose to `api.open-meteo.com`; the city you search for to `geocoding-api.open-meteo.com` |
+| Weather widget | Your location rounded to about 10 km (or the coordinates of the city you choose) to `api.open-meteo.com`; with your location, the same rounded coordinates to Apple Maps for the city name; a city you search for to `geocoding-api.open-meteo.com` |
 | Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
 
 The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes are saved as plain text in `~/Library/Application Support/Cumba/notes.txt`. Clipboard History keeps your last 20 copied texts in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. The microphone and camera indicator reads only whether a device is in use, never audio or video.
