@@ -1,6 +1,6 @@
 # XcodeGen spec. Regenerate the project after editing: `xcodegen generate`.
-# Never edit ljaspNotch.xcodeproj by hand; it is generated and gitignored.
-name: ljaspNotch
+# Never edit Cumba.xcodeproj by hand; it is generated and gitignored.
+name: Cumba
 
 options:
   bundleIdPrefix: io.github.muazfurkan
@@ -38,11 +38,11 @@ settings:
     DEAD_CODE_STRIPPING: YES
 
 targets:
-  ljaspNotch:
+  Cumba:
     type: application
     platform: macOS
     sources:
-      - path: ljaspNotch
+      - path: Cumba
       # The Chrome extension ships inside the app so Settings can reveal it for
       # "Load unpacked".
       - path: extensions/chrome
@@ -51,9 +51,9 @@ targets:
     dependencies:
       - package: FlyingFox
     info:
-      path: ljaspNotch/Resources/Info.plist
+      path: Cumba/Resources/Info.plist
       properties:
-        CFBundleDisplayName: ljaspNotch
+        CFBundleDisplayName: Cumba
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDevelopmentRegion: en
@@ -64,11 +64,11 @@ targets:
         LSUIElement: true
         NSPrincipalClass: NSApplication
         # Translations live in InfoPlist.xcstrings.
-        NSCalendarsFullAccessUsageDescription: ljaspNotch shows your upcoming events in the notch. Nothing leaves your Mac.
-        NSAppleEventsUsageDescription: ljaspNotch reads what Spotify and Music are playing and sends play, pause, next and seek commands to them.
+        NSCalendarsFullAccessUsageDescription: Cumba shows your upcoming events in the notch. Nothing leaves your Mac.
+        NSAppleEventsUsageDescription: Cumba reads what Spotify and Music are playing and sends play, pause, next and seek commands to them.
         NSCameraUsageDescription: The Mirror widget shows your camera while the panel is open. Nothing is recorded or sent.
     entitlements:
-      path: ljaspNotch/Resources/ljaspNotch.entitlements
+      path: Cumba/Resources/Cumba.entitlements
       properties:
         # Sandbox stays off for AppleScript automation and the local server.
         com.apple.security.app-sandbox: false
@@ -78,8 +78,10 @@ targets:
         com.apple.security.device.camera: true
     settings:
       base:
+        # Kept from the app's former name, ljaspNotch: macOS ties permissions, settings and
+        # Keychain items to it, so changing it would reset them for existing users.
         PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch
-        PRODUCT_NAME: ljaspNotch
+        PRODUCT_NAME: Cumba
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_IDENTITY: Apple Development
@@ -87,15 +89,15 @@ targets:
         COMBINE_HIDPI_IMAGES: YES
     scheme:
       testTargets:
-        - ljaspNotchTests
+        - CumbaTests
 
-  ljaspNotchTests:
+  CumbaTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: ljaspNotchTests
+      - path: CumbaTests
     dependencies:
-      - target: ljaspNotch
+      - target: Cumba
       - package: FlyingFox
     settings:
       base:

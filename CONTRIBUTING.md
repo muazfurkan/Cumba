@@ -1,6 +1,6 @@
-# Contributing to ljaspNotch
+# Contributing to Cumba
 
-Thanks for your interest! This is a small personal project, so please open an issue to discuss larger changes before you start working on them. Questions and loose ideas go to [Discussions](https://github.com/muazfurkan/ljaspNotch/discussions).
+Thanks for your interest! This is a small personal project, so please open an issue to discuss larger changes before you start working on them. Questions and loose ideas go to [Discussions](https://github.com/muazfurkan/Cumba/discussions).
 
 ## Setup
 
@@ -19,14 +19,14 @@ Thanks for your interest! This is a small personal project, so please open an is
    xcodegen generate
    ```
 
-Never edit `ljaspNotch.xcodeproj` by hand. It is generated from `project.yml` and is not committed.
+Never edit `Cumba.xcodeproj` by hand. It is generated from `project.yml` and is not committed.
 
 ## Build, test, run
 
 ```bash
-set -o pipefail && xcodebuild -project ljaspNotch.xcodeproj -scheme ljaspNotch -configuration Debug -derivedDataPath build build | xcbeautify
-xcodebuild -project ljaspNotch.xcodeproj -scheme ljaspNotch -derivedDataPath build test
-open build/Build/Products/Debug/ljaspNotch.app
+set -o pipefail && xcodebuild -project Cumba.xcodeproj -scheme Cumba -configuration Debug -derivedDataPath build build | xcbeautify
+xcodebuild -project Cumba.xcodeproj -scheme Cumba -derivedDataPath build test
+open build/Build/Products/Debug/Cumba.app
 ```
 
 Logs:
@@ -40,7 +40,7 @@ log stream --predicate 'subsystem == "io.github.muazfurkan.ljaspnotch"' --level 
 - Swift 6 with strict concurrency. UI code is `@MainActor`; I/O, AppleScript, networking and file work never run on the main thread.
 - **2-space indentation.** `.editorconfig` and `.swift-format` enforce it. Check before you push:
   ```bash
-  xcrun swift-format lint --strict --recursive ljaspNotch ljaspNotchTests
+  xcrun swift-format lint --strict --recursive Cumba CumbaTests
   ```
 - No force unwraps (`!`) and no `try!`. Log errors with `os.Logger` (see `Log.swift`).
 - Identifiers and code comments are in English.

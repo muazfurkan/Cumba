@@ -1,19 +1,23 @@
-<p align="center"><img src="docs/banner.png" alt="The ljaspNotch panel open below the notch, showing a mini player"></p>
+<p align="center"><img src="docs/banner.png" alt="The Cumba panel open below the notch, showing a mini player"></p>
 
-<h1 align="center">ljaspNotch</h1>
+<h1 align="center">Cumba</h1>
+
+<p align="center"><sub>by LJASP · formerly ljaspNotch</sub></p>
 
 <p align="center">
-  <a href="https://github.com/muazfurkan/ljaspNotch/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/ljaspNotch?label=download&color=DCB669" alt="Latest release"></a>
-  <a href="https://github.com/muazfurkan/ljaspNotch/actions/workflows/build.yml"><img src="https://github.com/muazfurkan/ljaspNotch/actions/workflows/build.yml/badge.svg?branch=main" alt="Build status"></a>
+  <a href="https://github.com/muazfurkan/Cumba/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/Cumba?label=download&color=DCB669" alt="Latest release"></a>
+  <a href="https://github.com/muazfurkan/Cumba/actions/workflows/build.yml"><img src="https://github.com/muazfurkan/Cumba/actions/workflows/build.yml/badge.svg?branch=main" alt="Build status"></a>
   <img src="https://img.shields.io/badge/macOS-26%2B-111111?logo=apple" alt="macOS 26 or later">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/muazfurkan/ljaspNotch?color=111111" alt="MIT license"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/muazfurkan/Cumba?color=111111" alt="MIT license"></a>
 </p>
 
 <p align="center"><a href="README.tr.md">Türkçe</a></p>
 
 A free, open source notch app for macOS. It turns the MacBook notch into a panel that grows out of the camera housing when you rest the pointer on it: music from Spotify, Apple Music and YouTube, Claude Code permission requests, and a set of widgets, all in a look you can make your own.
 
-> **Project status:** ljaspNotch is new (first release October 2026) and made by one maintainer with AI assistance (Claude Code). It hasn't had an external security audit. The code is small and open, releases are built by GitHub Actions from tagged commits, and [what it can access](#permissions-and-what-runs) and [how to check a download](#download-and-install) are listed below.
+A *cumba* is the small bay window that juts out from the upper floor of old Turkish houses: a quiet place to sit and see what's happening in the street. The panel does the same from the top of your screen.
+
+> **Project status:** Cumba is new (first release October 2026) and made by one maintainer with AI assistance (Claude Code). It hasn't had an external security audit. The code is small and open, releases are built by GitHub Actions from tagged commits, and [what it can access](#permissions-and-what-runs) and [how to check a download](#download-and-install) are listed below.
 
 ## Features
 
@@ -28,26 +32,28 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
 
 ## Download and install
 
-1. Get `ljaspNotch-vX.Y.Z.dmg` (or the `.zip`) from the [latest release](https://github.com/muazfurkan/ljaspNotch/releases/latest).
+1. Get `Cumba-vX.Y.Z.dmg` (or the `.zip`) from the [latest release](https://github.com/muazfurkan/Cumba/releases/latest).
 2. **Check the download before opening it.** Its SHA-256 must match the one in `SHA256SUMS.txt` on the release page:
    ```bash
-   shasum -a 256 ~/Downloads/ljaspNotch-vX.Y.Z.dmg
+   shasum -a 256 ~/Downloads/Cumba-vX.Y.Z.dmg
    ```
    From 1.1.0 on, releases are also immutable (files and tag can't change after publishing) and carry signed build provenance. With the [GitHub CLI](https://cli.github.com) you can confirm the file was built from this repository by its release workflow:
    ```bash
-   gh attestation verify ~/Downloads/ljaspNotch-vX.Y.Z.dmg --repo muazfurkan/ljaspNotch
+   gh attestation verify ~/Downloads/Cumba-vX.Y.Z.dmg --repo muazfurkan/Cumba
    ```
-3. Open the disk image and drag ljaspNotch to Applications.
-4. ljaspNotch isn't notarized by Apple, because that needs a paid developer account, so macOS blocks the first launch. Open it once, then click **Open Anyway** in **System Settings > Privacy & Security**. If you'd rather not run a downloaded build at all, [build it from source](#build-from-source).
-5. A short welcome lets you try the panel. ljaspNotch lives in the menu bar; if its icon hides behind the notch, right-click the notch for Settings.
+3. Open the disk image and drag Cumba to Applications.
+4. Cumba isn't notarized by Apple, because that needs a paid developer account, so macOS blocks the first launch. Open it once, then click **Open Anyway** in **System Settings > Privacy & Security**. If you'd rather not run a downloaded build at all, [build it from source](#build-from-source).
+5. A short welcome lets you try the panel. Cumba lives in the menu bar; if its icon hides behind the notch, right-click the notch for Settings.
 
 <details>
 <summary>Terminal alternative to Open Anyway</summary>
 
-`xattr -dr com.apple.quarantine /Applications/ljaspNotch.app` removes the download flag from this one app, so Gatekeeper stops asking. Only do this for a copy you checked in step 2.
+`xattr -dr com.apple.quarantine /Applications/Cumba.app` removes the download flag from this one app, so Gatekeeper stops asking. Only do this for a copy you checked in step 2.
 </details>
 
-**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Camera) and for Keychain access to ljaspNotch's tokens. Check the new download first, then allow.
+**Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
+
+**Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Claude Code. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
 
 ## Requirements
 
@@ -60,11 +66,11 @@ You need Xcode 26 or later and [Homebrew](https://brew.sh).
 
 ```bash
 brew install xcodegen
-git clone https://github.com/muazfurkan/ljaspNotch.git
-cd ljaspNotch
+git clone https://github.com/muazfurkan/Cumba.git
+cd Cumba
 cp Local.xcconfig.example Local.xcconfig   # then set your DEVELOPMENT_TEAM
 xcodegen generate
-open ljaspNotch.xcodeproj
+open Cumba.xcodeproj
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
@@ -86,15 +92,15 @@ Everything below is off or unused until you turn on the feature that needs it. S
 | Login item | Launch at login | Off until you turn it on |
 | Network | Artwork, weather, update check | See [Privacy](#privacy) |
 
-The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [ljaspNotch.entitlements](ljaspNotch/Resources/ljaspNotch.entitlements) (Apple Events, calendars, camera).
+The App Sandbox is off: a sandboxed app would need exceptions to script Spotify and Music, to run the socket Claude Code's hooks reach, and to edit `~/.claude/settings.json`. Hardened Runtime is on, and the app has only the entitlements in [Cumba.entitlements](Cumba/Resources/Cumba.entitlements) (Apple Events, calendars, camera).
 
-ljaspNotch never sends telemetry, uses no private Apple APIs, asks for no administrator password, installs no helper tools, kernel or system extensions, doesn't change system settings, and never downloads code or updates itself. [SECURITY.md](SECURITY.md) has the threat model and a map of the security-relevant code.
+Cumba never sends telemetry, uses no private Apple APIs, asks for no administrator password, installs no helper tools, kernel or system extensions, doesn't change system settings, and never downloads code or updates itself. [SECURITY.md](SECURITY.md) has the threat model and a map of the security-relevant code.
 
 ## YouTube and YouTube Music
 
 A small Chrome extension (also works in other Chromium browsers) sends what plays in YouTube tabs to the app over a local connection, and the app sends play, pause, next and seek back.
 
-1. In ljaspNotch, open **Settings > Connections**, turn on **Connect the YouTube extension** and click **Show Extension Folder**.
+1. In Cumba, open **Settings > Connections**, turn on **Connect the YouTube extension** and click **Show Extension Folder**.
 2. In Chrome, open `chrome://extensions`, turn on **Developer mode** and click **Load unpacked**. Choose the folder from step 1.
 3. Open the extension's **Details > Extension options**, paste the port and the token from **Settings > Connections**, and save.
 
@@ -111,8 +117,8 @@ Permission requests from Claude Code (terminal, IDE extensions and the Claude de
 Turn on **Settings > Connections > Scripts** to let your own scripts, Shortcuts or build tools show a short status beside the notch. **Copy Example Command** copies a ready-to-run command with your token:
 
 ```bash
-curl -s --unix-socket "$HOME/Library/Application Support/ljaspNotch/hook.sock" \
-  -H "X-LjaspNotch-Token: <token>" -H "Content-Type: application/json" \
+curl -s --unix-socket "$HOME/Library/Application Support/Cumba/hook.sock" \
+  -H "X-Cumba-Token: <token>" -H "Content-Type: application/json" \
   -d '{"id":"build","title":"Build done","symbol":"hammer","duration":5}' \
   http://localhost/activity
 ```
@@ -130,18 +136,18 @@ No telemetry. Everything stays on your Mac. These features make network requests
 | Weather widget | The coordinates of the place you choose to `api.open-meteo.com`; the city you search for to `geocoding-api.open-meteo.com` |
 | Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
 
-The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes are saved as plain text in `~/Library/Application Support/ljaspNotch/notes.txt`. Clipboard History keeps your last 20 copied texts in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. The microphone and camera indicator reads only whether a device is in use, never audio or video.
+The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes are saved as plain text in `~/Library/Application Support/Cumba/notes.txt`. Clipboard History keeps your last 20 copied texts in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. The microphone and camera indicator reads only whether a device is in use, never audio or video.
 
-When turned on, the extension server listens only on `127.0.0.1`, accepts only the ljaspNotch extension and requires its own token, stored in your Keychain.
+When turned on, the extension server listens only on `127.0.0.1`, accepts only the Cumba extension and requires its own token, stored in your Keychain.
 
 ## Uninstall
 
 1. If you installed the Claude Code hooks, remove them first in **Settings > Claude Code > Remove…**. Hooks left behind do nothing once the app is gone, but they stay in `~/.claude/settings.json`.
-2. Turn off **Launch at login** in Settings > General, quit ljaspNotch from the menu bar and move it to the Trash.
+2. Turn off **Launch at login** in Settings > General, quit Cumba from the menu bar and move it to the Trash.
 3. Remove the extension in `chrome://extensions`.
 4. To delete its data too (themes, layout, notes, preferences and the tokens):
    ```bash
-   rm -rf ~/Library/Application\ Support/ljaspNotch
+   rm -rf ~/Library/Application\ Support/Cumba
    defaults delete io.github.muazfurkan.ljaspnotch
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
@@ -151,7 +157,7 @@ When turned on, the extension server listens only on `127.0.0.1`, accepts only t
 
 ## Contributing
 
-Questions and ideas are welcome in [Discussions](https://github.com/muazfurkan/ljaspNotch/discussions). Contributions are welcome too; please read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
+Questions and ideas are welcome in [Discussions](https://github.com/muazfurkan/Cumba/discussions). Contributions are welcome too; please read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 

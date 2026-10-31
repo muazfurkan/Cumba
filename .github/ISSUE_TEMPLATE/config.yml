@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Questions and ideas
-    url: https://github.com/muazfurkan/ljaspNotch/discussions
+    url: https://github.com/muazfurkan/Cumba/discussions
     about: Ask how something works or share an idea in Discussions.
   - name: Report a security vulnerability
-    url: https://github.com/muazfurkan/ljaspNotch/security/advisories/new
+    url: https://github.com/muazfurkan/Cumba/security/advisories/new
     about: Please report security issues privately, not in public issues.

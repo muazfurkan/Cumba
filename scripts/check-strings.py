@@ -14,12 +14,12 @@ import pathlib
 import sys
 
 build_dir = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "build")
-catalog_path = pathlib.Path("ljaspNotch/Resources/Localizable.xcstrings")
+catalog_path = pathlib.Path("Cumba/Resources/Localizable.xcstrings")
 catalog = json.loads(catalog_path.read_text(encoding="utf-8"))["strings"]
 
 used = {}
 for path in build_dir.rglob("*.stringsdata"):
-    if "ljaspNotchTests" in str(path):
+    if "CumbaTests" in str(path):
         continue
     data = json.loads(path.read_text(encoding="utf-8"))
     source = pathlib.Path(data.get("source", "")).name

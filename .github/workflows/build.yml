@@ -35,14 +35,14 @@ jobs:
         run: xcodegen generate
 
       - name: Lint
-        run: xcrun swift-format lint --strict --recursive ljaspNotch ljaspNotchTests
+        run: xcrun swift-format lint --strict --recursive Cumba CumbaTests
 
       - name: Build and test
         run: |
           set -o pipefail
           xcodebuild test \
-            -project ljaspNotch.xcodeproj \
-            -scheme ljaspNotch \
+            -project Cumba.xcodeproj \
+            -scheme Cumba \
             -destination 'platform=macOS' \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
