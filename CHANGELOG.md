@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Notch panel: opens on hover (after a short delay) or on click, closes when the pointer leaves, and can be pinned open.
+- Notch panel: opens when the pointer rests on the notch or on click, closes when the pointer leaves, and can be pinned open.
+- ljasp logo as the app icon and menu bar icon.
 - The panel stays out of the way: clicks pass through to the menu bar while it is closed, and it hides in full screen apps and while paused.
 - The panel follows screen changes, sleep/wake and space switches.
 - Menu bar app skeleton: no Dock icon, a status item with Settings, Pause and Quit.

@@ -145,7 +145,9 @@ ljaspNotch/
 - Tıklama geçişi: Dinamik `ignoresMouseEvents`. İmleç yalnızca şeklin üzerindeyken panel fare olaylarını alır; panel kapalıyken menü çubuğu öğeleri tıklanabilir kalır.
 - Hover takibi: `NSEvent` global + yerel fare monitörleri (izin gerektirmez, zamanlayıcı yok). Uygulama aktifken olaylar yalnızca kendi pencerelerine geldiği için Ayarlar penceresi `acceptsMouseMovedEvents = true` kullanır.
 - Panel ancak metin girişi gerektiğinde key window olur (`canBecomeKey` yalnızca o durumda `true`). Esc ile kapanma da bu durumla sınırlıdır: key olmayan panelde Esc'yi yakalamak Erişilebilirlik izni ister. Faz 1'de metin girişi olmadığı için Esc yoktur; panel imleç ayrılınca kapanır.
-- Açılma: hover (gecikmeli) ve notch'a tıklama (anında). "Hover / tıklama" seçimi Faz 2'de Ayarlar'a gelir.
+- Açılma: hover (gecikmeli) ve notch'a tıklama (anında). İmleç notch içinde her hareket ettiğinde açılma gecikmesi yeniden başlar; panel imleç notch'ta durunca açılır, üzerinden geçince açılmaz. "Hover / tıklama" seçimi Faz 2'de Ayarlar'a gelir.
+- Animasyon: kritik sönümlü yay (taşma yok). İçerik açık boyutta bir kez yerleşir, büyüyen şekil onu açığa çıkarır; içerik kısa gecikmeyle belirir.
+- Kilit ekranında panel görünmez (macOS kilit ekranının üstünde uygulama panellerine izin vermez).
 
 ### Durum makinesi (`NotchViewModel`)
 | Durum | Görünüm | Giriş | Çıkış |
@@ -156,7 +158,7 @@ ljaspNotch/
 | `pinned` | `expanded` gibi ama kapanmaz | Sabitle butonu | Sabitlemeyi kaldır |
 
 - Varsayılan gecikmeler: açılma 0,15 sn, kapanma 0,4 sn. İkisi de ayarlanabilir.
-- Ayar: "Tam ekran uygulamada gizle" (varsayılan açık). `collectionBehavior` içinde `.fullScreenAuxiliary` olmayınca panel tam ekran Space'lerde görünmez; ayar açıksa bu bayrak eklenmez. Ayar arayüzü Faz 2'de.
+- Ayar: "Tam ekran uygulamada gizle" (varsayılan açık). Status bar üstü seviyedeki pencereler `.fullScreenAuxiliary` olmadan da tam ekran Space'lerde görünür (Faz 1'de doğrulandı), bu yüzden tam ekran pencere listesinden algılanır (`FullScreenDetector`): notch'lu ekranı enine kaplayan katman 0 penceresi ve aynı uygulamanın notch şeridini kaplayan ikinci penceresi. Yalnızca sınırlar, katman ve PID okunur; Ekran Kaydı izni gerekmez. Space değişiminde ana thread dışında kontrol edilir. Ayar arayüzü Faz 2'de.
 - Yeniden konumlama tetikleyicileri: `NSApplication.didChangeScreenParametersNotification`, `NSWorkspace.didWakeNotification`, `NSWorkspace.activeSpaceDidChangeNotification`.
 
 ## 7. Widget sistemi
