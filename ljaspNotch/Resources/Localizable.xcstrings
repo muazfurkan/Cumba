@@ -103,6 +103,16 @@
         }
       }
     },
+    "Pin panel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paneli sabitle"
+          }
+        }
+      }
+    },
     "Quit ljaspNotch" : {
       "localizations" : {
         "tr" : {
@@ -134,12 +144,32 @@
         }
       }
     },
+    "Unpin panel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panelin sabitlemesini kaldır"
+          }
+        }
+      }
+    },
     "Version" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sürüm"
+          }
+        }
+      }
+    },
+    "Widgets are coming soon." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget'lar yakında geliyor."
           }
         }
       }

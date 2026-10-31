@@ -46,7 +46,15 @@ jobs:
             MARKETING_VERSION="$MARKETING_VERSION" \
             CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" \
             CODE_SIGNING_ALLOWED=NO \
-            | xcbeautify --renderer github-actions
+            2>&1 | tee xcodebuild.log | xcbeautify --renderer github-actions
+
+      - name: Show compiler errors
+        if: failure()
+        run: |
+          grep -nE "(error|warning): " xcodebuild.log | sort -u | head -50 || true
+          grep -n -A12 "Stack dump:" xcodebuild.log | head -40 || true
+          echo "--- last lines ---"
+          tail -60 xcodebuild.log
 
       # Apple Silicon refuses to run unsigned apps; an ad-hoc signature is enough.
       # Hardened runtime and entitlements are kept so automation permissions work.
