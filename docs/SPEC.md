@@ -135,15 +135,17 @@ ljaspNotch/
 - Notch var mı: `NSScreen.safeAreaInsets.top > 0`.
 - Notch genişliği: `screen.frame.width - auxiliaryTopLeftArea.width - auxiliaryTopRightArea.width`. Yüksekliği: `safeAreaInsets.top`.
 - `NotchGeometry` saf bir struct olur (ekran değerlerini alır, frame'leri döner) ve birim testlerle doğrulanır.
-- Notch'suz ekran için ayar: "Sadece dahili ekran" (varsayılan) / "Ana ekranda sanal notch".
+- Notch'suz ekran için ayar: "Sadece dahili ekran" (varsayılan) / "Ana ekranda sanal notch". Faz 2'de Ayarlar ile gelir; Faz 1'de panel yalnızca notch'lu ekranda görünür.
 
 ### Pencere
 - `NSPanel`, `styleMask: [.borderless, .nonactivatingPanel]`, `backgroundColor = .clear`, `isOpaque = false`, `hasShadow = false`.
-- Seviye menü çubuğunun üstünde (`.statusBar` üstü; Faz 1'de doğrulanır).
+- Seviye `.statusBar + 1` (26): menü çubuğunun (24) ve durum öğelerinin (25) üstünde, onların açtığı menülerin (`.popUpMenu`, 101) altında. Faz 1'de doğrulandı.
 - `collectionBehavior: [.canJoinAllSpaces, .stationary, .fullScreenAuxiliary, .ignoresCycle]`.
 - **Pencere boyutu sabit** (açık halin en büyük boyutu + gölge payı). Açılma/kapanma animasyonu SwiftUI içinde şekil olarak yapılır; pencere frame'i her karede değiştirilmez. Bu hem akıcılık hem stabilite için.
-- Tıklama geçişi: Panelin görünür şekli dışındaki alanlar fare olaylarını almaz (hit-test override veya dinamik `ignoresMouseEvents`). Panel kapalıyken menü çubuğu öğeleri tıklanabilir kalır.
-- Panel ancak metin girişi gerektiğinde key window olur (`canBecomeKey` yalnızca o durumda `true`). Esc ile kapanır.
+- Tıklama geçişi: Dinamik `ignoresMouseEvents`. İmleç yalnızca şeklin üzerindeyken panel fare olaylarını alır; panel kapalıyken menü çubuğu öğeleri tıklanabilir kalır.
+- Hover takibi: `NSEvent` global + yerel fare monitörleri (izin gerektirmez, zamanlayıcı yok). Uygulama aktifken olaylar yalnızca kendi pencerelerine geldiği için Ayarlar penceresi `acceptsMouseMovedEvents = true` kullanır.
+- Panel ancak metin girişi gerektiğinde key window olur (`canBecomeKey` yalnızca o durumda `true`). Esc ile kapanma da bu durumla sınırlıdır: key olmayan panelde Esc'yi yakalamak Erişilebilirlik izni ister. Faz 1'de metin girişi olmadığı için Esc yoktur; panel imleç ayrılınca kapanır.
+- Açılma: hover (gecikmeli) ve notch'a tıklama (anında). "Hover / tıklama" seçimi Faz 2'de Ayarlar'a gelir.
 
 ### Durum makinesi (`NotchViewModel`)
 | Durum | Görünüm | Giriş | Çıkış |
@@ -154,7 +156,7 @@ ljaspNotch/
 | `pinned` | `expanded` gibi ama kapanmaz | Sabitle butonu | Sabitlemeyi kaldır |
 
 - Varsayılan gecikmeler: açılma 0,15 sn, kapanma 0,4 sn. İkisi de ayarlanabilir.
-- Ayar: "Tam ekran uygulamada gizle" (varsayılan açık).
+- Ayar: "Tam ekran uygulamada gizle" (varsayılan açık). `collectionBehavior` içinde `.fullScreenAuxiliary` olmayınca panel tam ekran Space'lerde görünmez; ayar açıksa bu bayrak eklenmez. Ayar arayüzü Faz 2'de.
 - Yeniden konumlama tetikleyicileri: `NSApplication.didChangeScreenParametersNotification`, `NSWorkspace.didWakeNotification`, `NSWorkspace.activeSpaceDidChangeNotification`.
 
 ## 7. Widget sistemi
@@ -433,6 +435,7 @@ Her faz sonunda: derleme temiz, testler yeşil, kabul kriterleri kontrol edildi,
 
 ### Faz 2: Tema ve ayarlar
 - `Theme`, `ThemeStore`, üç hazır tema, Ayarlar'da görünüm sekmesi (boyut, materyal, renk, animasyon, gecikmeler) ve canlı önizleme, içe/dışa aktarma.
+- Davranış ayarları: açılma şekli (hover / tıklama), tam ekranda gizle, notch'suz ekranda sanal notch.
 - **Kabul:** Tema ve boyut değişikliği anında uygulanır, yeniden başlatınca korunur. Bozuk bir tema dosyası uygulamayı çökertmez.
 
 ### Faz 3: Widget altyapısı ve ilk widget'lar
