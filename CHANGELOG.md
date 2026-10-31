@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Themes: Classic, Glass and Midnight built in, plus your own themes with material (Liquid Glass, solid, tinted glass), colors, font, panel size, corner radius, shadow and animation. Changes preview live in the notch.
+- Import and export themes as JSON. Broken theme files are skipped instead of crashing the app.
+- Panel settings: open on hover or only on click, open and close delays, hide in full screen apps, and a virtual notch for screens without one.
+- CI checks that every string in the code is in the string catalog.
+
+### Changed
+
+- New app and menu bar icon: the "L | J" mark.
+
 ## [0.1.0] - 2026-10-31
 
 ### Added
