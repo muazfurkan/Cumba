@@ -18,7 +18,10 @@ final class WidgetRegistry {
   static func standard(context: WidgetContext) -> WidgetRegistry {
     WidgetRegistry(
       context: context,
-      types: [MediaWidget.self, CalendarWidget.self, TimerWidget.self, BatteryWidget.self])
+      types: [
+        MediaWidget.self, ClaudeCodeWidget.self, CalendarWidget.self, TimerWidget.self,
+        BatteryWidget.self,
+      ])
   }
 
   var kinds: [String] { types.map { $0.kind } }

@@ -11,6 +11,7 @@ final class SettingsWindowController {
     case appearance
     case widgets
     case connections
+    case claudeCode
   }
 
   private let settings: AppSettings
@@ -67,6 +68,11 @@ final class SettingsWindowController {
         ConnectionsSettingsView(server: server, settings: settings),
         label: String(localized: "Connections", comment: "Settings tab"),
         symbol: "network"))
+    tabs.addTabViewItem(
+      tab(
+        ClaudeCodeSettingsView(server: server, settings: settings),
+        label: "Claude Code",
+        symbol: "terminal"))
     tabController = tabs
 
     let window = NSWindow(contentViewController: tabs)

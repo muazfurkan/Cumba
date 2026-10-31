@@ -1,0 +1,9 @@
+{
+  "session_id": "session-1",
+  "transcript_path": "/Users/example/.claude/projects/demo/session-1.jsonl",
+  "cwd": "/Users/example/Projects/demo",
+  "permission_mode": "default",
+  "hook_event_name": "PermissionRequest",
+  "tool_name": "Edit",
+  "tool_input": { "file_path": "/Users/example/Projects/demo/Sources/App.swift", "old_string": "a", "new_string": "b", "replace_all": false }
+}

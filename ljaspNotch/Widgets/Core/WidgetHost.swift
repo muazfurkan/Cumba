@@ -9,15 +9,27 @@ final class WidgetHost {
   let layoutStore: LayoutStore
   let registry: WidgetRegistry
   let liveActivities: LiveActivityCenter
+  let claude: ClaudeCodeService
   private(set) var selectedTabID: String?
 
   @ObservationIgnored private var activeKinds: Set<String> = []
   @ObservationIgnored private var isPanelOpen = false
 
-  init(layoutStore: LayoutStore, registry: WidgetRegistry, liveActivities: LiveActivityCenter) {
+  init(
+    layoutStore: LayoutStore, registry: WidgetRegistry, liveActivities: LiveActivityCenter,
+    claude: ClaudeCodeService
+  ) {
     self.layoutStore = layoutStore
     self.registry = registry
     self.liveActivities = liveActivities
+    self.claude = claude
+  }
+
+  /// A pending Claude Code request shows above the widgets unless the Claude Code widget
+  /// is already on screen.
+  var permissionBanner: PermissionBroker.Request? {
+    guard selectedTab?.widgets.contains(ClaudeCodeWidget.kind) != true else { return nil }
+    return claude.permissions.pending.first
   }
 
   var tabs: [WidgetLayout.Tab] { layoutStore.layout.tabs }

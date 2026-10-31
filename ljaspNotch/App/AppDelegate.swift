@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let liveActivities: LiveActivityCenter
   private let media: MediaCoordinator
   private let server: LocalServer
+  private let claude: ClaudeCodeService
   private let registry: WidgetRegistry
   private let layoutStore: LayoutStore
   private let settingsWindow: SettingsWindowController
@@ -18,12 +19,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     themes = ThemeStore()
     liveActivities = LiveActivityCenter()
     media = MediaCoordinator.standard()
-    server = LocalServer(browserHub: BrowserMediaHub())
+    claude = ClaudeCodeService(liveActivities: liveActivities)
+    server = LocalServer(browserHub: BrowserMediaHub(), claude: claude)
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
     registry = WidgetRegistry.standard(
       context: WidgetContext(
-        liveActivities: liveActivities, media: media, openSettings: { settingsOpener.open() }))
+        liveActivities: liveActivities, media: media, claude: claude,
+        openSettings: { settingsOpener.open() }))
     layoutStore = LayoutStore(knownKinds: registry.kinds)
     settingsWindow = SettingsWindowController(
       settings: settings, themes: themes, layoutStore: layoutStore, registry: registry,
@@ -31,7 +34,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     notchWindow = NotchWindowController(
       settings: settings, themes: themes,
       host: WidgetHost(
-        layoutStore: layoutStore, registry: registry, liveActivities: liveActivities))
+        layoutStore: layoutStore, registry: registry, liveActivities: liveActivities,
+        claude: claude))
     super.init()
     settingsOpener.open = { [notchWindow, settingsWindow] in
       // Close the panel first so permission prompts can't end up behind it.

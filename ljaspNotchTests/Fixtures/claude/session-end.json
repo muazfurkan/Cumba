@@ -1,0 +1,7 @@
+{
+  "session_id": "session-1",
+  "transcript_path": "/Users/example/.claude/projects/demo/session-1.jsonl",
+  "cwd": "/Users/example/Projects/demo",
+  "hook_event_name": "SessionEnd",
+  "reason": "prompt_input_exit"
+}

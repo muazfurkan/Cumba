@@ -21,14 +21,14 @@ final class LocalServer {
   /// Empty until the Keychain has been read.
   private(set) var token = ""
   let browserHub: BrowserMediaHub
-  /// Extra routes added by other features, e.g. Claude Code hooks.
-  @ObservationIgnored var extraRoutes: [(route: HTTPRoute, handler: any HTTPHandler)] = []
+  let claude: ClaudeCodeService
 
   @ObservationIgnored private var server: HTTPServer?
   @ObservationIgnored private var runTask: Task<Void, Never>?
 
-  init(browserHub: BrowserMediaHub) {
+  init(browserHub: BrowserMediaHub, claude: ClaudeCodeService) {
     self.browserHub = browserHub
+    self.claude = claude
   }
 
   func start(port: UInt16) async {
@@ -76,9 +76,8 @@ final class LocalServer {
     let server = HTTPServer(address: address, timeout: Self.requestTimeout, logger: .disabled)
     await server.appendRoute(
       "GET /media", to: MediaSocketRoute(port: port, token: token, hub: browserHub))
-    for extra in extraRoutes {
-      await server.appendRoute(extra.route, to: extra.handler)
-    }
+    await server.appendRoute(
+      "POST /claude/hook", to: ClaudeHookRoute(port: port, token: token, service: claude))
     self.server = server
     runTask = Task { [weak self] in
       do {
