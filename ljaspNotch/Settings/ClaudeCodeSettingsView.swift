@@ -123,10 +123,8 @@ struct ClaudeCodeSettingsView: View {
     status = result.0
     hooksDisabled = result.1
     // The socket runs only while hooks are installed.
-    switch result.0 {
-    case .notInstalled: server.stopHookServer()
-    case .installed, .outdated: server.startHookServer()
-    case nil: break
+    if let installed = result.0 {
+      server.setHooksInstalled(installed != .notInstalled)
     }
     if result.0 == nil {
       message = String(

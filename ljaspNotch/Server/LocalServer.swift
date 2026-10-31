@@ -5,8 +5,9 @@ import Observation
 /// The app's two local servers. Each runs only while its feature is in use:
 /// - HTTP/WebSocket on 127.0.0.1 for the Chrome extension (`/media`), checking Host,
 ///   Origin and the extension token. Only while turned on in Settings > Connections.
-/// - HTTP on a Unix socket for Claude Code hooks (`/claude/hook`), checking the hook token.
-///   Only while the hooks are installed. The socket's folder is readable only by this user,
+/// - HTTP on a Unix socket for Claude Code hooks (`/claude/hook`, hook token) and, when
+///   turned on, script activities (`/activity`, script token). Only while hooks are
+///   installed or script activities are on. The socket's folder is readable only by this user,
 ///   so no other user or app can answer Claude Code in the app's place, not even while the
 ///   app is closed.
 /// Both restart on their own after a failure.
@@ -39,22 +40,35 @@ final class LocalServer {
   private(set) var hookToken = ""
   /// Pasted into the Chrome extension's options. Empty until read.
   private(set) var extensionToken = ""
+  /// For scripts that post to `/activity`. Empty until read.
+  private(set) var scriptToken = ""
+  /// Last known hook state; with script activities on, the socket runs either way.
+  private(set) var hooksInstalled = false
+  private(set) var scriptsEnabled = false
   let browserHub: BrowserMediaHub
   let claude: ClaudeCodeService
+  let liveActivities: LiveActivityCenter
 
   @ObservationIgnored private var mediaTask: Task<Void, Never>?
   @ObservationIgnored private var hookTask: Task<Void, Never>?
 
-  init(browserHub: BrowserMediaHub, claude: ClaudeCodeService) {
+  init(
+    browserHub: BrowserMediaHub, claude: ClaudeCodeService,
+    liveActivities: LiveActivityCenter = LiveActivityCenter()
+  ) {
     self.browserHub = browserHub
     self.claude = claude
+    self.liveActivities = liveActivities
   }
 
   /// Reads both tokens from the Keychain; the servers start only after this.
   func loadTokens() async {
     do {
-      (hookToken, extensionToken) = try await Task.detached {
-        (try TokenStore.loadOrCreate(.hooks), try TokenStore.loadOrCreate(.browserExtension))
+      (hookToken, extensionToken, scriptToken) = try await Task.detached {
+        (
+          try TokenStore.loadOrCreate(.hooks), try TokenStore.loadOrCreate(.browserExtension),
+          try TokenStore.loadOrCreate(.scripts)
+        )
       }.value
     } catch {
       status = .failed(String(localized: "The token couldn't be read from the Keychain."))
@@ -91,10 +105,32 @@ final class LocalServer {
     status = .stopped
   }
 
-  /// Starts the hook socket unless it already runs.
-  func startHookServer() {
+  func setHooksInstalled(_ installed: Bool) {
+    hooksInstalled = installed
+    updateSocket()
+  }
+
+  func setScriptsEnabled(_ enabled: Bool) {
+    scriptsEnabled = enabled
+    updateSocket()
+  }
+
+  private func updateSocket() {
+    if hooksInstalled || scriptsEnabled {
+      startHookServer()
+    } else {
+      stopHookServer()
+    }
+  }
+
+  /// Starts the socket unless it already runs.
+  private func startHookServer() {
     guard hookTask == nil, !hookToken.isEmpty else { return }
     let token = hookToken
+    let scriptToken = scriptToken
+    let liveActivities = liveActivities
+    let isEnabled: @Sendable @MainActor () -> Bool = { [weak self] in self?.scriptsEnabled ?? false
+    }
     let claude = claude
     let make: @MainActor () async throws -> HTTPServer = {
       let path = try await Task.detached { try Self.prepareHookSocket() }.value
@@ -102,6 +138,10 @@ final class LocalServer {
         address: sockaddr_un.unix(path: path), timeout: Self.requestTimeout, logger: .disabled)
       await server.appendRoute(
         "POST /claude/hook", to: ClaudeHookRoute(token: token, service: claude))
+      await server.appendRoute(
+        "POST /activity",
+        to: ScriptActivityRoute(
+          token: scriptToken, isEnabled: isEnabled, liveActivities: liveActivities))
       return server
     }
     hookTask = supervise(
@@ -110,7 +150,7 @@ final class LocalServer {
       update: { [weak self] in self?.hookStatus = $0 }, make: make)
   }
 
-  func stopHookServer() {
+  private func stopHookServer() {
     hookTask?.cancel()
     hookTask = nil
     hookStatus = .stopped

@@ -24,6 +24,7 @@ final class AppSettings {
     static let showsVolumeChanges = "showsVolumeChanges"
     static let replacesVolumeIndicator = "replacesVolumeIndicator"
     static let showsPrivacyIndicators = "showsPrivacyIndicators"
+    static let scriptActivitiesEnabled = "scriptActivitiesEnabled"
   }
 
   /// Which display shows the panel.
@@ -112,6 +113,11 @@ final class AppSettings {
     didSet { defaults.set(showsPrivacyIndicators, forKey: Key.showsPrivacyIndicators) }
   }
 
+  /// Lets local scripts show activities through `/activity` on the private socket.
+  var scriptActivitiesEnabled: Bool {
+    didSet { defaults.set(scriptActivitiesEnabled, forKey: Key.scriptActivitiesEnabled) }
+  }
+
   /// Set once the welcome window has been shown.
   var hasSeenWelcome: Bool {
     didSet { defaults.set(hasSeenWelcome, forKey: Key.hasSeenWelcome) }
@@ -149,6 +155,7 @@ final class AppSettings {
     showsVolumeChanges = defaults.bool(forKey: Key.showsVolumeChanges)
     replacesVolumeIndicator = defaults.bool(forKey: Key.replacesVolumeIndicator)
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
+    scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

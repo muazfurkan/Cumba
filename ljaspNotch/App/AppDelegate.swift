@@ -25,7 +25,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     claude = ClaudeCodeService(liveActivities: liveActivities)
     systemIndicators = SystemIndicators(settings: settings, liveActivities: liveActivities)
     updates = UpdateChecker(settings: settings)
-    server = LocalServer(browserHub: BrowserMediaHub(), claude: claude)
+    server = LocalServer(
+      browserHub: BrowserMediaHub(), claude: claude, liveActivities: liveActivities)
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
     let panelControl = PanelControl()
@@ -77,9 +78,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       let hooksPresent = await Task.detached {
         (try? HookInstaller.standard.status(token: token)).map { $0 != .notInstalled } ?? false
       }.value
-      if hooksPresent {
-        server.startHookServer()
-      }
+      server.setScriptsEnabled(settings.scriptActivitiesEnabled)
+      server.setHooksInstalled(hooksPresent)
     }
     notchWindow.start()
     systemIndicators.start()

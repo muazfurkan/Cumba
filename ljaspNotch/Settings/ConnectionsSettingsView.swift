@@ -68,10 +68,45 @@ struct ConnectionsSettingsView: View {
           .fixedSize(horizontal: false, vertical: true)
         }
       }
+
+      Section("Scripts") {
+        Toggle("Let scripts show activities in the notch", isOn: scriptsEnabled)
+        Text(
+          "Your own scripts, Shortcuts or build tools can show a short status or progress beside the notch through ljaspNotch's private socket. Only programs running as you can reach it, and they need this token. Activities are text only; nothing in them can be clicked."
+        )
+        .font(.callout)
+        .foregroundStyle(.secondary)
+        .fixedSize(horizontal: false, vertical: true)
+        if settings.scriptActivitiesEnabled {
+          HStack {
+            Button("Copy Token") { SecretCopy.copy(server.scriptToken) }
+            Button("Copy Example Command") { SecretCopy.copy(exampleCommand) }
+          }
+          .disabled(server.scriptToken.isEmpty)
+        }
+      }
     }
     .formStyle(.grouped)
-    .frame(width: 520, height: 520)
+    .frame(width: 520, height: 600)
     .onAppear { portText = String(settings.serverPort) }
+  }
+
+  private var scriptsEnabled: Binding<Bool> {
+    Binding(
+      get: { [settings] in settings.scriptActivitiesEnabled },
+      set: { [settings, server] enabled in
+        settings.scriptActivitiesEnabled = enabled
+        server.setScriptsEnabled(enabled)
+      })
+  }
+
+  /// A ready-to-run curl command with the real socket path and token.
+  private var exampleCommand: String {
+    let socket = LocalServer.hookSocketURL.path(percentEncoded: false)
+    let body = #"{"id":"build","title":"Build done","symbol":"hammer","duration":5}"#
+    return "curl -s --unix-socket \"\(socket)\""
+      + " -H \"\(RequestGuard.tokenHeader): \(server.scriptToken)\""
+      + " -H \"Content-Type: application/json\" -d '\(body)' http://localhost/activity"
   }
 
   private var extensionEnabled: Binding<Bool> {

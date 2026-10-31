@@ -500,6 +500,16 @@
         }
       }
     },
+    "CPU %@ · Memory %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU %1$@ · Bellek %2$@"
+          }
+        }
+      }
+    },
     "CPU and memory use" : {
       "localizations" : {
         "tr" : {
@@ -895,12 +905,32 @@
         }
       }
     },
+    "Copy Example Command" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek Komutu Kopyala"
+          }
+        }
+      }
+    },
     "Copy Hook Token" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook Token'ını Kopyala"
+          }
+        }
+      }
+    },
+    "Copy Token" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token'ı Kopyala"
           }
         }
       }
@@ -1435,6 +1465,16 @@
         }
       }
     },
+    "Let scripts show activities in the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Script'lerin notch'ta etkinlik göstermesine izin ver"
+          }
+        }
+      }
+    },
     "Liquid Glass" : {
       "localizations" : {
         "tr" : {
@@ -1522,6 +1562,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bellek"
+          }
+        }
+      }
+    },
+    "Memory %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bellek %@"
           }
         }
       }
@@ -2166,6 +2216,16 @@
         }
       }
     },
+    "Resource use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaynak kullanımı"
+          }
+        }
+      }
+    },
     "Resume" : {
       "localizations" : {
         "tr" : {
@@ -2272,6 +2332,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Metin"
+          }
+        }
+      }
+    },
+    "Scripts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Script'ler"
           }
         }
       }
@@ -3227,6 +3297,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notch'unuz artık bir panel. Kullanımı şöyle:"
+          }
+        }
+      }
+    },
+    "Your own scripts, Shortcuts or build tools can show a short status or progress beside the notch through ljaspNotch's private socket. Only programs running as you can reach it, and they need this token. Activities are text only; nothing in them can be clicked." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kendi script'leriniz, Kısayollar veya derleme araçlarınız ljaspNotch'un özel soketi üzerinden notch'un yanında kısa bir durum ya da ilerleme gösterebilir. Ona yalnızca sizin hesabınızla çalışan programlar ulaşabilir ve bu token'a ihtiyaç duyarlar. Etkinlikler yalnızca metindir; içlerinde tıklanabilecek bir şey yoktur."
           }
         }
       }

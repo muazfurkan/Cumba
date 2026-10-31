@@ -195,3 +195,44 @@ struct SystemIndicatorTests {
     #expect(privacy.state == PrivacyIndicatorMonitor.State())
   }
 }
+
+struct ResourceUsageTests {
+  @Test func readsOwnUsage() {
+    #expect(ResourceUsage.memory() > 1_000_000)
+    #expect(ResourceUsage.cpuTime() > 0)
+  }
+}
+
+@MainActor
+struct ScriptActivityTests {
+  private func message(_ json: String) throws -> ScriptActivityRoute.Message {
+    try JSONDecoder().decode(ScriptActivityRoute.Message.self, from: Data(json.utf8))
+  }
+
+  @Test func validatesAndEscapes() throws {
+    let activity = try #require(
+      ScriptActivity(
+        try message(
+          #"{"id":"build","title":"Done‮evil","symbol":"no.such.symbol","progress":7,"duration":0}"#
+        )))
+    #expect(activity.id == "script.build")
+    #expect(activity.title.contains("⟨U+202E⟩"))
+    #expect(activity.symbol == "terminal")
+    #expect(activity.progress == 1)
+    #expect(activity.duration == ScriptActivity.durationRange.lowerBound)
+  }
+
+  @Test func rejectsBadMessages() throws {
+    #expect(ScriptActivity(try message(#"{"id":"build"}"#)) == nil)
+    #expect(ScriptActivity(try message(#"{"id":"../x","title":"t"}"#)) == nil)
+    #expect(ScriptActivity(try message(#"{"id":"build","remove":true}"#))?.isRemoval == true)
+  }
+
+  @Test func showsAndRemoves() throws {
+    let center = LiveActivityCenter()
+    try #require(ScriptActivity(try message(#"{"id":"a","title":"Hi"}"#))).apply(to: center)
+    #expect(center.contains("script.a"))
+    try #require(ScriptActivity(try message(#"{"id":"a","remove":true}"#))).apply(to: center)
+    #expect(!center.contains("script.a"))
+  }
+}

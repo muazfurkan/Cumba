@@ -76,6 +76,7 @@ struct GeneralSettingsView: View {
 
       Section {
         LabeledContent("Version", value: "\(AppInfo.version) (\(AppInfo.build))")
+        LabeledContent("Resource use") { ResourceUsageLabel() }
         HStack {
           Button("Copy Diagnostics") {
             Task {
