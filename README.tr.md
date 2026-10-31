@@ -39,7 +39,11 @@ Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
 ## Gizlilik
 
-Telemetri yok. Her şey Mac'inizde kalır. Ağ isteği yapan özellikler burada listelenecek.
+Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, yalnızca siz kullanırken:
+
+| Özellik | İstek |
+|---|---|
+| Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
 
 ## Katkı
 

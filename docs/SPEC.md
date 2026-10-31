@@ -252,9 +252,11 @@ struct NowPlaying: Equatable, Sendable {
   var isPlaying: Bool
 }
 
-protocol MediaProvider: AnyObject, Sendable {
+@MainActor
+protocol MediaProvider: AnyObject {
   var source: NowPlaying.Source { get }
-  var updates: AsyncStream<NowPlaying?> { get }
+  var onUpdate: ((NowPlaying?) -> Void)? { get set }   // nil: oynatıcı durdu/kapandı
+  func start()
   func send(_ command: MediaCommand) async
 }
 
@@ -270,11 +272,18 @@ enum MediaCommand: Sendable {
 - Kullanıcı panelden kaynaklar arasında elle geçiş yapabilir.
 - İlerleme çubuğu saniyede bir yeniden sorgulanmaz; `position + (now - positionTimestamp)` ile yerelde hesaplanır.
 
+Not: Bildirimler zaten ana thread'de geldiği için sağlayıcılar `@MainActor` ve `AsyncStream` yerine `onUpdate` geri çağrısı kullanır.
+
 ### Spotify ve Apple Music
 - Değişiklikleri dağıtık bildirimlerle dinle: Spotify `com.spotify.client.PlaybackStateChanged`, Apple Music `com.apple.Music.playerInfo`. `userInfo` alanları Faz 4'te macOS 26 üzerinde doğrulanır.
 - Kontrol ve eksik bilgiler (konum, kapak) AppleScript ile alınır. Spotify kapak için URL verir, Apple Music görsel verisinin kendisini verir.
 - **Kural:** Komut göndermeden önce `NSRunningApplication` ile uygulamanın çalıştığını kontrol et. Kapalı uygulamaya AppleScript gönderilirse uygulama açılır.
-- AppleScript çağrıları tek bir actor üzerinden, ana thread dışında çalışır.
+- AppleScript çağrıları tek bir actor üzerinden, ana thread dışında çalışır (`AppleScriptRunner`, yürütücüsü tek bir seri `DispatchSerialQueue`).
+- Script'ler uygulamayı adıyla değil `tell application id "<bundle id>"` ile hedefler.
+- Her script'ten önce `AEDeterminePermissionToAutomateTarget(..., askUserIfNeeded: false)` ile izin kontrol edilir; izin yoksa script gönderilmez, böylece Otomasyon izni penceresi panelden asla çıkmaz. İzin yalnızca Ayarlar > Widget'lar > Medya > "İzin Ver" ile istenir (oynatıcı açık olmalı).
+- Music bildirimi konum içermez; konum ve kapak, izin varsa AppleScript ile alınır. Spotify kapak URL'si yalnızca `https` ise kullanılır.
+- Spotify/Music ortak kod: `ScriptablePlayerProvider` + oynatıcıya özel `PlayerAdapter` (bildirim ve script ayrıştırma, birim testli).
+- Medya canlı etkinliği: kapak + `waveform` sembolü (`symbolEffect`, sistem tarafından çizilir).
 
 ### YouTube ve YouTube Music (Chrome eklentisi)
 **Eklenti yapısı (Manifest V3)**
