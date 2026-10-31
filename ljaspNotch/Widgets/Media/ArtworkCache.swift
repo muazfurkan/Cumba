@@ -47,10 +47,10 @@ final class ArtworkCache {
       return entry
     }
     var data = nowPlaying.artworkData
-    if data == nil, let url = nowPlaying.artworkURL, url.scheme == "https" {
-      data = try? await session.data(from: url).0
+    if data == nil, let url = nowPlaying.artworkURL, Self.isAllowed(url) {
+      data = await download(url)
     }
-    guard let data, data.count < 8_000_000 else { return nil }
+    guard let data, data.count <= Self.maxBytes else { return nil }
     let decoded = await Task.detached { () -> (NSImage, HexColor?)? in
       guard let image = NSImage(data: data) else { return nil }
       return (image, Self.averageColor(of: data))
@@ -59,6 +59,40 @@ final class ArtworkCache {
     let entry = Entry(image: decoded.0, color: decoded.1?.color)
     cache.setObject(Box(entry), forKey: key as NSString)
     return entry
+  }
+
+  nonisolated static let maxBytes = 8_000_000
+  /// Image hosts of Spotify and YouTube; artwork from anywhere else isn't fetched.
+  static let allowedHosts = ["i.scdn.co", "ytimg.com", "googleusercontent.com", "ggpht.com"]
+
+  static func isAllowed(_ url: URL) -> Bool {
+    guard url.scheme == "https", let host = url.host()?.lowercased() else { return false }
+    return allowedHosts.contains { host == $0 || host.hasSuffix("." + $0) }
+  }
+
+  /// Streams the download off the main thread and stops at `maxBytes`, so a huge response
+  /// can't fill memory.
+  private func download(_ url: URL) async -> Data? {
+    let session = session
+    return await Task.detached { () -> Data? in
+      do {
+        let (bytes, response) = try await session.bytes(from: url)
+        guard (response as? HTTPURLResponse)?.statusCode == 200,
+          response.expectedContentLength <= Int64(Self.maxBytes)
+        else { return nil }
+        var data = Data()
+        data.reserveCapacity(max(0, Int(response.expectedContentLength)))
+        for try await byte in bytes {
+          data.append(byte)
+          if data.count > Self.maxBytes {
+            return nil
+          }
+        }
+        return data
+      } catch {
+        return nil
+      }
+    }.value
   }
 
   /// Average color of an image, lifted a little so it reads as a glow on black.

@@ -41,7 +41,13 @@ final class ShortcutsWidget: NotchWidget {
     AnyView(ShortcutsSettingsView(widget: self))
   }
 
+  /// A name starting with "-" would be read as an option by the command line tool.
+  nonisolated static func isRunnable(_ name: String) -> Bool {
+    !name.isEmpty && !name.hasPrefix("-")
+  }
+
   func toggleFavorite(_ name: String) {
+    guard Self.isRunnable(name) else { return }
     if let index = favorites.firstIndex(of: name) {
       favorites.remove(at: index)
     } else if favorites.count < Self.maxFavorites {
@@ -53,14 +59,14 @@ final class ShortcutsWidget: NotchWidget {
   func loadAvailable() async {
     do {
       let output = try await Self.runTool(["list"])
-      available = Self.parseList(output)
+      available = Self.parseList(output).filter(Self.isRunnable)
     } catch {
       Log.widgets.error("Listing shortcuts failed: \(error.localizedDescription, privacy: .public)")
     }
   }
 
   func run(_ name: String) {
-    guard !running.contains(name) else { return }
+    guard Self.isRunnable(name), !running.contains(name) else { return }
     running.insert(name)
     failed = nil
     Task {

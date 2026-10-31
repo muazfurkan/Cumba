@@ -53,11 +53,11 @@ struct HookPayload: Decodable, Sendable {
     return try? JSONDecoder().decode(HookPayload.self, from: data)
   }
 
-  /// Short description of a permission request: the command for Bash, the file for edits,
-  /// the URL for fetches, otherwise the tool name.
-  var permissionSummary: String {
+  /// What the permission request would do, in full and safe to show: the command for
+  /// Bash, the file for edits, the URL for fetches, otherwise the whole tool input as JSON.
+  var permissionDetail: SafeText {
     let tool = toolName ?? "?"
-    let detail: String? =
+    let known: String? =
       switch tool {
       case "Bash": toolInput?["command"]?.string
       case "Edit", "Write", "MultiEdit", "NotebookEdit", "Read":
@@ -67,7 +67,7 @@ struct HookPayload: Decodable, Sendable {
       case "WebSearch": toolInput?["query"]?.string
       default: nil
       }
-    return Self.truncate(detail ?? tool, to: 160)
+    return SafeText(known ?? JSONValue.object(toolInput ?? [:]).rendered())
   }
 
   static func truncate(_ text: String, to length: Int) -> String {
@@ -76,12 +76,17 @@ struct HookPayload: Decodable, Sendable {
     return String(singleLine.prefix(length - 1)) + "…"
   }
 
-  /// Path relative to the project when inside it, otherwise the last two components.
+  /// Path relative to the project when inside it, otherwise the full path. `..` is
+  /// resolved first, so a path can't look like it stays inside the project when it doesn't.
   static func shortPath(_ path: String, relativeTo cwd: String?) -> String {
-    if let cwd, path.hasPrefix(cwd + "/") {
-      return String(path.dropFirst(cwd.count + 1))
+    let standardized = URL(filePath: path).standardized.path(percentEncoded: false)
+    if let cwd {
+      let root = URL(filePath: cwd).standardized.path(percentEncoded: false)
+      if standardized.hasPrefix(root + "/") {
+        return String(standardized.dropFirst(root.count + 1))
+      }
     }
-    return URL(filePath: path).pathComponents.suffix(2).joined(separator: "/")
+    return standardized
   }
 }
 
@@ -113,5 +118,33 @@ enum JSONValue: Decodable, Equatable, Sendable {
 
   var string: String? {
     if case .string(let value) = self { value } else { nil }
+  }
+
+  /// Indented JSON with sorted keys, for showing unknown tool inputs.
+  func rendered(indent: String = "") -> String {
+    let inner = indent + "  "
+    switch self {
+    case .string(let value):
+      let escaped = value.replacingOccurrences(of: "\\", with: "\\\\")
+        .replacingOccurrences(of: "\"", with: "\\\"")
+      return "\"\(escaped)\""
+    case .number(let value):
+      return value.rounded() == value && abs(value) < 1e15
+        ? String(Int(value)) : String(value)
+    case .bool(let value):
+      return value ? "true" : "false"
+    case .null:
+      return "null"
+    case .array(let values):
+      guard !values.isEmpty else { return "[]" }
+      return "[\n" + values.map { inner + $0.rendered(indent: inner) }.joined(separator: ",\n")
+        + "\n\(indent)]"
+    case .object(let fields):
+      guard !fields.isEmpty else { return "{}" }
+      return "{\n"
+        + fields.keys.sorted().map { key in
+          "\(inner)\"\(key)\": \(fields[key]?.rendered(indent: inner) ?? "null")"
+        }.joined(separator: ",\n") + "\n\(indent)}"
+    }
   }
 }

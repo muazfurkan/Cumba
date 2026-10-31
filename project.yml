@@ -13,11 +13,12 @@ options:
   usesTabs: false
 
 packages:
-  # The only allowed dependency (CLAUDE.md). MIT licensed. Pinned exactly because the
-  # generated project and Package.resolved aren't committed.
+  # The only allowed dependency (CLAUDE.md). MIT licensed. Pinned to the commit of tag
+  # 0.27.1 (a tag can move), because the generated project and Package.resolved aren't
+  # committed.
   FlyingFox:
     url: https://github.com/swhitty/FlyingFox
-    exactVersion: 0.27.1
+    revision: 4e246d3fb515bd2069e5c169abdc75808b90548f
 
 configFiles:
   Debug: Config/Base.xcconfig

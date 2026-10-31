@@ -124,6 +124,7 @@ private struct ExpandedPanelView: View {
           decision in
           host.claude.answer(request, with: decision)
         }
+        .id(request.id)
         .padding(10)
         .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
         .padding(.top, 8)

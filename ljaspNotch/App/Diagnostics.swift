@@ -18,10 +18,9 @@ enum Diagnostics {
     let spotify = await AppleScriptRunner.shared.permission(
       for: SpotifyAdapter().bundleID, ask: false)
     let music = await AppleScriptRunner.shared.permission(for: MusicAdapter().bundleID, ask: false)
-    let port = sources.settings.serverPort
     let token = sources.server.token
     let hooks = await Task.detached {
-      (try? HookInstaller.standard.status(port: port, token: token)).map { "\($0)" } ?? "unreadable"
+      (try? HookInstaller.standard.status(token: token)).map { "\($0)" } ?? "unreadable"
     }.value
 
     var lines: [String] = []
@@ -49,7 +48,7 @@ enum Diagnostics {
       lines.append("Tab: \(tab.widgets.joined(separator: ", "))")
     }
     lines.append(
-      "Server: \(describe(sources.server.status)), browsers=\(sources.server.browserHub.connectionCount)"
+      "Server: \(describe(sources.server.status)), browsers=\(sources.server.browserHub.connectionCount), hook socket=\(describe(sources.server.hookStatus))"
     )
     lines.append("Claude Code hooks: \(hooks)")
     lines.append(

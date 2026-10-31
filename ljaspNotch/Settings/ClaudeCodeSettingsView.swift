@@ -7,7 +7,7 @@ struct ClaudeCodeSettingsView: View {
   @Bindable var settings: AppSettings
 
   @State private var status: HookInstaller.Status?
-  @State private var isBlockedByAllowlist = false
+  @State private var hooksDisabled = false
   @State private var plan: HookInstaller.Plan?
   @State private var message: String?
 
@@ -17,9 +17,10 @@ struct ClaudeCodeSettingsView: View {
     Form {
       Section("Hooks") {
         LabeledContent("Status") { statusLabel }
-        if isBlockedByAllowlist {
+        LabeledContent("Socket") { socketLabel }
+        if hooksDisabled {
           Label(
-            "allowedHttpHookUrls in settings.json doesn't include ljaspNotch's address, so Claude Code will skip these hooks.",
+            "disableAllHooks is on in settings.json, so Claude Code ignores every hook.",
             systemImage: "exclamationmark.triangle.fill"
           )
           .foregroundStyle(.orange)
@@ -40,7 +41,7 @@ struct ClaudeCodeSettingsView: View {
       }
       Section {
         Text(
-          "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to ljaspNotch on 127.0.0.1. Permission requests then appear in the notch. When ljaspNotch isn't running, Claude Code carries on as usual. Session data stays in memory."
+          "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to ljaspNotch through a private socket that only your user account can open. Permission requests then appear in the notch. When ljaspNotch isn't running, Claude Code carries on as usual. Session data stays in memory."
         )
         .font(.callout)
         .foregroundStyle(.secondary)
@@ -70,7 +71,7 @@ struct ClaudeCodeSettingsView: View {
     case .installed:
       Label("Installed", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
     case .outdated:
-      Label("Out of date (port or token changed)", systemImage: "arrow.triangle.2.circlepath")
+      Label("Out of date (token or format changed)", systemImage: "arrow.triangle.2.circlepath")
         .foregroundStyle(.orange)
     case .notInstalled:
       Text("Not installed").foregroundStyle(.secondary)
@@ -79,17 +80,27 @@ struct ClaudeCodeSettingsView: View {
     }
   }
 
+  @ViewBuilder private var socketLabel: some View {
+    switch server.hookStatus {
+    case .running:
+      Label("Listening", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+    case .stopped:
+      Text("Stopped").foregroundStyle(.secondary)
+    case .failed(let message):
+      Label(message, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+    }
+  }
+
   private func refresh() async {
     let installer = installer
-    let port = settings.serverPort
     let token = server.token
     let result = await Task.detached { () -> (HookInstaller.Status?, Bool) in
-      let status = try? installer.status(port: port, token: token)
-      let blocked = (try? installer.isBlockedByAllowlist(port: port)) ?? false
-      return (status, blocked)
+      let status = try? installer.status(token: token)
+      let disabled = (try? installer.hooksAreDisabled()) ?? false
+      return (status, disabled)
     }.value
     status = result.0
-    isBlockedByAllowlist = result.1
+    hooksDisabled = result.1
     if result.0 == nil {
       message = String(
         localized: "~/.claude/settings.json isn't valid JSON. Fix it first; nothing was changed.")
@@ -98,14 +109,12 @@ struct ClaudeCodeSettingsView: View {
 
   private func review(install: Bool) {
     let installer = installer
-    let port = settings.serverPort
     let token = server.token
     Task {
       let result = await Task.detached { () -> Result<HookInstaller.Plan, HookInstaller.Failure> in
         do throws(HookInstaller.Failure) {
           return .success(
-            try install
-              ? installer.planInstall(port: port, token: token) : installer.planUninstall())
+            try install ? installer.planInstall(token: token) : installer.planUninstall())
         } catch {
           return .failure(error)
         }

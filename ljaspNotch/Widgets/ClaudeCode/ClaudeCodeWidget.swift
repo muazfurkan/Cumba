@@ -32,6 +32,7 @@ private struct ClaudeCodeWidgetView: View {
         ) { decision in
           service.answer(request, with: decision)
         }
+        .id(request.id)
       } else {
         VStack(alignment: .leading, spacing: 6) {
           Label("Claude Code", systemImage: "terminal")
@@ -110,12 +111,19 @@ private struct SessionRow: View {
 
 /// A permission request with Allow, Deny and "answer in the terminal". Used in the widget
 /// and as a banner in the panel when the widget isn't in the visible tab.
+///
+/// Safety: the full request is shown, escaped (`SafeText`). Buttons stay disabled for a
+/// moment whenever a new request appears, so a click aimed at something else or a double
+/// click can't approve it unseen. Suspicious requests get no Allow button at all.
 struct PermissionCard: View {
   let request: PermissionBroker.Request
   /// Requests waiting behind this one.
   let waiting: Int
   var compact = false
   let answer: (PermissionBroker.Decision) -> Void
+
+  static let armingDelay = Duration.milliseconds(750)
+  @State private var isArmed = false
 
   var body: some View {
     VStack(alignment: .leading, spacing: compact ? 4 : 6) {
@@ -134,14 +142,30 @@ struct PermissionCard: View {
             .accessibilityLabel(Text("\(waiting) more requests waiting"))
         }
       }
-      Text(request.summary)
-        .font(.system(.caption, design: .monospaced))
-        .lineLimit(compact ? 2 : 3)
-        .textSelection(.enabled)
+      ScrollView {
+        Text(request.detail)
+          .font(.system(.caption, design: .monospaced))
+          .textSelection(.enabled)
+          .frame(maxWidth: .infinity, alignment: .leading)
+      }
+      .frame(maxHeight: compact ? 44 : 64)
+      .padding(6)
+      .background(.black.opacity(0.25), in: RoundedRectangle(cornerRadius: 6))
+      if request.isSuspicious {
+        Label(
+          "This request has hidden characters or is too long to show safely. Answer it in the terminal.",
+          systemImage: "exclamationmark.triangle.fill"
+        )
+        .font(.caption2)
+        .foregroundStyle(.orange)
+        .fixedSize(horizontal: false, vertical: true)
+      }
       HStack(spacing: 6) {
-        Button("Allow") { answer(.allow) }
-          .buttonStyle(.borderedProminent)
-          .tint(.green)
+        if !request.isSuspicious {
+          Button("Allow") { answer(.allow) }
+            .buttonStyle(.borderedProminent)
+            .tint(.green)
+        }
         Button("Deny") { answer(.deny) }
           .buttonStyle(.bordered)
         Button("In Terminal") { answer(.askInTerminal) }
@@ -149,6 +173,12 @@ struct PermissionCard: View {
           .help(Text("Answer in Claude Code instead"))
       }
       .controlSize(.small)
+      .disabled(!isArmed)
+    }
+    .task(id: request.id) {
+      isArmed = false
+      try? await Task.sleep(for: Self.armingDelay)
+      isArmed = true
     }
   }
 }

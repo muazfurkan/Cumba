@@ -63,6 +63,10 @@ actor AppleScriptRunner {
     }
     let script = compiled[source] ?? NSAppleScript(source: source)
     guard let script else { throw .scriptError(code: 0, message: "Invalid script") }
+    // Seek scripts differ by position; keep the cache small instead of growing per seek.
+    if compiled.count >= 16 {
+      compiled.removeAll()
+    }
     compiled[source] = script
     var errorInfo: NSDictionary?
     let result = script.executeAndReturnError(&errorInfo)

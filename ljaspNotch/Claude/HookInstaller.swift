@@ -1,19 +1,25 @@
 import Foundation
 
-/// Adds ljaspNotch's HTTP hooks to `~/.claude/settings.json` and removes them again
-/// (SPEC § 9). Other settings and hooks are kept. The user always sees a diff first; the
-/// file is backed up and written atomically. Every method does file I/O, so call them off
-/// the main thread.
+/// Adds ljaspNotch's hooks to `~/.claude/settings.json` and removes them again (SPEC § 9).
+///
+/// The hooks are `command` hooks that pipe the event to the app's Unix socket with curl.
+/// The socket lives in a folder only this user can open, so no other user or sandboxed app
+/// can pose as ljaspNotch, even while the app isn't running (a TCP port could be taken over
+/// then). When the app is closed, curl fails quietly and Claude Code carries on.
+///
+/// Other settings and hooks are kept. The user always sees a diff first (with the token
+/// masked); the file is backed up and written atomically, through symlinks. Every method
+/// does file I/O, so call them off the main thread.
 struct HookInstaller: Sendable {
   enum Status: Equatable, Sendable {
     case notInstalled
     case installed
-    /// Some entries exist but with another port, token or timeout.
+    /// Some entries exist but with another token, timeout or format.
     case outdated
   }
 
   enum Failure: Error, Equatable {
-    /// The file exists but isn't a JSON object; it is never overwritten.
+    /// The file exists but can't be read or isn't a JSON object; it is never overwritten.
     case unreadable
     /// The file changed after the diff was shown.
     case changedSinceReview
@@ -24,6 +30,7 @@ struct HookInstaller: Sendable {
   struct Plan: Equatable, Sendable {
     let oldText: String
     let newText: String
+    /// Line diff with tokens masked, for display.
     let diff: [DiffLine]
     var hasChanges: Bool { oldText != newText }
   }
@@ -36,31 +43,33 @@ struct HookInstaller: Sendable {
   ]
 
   let settingsURL: URL
+  let socketPath: String
 
   static var standard: HookInstaller {
     HookInstaller(
       settingsURL: FileManager.default.homeDirectoryForCurrentUser
-        .appending(path: ".claude/settings.json"))
+        .appending(path: ".claude/settings.json"),
+      socketPath: LocalServer.hookSocketURL.path(percentEncoded: false))
   }
 
-  static func hookURL(port: UInt16) -> String {
-    "http://127.0.0.1:\(port)/claude/hook"
-  }
+  /// Settings path with symlinks resolved, so dotfile setups keep their link.
+  private var resolvedURL: URL { settingsURL.resolvingSymlinksInPath() }
 
   // MARK: - File access
 
-  func status(port: UInt16, token: String) throws(Failure) -> Status {
-    Self.status(of: try readSettings(), port: port, token: token)
+  func status(token: String) throws(Failure) -> Status {
+    Self.status(of: try readSettings(), socketPath: socketPath, token: token)
   }
 
-  /// True when `allowedHttpHookUrls` exists and none of its patterns allow our URL.
-  func isBlockedByAllowlist(port: UInt16) throws(Failure) -> Bool {
-    Self.isBlocked(url: Self.hookURL(port: port), in: try readSettings())
+  /// True when `disableAllHooks` is set, so Claude Code ignores every hook.
+  func hooksAreDisabled() throws(Failure) -> Bool {
+    try readSettings()["disableAllHooks"] as? Bool == true
   }
 
-  func planInstall(port: UInt16, token: String) throws(Failure) -> Plan {
+  func planInstall(token: String) throws(Failure) -> Plan {
     let settings = try readSettings()
-    return Self.plan(from: settings, to: Self.installing(port: port, token: token, into: settings))
+    return Self.plan(
+      from: settings, to: Self.installing(socketPath: socketPath, token: token, into: settings))
   }
 
   func planUninstall() throws(Failure) -> Plan {
@@ -73,14 +82,15 @@ struct HookInstaller: Sendable {
   func apply(_ plan: Plan, now: Date = .now) throws(Failure) -> URL? {
     let current = try readSettings()
     guard Self.render(current) == plan.oldText else { throw .changedSinceReview }
+    let target = resolvedURL
     let manager = FileManager.default
     do {
       var backup: URL?
-      if manager.fileExists(atPath: settingsURL.path(percentEncoded: false)) {
+      if manager.fileExists(atPath: target.path(percentEncoded: false)) {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyyMMdd-HHmmss"
-        let folder = settingsURL.deletingLastPathComponent()
+        let folder = target.deletingLastPathComponent()
         let stamp = "settings.json.bak-\(formatter.string(from: now))"
         // Two saves within a second get "-2", "-3" … instead of failing.
         var url = folder.appending(path: stamp)
@@ -89,21 +99,30 @@ struct HookInstaller: Sendable {
           url = folder.appending(path: "\(stamp)-\(counter)")
           counter += 1
         }
-        try manager.copyItem(at: settingsURL, to: url)
+        try manager.copyItem(at: target, to: url)
+        // The backup holds the token too; keep it private like the original.
+        try manager.setAttributes(
+          [.posixPermissions: 0o600], ofItemAtPath: url.path(percentEncoded: false))
         backup = url
       } else {
         try manager.createDirectory(
-          at: settingsURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+          at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
       }
-      try Data((plan.newText + "\n").utf8).write(to: settingsURL, options: .atomic)
+      try Data((plan.newText + "\n").utf8).write(to: target, options: .atomic)
       return backup
     } catch {
       throw .writeFailed(error.localizedDescription)
     }
   }
 
+  /// A missing file counts as empty; any other read error is a failure, so a file we
+  /// can't read (e.g. owned by root) is never replaced.
   private func readSettings() throws(Failure) -> [String: Any] {
-    guard let data = try? Data(contentsOf: settingsURL) else { return [:] }
+    let url = resolvedURL
+    guard FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) else {
+      return [:]
+    }
+    guard let data = try? Data(contentsOf: url) else { throw .unreadable }
     if data.allSatisfy({ $0 == 0x20 || $0 == 0x0A || $0 == 0x0D || $0 == 0x09 }) {
       return [:]
     }
@@ -115,14 +134,41 @@ struct HookInstaller: Sendable {
 
   // MARK: - Pure transformations
 
-  /// An entry is ours when it is an HTTP hook to `/claude/hook` on the loopback address.
+  /// The shell command of one hook. curl fails quietly (`-sf`, `|| true`) when the app isn't
+  /// running, and gives up a second before Claude Code's own timeout.
+  static func command(socketPath: String, token: String, timeout: Int) -> String {
+    let header = "\(RequestGuard.tokenHeader): \(token)"
+    return [
+      "/usr/bin/curl -sf --max-time \(max(1, timeout - 1))",
+      "--unix-socket \(shellQuoted(socketPath))",
+      "-H \(shellQuoted(header)) -H 'Content-Type: application/json'",
+      "--data-binary @- http://localhost/claude/hook || true",
+    ].joined(separator: " ")
+  }
+
+  static func shellQuoted(_ text: String) -> String {
+    "'" + text.replacingOccurrences(of: "'", with: #"'\''"#) + "'"
+  }
+
+  /// Ours: a command hook that posts to our socket, or an HTTP hook from earlier versions
+  /// that carries our token header. Hooks of other tools on the same path are left alone.
   static func isOurs(_ hook: Any) -> Bool {
-    guard let hook = hook as? [String: Any], hook["type"] as? String == "http",
-      let url = hook["url"] as? String
-    else { return false }
-    return url.range(
-      of: #"^http://(127\.0\.0\.1|localhost):\d+/claude/hook$"#, options: .regularExpression)
-      != nil
+    guard let hook = hook as? [String: Any] else { return false }
+    switch hook["type"] as? String {
+    case "command":
+      guard let command = hook["command"] as? String else { return false }
+      return command.contains("--unix-socket") && command.contains("ljaspNotch/hook.sock")
+        && command.contains("/claude/hook")
+    case "http":
+      guard let url = hook["url"] as? String,
+        url.range(
+          of: #"^http://(127\.0\.0\.1|localhost):\d+/claude/hook$"#, options: .regularExpression)
+          != nil
+      else { return false }
+      return (hook["headers"] as? [String: Any])?[RequestGuard.tokenHeader] != nil
+    default:
+      return false
+    }
   }
 
   static func removingOurs(from settings: [String: Any]) -> [String: Any] {
@@ -147,7 +193,8 @@ struct HookInstaller: Sendable {
     return result
   }
 
-  static func installing(port: UInt16, token: String, into settings: [String: Any]) -> [String: Any]
+  static func installing(socketPath: String, token: String, into settings: [String: Any])
+    -> [String: Any]
   {
     var result = removingOurs(from: settings)
     var hooks = result["hooks"] as? [String: Any] ?? [:]
@@ -156,12 +203,9 @@ struct HookInstaller: Sendable {
       groups.append([
         "hooks": [
           [
-            "type": "http",
-            "url": hookURL(port: port),
+            "type": "command",
+            "command": command(socketPath: socketPath, token: token, timeout: timeout),
             "timeout": timeout,
-            // A literal value: desktop apps don't inherit shell variables, so `$VAR`
-            // would silently fail in the Claude desktop app.
-            "headers": [RequestGuard.tokenHeader: token],
           ]
         ]
       ])
@@ -171,7 +215,7 @@ struct HookInstaller: Sendable {
     return result
   }
 
-  static func status(of settings: [String: Any], port: UInt16, token: String) -> Status {
+  static func status(of settings: [String: Any], socketPath: String, token: String) -> Status {
     let hooks = settings["hooks"] as? [String: Any] ?? [:]
     var found = 0
     var current = 0
@@ -183,9 +227,9 @@ struct HookInstaller: Sendable {
         .compactMap { $0 as? [String: Any] }
       guard !entries.isEmpty else { continue }
       found += 1
+      let expected = command(socketPath: socketPath, token: token, timeout: timeout)
       let matches = entries.contains { entry in
-        entry["url"] as? String == hookURL(port: port) && entry["timeout"] as? Int == timeout
-          && (entry["headers"] as? [String: Any])?[RequestGuard.tokenHeader] as? String == token
+        entry["command"] as? String == expected && entry["timeout"] as? Int == timeout
       }
       if matches && entries.count == 1 {
         current += 1
@@ -197,18 +241,6 @@ struct HookInstaller: Sendable {
     return current == events.count ? .installed : .outdated
   }
 
-  static func isBlocked(url: String, in settings: [String: Any]) -> Bool {
-    guard let patterns = settings["allowedHttpHookUrls"] as? [String] else { return false }
-    return !patterns.contains { pattern in
-      let regex =
-        "^"
-        + pattern.split(separator: "*", omittingEmptySubsequences: false)
-        .map { NSRegularExpression.escapedPattern(for: String($0)) }
-        .joined(separator: ".*") + "$"
-      return url.range(of: regex, options: [.regularExpression, .caseInsensitive]) != nil
-    }
-  }
-
   static func render(_ settings: [String: Any]) -> String {
     guard !settings.isEmpty,
       let data = try? JSONSerialization.data(
@@ -217,10 +249,18 @@ struct HookInstaller: Sendable {
     return String(decoding: data, as: UTF8.self)
   }
 
+  /// Hides token values so the diff can be shown or screenshotted safely.
+  static func maskingTokens(in text: String) -> String {
+    text.replacingOccurrences(
+      of: "\(RequestGuard.tokenHeader)([\"']?\\s*:\\s*[\"']?)[0-9a-fA-F]{16,}",
+      with: "\(RequestGuard.tokenHeader)$1••••••••", options: .regularExpression)
+  }
+
   static func plan(from old: [String: Any], to new: [String: Any]) -> Plan {
     let oldText = render(old)
     let newText = render(new)
     return Plan(
-      oldText: oldText, newText: newText, diff: DiffLine.lines(from: oldText, to: newText))
+      oldText: oldText, newText: newText,
+      diff: DiffLine.lines(from: maskingTokens(in: oldText), to: maskingTokens(in: newText)))
   }
 }

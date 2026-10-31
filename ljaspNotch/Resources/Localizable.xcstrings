@@ -875,12 +875,12 @@
         }
       }
     },
-    "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to ljaspNotch on 127.0.0.1. Permission requests then appear in the notch. When ljaspNotch isn't running, Claude Code carries on as usual. Session data stays in memory." : {
+    "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to ljaspNotch through a private socket that only your user account can open. Permission requests then appear in the notch. When ljaspNotch isn't running, Claude Code carries on as usual. Session data stays in memory." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hook'lar terminaldeki, IDE eklentilerindeki ve Claude masaüstü uygulamasındaki Claude Code olaylarını 127.0.0.1 üzerinden ljaspNotch'a gönderir. İzin istekleri böylece notch'ta görünür. ljaspNotch çalışmıyorsa Claude Code her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
+            "value" : "Hook'lar terminaldeki, IDE eklentilerindeki ve Claude masaüstü uygulamasındaki Claude Code olaylarını yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ljaspNotch'a gönderir. İzin istekleri böylece notch'ta görünür. ljaspNotch çalışmıyorsa Claude Code her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
           }
         }
       }
@@ -971,6 +971,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Liquid Glass"
+          }
+        }
+      }
+    },
+    "Listening" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dinliyor"
           }
         }
       }
@@ -1312,12 +1322,12 @@
         }
       }
     },
-    "Out of date (port or token changed)" : {
+    "Out of date (token or format changed)" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Güncel değil (port veya token değişti)"
+            "value" : "Güncel değil (token veya biçim değişti)"
           }
         }
       }
@@ -1770,6 +1780,16 @@
         }
       }
     },
+    "Socket" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soket"
+          }
+        }
+      }
+    },
     "Solid black" : {
       "localizations" : {
         "tr" : {
@@ -1871,6 +1891,16 @@
         }
       }
     },
+    "The Claude Code socket couldn't be opened." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code soketi açılamadı."
+          }
+        }
+      }
+    },
     "The search didn't work. Check your connection." : {
       "localizations" : {
         "tr" : {
@@ -1917,6 +1947,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tema"
+          }
+        }
+      }
+    },
+    "This request has hidden characters or is too long to show safely. Answer it in the terminal." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu istekte gizli karakterler var veya güvenle gösterilemeyecek kadar uzun. Terminalde yanıtlayın."
           }
         }
       }
@@ -2200,12 +2240,12 @@
         }
       }
     },
-    "allowedHttpHookUrls in settings.json doesn't include ljaspNotch's address, so Claude Code will skip these hooks." : {
+    "disableAllHooks is on in settings.json, so Claude Code ignores every hook." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "settings.json'daki allowedHttpHookUrls ljaspNotch'un adresini içermiyor; Claude Code bu hook'ları atlayacak."
+            "value" : "settings.json'da disableAllHooks açık; Claude Code tüm hook'ları yok sayıyor."
           }
         }
       }
