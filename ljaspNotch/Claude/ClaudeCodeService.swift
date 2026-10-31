@@ -2,8 +2,8 @@ import Foundation
 import Observation
 import SwiftUI
 
-/// Claude Code sessions as reported by hooks, plus the live activities they cause
-/// (SPEC § 9). Nothing is written to disk.
+/// Claude Code sessions as reported by hooks, plus the live activities they cause.
+/// Nothing is written to disk.
 @MainActor
 @Observable
 final class ClaudeCodeService {

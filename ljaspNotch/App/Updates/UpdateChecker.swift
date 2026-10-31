@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// Asks GitHub Releases for a newer version at launch and once a day (SPEC § 14). It only
+/// Asks GitHub Releases for a newer version at launch and once a day. It only
 /// reports; downloading and installing stay with the user. Can be turned off in Settings.
 @MainActor
 @Observable

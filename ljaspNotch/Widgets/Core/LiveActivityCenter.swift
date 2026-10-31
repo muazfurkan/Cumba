@@ -1,7 +1,7 @@
 import Observation
 import SwiftUI
 
-/// Small indicator shown on both sides of the closed notch (SPEC § 7, F8).
+/// Small indicator shown on both sides of the closed notch.
 struct LiveActivity: Identifiable {
   /// Higher wins when several activities are active at once.
   enum Priority: Int, Comparable, Sendable {

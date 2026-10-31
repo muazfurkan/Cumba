@@ -17,7 +17,17 @@ xcuserdata/
 Local.xcconfig
 
 # Claude Code local settings
-.claude/settings.local.json
+.claude/
+CLAUDE.local.md
+
+# Maintainer-only notes and tools, kept locally and not published
+CLAUDE.md
+docs/SPEC.md
+docs/manual-tests.md
+docs/icon.png
+scripts/make-banner.swift
+scripts/make-icon.swift
+scripts/perf-cycle.swift
 
 # macOS
 .DS_Store

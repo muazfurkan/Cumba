@@ -1,7 +1,7 @@
 import Observation
 import SwiftUI
 
-/// Claude Code sessions and pending permission requests (SPEC § 9).
+/// Claude Code sessions and pending permission requests.
 @MainActor
 @Observable
 final class ClaudeCodeWidget: NotchWidget {

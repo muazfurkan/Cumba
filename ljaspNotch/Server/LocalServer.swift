@@ -2,7 +2,7 @@ import FlyingFox
 import Foundation
 import Observation
 
-/// The app's two local servers (SPEC § 12). Each runs only while its feature is in use:
+/// The app's two local servers. Each runs only while its feature is in use:
 /// - HTTP/WebSocket on 127.0.0.1 for the Chrome extension (`/media`), checking Host,
 ///   Origin and the extension token. Only while turned on in Settings > Connections.
 /// - HTTP on a Unix socket for Claude Code hooks (`/claude/hook`), checking the hook token.

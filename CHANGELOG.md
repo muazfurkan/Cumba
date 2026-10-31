@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Releases include a `.dmg` with an Applications shortcut next to the `.zip`.
 - README sections on uninstalling.
 - Release downloads carry signed build provenance; check them with `gh attestation verify`. Releases are immutable once published.
-- README banner, also used as the GitHub social preview, drawn by `scripts/make-banner.swift`.
+- README banner, also used as the GitHub social preview.
 - Settings > Claude Code: choose what can be allowed from the notch (everything, everything except shell commands, or nothing), and copy the hook token for manual setup.
 - README sections on project status, verifying a download before opening it, and the permissions the app uses and when; SECURITY.md explains how releases are built and maps the security-relevant code.
 
@@ -37,7 +37,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Update check against GitHub Releases at launch and once a day, with an optional pre-release channel and a menu bar item when a newer version exists.
 - Copy Diagnostics in Settings > General for bug reports, without tokens, paths or personal data.
 - Optional haptic tap when the panel opens.
-- Manual test checklist in docs/manual-tests.md.
 
 ### Changed
 

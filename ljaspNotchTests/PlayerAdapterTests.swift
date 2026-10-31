@@ -3,8 +3,8 @@ import Testing
 
 @testable import ljaspNotch
 
-/// Notification payloads in the shape Spotify and Music post them. SPEC § 16 item 3 asks
-/// to re-check the fields on macOS 26 with real players.
+/// Notification payloads in the shape Spotify and Music post them. Re-check the fields
+/// against real players when macOS or the players change.
 struct PlayerAdapterTests {
   private let date = Date(timeIntervalSince1970: 1_800_000_000)
 

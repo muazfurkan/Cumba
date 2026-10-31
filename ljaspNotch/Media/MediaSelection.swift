@@ -1,6 +1,6 @@
 import Foundation
 
-/// Decides which player the media widget shows (SPEC § 8):
+/// Decides which player the media widget shows:
 /// - A playing source wins; with several, the one that started playing last.
 /// - With nothing playing, the last paused source stays for 10 minutes, then disappears.
 /// - A source the user picked by hand wins while it has something to show.

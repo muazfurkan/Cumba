@@ -1,6 +1,6 @@
 import Foundation
 
-/// Look of the notch panel (SPEC § 10). Decoding is tolerant: unknown keys are ignored and
+/// Look of the notch panel. Decoding is tolerant: unknown keys are ignored and
 /// missing or invalid values fall back to defaults, so older theme files keep working.
 struct Theme: Codable, Equatable, Identifiable, Sendable {
   enum Material: String, Codable, CaseIterable, Sendable {

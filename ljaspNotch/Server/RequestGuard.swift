@@ -1,6 +1,6 @@
 import Foundation
 
-/// Security checks for requests to the local server (SPEC § 12). Pure functions so every
+/// Security checks for requests to the local server. Pure functions so every
 /// rule is unit tested.
 enum RequestGuard {
   enum Rejection: Equatable, Sendable {

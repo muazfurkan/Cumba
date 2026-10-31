@@ -2,7 +2,7 @@ import Observation
 import SwiftUI
 
 /// CPU and memory load with a small CPU graph. Samples once a second, and only while the
-/// widget is on screen (CLAUDE.md: polling at most every second, only while visible).
+/// widget is on screen (polling at most every second, only while visible).
 @MainActor
 @Observable
 final class SystemStatsWidget: NotchWidget {

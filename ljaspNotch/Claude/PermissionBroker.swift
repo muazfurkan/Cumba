@@ -1,8 +1,8 @@
 import Foundation
 import Observation
 
-/// Holds Claude Code permission requests until the user answers in the notch
-/// (SPEC § 9). Each request keeps its HTTP response waiting; it is answered with the
+/// Holds Claude Code permission requests until the user answers in the notch.
+/// Each request keeps its HTTP response waiting; it is answered with the
 /// user's decision, or with "ask in the terminal" before the hook times out.
 @MainActor
 @Observable
@@ -80,7 +80,7 @@ final class PermissionBroker {
     pending.contains { $0.sessionID == sessionID }
   }
 
-  /// Body of the HTTP response for a decision (SPEC § 9).
+  /// Body of the HTTP response for a decision.
   nonisolated static func responseBody(for decision: Decision) -> Data {
     let behavior: String
     switch decision {
