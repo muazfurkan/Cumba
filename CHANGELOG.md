@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-31
+
+### Added
+
+- Media widget for Spotify and Music: artwork, title, artist, progress with click to seek, play/pause, next and previous.
+- With several players, the one that started playing last wins; a paused player stays for 10 minutes. You can switch players by hand.
+- Playing media shows as a live activity beside the closed notch.
+- Automation access is asked for in Settings > Widgets > Media; a closed player is never launched.
+
 ## [0.3.0] - 2026-10-31
 
 ### Added
@@ -44,7 +53,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/muazfurkan/ljaspNotch/releases/tag/v0.1.0

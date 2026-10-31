@@ -97,6 +97,16 @@
         }
       }
     },
+    "Allow" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin Ver"
+          }
+        }
+      }
+    },
     "Allow Calendar Access" : {
       "localizations" : {
         "tr" : {
@@ -113,6 +123,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Etkinliklerinizi görmek için Ayarlar'dan takvim erişimine izin verin."
+          }
+        }
+      }
+    },
+    "Allow control in Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar'dan kontrole izin ver"
+          }
+        }
+      }
+    },
+    "Allowed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin verildi"
           }
         }
       }
@@ -465,6 +495,17 @@
         }
       }
     },
+    "Media" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medya"
+          }
+        }
+      }
+    },
     "Midnight" : {
       "comment" : "Built-in theme name",
       "localizations" : {
@@ -516,6 +557,17 @@
         }
       }
     },
+    "Music" : {
+      "comment" : "Apple Music app name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müzik"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "tr" : {
@@ -537,6 +589,16 @@
         }
       }
     },
+    "Next" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki"
+          }
+        }
+      }
+    },
     "No battery" : {
       "localizations" : {
         "tr" : {
@@ -553,6 +615,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Henüz widget yok."
+          }
+        }
+      }
+    },
+    "Not running" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışmıyor"
+          }
+        }
+      }
+    },
+    "Nothing is playing." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir şey çalmıyor."
           }
         }
       }
@@ -583,6 +665,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yalnızca tıklayınca"
+          }
+        }
+      }
+    },
+    "Open Automation Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomasyon Ayarlarını Aç"
           }
         }
       }
@@ -674,6 +766,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paneli sabitle"
+          }
+        }
+      }
+    },
+    "Play" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oynat"
+          }
+        }
+      }
+    },
+    "Playback position" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oynatma konumu"
+          }
+        }
+      }
+    },
+    "Playing" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalıyor"
+          }
+        }
+      }
+    },
+    "Previous" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önceki"
           }
         }
       }
@@ -829,6 +961,16 @@
         }
       }
     },
+    "Switch Player" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oynatıcıyı Değiştir"
+          }
+        }
+      }
+    },
     "Symbol" : {
       "localizations" : {
         "tr" : {
@@ -926,6 +1068,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renkli cam"
+          }
+        }
+      }
+    },
+    "To show artwork and use the controls, ljaspNotch needs Automation access to each player. Open the player, then allow it here." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapak görselini göstermek ve kontrolleri kullanmak için ljaspNotch'un her oynatıcıya Otomasyon erişimi olmalı. Oynatıcıyı açın, ardından buradan izin verin."
           }
         }
       }
@@ -1038,6 +1190,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch (duraklatıldı)"
+          }
+        }
+      }
+    },
+    "ljaspNotch may not control %@. Allow it in System Settings > Privacy & Security > Automation." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch %@ uygulamasını kontrol edemiyor. Sistem Ayarları > Gizlilik ve Güvenlik > Otomasyon'dan izin verin."
           }
         }
       }

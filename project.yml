@@ -50,6 +50,7 @@ targets:
         NSPrincipalClass: NSApplication
         # Translations live in InfoPlist.xcstrings.
         NSCalendarsFullAccessUsageDescription: ljaspNotch shows your upcoming events in the notch. Nothing leaves your Mac.
+        NSAppleEventsUsageDescription: ljaspNotch reads what Spotify and Music are playing and sends play, pause, next and seek commands to them.
     entitlements:
       path: ljaspNotch/Resources/ljaspNotch.entitlements
       properties:
@@ -57,6 +58,7 @@ targets:
         com.apple.security.app-sandbox: false
         # Hardened Runtime needs these for the matching permission prompts.
         com.apple.security.personal-information.calendars: true
+        com.apple.security.automation.apple-events: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch

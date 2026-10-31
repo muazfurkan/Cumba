@@ -39,7 +39,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Privacy
 
-No telemetry. Everything stays on your Mac. Features that make network requests will be listed here.
+No telemetry. Everything stays on your Mac. These features make network requests, and only while you use them:
+
+| Feature | Request |
+|---|---|
+| Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
 
 ## Contributing
 

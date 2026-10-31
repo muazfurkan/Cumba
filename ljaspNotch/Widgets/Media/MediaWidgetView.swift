@@ -1,0 +1,157 @@
+import AppKit
+import SwiftUI
+
+struct MediaWidgetView: View {
+  let widget: MediaWidget
+
+  private var media: MediaCoordinator { widget.media }
+
+  var body: some View {
+    WidgetCard {
+      if let nowPlaying = media.current {
+        VStack(alignment: .leading, spacing: 6) {
+          HStack(spacing: 8) {
+            ArtworkView(nowPlaying: nowPlaying, size: 40)
+            VStack(alignment: .leading, spacing: 1) {
+              Text(nowPlaying.title)
+                .font(.callout.weight(.semibold))
+                .lineLimit(1)
+              Text(nowPlaying.artist ?? nowPlaying.source.displayName)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            }
+            Spacer(minLength: 0)
+            sourceMenu(current: nowPlaying.source)
+          }
+          ProgressBar(nowPlaying: nowPlaying) { position in
+            Task { await media.send(.seek(position)) }
+          }
+          controls(isPlaying: nowPlaying.isPlaying)
+          if let failure = media.failures[nowPlaying.source] {
+            FailureNote(failure: failure, source: nowPlaying.source) { widget.showSettings() }
+          }
+        }
+      } else {
+        VStack(alignment: .leading, spacing: 6) {
+          Label("Media", systemImage: "music.note")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+          Text("Nothing is playing.")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+      }
+    }
+  }
+
+  private func controls(isPlaying: Bool) -> some View {
+    HStack(spacing: 18) {
+      control("backward.fill", label: Text("Previous")) { await media.send(.previous) }
+      control(
+        isPlaying ? "pause.fill" : "play.fill",
+        label: isPlaying ? Text("Pause") : Text("Play")
+      ) { await media.send(.togglePlayPause) }
+      control("forward.fill", label: Text("Next")) { await media.send(.next) }
+    }
+    .frame(maxWidth: .infinity)
+  }
+
+  private func control(
+    _ symbol: String, label: Text, action: @escaping @MainActor () async -> Void
+  ) -> some View {
+    Button {
+      Task { await action() }
+    } label: {
+      Image(systemName: symbol)
+        .font(.body)
+        .frame(width: 28, height: 22)
+        .contentShape(Rectangle())
+    }
+    .buttonStyle(.plain)
+    .accessibilityLabel(label)
+    .help(label)
+  }
+
+  @ViewBuilder private func sourceMenu(current: NowPlaying.Source) -> some View {
+    if media.availableSources.count > 1 {
+      Menu {
+        ForEach(media.availableSources, id: \.self) { source in
+          Button(source.displayName) { media.pin(source) }
+        }
+      } label: {
+        Image(systemName: current.symbol)
+      }
+      .menuStyle(.borderlessButton)
+      .menuIndicator(.hidden)
+      .fixedSize()
+      .accessibilityLabel(Text("Switch Player"))
+    }
+  }
+}
+
+/// Thin progress bar; click to seek. Redraws once a second, and only while on screen.
+private struct ProgressBar: View {
+  let nowPlaying: NowPlaying
+  let seek: (TimeInterval) -> Void
+
+  var body: some View {
+    if let duration = nowPlaying.duration, duration > 0 {
+      TimelineView(.periodic(from: .now, by: 1)) { context in
+        let position = nowPlaying.currentPosition(at: context.date) ?? 0
+        VStack(spacing: 2) {
+          GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+              Capsule().fill(.white.opacity(0.2))
+              Capsule()
+                .fill(.tint)
+                .frame(width: proxy.size.width * min(1, position / duration))
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { location in
+              seek(duration * min(1, max(0, location.x / proxy.size.width)))
+            }
+          }
+          .frame(height: 4)
+          HStack {
+            Text(Duration.seconds(position), format: .time(pattern: .minuteSecond))
+            Spacer()
+            Text(Duration.seconds(duration), format: .time(pattern: .minuteSecond))
+          }
+          .font(.system(size: 9).monospacedDigit())
+          .foregroundStyle(.secondary)
+        }
+      }
+      .accessibilityElement()
+      .accessibilityLabel(Text("Playback position"))
+      .accessibilityValue(
+        Text(
+          Duration.seconds(nowPlaying.currentPosition() ?? 0), format: .time(pattern: .minuteSecond)
+        ))
+    }
+  }
+}
+
+private struct FailureNote: View {
+  let failure: AppleScriptRunner.Failure
+  let source: NowPlaying.Source
+  let openSettings: () -> Void
+
+  var body: some View {
+    switch failure {
+    case .denied:
+      Text(
+        "ljaspNotch may not control \(source.displayName). Allow it in System Settings > Privacy & Security > Automation."
+      )
+      .font(.caption2)
+      .foregroundStyle(.orange)
+      .fixedSize(horizontal: false, vertical: true)
+    case .needsPermission:
+      Button("Allow control in Settings", action: openSettings)
+        .font(.caption2)
+        .buttonStyle(.link)
+    case .notRunning, .scriptError:
+      EmptyView()
+    }
+  }
+}
