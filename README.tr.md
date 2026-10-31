@@ -19,10 +19,10 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 - **Medya**: Spotify, Apple Music, YouTube ve YouTube Music tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
 - **Claude Code**: terminaldeki, IDE eklentilerindeki veya Claude masaüstü uygulamasındaki izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür. Bir oturum bitince veya hata verince de görürsünüz.
-- **Sekmelerde widget'lar**: takvim, zamanlayıcı, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Ayarlar'dan ekleyin, kaldırın, sıralayın.
+- **Sekmelerde widget'lar**: takvim, zamanlayıcı, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Ayarlar'daki galeriden seçin, sürükleyerek sıralayın; yeni kurulum yalnızca üçüyle başlar.
 - **Canlı etkinlikler**: çalışan zamanlayıcı, bekleyen Claude isteği, şarj veya çalan şarkı kapalı notch'un iki yanında görünür.
 - **Temalar**: Liquid Glass, düz siyah veya renkli cam; renkler, yazı tipi, panel boyutu, köşe yuvarlaklığı, gölge ve animasyon. Temaları JSON olarak içe/dışa aktarın.
-- **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, panel tam ekran uygulamalarda gizlenir, boşta CPU kullanımı sıfırdır.
+- **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda gizlenir ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
 - Türkçe ve İngilizce arayüz.
 
 <a name="indirme"></a>
@@ -40,7 +40,7 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
    ```
 3. Disk görüntüsünü açın ve ljaspNotch'u Uygulamalar klasörüne sürükleyin.
 4. ljaspNotch Apple tarafından notarize edilmedi, çünkü bu ücretli bir geliştirici hesabı gerektiriyor; bu yüzden macOS ilk açılışı engeller. Bir kez açmayı deneyin, ardından **Sistem Ayarları > Gizlilik ve Güvenlik**'te **Yine de Aç**'a tıklayın. İndirilmiş bir derlemeyi hiç çalıştırmak istemezseniz [kaynaktan derleyin](#kaynaktan-derleme).
-5. Kısa bir karşılama penceresi temel kullanımı anlatır. ljaspNotch menü çubuğunda yaşar; simgesi notch'un arkasında kalırsa Ayarlar'a ulaşmak için uygulamayı Finder'dan veya Spotlight'tan yeniden açın.
+5. Kısa bir karşılama penceresi paneli denemenizi sağlar. ljaspNotch menü çubuğunda yaşar; simgesi notch'un arkasında kalırsa Ayarlar için notch'a sağ tıklayın.
 
 <details>
 <summary>Yine de Aç yerine Terminal</summary>
@@ -74,7 +74,7 @@ Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
 ## İzinler ve neler çalışır
 
-Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kullanılmaz.
+Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kullanılmaz. Her birinin güncel durumu Ayarlar > İzinler'de görünür.
 
 | Ne | Neden | Ne zaman |
 |---|---|---|
