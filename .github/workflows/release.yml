@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  HOMEBREW_NO_AUTO_UPDATE: 1
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Read version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          {
+            echo "TAG=$GITHUB_REF_NAME"
+            echo "VERSION=$VERSION"
+            # CFBundleShortVersionString allows only numbers, so drop any pre-release suffix.
+            echo "MARKETING_VERSION=${VERSION%%-*}"
+          } >> "$GITHUB_ENV"
+
+      - name: Install tools
+        run: brew install xcodegen xcbeautify
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project ljaspNotch.xcodeproj \
+            -scheme ljaspNotch \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath build \
+            MARKETING_VERSION="$MARKETING_VERSION" \
+            CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcbeautify --renderer github-actions
+
+      # Apple Silicon refuses to run unsigned apps; an ad-hoc signature is enough.
+      # Hardened runtime and entitlements are kept so automation permissions work.
+      - name: Sign ad-hoc
+        run: |
+          APP=build/Build/Products/Release/ljaspNotch.app
+          codesign --force --deep --options runtime \
+            --entitlements ljaspNotch/Resources/ljaspNotch.entitlements \
+            --sign - "$APP"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          ditto -c -k --sequesterRsrc --keepParent \
+            build/Build/Products/Release/ljaspNotch.app "dist/ljaspNotch-$TAG.zip"
+          if [ -d extensions/chrome ]; then
+            (cd extensions/chrome && zip -qr "$GITHUB_WORKSPACE/dist/ljaspNotch-chrome-extension-$TAG.zip" .)
+          fi
+          (cd dist && shasum -a 256 *.zip > SHA256SUMS.txt)
+          cat dist/SHA256SUMS.txt
+
+      - name: Write release notes
+        run: |
+          awk -v header="## [$VERSION]" '
+            index($0, header) == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "See [CHANGELOG.md](https://github.com/$GITHUB_REPOSITORY/blob/$TAG/CHANGELOG.md)." > notes.md
+          fi
+          {
+            echo
+            echo "### Installing"
+            echo
+            echo "The app is ad-hoc signed and not notarized, so macOS warns on first launch."
+            echo "Move it to Applications, then either allow it in System Settings > Privacy & Security > Open Anyway, or run:"
+            echo
+            echo '```bash'
+            echo 'xattr -dr com.apple.quarantine /Applications/ljaspNotch.app'
+            echo '```'
+            echo
+            echo "### SHA-256"
+            echo
+            echo '```'
+            cat dist/SHA256SUMS.txt
+            echo '```'
+          } >> notes.md
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          FLAGS=()
+          if [[ "$VERSION" == 0.* || "$VERSION" == *-* ]]; then FLAGS+=(--prerelease); fi
+          # Test tags such as v0.0.1-test create a draft that only maintainers can see.
+          if [[ "$VERSION" == *-test* ]]; then FLAGS+=(--draft); fi
+          gh release create "$TAG" dist/*.zip dist/SHA256SUMS.txt \
+            --title "ljaspNotch $TAG" \
+            --notes-file notes.md \
+            --verify-tag \
+            "${FLAGS[@]}"
