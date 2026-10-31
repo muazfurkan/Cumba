@@ -28,6 +28,17 @@ jobs:
             echo "MARKETING_VERSION=${VERSION%%-*}"
           } >> "$GITHUB_ENV"
 
+      # The extension ships inside the app and as its own zip; keep its version in step.
+      - name: Set extension version
+        run: |
+          python3 - "$MARKETING_VERSION" <<'PY'
+          import json, sys
+          path = "extensions/chrome/manifest.json"
+          manifest = json.load(open(path))
+          manifest["version"] = sys.argv[1]
+          json.dump(manifest, open(path, "w"), indent=2)
+          PY
+
       - name: Install tools
         run: brew install xcodegen xcbeautify
 

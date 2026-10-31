@@ -12,6 +12,13 @@ options:
   tabWidth: 2
   usesTabs: false
 
+packages:
+  # The only allowed dependency (CLAUDE.md). MIT licensed. Pinned exactly because the
+  # generated project and Package.resolved aren't committed.
+  FlyingFox:
+    url: https://github.com/swhitty/FlyingFox
+    exactVersion: 0.27.1
+
 configFiles:
   Debug: Config/Base.xcconfig
   Release: Config/Base.xcconfig
@@ -35,6 +42,13 @@ targets:
     platform: macOS
     sources:
       - path: ljaspNotch
+      # The Chrome extension ships inside the app so Settings can reveal it for
+      # "Load unpacked".
+      - path: extensions/chrome
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - package: FlyingFox
     info:
       path: ljaspNotch/Resources/Info.plist
       properties:
@@ -79,6 +93,7 @@ targets:
       - path: ljaspNotchTests
     dependencies:
       - target: ljaspNotch
+      - package: FlyingFox
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch.tests

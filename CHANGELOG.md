@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-31
+
+### Added
+
+- YouTube and YouTube Music in the media widget through a Chrome extension (`extensions/chrome`), including controls and seeking. The right tab is picked when several play.
+- Local server on 127.0.0.1 with a Keychain token, Host and Origin checks, and Settings > Connections to change the port, copy or regenerate the token and find the extension.
+
 ## [0.4.0] - 2026-10-31
 
 ### Added
@@ -53,7 +60,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.1.0...v0.2.0

@@ -37,6 +37,16 @@ open ljaspNotch.xcodeproj
 
 Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
+## YouTube ve YouTube Music
+
+Küçük bir Chrome eklentisi (diğer Chromium tarayıcılarda da çalışır) YouTube sekmelerinde çalanı yerel bir bağlantı üzerinden uygulamaya gönderir; uygulama da oynat, duraklat, sonraki ve sarma komutlarını geri yollar.
+
+1. ljaspNotch'ta **Ayarlar > Bağlantılar**'ı açın ve **Eklenti Klasörünü Göster**'e tıklayın.
+2. Chrome'da `chrome://extensions` adresini açın, **Geliştirici modu**'nu etkinleştirin ve **Paketlenmemiş öğe yükle**'ye tıklayın. 1. adımdaki klasörü seçin.
+3. Eklentinin **Ayrıntılar > Eklenti seçenekleri** sayfasını açın, **Ayarlar > Bağlantılar**'daki portu ve token'ı yapıştırıp kaydedin.
+
+Eklentinin depolama dışında izni yoktur, yalnızca `youtube.com` ve `music.youtube.com` sayfalarını okur ve yalnızca `127.0.0.1` ile konuşur.
+
 ## Gizlilik
 
 Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, yalnızca siz kullanırken:
@@ -44,6 +54,9 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 | Özellik | İstek |
 |---|---|
 | Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
+| YouTube ile medya widget'ı | YouTube'un görsel sunucularından küçük resim (sayfanın kendi kullandığı adres) |
+
+Yerel sunucu yalnızca `127.0.0.1` adresini dinler ve Anahtar Zinciri'nde saklanan bir token ister. Ad-hoc imzalı bir sürümü güncelledikten sonra macOS bir kez daha Anahtar Zinciri erişimi sorabilir.
 
 ## Katkı
 

@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let themes: ThemeStore
   private let liveActivities: LiveActivityCenter
   private let media: MediaCoordinator
+  private let server: LocalServer
   private let registry: WidgetRegistry
   private let layoutStore: LayoutStore
   private let settingsWindow: SettingsWindowController
@@ -17,6 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     themes = ThemeStore()
     liveActivities = LiveActivityCenter()
     media = MediaCoordinator.standard()
+    server = LocalServer(browserHub: BrowserMediaHub())
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
     registry = WidgetRegistry.standard(
@@ -24,7 +26,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         liveActivities: liveActivities, media: media, openSettings: { settingsOpener.open() }))
     layoutStore = LayoutStore(knownKinds: registry.kinds)
     settingsWindow = SettingsWindowController(
-      settings: settings, themes: themes, layoutStore: layoutStore, registry: registry)
+      settings: settings, themes: themes, layoutStore: layoutStore, registry: registry,
+      server: server)
     notchWindow = NotchWindowController(
       settings: settings, themes: themes,
       host: WidgetHost(
@@ -43,6 +46,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       settingsWindow.show()
     }
     media.start()
+    media.add(server.browserHub.youtube)
+    media.add(server.browserHub.youtubeMusic)
+    Task { [server, settings] in await server.start(port: settings.serverPort) }
     notchWindow.start()
     Task { [themes, layoutStore] in
       await themes.load()
