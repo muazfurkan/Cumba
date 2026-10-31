@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-31
+
+### Added
+
+- Widgets in tabs: add, remove and reorder widgets and tabs in Settings > Widgets. New widgets in future versions appear once on their own.
+- Calendar widget: today's and tomorrow's events. Access is requested from Settings, never from the panel.
+- Timer widget: presets from 5 to 50 minutes, pause and resume; plays a sound when done.
+- Battery widget: level, charging state and time remaining.
+- Live activities beside the closed notch: running and finished timer, charger plugged in, low battery.
+
 ## [0.2.0] - 2026-10-31
 
 ### Added
@@ -34,6 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/muazfurkan/ljaspNotch/releases/tag/v0.1.0

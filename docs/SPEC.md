@@ -164,19 +164,22 @@ ljaspNotch/
 
 ## 7. Widget sistemi
 
-### Protokol (taslak)
+### Protokol
 ```swift
 @MainActor
-protocol NotchWidget: AnyObject, Identifiable {
+protocol NotchWidget: AnyObject {
   static var kind: String { get }        // "media", "calendar", ...
-  var id: UUID { get }
-  var title: LocalizedStringResource { get }
+  static var title: String { get }       // Ayarlar'da görünen ad (çevrilmiş)
+  static var symbol: String { get }      // SF Symbol
+  init(context: WidgetContext)           // canlı etkinlikler, Ayarlar'ı açma
   var size: WidgetSize { get }
   func makeView() -> AnyView
   func makeSettingsView() -> AnyView?
   // Panel görünürken çağrılır; kamera, zamanlayıcı gibi kaynaklar yalnızca burada açılır
   func activate()
   func deactivate()
+  // Widget düzenden çıkarılınca çağrılır; arka plan işi durur
+  func shutdown()
 }
 
 enum WidgetSize: String, Codable {
@@ -185,8 +188,10 @@ enum WidgetSize: String, Codable {
   case wide      // 3 birim
 }
 ```
-- `WidgetRegistry`: `kind` → fabrika eşlemesi. Yeni widget = yeni klasör + registry'ye tek satır.
+- Her `kind` için tek örnek vardır; kimlik `kind`'dır (UUID yok). Yalnızca düzendeki widget'lar oluşturulur (`WidgetRegistry.sync`).
+- `WidgetRegistry.standard`: tür listesi. Yeni widget = yeni klasör + listeye tek satır. Ayarlar görünümleri türler yerine `WidgetInfo` (kind, ad, simge) kullanır; varoluşsal metatipler SwiftUI görünümlerinde Swift 6.4 derleyicisini çökertti.
 - Widget'lar canlı etkinliklerini `LiveActivityCenter`'a kendileri bildirir.
+- İzin isteyen widget'lar (Takvim) izni panelden değil, Ayarlar > Widget'lar'daki düğmeden ister; panel önce kapatılır.
 
 ### Düzen (`LayoutStore`)
 `~/Library/Application Support/ljaspNotch/layout.json` içinde saklanır:
@@ -196,17 +201,22 @@ enum WidgetSize: String, Codable {
   "tabs": [
     { "id": "home", "title": "Home", "symbol": "house", "widgets": ["media", "calendar", "claude-code"] },
     { "id": "tray", "title": "Tray", "symbol": "tray", "widgets": ["tray"] }
-  ]
+  ],
+  "seenKinds": ["calendar", "claude-code", "media", "tray"]
 }
 ```
+- Bir widget yalnızca bir sekmede olabilir. Bilinmeyen ve tekrarlanan türler yüklemede atılır; bozuk dosya boş düzen sayılır.
+- `seenKinds`: düzenin bildiği türler. Güncellemeyle gelen yeni widget'lar bir kez ilk sekmeye eklenir; kullanıcının kaldırdıkları geri gelmez.
+- Panelde sekmeler notch'un solundaki şeritte simge olarak görünür (tek sekmede uygulama adı).
 
 ### Canlı etkinlik öncelikleri
-Aynı anda birden fazla etkinlik varsa yüksek öncelikli olan gösterilir:
+Aynı anda birden fazla etkinlik varsa yüksek öncelikli olan gösterilir (eşitlikte en yenisi):
 1. Bekleyen Claude Code izin isteği
-2. Biten zamanlayıcı
+2. Biten zamanlayıcı (10 sn)
 3. Claude Code iş bitti / hata (4 sn)
 4. Şarj başladı / batarya düşük (3 sn)
-5. Çalan medya (sürekli)
+5. Çalışan zamanlayıcı (geri sayım)
+6. Çalan medya (sürekli)
 
 ### Widget kataloğu
 | Widget | Faz | Zorluk | Not |
@@ -487,12 +497,12 @@ Her faz sonunda: derleme temiz, testler yeşil, kabul kriterleri kontrol edildi,
 |---|---|---|
 | Dock'ta görünmeme | `LSUIElement = YES` | |
 | Spotify / Apple Music kontrolü | `NSAppleEventsUsageDescription` + `com.apple.security.automation.apple-events` | Media widget'ı ilk kez açılınca, Ayarlar üzerinden |
-| Takvim | `NSCalendarsFullAccessUsageDescription` | Calendar widget'ı eklenince, Ayarlar üzerinden |
+| Takvim | `NSCalendarsFullAccessUsageDescription` + `com.apple.security.personal-information.calendars` (Hardened Runtime) | Ayarlar > Widget'lar > Takvim > "Takvim Erişimine İzin Ver" |
 | Kamera (Mirror) | `NSCameraUsageDescription` + `com.apple.security.device.camera` | Mirror widget'ı eklenince |
 | Ekran Kaydı | (sistem kendisi sorar) | Yalnızca deneysel video önizleme açılırsa |
 | Erişilebilirlik | Gerekmez | Gerekirse önce kullanıcıya sorulur |
 
-App Sandbox kapalı, Hardened Runtime açık. Tüm izin istekleri kullanıcının bir eylemiyle ve panel kapalıyken tetiklenir.
+App Sandbox kapalı, Hardened Runtime açık. Tüm izin istekleri kullanıcının bir eylemiyle ve panel kapalıyken tetiklenir. İzin açıklamalarının çevirileri `InfoPlist.xcstrings` içindedir.
 
 ## 14. Açık kaynak ve dağıtım
 - **Lisans:** MIT. Bağımlılık: FlyingFox (MIT).
