@@ -8,7 +8,6 @@ final class NotchWindowController {
   private let hoverTracker = HoverTracker()
   private var panel: NotchPanel?
   private var observers: [NSObjectProtocol] = []
-  private var pauseTask: Task<Void, Never>?
   private var fullScreenTask: Task<Void, Never>?
   /// A full screen app covers the notched screen, so the panel stays hidden (SPEC § 6).
   private var isFullScreenActive = false
@@ -56,9 +55,18 @@ final class NotchWindowController {
           self?.refreshFullScreenState()
         }
       })
-    pauseTask = Task { [weak self, settings] in
-      for await _ in Observations({ @MainActor in settings.isPaused }) {
+    observePause()
+  }
+
+  /// Re-registers after every change, as `withObservationTracking` fires only once.
+  /// (`Observations` would be simpler but crashes the Swift 6.2 compiler in CI.)
+  private func observePause() {
+    withObservationTracking {
+      _ = settings.isPaused
+    } onChange: { [weak self] in
+      Task { @MainActor in
         self?.layoutPanel()
+        self?.observePause()
       }
     }
   }
