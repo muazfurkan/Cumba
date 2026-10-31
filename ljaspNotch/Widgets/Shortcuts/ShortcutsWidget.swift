@@ -10,6 +10,9 @@ final class ShortcutsWidget: NotchWidget {
   static var title: String { String(localized: "Shortcuts", comment: "Widget name") }
   static let symbol = "square.stack.3d.up"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(localized: "Run your favorite shortcuts", comment: "Widget description")
+  }
 
   static let maxFavorites = 6
   private static let favoritesKey = "shortcuts.favorites"

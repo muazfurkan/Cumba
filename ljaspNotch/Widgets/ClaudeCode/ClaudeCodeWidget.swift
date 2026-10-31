@@ -9,6 +9,9 @@ final class ClaudeCodeWidget: NotchWidget {
   static let title = "Claude Code"
   static let symbol = "terminal"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(localized: "Claude Code sessions and permission requests", comment: "Widget description")
+  }
 
   let service: ClaudeCodeService
 

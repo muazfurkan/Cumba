@@ -11,6 +11,9 @@ final class BatteryWidget: NotchWidget {
   static var title: String { String(localized: "Battery", comment: "Widget name") }
   static let symbol = "battery.75percent"
   static let size = WidgetSize.compact
+  static var summary: String {
+    String(localized: "Charge level, charging and time left", comment: "Widget description")
+  }
 
   struct Status: Equatable, Sendable {
     var percent: Int

@@ -76,7 +76,9 @@ final class SettingsWindowController {
         symbol: "network"))
     tabs.addTabViewItem(
       tab(
-        ClaudeCodeSettingsView(server: server, settings: settings),
+        ClaudeCodeSettingsView(
+          server: server, settings: settings,
+          onHooksInstalled: { [layoutStore] in layoutStore.addAnywhere(ClaudeCodeWidget.kind) }),
         label: "Claude Code",
         symbol: "terminal"))
     tabs.addTabViewItem(
@@ -127,8 +129,20 @@ final class SettingsTabViewController: NSTabViewController {
     }
   }
 
+  override func viewDidAppear() {
+    super.viewDidAppear()
+    updateWindowTitle()
+  }
+
   override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
     super.tabView(tabView, didSelect: tabViewItem)
     UserDefaults.standard.set(selectedTabViewItemIndex, forKey: Self.key)
+    updateWindowTitle()
+  }
+
+  /// The window shows the name of the open pane.
+  private func updateWindowTitle() {
+    guard tabViewItems.indices.contains(selectedTabViewItemIndex) else { return }
+    view.window?.title = tabViewItems[selectedTabViewItemIndex].label
   }
 }

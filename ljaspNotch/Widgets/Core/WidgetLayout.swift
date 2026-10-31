@@ -30,27 +30,40 @@ struct WidgetLayout: Codable, Equatable, Sendable {
   /// Width a tab holds before new widgets go to another tab, in size units.
   static let unitsPerTab = 6
 
-  /// Adds kinds that are new in this app version, so updates show their new widgets once.
-  /// Each goes to the first tab with room, or to a new "More" tab. Kinds the user removed
-  /// stay removed.
-  /// - Parameter kinds: Kinds of this app version with their width in units, in order.
-  mutating func adoptNewKinds(_ kinds: [(kind: String, units: Int)]) {
-    let units = Dictionary(
+  /// Places kinds this layout hasn't seen before: those in `defaults` (all when `nil`) go to
+  /// the first tab with room, or to a new "More" tab; the rest only become known, so they
+  /// wait in the widget gallery. Kinds the user removed stay removed.
+  /// - Parameters:
+  ///   - kinds: Kinds of this app version with their width in units, in order.
+  ///   - defaults: Kinds that a new or updated layout gets automatically.
+  mutating func adoptNewKinds(_ kinds: [(kind: String, units: Int)], defaults: Set<String>? = nil) {
+    let widths = Dictionary(
       kinds.map { ($0.kind, $0.units) }, uniquingKeysWith: { first, _ in first })
-    func used(_ tab: Tab) -> Int {
-      tab.widgets.reduce(0) { $0 + (units[$1] ?? 1) }
-    }
-    for (kind, width) in kinds where !seenKinds.contains(kind) && !contains(kind) {
-      if tabs.isEmpty {
-        tabs.append(Self.homeTab(widgets: []))
-      }
-      if let index = tabs.firstIndex(where: { used($0) + width <= Self.unitsPerTab }) {
-        tabs[index].widgets.append(kind)
-      } else {
-        tabs.append(Self.moreTab(number: tabs.count, widgets: [kind]))
+    for (kind, width) in kinds where !seenKinds.contains(kind) {
+      if defaults?.contains(kind) ?? true {
+        place(kind, units: width, widths: widths)
       }
     }
     seenKinds = Array(Set(seenKinds).union(kinds.map(\.kind))).sorted()
+    if tabs.isEmpty {
+      tabs.append(Self.homeTab(widgets: []))
+    }
+  }
+
+  /// Puts a kind in the first tab with room, or in a new "More" tab.
+  mutating func place(_ kind: String, units: Int, widths: [String: Int]) {
+    guard !contains(kind) else { return }
+    func used(_ tab: Tab) -> Int {
+      tab.widgets.reduce(0) { $0 + (widths[$1] ?? 1) }
+    }
+    if tabs.isEmpty {
+      tabs.append(Self.homeTab(widgets: []))
+    }
+    if let index = tabs.firstIndex(where: { used($0) + units <= Self.unitsPerTab }) {
+      tabs[index].widgets.append(kind)
+    } else {
+      tabs.append(Self.moreTab(number: tabs.count, widgets: [kind]))
+    }
   }
 
   /// Drops kinds this version doesn't know and duplicates across tabs.

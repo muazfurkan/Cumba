@@ -29,7 +29,11 @@ final class WidgetRegistry {
 
   /// Name and symbol of every widget kind, for Settings.
   var infos: [WidgetInfo] {
-    types.map { WidgetInfo(kind: $0.kind, title: $0.title, symbol: $0.symbol, size: $0.size) }
+    types.map {
+      WidgetInfo(
+        kind: $0.kind, title: $0.title, symbol: $0.symbol, size: $0.size, summary: $0.summary,
+        addedByDefault: $0.addedByDefault)
+    }
   }
 
   func info(for kind: String) -> WidgetInfo? {
@@ -59,6 +63,8 @@ struct WidgetInfo: Identifiable, Equatable, Sendable {
   let title: String
   let symbol: String
   let size: WidgetSize
+  let summary: String
+  let addedByDefault: Bool
 
   var id: String { kind }
 }

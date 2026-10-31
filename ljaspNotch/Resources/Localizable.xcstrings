@@ -128,12 +128,32 @@
         }
       }
     },
+    "A countdown that keeps running when the panel closes" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel kapansa da çalışmaya devam eden bir geri sayım"
+          }
+        }
+      }
+    },
     "Accent" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vurgu"
+          }
+        }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekle"
           }
         }
       }
@@ -154,6 +174,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widget Ekle"
+          }
+        }
+      }
+    },
+    "Add widgets from the gallery below." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşağıdaki galeriden widget ekleyin."
           }
         }
       }
@@ -390,6 +420,16 @@
         }
       }
     },
+    "CPU and memory use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU ve bellek kullanımı"
+          }
+        }
+      }
+    },
     "Calendar" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -481,6 +521,16 @@
         }
       }
     },
+    "Charge level, charging and time left" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj düzeyi, şarj durumu ve kalan süre"
+          }
+        }
+      }
+    },
     "Check Now" : {
       "localizations" : {
         "tr" : {
@@ -558,6 +608,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claude Code"
+          }
+        }
+      }
+    },
+    "Claude Code sessions and permission requests" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code oturumları ve izin istekleri"
           }
         }
       }
@@ -735,6 +795,16 @@
         }
       }
     },
+    "Current weather for a place you choose" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçtiğiniz yerin anlık hava durumu"
+          }
+        }
+      }
+    },
     "Cut" : {
       "localizations" : {
         "tr" : {
@@ -782,6 +852,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bitti"
+          }
+        }
+      }
+    },
+    "Drag to reorder." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıralamak için sürükleyin."
           }
         }
       }
@@ -1111,6 +1191,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geçersiz port."
+          }
+        }
+      }
+    },
+    "Keep dropped files at hand or AirDrop them" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bırakılan dosyaları elinizin altında tutun veya AirDrop ile gönderin"
           }
         }
       }
@@ -1806,6 +1896,16 @@
         }
       }
     },
+    "Run your favorite shortcuts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sık kullandığınız kısayolları çalıştırın"
+          }
+        }
+      }
+    },
     "Running on port %@" : {
       "localizations" : {
         "tr" : {
@@ -2070,6 +2170,16 @@
         }
       }
     },
+    "Spotify, Music and YouTube with artwork and controls" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapak görseli ve kontrollerle Spotify, Müzik ve YouTube"
+          }
+        }
+      }
+    },
     "Start" : {
       "localizations" : {
         "tr" : {
@@ -2303,6 +2413,16 @@
         }
       }
     },
+    "Today's and tomorrow's events" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünün ve yarının etkinlikleri"
+          }
+        }
+      }
+    },
     "Token" : {
       "localizations" : {
         "tr" : {
@@ -2479,6 +2599,16 @@
         }
       }
     },
+    "Widget Gallery" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Galerisi"
+          }
+        }
+      }
+    },
     "Widgets" : {
       "comment" : "Settings tab",
       "localizations" : {
@@ -2527,6 +2657,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalışıyor"
+          }
+        }
+      }
+    },
+    "Your camera as a quick mirror" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kameranız hızlı bir ayna olarak"
           }
         }
       }

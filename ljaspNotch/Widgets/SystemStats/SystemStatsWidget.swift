@@ -10,6 +10,9 @@ final class SystemStatsWidget: NotchWidget {
   static var title: String { String(localized: "System", comment: "Widget name") }
   static let symbol = "cpu"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(localized: "CPU and memory use", comment: "Widget description")
+  }
 
   static let historyLength = 30
 

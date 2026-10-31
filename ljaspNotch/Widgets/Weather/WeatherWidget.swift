@@ -10,6 +10,9 @@ final class WeatherWidget: NotchWidget {
   static var title: String { String(localized: "Weather", comment: "Widget name") }
   static let symbol = "cloud.sun"
   static let size = WidgetSize.compact
+  static var summary: String {
+    String(localized: "Current weather for a place you choose", comment: "Widget description")
+  }
 
   private static let placeKey = "weather.place"
   private static let refreshInterval: TimeInterval = 15 * 60

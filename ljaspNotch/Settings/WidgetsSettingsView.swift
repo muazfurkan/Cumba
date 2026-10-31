@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Tabs of the panel and the widgets in them, plus per-widget settings.
+/// Tabs of the panel and the widgets in them, the gallery of every widget, and per-widget
+/// settings. Every widget can be added, removed and reordered.
 struct WidgetsSettingsView: View {
   let layoutStore: LayoutStore
   let registry: WidgetRegistry
@@ -43,9 +44,9 @@ struct WidgetsSettingsView: View {
       }
 
       if let tab {
-        Section("Widgets in This Tab") {
+        Section {
           if tab.widgets.isEmpty {
-            Text("No widgets yet.")
+            Text("Add widgets from the gallery below.")
               .foregroundStyle(.secondary)
           }
           ForEach(Array(tab.widgets.enumerated()), id: \.element) { index, kind in
@@ -59,19 +60,30 @@ struct WidgetsSettingsView: View {
               },
               remove: { layoutStore.remove(kind) })
           }
-          let available = registry.infos.filter { !layoutStore.layout.contains($0.kind) }
-          if !available.isEmpty {
-            Menu("Add Widget") {
-              ForEach(available) { info in
-                Button {
+          .onMove { source, destination in
+            layoutStore.moveWidgets(in: tab.id, from: source, to: destination)
+          }
+        } header: {
+          Text("Widgets in This Tab")
+        } footer: {
+          Text("Drag to reorder.")
+        }
+      }
+
+      Section("Widget Gallery") {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 10)], spacing: 10) {
+          ForEach(registry.infos) { info in
+            GalleryCard(
+              info: info, tabTitle: layoutStore.layout.tab(containing: info.kind)?.title,
+              add: {
+                if let tab {
                   layoutStore.add(info.kind, to: tab.id)
-                } label: {
-                  Label(info.title, systemImage: info.symbol)
                 }
-              }
-            }
+              },
+              remove: { layoutStore.remove(info.kind) })
           }
         }
+        .padding(.vertical, 4)
       }
 
       ForEach(registry.infos) { info in
@@ -83,7 +95,7 @@ struct WidgetsSettingsView: View {
       }
     }
     .formStyle(.grouped)
-    .frame(width: 520, height: 560)
+    .frame(width: 520, height: 620)
   }
 
   private var tabSelection: Binding<String> {
@@ -109,27 +121,77 @@ private struct WidgetRowEditor: View {
 
   var body: some View {
     HStack {
+      Image(systemName: "line.3.horizontal")
+        .foregroundStyle(.tertiary)
+        .accessibilityHidden(true)
       Label(info?.title ?? kind, systemImage: info?.symbol ?? "questionmark.square")
       Spacer()
-      Button {
-        move(-1)
-      } label: {
-        Image(systemName: "chevron.up")
-      }
-      .disabled(!canMoveUp)
-      .accessibilityLabel(Text("Move Up"))
-      Button {
-        move(1)
-      } label: {
-        Image(systemName: "chevron.down")
-      }
-      .disabled(!canMoveDown)
-      .accessibilityLabel(Text("Move Down"))
       Button(role: .destructive, action: remove) {
         Image(systemName: "minus.circle")
       }
+      .buttonStyle(.borderless)
       .accessibilityLabel(Text("Remove"))
     }
-    .buttonStyle(.borderless)
+    .contextMenu {
+      Button("Move Up") { move(-1) }
+        .disabled(!canMoveUp)
+      Button("Move Down") { move(1) }
+        .disabled(!canMoveDown)
+      Button("Remove", role: .destructive, action: remove)
+    }
+    .accessibilityActions {
+      if canMoveUp {
+        Button("Move Up") { move(-1) }
+      }
+      if canMoveDown {
+        Button("Move Down") { move(1) }
+      }
+    }
+  }
+}
+
+/// A widget in the gallery: what it does, where it is, and one button to add or remove it.
+private struct GalleryCard: View {
+  let info: WidgetInfo
+  /// The tab that shows it, or nil when it isn't in the panel.
+  let tabTitle: String?
+  let add: () -> Void
+  let remove: () -> Void
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 6) {
+      HStack(alignment: .top) {
+        Image(systemName: info.symbol)
+          .font(.title3)
+          .foregroundStyle(.tint)
+          .frame(width: 30, height: 30)
+          .background(.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+          .accessibilityHidden(true)
+        Spacer()
+        if let tabTitle {
+          Text(verbatim: tabTitle)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(.quaternary, in: Capsule())
+        }
+      }
+      Text(info.title)
+        .font(.headline)
+      Text(info.summary)
+        .font(.caption)
+        .foregroundStyle(.secondary)
+        .lineLimit(2, reservesSpace: true)
+      if tabTitle == nil {
+        Button("Add", action: add)
+      } else {
+        Button("Remove", role: .destructive, action: remove)
+      }
+    }
+    .padding(10)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(.background.secondary, in: RoundedRectangle(cornerRadius: 10))
+    .accessibilityElement(children: .contain)
   }
 }

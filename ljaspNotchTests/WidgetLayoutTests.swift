@@ -27,6 +27,34 @@ struct WidgetLayoutTests {
     #expect(layout.tabs.isEmpty)
   }
 
+  @Test func newInstallGetsOnlyTheDefaultWidgets() {
+    var layout = WidgetLayout(tabs: [])
+    let kinds = [("media", 2), ("claude-code", 2), ("calendar", 2), ("timer", 2), ("tray", 2)]
+    layout.adoptNewKinds(kinds, defaults: ["media", "calendar", "timer"])
+    #expect(layout.tabs.flatMap(\.widgets) == ["media", "calendar", "timer"])
+    #expect(Set(layout.seenKinds) == Set(kinds.map(\.0)))
+  }
+
+  @Test func laterWidgetsWaitInTheGallery() {
+    var layout = WidgetLayout(
+      tabs: [Tab(id: "home", title: "Home", symbol: "house", widgets: ["media"])],
+      seenKinds: ["media"])
+    layout.adoptNewKinds([("media", 2), ("notes", 2)], defaults: ["media"])
+    #expect(layout.tabs[0].widgets == ["media"])
+    #expect(layout.seenKinds.contains("notes"))
+  }
+
+  @Test func placeUsesTheFirstTabWithRoomOrANewOne() {
+    var layout = WidgetLayout(
+      tabs: [Tab(id: "home", title: "Home", symbol: "house", widgets: ["a", "b", "c"])])
+    let widths = ["a": 2, "b": 2, "c": 2, "d": 1]
+    layout.place("d", units: 1, widths: widths)
+    #expect(layout.tabs.count == 2)
+    #expect(layout.tabs[1].widgets == ["d"])
+    layout.place("d", units: 1, widths: widths)
+    #expect(layout.tabs.flatMap(\.widgets).filter { $0 == "d" }.count == 1)
+  }
+
   @Test func newKindsAreAddedOnceToATabWithRoom() {
     var layout = WidgetLayout(tabs: [Tab(id: "a", title: "A", symbol: "star", widgets: ["timer"])])
     layout.adoptNewKinds([("calendar", 2), ("timer", 2), ("battery", 1)])

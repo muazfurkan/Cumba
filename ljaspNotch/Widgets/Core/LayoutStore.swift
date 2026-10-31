@@ -10,6 +10,7 @@ final class LayoutStore {
 
   @ObservationIgnored private let fileURL: URL
   @ObservationIgnored private let knownKinds: [(kind: String, units: Int)]
+  @ObservationIgnored private let defaultKinds: Set<String>?
   @ObservationIgnored private var saveTask: Task<Void, Never>?
 
   /// `~/Library/Application Support/ljaspNotch/layout.json`
@@ -20,11 +21,17 @@ final class LayoutStore {
     return base.appending(path: "ljaspNotch/layout.json")
   }
 
-  /// - Parameter knownKinds: Widget kinds of this app version with their width in units,
-  ///   in default order.
-  init(fileURL: URL = LayoutStore.standardURL, knownKinds: [(kind: String, units: Int)]) {
+  /// - Parameters:
+  ///   - knownKinds: Widget kinds of this app version with their width in units, in
+  ///     default order.
+  ///   - defaultKinds: Kinds placed automatically; `nil` places every new kind.
+  init(
+    fileURL: URL = LayoutStore.standardURL, knownKinds: [(kind: String, units: Int)],
+    defaultKinds: Set<String>? = nil
+  ) {
     self.fileURL = fileURL
     self.knownKinds = knownKinds
+    self.defaultKinds = defaultKinds
   }
 
   func load() async {
@@ -41,7 +48,7 @@ final class LayoutStore {
     }.value
     var layout = saved ?? WidgetLayout(tabs: [])
     layout.removeUnknown(knownKinds: knownKinds.map(\.kind))
-    layout.adoptNewKinds(knownKinds)
+    layout.adoptNewKinds(knownKinds, defaults: defaultKinds)
     apply(layout, save: layout != saved)
   }
 
@@ -52,6 +59,15 @@ final class LayoutStore {
       guard !layout.contains(kind), let index = layout.tabs.firstIndex(where: { $0.id == tabID })
       else { return }
       layout.tabs[index].widgets.append(kind)
+    }
+  }
+
+  /// Adds a kind to the first tab with room (or a new tab), e.g. once its feature is set up.
+  func addAnywhere(_ kind: String) {
+    let widths = Dictionary(
+      knownKinds.map { ($0.kind, $0.units) }, uniquingKeysWith: { first, _ in first })
+    edit { layout in
+      layout.place(kind, units: widths[kind] ?? 1, widths: widths)
     }
   }
 

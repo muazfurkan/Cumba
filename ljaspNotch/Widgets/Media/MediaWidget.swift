@@ -11,6 +11,12 @@ final class MediaWidget: NotchWidget {
   static var title: String { String(localized: "Media", comment: "Widget name") }
   static let symbol = "music.note"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(
+      localized: "Spotify, Music and YouTube with artwork and controls",
+      comment: "Widget description")
+  }
+  static let addedByDefault = true
 
   let media: MediaCoordinator
 

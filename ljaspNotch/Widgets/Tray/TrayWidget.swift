@@ -12,6 +12,9 @@ final class TrayWidget: NotchWidget {
   static var title: String { String(localized: "Tray", comment: "Widget name") }
   static let symbol = "tray"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(localized: "Keep dropped files at hand or AirDrop them", comment: "Widget description")
+  }
 
   static let maxItems = 20
   private static let itemsKey = "tray.items"

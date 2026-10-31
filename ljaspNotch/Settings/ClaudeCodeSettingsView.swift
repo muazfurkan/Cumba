@@ -5,10 +5,13 @@ import SwiftUI
 struct ClaudeCodeSettingsView: View {
   let server: LocalServer
   @Bindable var settings: AppSettings
+  /// Called after hooks were installed, e.g. to put the Claude Code widget in the panel.
+  var onHooksInstalled: () -> Void = {}
 
   @State private var status: HookInstaller.Status?
   @State private var hooksDisabled = false
   @State private var plan: HookInstaller.Plan?
+  @State private var planInstalls = false
   @State private var message: String?
 
   private let installer = HookInstaller.standard
@@ -132,6 +135,7 @@ struct ClaudeCodeSettingsView: View {
   }
 
   private func review(install: Bool) {
+    planInstalls = install
     let installer = installer
     let token = server.hookToken
     Task {
@@ -162,6 +166,9 @@ struct ClaudeCodeSettingsView: View {
       }.value
       switch result {
       case .success(let backup):
+        if planInstalls {
+          onHooksInstalled()
+        }
         message =
           backup.map {
             String(localized: "Saved. The previous file was backed up to \($0.lastPathComponent).")
