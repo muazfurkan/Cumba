@@ -52,9 +52,10 @@ final class MenuBarController: NSObject, NSMenuDelegate {
       settings.isPaused
       ? String(localized: "ljaspNotch (paused)", comment: "Menu bar icon label while paused")
       : String(localized: "ljaspNotch")
-    button.image = NSImage(
-      systemSymbolName: "rectangle.topthird.inset.filled",
-      accessibilityDescription: description)
+    // The ljasp logo as a template image, so it follows the menu bar's colors.
+    let image = NSImage(resource: .menuBarIcon)
+    image.accessibilityDescription = description
+    button.image = image
     button.appearsDisabled = settings.isPaused
   }
 
