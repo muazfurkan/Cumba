@@ -6,6 +6,7 @@ struct GeneralSettingsView: View {
   let updates: UpdateChecker
   let diagnostics: Diagnostics.Sources
   @State private var copiedDiagnostics = false
+  @State private var isTrusted = VolumeKeyTap.isTrusted
 
   var body: some View {
     Form {
@@ -43,6 +44,24 @@ struct GeneralSettingsView: View {
         Toggle("Haptic feedback when the panel opens", isOn: $settings.hapticFeedback)
       }
 
+      Section("Indicators") {
+        Toggle("Show volume changes in the notch", isOn: $settings.showsVolumeChanges)
+        if settings.showsVolumeChanges {
+          Toggle("Replace the system volume indicator", isOn: replacesVolumeIndicator)
+          Text(
+            "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS."
+          )
+          .font(.callout)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
+          if settings.replacesVolumeIndicator && !isTrusted {
+            OpenPrivacySettings(pane: "Privacy_Accessibility")
+          }
+        }
+        Toggle(
+          "Show when the microphone or camera is in use", isOn: $settings.showsPrivacyIndicators)
+      }
+
       Section("Updates") {
         Toggle("Check for updates automatically", isOn: $settings.checksForUpdates)
         Toggle("Include pre-releases", isOn: $settings.includesPrereleases)
@@ -73,6 +92,23 @@ struct GeneralSettingsView: View {
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 600)
+    .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification))
+    { _ in
+      isTrusted = VolumeKeyTap.isTrusted
+    }
+  }
+
+  /// Turning it on without Accessibility access shows the system prompt first.
+  private var replacesVolumeIndicator: Binding<Bool> {
+    Binding(
+      get: { settings.replacesVolumeIndicator },
+      set: { isOn in
+        if isOn && !VolumeKeyTap.isTrusted {
+          VolumeKeyTap.requestAccess()
+        }
+        settings.replacesVolumeIndicator = isOn
+        isTrusted = VolumeKeyTap.isTrusted
+      })
   }
 
   @ViewBuilder private var updateStatus: some View {

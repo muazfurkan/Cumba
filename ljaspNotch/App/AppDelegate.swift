@@ -15,6 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let welcomeWindow: WelcomeWindowController
   private let notchWindow: NotchWindowController
   private var menuBar: MenuBarController?
+  private let systemIndicators: SystemIndicators
 
   override init() {
     settings = AppSettings()
@@ -22,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     liveActivities = LiveActivityCenter()
     media = MediaCoordinator.standard()
     claude = ClaudeCodeService(liveActivities: liveActivities)
+    systemIndicators = SystemIndicators(settings: settings, liveActivities: liveActivities)
     updates = UpdateChecker(settings: settings)
     server = LocalServer(browserHub: BrowserMediaHub(), claude: claude)
     // Widgets are created before the Settings window, so they reach it through this box.
@@ -80,6 +82,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
     notchWindow.start()
+    systemIndicators.start()
     Task { [themes, layoutStore] in
       await themes.load()
       await layoutStore.load()

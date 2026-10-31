@@ -8,6 +8,7 @@ import SwiftUI
 struct PermissionsSettingsView: View {
   @State private var calendar = EKEventStore.authorizationStatus(for: .event)
   @State private var camera = AVCaptureDevice.authorizationStatus(for: .video)
+  @State private var accessibility = VolumeKeyTap.isTrusted
 
   var body: some View {
     Form {
@@ -34,6 +35,16 @@ struct PermissionsSettingsView: View {
         } label: {
           Label("Camera", systemImage: "camera")
           Text("Mirror widget, only while the panel shows it")
+        }
+        LabeledContent {
+          if accessibility {
+            PermissionGranted()
+          } else {
+            OpenPrivacySettings(pane: "Privacy_Accessibility")
+          }
+        } label: {
+          Label("Accessibility", systemImage: "accessibility")
+          Text("Optional: volume keys, when the notch replaces the system volume indicator")
         }
       }
     }
@@ -83,6 +94,7 @@ struct PermissionsSettingsView: View {
   private func refresh() {
     calendar = EKEventStore.authorizationStatus(for: .event)
     camera = AVCaptureDevice.authorizationStatus(for: .video)
+    accessibility = VolumeKeyTap.isTrusted
   }
 }
 

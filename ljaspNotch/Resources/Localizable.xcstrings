@@ -178,6 +178,16 @@
         }
       }
     },
+    "Accessibility" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erişilebilirlik"
+          }
+        }
+      }
+    },
     "Add" : {
       "localizations" : {
         "tr" : {
@@ -567,6 +577,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamera erişimi reddedildi. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Camera in use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera kullanılıyor"
           }
         }
       }
@@ -1173,6 +1193,16 @@
         }
       }
     },
+    "Handles the volume keys so only the notch shows the change. Needs Accessibility access; brightness keys stay with macOS." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses tuşlarını ljaspNotch yönetir, değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir; parlaklık tuşları macOS'ta kalır."
+          }
+        }
+      }
+    },
     "Haptic feedback when the panel opens" : {
       "localizations" : {
         "tr" : {
@@ -1311,6 +1341,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gösterge genişliği"
+          }
+        }
+      }
+    },
+    "Indicators" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Göstergeler"
           }
         }
       }
@@ -1482,6 +1522,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bellek"
+          }
+        }
+      }
+    },
+    "Microphone in use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon kullanılıyor"
           }
         }
       }
@@ -1852,6 +1902,16 @@
         }
       }
     },
+    "Optional: volume keys, when the notch replaces the system volume indicator" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsteğe bağlı: notch sistemin ses göstergesinin yerine geçtiğinde ses tuşları için"
+          }
+        }
+      }
+    },
     "Out of date (token or format changed)" : {
       "localizations" : {
         "tr" : {
@@ -2072,6 +2132,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kaldır…"
+          }
+        }
+      }
+    },
+    "Replace the system volume indicator" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistemin ses göstergesinin yerine geç"
           }
         }
       }
@@ -2394,6 +2464,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gösterileceği ekran"
+          }
+        }
+      }
+    },
+    "Show volume changes in the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses değişikliklerini notch'ta göster"
+          }
+        }
+      }
+    },
+    "Show when the microphone or camera is in use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon veya kamera kullanılırken göster"
           }
         }
       }
@@ -2962,6 +3052,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ sürümü çıktı"
+          }
+        }
+      }
+    },
+    "Volume" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses"
           }
         }
       }

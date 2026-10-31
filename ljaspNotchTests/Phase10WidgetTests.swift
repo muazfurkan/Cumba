@@ -171,3 +171,27 @@ struct MediaSourceTests {
     #expect(MediaCoordinator(providers: [], defaults: defaults).disabledSources == [.spotify])
   }
 }
+
+@MainActor
+struct SystemIndicatorTests {
+  @Test(arguments: [
+    (Float(0), "speaker.slash.fill"), (0.2, "speaker.wave.1.fill"), (0.5, "speaker.wave.2.fill"),
+    (0.9, "speaker.wave.3.fill"),
+  ])
+  func speakerSymbolFollowsTheLevel(volume: Float, symbol: String) {
+    #expect(SystemIndicators.speakerSymbol(volume) == symbol)
+  }
+
+  /// Hosted runners may have no audio or camera devices; this only checks that starting and
+  /// stopping the listeners is safe either way.
+  @Test func monitorsStartAndStopCleanly() {
+    let volume = VolumeMonitor()
+    volume.start()
+    _ = volume.level
+    volume.stop()
+    let privacy = PrivacyIndicatorMonitor()
+    privacy.start()
+    privacy.stop()
+    #expect(privacy.state == PrivacyIndicatorMonitor.State())
+  }
+}
