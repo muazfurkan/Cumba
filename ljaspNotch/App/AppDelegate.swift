@@ -4,11 +4,13 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate {
   private let settings: AppSettings
   private let settingsWindow: SettingsWindowController
+  private let notchWindow: NotchWindowController
   private var menuBar: MenuBarController?
 
   override init() {
     settings = AppSettings()
     settingsWindow = SettingsWindowController(settings: settings)
+    notchWindow = NotchWindowController(settings: settings)
     super.init()
   }
 
@@ -17,6 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     menuBar = MenuBarController(settings: settings) { [settingsWindow] in
       settingsWindow.show()
     }
+    notchWindow.start()
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
   }
