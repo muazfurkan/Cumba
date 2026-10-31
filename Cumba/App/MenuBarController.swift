@@ -17,7 +17,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     self.settings = settings
     self.updates = updates
     self.onOpenSettings = onOpenSettings
-    statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     super.init()
     statusItem.menu = makeMenu()
     updateButton()
