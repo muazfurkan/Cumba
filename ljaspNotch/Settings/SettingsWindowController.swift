@@ -34,6 +34,9 @@ final class SettingsWindowController {
     window.styleMask = [.titled, .closable, .miniaturizable]
     window.toolbarStyle = .preference
     window.isReleasedWhenClosed = false
+    // While this app is active, pointer moves reach the notch hover tracker only
+    // through this window.
+    window.acceptsMouseMovedEvents = true
     window.center()
     window.setFrameAutosaveName("SettingsWindow")
     return window

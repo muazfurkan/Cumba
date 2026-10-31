@@ -5,6 +5,7 @@ import AppKit
 final class NotchWindowController {
   private let settings: AppSettings
   private let model = NotchViewModel()
+  private let hoverTracker = HoverTracker()
   private var panel: NotchPanel?
 
   init(settings: AppSettings) {
@@ -12,6 +13,12 @@ final class NotchWindowController {
   }
 
   func start() {
+    hoverTracker.onChange = { [weak self] inside in
+      self?.pointerInsideChanged(inside)
+    }
+    model.onStateChange = { [weak self] _ in
+      self?.updateHoverArea()
+    }
     layoutPanel()
   }
 
@@ -26,12 +33,27 @@ final class NotchWindowController {
     self.panel = panel
     panel.setFrame(geometry.windowFrame, display: true)
     panel.orderFrontRegardless()
+    hoverTracker.start()
+    updateHoverArea()
     Log.notch.info("Panel placed at \(String(describing: geometry.windowFrame), privacy: .public)")
   }
 
   private func hidePanel() {
+    hoverTracker.stop()
     model.send(.reset)
+    panel?.ignoresMouseEvents = true
     panel?.orderOut(nil)
+  }
+
+  /// The panel takes mouse events only while the pointer is over its shape; everywhere
+  /// else clicks go through to the menu bar.
+  private func pointerInsideChanged(_ inside: Bool) {
+    panel?.ignoresMouseEvents = !inside
+    model.send(inside ? .pointerEntered : .pointerExited)
+  }
+
+  private func updateHoverArea() {
+    hoverTracker.rect = model.geometry?.hoverRect(for: model.state) ?? .null
   }
 
   private func makePanel() -> NotchPanel {
