@@ -76,14 +76,14 @@ struct WidgetTabBar: View {
         ForEach(host.tabs) { tab in
           let isSelected = tab.id == host.selectedTab?.id
           Button {
-            host.select(tab.id)
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+              host.select(tab.id)
+            }
           } label: {
             Image(systemName: tab.symbol)
-              .frame(width: 26, height: 22)
-              .background(isSelected ? .white.opacity(0.18) : .clear, in: Capsule())
-              .contentShape(Capsule())
+              .symbolVariant(isSelected ? .fill : .none)
           }
-          .buttonStyle(.plain)
+          .buttonStyle(PanelButtonStyle(isSelected: isSelected))
           .help(tab.title)
           .accessibilityLabel(tab.title)
           .accessibilityAddTraits(isSelected ? .isSelected : [])
@@ -144,5 +144,6 @@ struct PeekView: View {
         .frame(width: sideWidth)
     }
     .font(.caption)
+    .accessibilityElement(children: .combine)
   }
 }

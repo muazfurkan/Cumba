@@ -1,9 +1,9 @@
 import FlyingFox
 import Foundation
 
-/// `GET /media`: WebSocket for the Chrome extension. The handshake needs an extension
+/// `GET /media`: WebSocket for the Chrome extension. The handshake needs our extension's
 /// Origin and a loopback Host; the first message must be a `hello` with the token, sent
-/// within 5 seconds. Anything else closes the connection (SPEC § 12).
+/// within 5 seconds. Anything else closes the connection at once (SPEC § 12).
 struct MediaSocketRoute: HTTPHandler {
   let port: UInt16
   let token: String
@@ -42,9 +42,8 @@ struct MediaSocketHandler: WSMessageHandler {
     Task {
       var authenticated = false
       for await message in client {
-        guard case .text(let text) = message, let decoded = BrowserMessage.decode(text) else {
-          continue
-        }
+        let decoded: BrowserMessage? =
+          if case .text(let text) = message { BrowserMessage.decode(text) } else { nil }
         if !authenticated {
           guard case .hello(_, let provided) = decoded,
             RequestGuard.checkToken(provided, expected: token) == nil
@@ -57,6 +56,7 @@ struct MediaSocketHandler: WSMessageHandler {
           await hub.connected(id, outbound: continuation)
           continue
         }
+        guard let decoded else { continue }
         switch decoded {
         case .state(let state):
           await hub.receive(state, from: id)

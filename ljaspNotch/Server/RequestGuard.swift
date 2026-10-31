@@ -14,6 +14,10 @@ enum RequestGuard {
 
   static let tokenHeader = "X-LjaspNotch-Token"
 
+  /// The extension's ID, fixed by the public `key` in `extensions/chrome/manifest.json`.
+  /// Only this extension may open the media socket, not any other installed extension.
+  static let extensionOrigin = "chrome-extension://cleojjpnnopjeiedakghnnlilblgploj"
+
   /// Accepts only Host values that point at the loopback address on `port`. A web page
   /// that rebinds its own domain to 127.0.0.1 still sends its domain as Host.
   static func checkHost(_ host: String?, port: UInt16) -> Rejection? {
@@ -22,17 +26,9 @@ enum RequestGuard {
     return allowed.contains(host) ? nil : .badHost
   }
 
-  /// Hooks from Claude Code send no Origin. Browsers always do; then only an extension
-  /// page is allowed, never a website.
-  static func checkHookOrigin(_ origin: String?) -> Rejection? {
-    guard let origin, !origin.isEmpty else { return nil }
-    return origin.hasPrefix("chrome-extension://") ? nil : .badOrigin
-  }
-
-  /// The media socket is for the extension only.
+  /// The media socket is for our extension only.
   static func checkSocketOrigin(_ origin: String?) -> Rejection? {
-    guard let origin, origin.hasPrefix("chrome-extension://") else { return .badOrigin }
-    return nil
+    origin?.lowercased() == extensionOrigin ? nil : .badOrigin
   }
 
   static func checkToken(_ provided: String?, expected: String) -> Rejection? {

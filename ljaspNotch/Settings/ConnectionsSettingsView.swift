@@ -30,10 +30,7 @@ struct ConnectionsSettingsView: View {
               .lineLimit(1)
               .truncationMode(.middle)
             Button(showsToken ? "Hide" : "Show") { showsToken.toggle() }
-            Button("Copy") {
-              NSPasteboard.general.clearContents()
-              NSPasteboard.general.setString(server.token, forType: .string)
-            }
+            Button("Copy") { copyToken() }
             Button("Regenerate") {
               Task { await server.regenerateToken(port: settings.serverPort) }
             }
@@ -76,6 +73,22 @@ struct ConnectionsSettingsView: View {
     case .failed(let message):
       Label(message, systemImage: "exclamationmark.triangle.fill")
         .foregroundStyle(.orange)
+    }
+  }
+
+  /// Copies the token marked as concealed, so clipboard managers and Universal Clipboard
+  /// skip it, and clears it again after a minute if nothing else was copied since.
+  private func copyToken() {
+    let pasteboard = NSPasteboard.general
+    pasteboard.clearContents()
+    pasteboard.setString(server.token, forType: .string)
+    pasteboard.setString("", forType: NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType"))
+    let changeCount = pasteboard.changeCount
+    Task {
+      try? await Task.sleep(for: .seconds(60))
+      if NSPasteboard.general.changeCount == changeCount {
+        NSPasteboard.general.clearContents()
+      }
     }
   }
 

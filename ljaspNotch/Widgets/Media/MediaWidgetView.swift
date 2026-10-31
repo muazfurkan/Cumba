@@ -3,11 +3,12 @@ import SwiftUI
 
 struct MediaWidgetView: View {
   let widget: MediaWidget
+  @State private var glow: Color?
 
   private var media: MediaCoordinator { widget.media }
 
   var body: some View {
-    WidgetCard {
+    WidgetCard(tint: glow) {
       if let nowPlaying = media.current {
         VStack(alignment: .leading, spacing: 6) {
           HStack(spacing: 8) {
@@ -43,6 +44,17 @@ struct MediaWidgetView: View {
         }
       }
     }
+    .task(id: glowKey) {
+      guard let nowPlaying = media.current else {
+        glow = nil
+        return
+      }
+      glow = await ArtworkCache.shared.load(for: nowPlaying)?.color
+    }
+  }
+
+  private var glowKey: String? {
+    media.current.flatMap { ArtworkCache.key(for: $0) }
   }
 
   private func controls(isPlaying: Bool) -> some View {
@@ -65,10 +77,9 @@ struct MediaWidgetView: View {
     } label: {
       Image(systemName: symbol)
         .font(.body)
-        .frame(width: 28, height: 22)
-        .contentShape(Rectangle())
+        .contentTransition(.symbolEffect(.replace))
     }
-    .buttonStyle(.plain)
+    .buttonStyle(PanelButtonStyle(size: 30))
     .accessibilityLabel(label)
     .help(label)
   }

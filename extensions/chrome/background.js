@@ -9,6 +9,13 @@ const PING_INTERVAL_MS = 20000;
 const MAX_BACKOFF_MS = 30000;
 const ACTIONS = new Set(["toggle", "play", "pause", "next", "previous", "seek"]);
 
+// Keep the token away from content scripts that run inside YouTube pages.
+try {
+  chrome.storage.local.setAccessLevel({ accessLevel: "TRUSTED_CONTEXTS" }).catch(() => {});
+} catch {
+  // Older Chrome: local storage is limited to trusted contexts already.
+}
+
 let socket = null;
 let backoffMs = 1000;
 let reconnectTimer = null;

@@ -111,8 +111,8 @@ ljaspNotch/
 │   ├── SPEC.md
 │   └── claude-code-setup.md
 ├── ljaspNotch/
-│   ├── App/          # LjaspNotchApp, AppDelegate, MenuBarController, MainMenu, AppSettings, AppInfo, Log
-│   ├── Notch/        # NotchPanel, NotchWindowController, NotchGeometry, NotchViewModel, HoverTracker
+│   ├── App/          # LjaspNotchApp, AppDelegate, MenuBarController, MainMenu, AppSettings, AppInfo, Log, Diagnostics, Updates/UpdateChecker
+│   ├── Notch/        # NotchPanel, NotchWindowController, NotchGeometry, NotchViewModel, NotchStateMachine, HoverTracker, FullScreenDetector, Style/PanelStyle
 │   ├── Widgets/
 │   │   ├── Core/     # NotchWidget, WidgetRegistry, LayoutStore, LiveActivity, LiveActivityCenter
 │   │   ├── Media/  Calendar/  ClaudeCode/  Battery/  Timer/
@@ -337,7 +337,9 @@ Varsayılan kapalı bir ayar olarak eklenir.
 ## 9. Claude Code entegrasyonu
 
 ### Yaklaşım
-Claude Code'un **HTTP hook** desteği kullanılır: Claude Code belirli olaylarda olay verisini JSON olarak uygulamanın lokal sunucusuna POST eder, uygulama gerekirse cevap gövdesinde karar döner. Ara bir script gerekmez. Hook'lar terminal, IDE eklentileri ve Claude masaüstü uygulamasındaki Code oturumlarında aynı şekilde çalışır.
+v1.0.0'da güvenlik denetimi sonrası değişti: Claude Code'un **`command` hook**'ları kullanılır. Her hook olayı `curl --unix-socket` ile uygulamanın **Unix soketine** (`~/Library/Application Support/ljaspNotch/hook.sock`, klasör `0700`) gönderir; uygulama gerekirse cevap gövdesinde karar döner, curl bunu stdout'a yazar.
+
+Gerekçe: TCP portundaki HTTP hook'lar uygulama kapalıyken (veya port boşaltılarak) aynı Mac'teki başka bir kullanıcı ya da ağ sunucusu yetkili sandbox'lı bir uygulama tarafından yanıtlanabilir. Bu süreç PermissionRequest'e `allow` + `updatedInput` dönerek kullanıcının adına komut çalıştırabilir. `0700` klasördeki sokete yalnızca aynı kullanıcı ulaşabilir. Uygulama kapalıyken curl başarısız olur; `-sf` ve `|| true` hook'u sessizce başarılı sayar, Claude Code normal akışına devam eder. Hook'lar terminal, IDE eklentileri ve Claude masaüstü uygulamasındaki Code oturumlarında aynı şekilde çalışır.
 
 Referans: https://code.claude.com/docs/en/hooks (alan adları ve davranışlar uygulama sırasında buradan doğrulanır).
 
@@ -394,19 +396,18 @@ Notlar (Faz 6'da belgelerden doğrulandı):
 - Elle kurmak isteyenler için `docs/claude-code-setup.md` aynı yapılandırmayı anlatır.
 
 ### Örnek yapılandırma
+Her olay için bir `command` hook (zaman aşımları yukarıdaki tabloda; curl'ün `--max-time` değeri bir saniye eksik):
 ```json
-{
-  "hooks": {
-    "UserPromptSubmit":  [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:47823/claude/hook", "timeout": 5,   "headers": { "X-LjaspNotch-Token": "<TOKEN>" } }] }],
-    "PermissionRequest": [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:47823/claude/hook", "timeout": 300, "headers": { "X-LjaspNotch-Token": "<TOKEN>" } }] }],
-    "Notification":      [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:47823/claude/hook", "timeout": 5,   "headers": { "X-LjaspNotch-Token": "<TOKEN>" } }] }],
-    "Stop":              [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:47823/claude/hook", "timeout": 5,   "headers": { "X-LjaspNotch-Token": "<TOKEN>" } }] }],
-    "StopFailure":       [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:47823/claude/hook", "timeout": 5,   "headers": { "X-LjaspNotch-Token": "<TOKEN>" } }] }],
-    "SessionEnd":        [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:47823/claude/hook", "timeout": 2,   "headers": { "X-LjaspNotch-Token": "<TOKEN>" } }] }]
-  }
-}
+{ "type": "command", "timeout": 300,
+  "command": "/usr/bin/curl -sf --max-time 299 --unix-socket '<home>/Library/Application Support/ljaspNotch/hook.sock' -H 'X-LjaspNotch-Token: <TOKEN>' -H 'Content-Type: application/json' --data-binary @- http://localhost/claude/hook || true" }
 ```
-Tüm olaylar tek endpoint'e gelir; sunucu `hook_event_name` alanına göre dağıtır.
+Tüm olaylar tek endpoint'e gelir; sunucu `hook_event_name` alanına göre dağıtır. Soket rotası herhangi bir `Origin` başlığını reddeder ve token ister. Eski sürümlerin HTTP hook'ları (`X-LjaspNotch-Token` başlıklı) "güncel değil" sayılır ve Güncelle ile değiştirilir; başka araçların hook'larına dokunulmaz.
+
+### İzin kartı güvenliği
+- İstek tam gösterilir: Bash için komutun tamamı, düzenlemeler için `..` çözülmüş yol, bilinmeyen/MCP araçları için tüm `tool_input` JSON olarak. Uzun içerik kaydırılabilir alanda.
+- Kontrol, yön (bidi), sıfır genişlik ve satır/paragraf ayırıcı karakterleri `⟨U+XXXX⟩`, 12'den uzun boşluk dizileri `⟨N spaces⟩` olarak gösterilir; bir karakterde 3'ten fazla birleşik işaret kesilir; içerik 4000 Unicode skalerle sınırlıdır (`SafeText`). Bunlardan biri olduysa istek şüpheli sayılır ve yalnızca Reddet / Terminalde sunulur.
+- Kart her yeni istekte 0,75 sn boyunca düğmeleri devre dışı tutar (çift tıklama veya kart altından kayan tık onay veremez).
+- FlyingFox, istemci bağlantıyı kapatınca işleyiciyi iptal etmez; terminalde yanıtlanan istekler aynı oturumun sonraki olayıyla veya 290 sn'de düşer.
 
 ## 10. Tema sistemi
 
@@ -506,10 +507,13 @@ Her faz sonunda: derleme temiz, testler yeşil, kabul kriterleri kontrol edildi,
 - Video önizleme (§ 8, deneysel), Lyrics widget'ı, AirPods araştırması, Jira widget'ı, Safari eklentisi.
 
 ## 12. Lokal sunucu, güvenlik ve gizlilik
-- Sunucu yalnızca `127.0.0.1` adresini dinler (IPv4 açıkça verilir; FlyingFox'un `.loopback` adresi IPv6 `::1`'dir). Varsayılan port `47823`, Ayarlar > Bağlantılar'dan değiştirilebilir. Port doluysa kullanıcıya açık bir hata gösterilir.
+- Eklenti sunucusu yalnızca `127.0.0.1` adresini dinler (IPv4 açıkça verilir; FlyingFox'un `.loopback` adresi IPv6 `::1`'dir). Varsayılan port `47823`, Ayarlar > Bağlantılar'dan değiştirilebilir. Port doluysa kullanıcıya açık bir hata gösterilir. Claude hook'ları bu portu kullanmaz (§ 9, Unix soketi).
+- İki sunucu da hata verirse kendini 2 sn'den başlayıp 60 sn'ye kadar artan aralıklarla yeniden başlatır (ör. dosya tanımlayıcıları tükenince).
+- WebSocket yalnızca bizim eklentimizin Origin'ini kabul eder: `manifest.json`'daki açık `key` eklenti kimliğini sabitler (`chrome-extension://cleojjpnnopjeiedakghnnlilblgploj`). Gizli anahtar saklanmaz; yalnızca kimlik için gerekir.
+- Bilinen sınır: FlyingFox başlık sayısı/boyutu, WebSocket çerçeve boyutu ve bağlantı sayısı için sınır koymaz. Kimlik doğrulamadan önce yerel bir süreç bellek veya dosya tanımlayıcısı tüketebilir; etkisi yerel hizmet reddi ile sınırlıdır ve sunucu yeniden başlar.
 - Her istekte `Host` başlığı `127.0.0.1:<port>` veya `localhost:<port>` olmalıdır (DNS rebinding koruması).
 - Sunucunun istek zaman aşımı 310 sn (bekletilen izin istekleri için); FlyingFox günlüğü kapalıdır.
-- Token: ilk açılışta 32 bayt rastgele üretilir (`SecRandomCopyBytes`, 64 hex karakter), **Keychain**'de `AfterFirstUnlockThisDeviceOnly` ile saklanır. Ayarlar'da göster / kopyala / yenile. Yenilenince hook yapılandırmasının güncellenmesi gerektiği söylenir. Karşılaştırma sabit sürelidir.
+- Token: ilk açılışta 32 bayt rastgele üretilir (`SecRandomCopyBytes`, 64 hex karakter), **Keychain**'de saklanır (eski login keychain; `kSecAttrAccessible` orada etkisiz olabilir, ad-hoc imzalı güncellemeler erişim sorabilir). Kopyalama panoya "concealed" türüyle yapılır ve 60 sn sonra temizlenir. Eklenti token'ı `chrome.storage.local`'da, içerik betiklerine kapalı (`TRUSTED_CONTEXTS`) tutar. Ayarlar'da göster / kopyala / yenile. Yenilenince hook yapılandırmasının güncellenmesi gerektiği söylenir. Karşılaştırma sabit sürelidir.
 - HTTP: `X-LjaspNotch-Token` header'ı zorunlu, yanlışsa 401. CORS header'ı dönülmez; böylece web sayfalarından gelen JSON istekleri tarayıcıda takılır.
 - WebSocket: el sıkışmada `Origin` bir `chrome-extension://` adresi olmalı, ilk mesaj geçerli token içeren `hello` olmalı ve 5 sn içinde gelmeli. Aksi halde bağlantı `1008` ile kapatılır. Mesajlar en fazla 16 KB, metin alanları 300 karakterle sınırlıdır; kapak adresi yalnızca `https` ise kullanılır.
 - Telemetri yok. Dışarı giden istekler yalnızca kullanıcının açtığı özelliklerden gelir (kapak görselleri, Open-Meteo, LRCLIB, GitHub Releases güncelleme kontrolü) ve README'de listelenir. Güncelleme kontrolü Ayarlar'dan kapatılabilir.
@@ -553,9 +557,15 @@ App Sandbox kapalı, Hardened Runtime açık. Tüm izin istekleri kullanıcını
 - **Manuel testler:** Her fazın sonunda Claude Code kullanıcıya adım adım bir liste verir.
 
 ## 16. Doğrulanacaklar
-1. `PermissionRequest` hook'u cevap beklerken terminaldeki izin diyaloğu da görünüyor mu, yoksa hook bitene kadar bekliyor mu? Sonuca göre "Terminalde yanıtla" davranışı ve timeout süresi kesinleşir.
-2. `Notification` ve `Stop` olaylarının gerçek payload alanları (gerçek oturumdan loglanır, fixture olarak kaydedilir).
-3. Spotify ve Apple Music dağıtık bildirimlerinin macOS 26'daki `userInfo` alanları.
-4. Panel seviyesinin menü çubuğunun ve tam ekran Space'lerin üstünde doğru davranması.
-5. YouTube `<video>` karesinin canvas'a çizilip okunabilmesi (deneysel video önizleme için).
-6. Hook'ların Claude masaüstü uygulamasındaki Code oturumlarında `~/.claude/settings.json` üzerinden tetiklendiği.
+Durum v1.0.0 itibarıyla:
+1. `PermissionRequest` hook'u cevap beklerken terminaldeki izin diyaloğu da görünüyor mu? **Belgelerde yok; gerçek oturumla manuel test bekliyor.** Uygulama her iki duruma da dayanıklı: kullanıcı terminalde yanıtlarsa aynı oturumun sonraki olayı bekleyen isteği düşürür, yanıtlanmazsa 290 sn'de terminale bırakılır.
+2. `Notification` ve `Stop` olaylarının gerçek payload alanları. **Belgelerden alındı (§ 9); gerçek payload'la doğrulama manuel testte.** Fixture'lar belgelenen biçimde.
+3. Spotify ve Apple Music dağıtık bildirimlerinin macOS 26'daki `userInfo` alanları. **Manuel test bekliyor.** Ayrıştırıcılar eksik alanlara dayanıklı; konum ve kapak izin varsa AppleScript'ten de alınır.
+4. Panel seviyesinin menü çubuğu ve tam ekran Space'lerle davranışı. **Doğrulandı:** seviye 26 menü çubuğunun (24) üstünde; tam ekran pencere listesinden algılanır (§ 6).
+5. YouTube `<video>` karesinin canvas'a çizilmesi (video önizleme). **Faz 9'a kaldı.**
+6. Hook'ların Claude masaüstü uygulamasındaki Code oturumlarında tetiklenmesi. **Belgeye göre aynı `settings.json` okunur; manuel test bekliyor.**
+
+## 17. Performans ölçümleri (Faz 8)
+- Boşta CPU %0,0 (`top`), fiziksel bellek ayak izi ~23 MB (`vmmap`), RSS ~76-89 MB.
+- `scripts/perf-cycle.swift` ile 200 aç/kapa (yalnızca Debug derlemesinin dinlediği dağıtık bildirimlerle): donma yok, `leaks` 0 sızıntı, bellek ikinci 100 döngüde sabit. Sürekli animasyon sırasında Debug derlemesinde ~%17 CPU (120 Hz ekranda SwiftUI/Core Animation çizimi); her geçiş ~0,35 sn.
+- Panel kapalıyken sürekli animasyon yok; zamanlayıcı yoklamaları yalnızca widget görünürken (Sistem widget'ı 1 sn, medya ilerleme çubuğu 1 sn).

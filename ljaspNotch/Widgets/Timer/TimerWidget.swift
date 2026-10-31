@@ -185,10 +185,9 @@ private struct TimerWidgetView: View {
   {
     Button(action: action) {
       Image(systemName: symbol)
-        .frame(width: 26, height: 22)
-        .background(.white.opacity(0.15), in: Capsule())
+        .contentTransition(.symbolEffect(.replace))
     }
-    .buttonStyle(.plain)
+    .buttonStyle(PanelButtonStyle(isSelected: true))
     .accessibilityLabel(label)
     .help(label)
   }

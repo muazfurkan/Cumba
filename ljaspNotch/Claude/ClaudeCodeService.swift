@@ -86,9 +86,11 @@ final class ClaudeCodeService {
 
   /// Shows the request in the notch and waits for the user's decision.
   func requestPermission(_ payload: HookPayload) async -> PermissionBroker.Decision {
+    let detail = payload.permissionDetail
     let request = PermissionBroker.Request(
       id: UUID(), sessionID: payload.sessionID, project: payload.project,
-      toolName: payload.toolName ?? "?", summary: payload.permissionSummary, receivedAt: Date())
+      toolName: SafeText(payload.toolName ?? "?").text, detail: detail.text,
+      isSuspicious: detail.isSuspicious, receivedAt: Date())
     update(payload.sessionID, project: payload.project, state: .waitingPermission, detail: nil)
     let decision = await permissions.decide(request)
     if !permissions.hasPending(in: payload.sessionID) {

@@ -12,7 +12,10 @@ final class PermissionBroker {
     let sessionID: String
     let project: String
     let toolName: String
-    let summary: String
+    /// Everything the request would do, escaped (see `SafeText`).
+    let detail: String
+    /// Hidden characters or truncation found; Allow isn't offered then.
+    let isSuspicious: Bool
     let receivedAt: Date
   }
 

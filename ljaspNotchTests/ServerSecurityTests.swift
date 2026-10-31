@@ -15,15 +15,9 @@ struct RequestGuardTests {
     #expect(RequestGuard.checkHost(host, port: 47823) == .badHost)
   }
 
-  @Test func hooksMayHaveNoOriginButNotAWebsiteOrigin() {
-    #expect(RequestGuard.checkHookOrigin(nil) == nil)
-    #expect(RequestGuard.checkHookOrigin("chrome-extension://abc") == nil)
-    #expect(RequestGuard.checkHookOrigin("https://evil.example") == .badOrigin)
-    #expect(RequestGuard.checkHookOrigin("null") == .badOrigin)
-  }
-
-  @Test func socketNeedsAnExtensionOrigin() {
-    #expect(RequestGuard.checkSocketOrigin("chrome-extension://abcdef") == nil)
+  @Test func socketNeedsOurExtensionOrigin() {
+    #expect(RequestGuard.checkSocketOrigin(RequestGuard.extensionOrigin) == nil)
+    #expect(RequestGuard.checkSocketOrigin("chrome-extension://abcdef") == .badOrigin)
     #expect(RequestGuard.checkSocketOrigin(nil) == .badOrigin)
     #expect(RequestGuard.checkSocketOrigin("https://www.youtube.com") == .badOrigin)
   }
@@ -135,16 +129,17 @@ struct MediaSocketHandlerTests {
     input.finish()
   }
 
-  @Test func statesBeforeHelloAreIgnored() async throws {
+  @Test func anythingBeforeHelloClosesTheConnection() async throws {
     let hub = BrowserMediaHub()
     var shown: NowPlaying?
     hub.youtube.onUpdate = { shown = $0 }
     let (client, input) = AsyncStream.makeStream(of: WSMessage.self)
-    _ = try await MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
+    let outbound = try await MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
     input.yield(
       .text(#"{ "type": "state", "tabId": 1, "site": "youtube", "title": "x", "isPlaying": true }"#)
     )
-    try await Task.sleep(for: .milliseconds(100))
+    var iterator = outbound.makeAsyncIterator()
+    #expect(await iterator.next() == .close(.policyViolation))
     #expect(shown == nil)
     #expect(hub.connectionCount == 0)
     input.finish()

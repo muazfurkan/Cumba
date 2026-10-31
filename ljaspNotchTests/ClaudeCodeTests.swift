@@ -24,9 +24,10 @@ struct HookPayloadTests {
 
   @Test func summarizesBashAndEdits() throws {
     let bash = try #require(HookPayload.decode(try fixture("permission-request-bash")))
-    #expect(bash.permissionSummary == "rm -rf node_modules")
+    #expect(bash.permissionDetail == SafeText("rm -rf node_modules"))
+    #expect(!bash.permissionDetail.isSuspicious)
     let edit = try #require(HookPayload.decode(try fixture("permission-request-edit")))
-    #expect(edit.permissionSummary == "Sources/App.swift")
+    #expect(edit.permissionDetail.text == "Sources/App.swift")
   }
 
   @Test func longCommandsAreCutToOneLine() {
@@ -45,8 +46,8 @@ struct HookPayloadTests {
 struct PermissionBrokerTests {
   private func request(session: String = "s") -> PermissionBroker.Request {
     PermissionBroker.Request(
-      id: UUID(), sessionID: session, project: "demo", toolName: "Bash", summary: "ls",
-      receivedAt: .now)
+      id: UUID(), sessionID: session, project: "demo", toolName: "Bash", detail: "ls",
+      isSuspicious: false, receivedAt: .now)
   }
 
   @Test func userDecisionIsReturned() async {
@@ -136,10 +137,8 @@ struct ClaudeCodeServiceTests {
 struct ClaudeHookRouteTests {
   private let token = String(repeating: "c", count: 64)
 
-  private func request(_ body: Data, token: String?, origin: String? = nil, host: String? = nil)
-    -> HTTPRequest
-  {
-    var headers: HTTPHeaders = [.host: host ?? "127.0.0.1:47823"]
+  private func request(_ body: Data, token: String?, origin: String? = nil) -> HTTPRequest {
+    var headers: HTTPHeaders = [.host: "localhost"]
     if let token {
       headers[HTTPHeader(RequestGuard.tokenHeader)] = token
     }
@@ -152,8 +151,7 @@ struct ClaudeHookRouteTests {
   }
 
   private func route() -> ClaudeHookRoute {
-    ClaudeHookRoute(
-      port: 47823, token: token, service: ClaudeCodeService(liveActivities: LiveActivityCenter()))
+    ClaudeHookRoute(token: token, service: ClaudeCodeService(liveActivities: LiveActivityCenter()))
   }
 
   @Test func rejectsMissingOrWrongTokens() async throws {
@@ -163,12 +161,12 @@ struct ClaudeHookRouteTests {
       try await route().handleRequest(request(body, token: "x")).statusCode == .unauthorized)
   }
 
-  @Test func rejectsWebsitesAndRebinding() async throws {
+  @Test func rejectsAnyBrowserOrigin() async throws {
     let body = try fixture("stop")
-    let fromWebsite = request(body, token: token, origin: "https://evil.example")
-    #expect(try await route().handleRequest(fromWebsite).statusCode == .forbidden)
-    let rebound = request(body, token: token, host: "evil.example:47823")
-    #expect(try await route().handleRequest(rebound).statusCode == .forbidden)
+    for origin in ["https://evil.example", "chrome-extension://abc", "null"] {
+      let response = try await route().handleRequest(request(body, token: token, origin: origin))
+      #expect(response.statusCode == .forbidden)
+    }
   }
 
   @Test func acceptsValidEventsAndRejectsGarbage() async throws {

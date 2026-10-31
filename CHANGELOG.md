@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-31
+
+### Added
+
+- Update check against GitHub Releases at launch and once a day, with an optional pre-release channel and a menu bar item when a newer version exists.
+- Copy Diagnostics in Settings > General for bug reports, without tokens, paths or personal data.
+- Optional haptic tap when the panel opens.
+- Manual test checklist in docs/manual-tests.md.
+
+### Changed
+
+- Panel polish: content materializes from a slight blur, a hairline edge, hover and press feedback on every control, animated tab and pin symbols, and an album-art glow on the media card.
+- Artwork is decoded once per track off the main thread.
+- README rewritten for the first stable release.
+
+### Security
+
+Fixes from an independent security review:
+
+- Claude Code hooks now reach the app through a Unix socket in a folder only your account can open, using `command` hooks with curl, instead of HTTP on a TCP port. Another user or a sandboxed app could otherwise have taken the port while the app was closed and approved commands. Update the hooks in Settings > Claude Code.
+- The permission card shows the full request, makes control, direction and zero-width characters and long space runs visible, offers no Allow button for suspicious requests, and arms its buttons only after a short delay.
+- The extension socket accepts only the ljaspNotch extension (fixed extension ID) and closes on anything but a valid hello; the extension keeps the token away from content scripts.
+- Both local servers restart after a failure.
+- The hook installer recognizes only its own entries, resolves symlinks, refuses to touch a settings file it can't read, keeps backups private and masks the token in the diff.
+- The token is copied as concealed and cleared from the clipboard after a minute.
+- Artwork is fetched only from Spotify and YouTube image hosts, streamed with a size cap.
+- Release builds run without write access; only the publish step can write. FlyingFox and all actions are pinned to commits; checkout without persisted credentials; Dependabot for actions.
+
 ## [0.7.0] - 2026-10-31
 
 ### Added
@@ -83,7 +111,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...v0.5.0

@@ -15,6 +15,7 @@ final class NotchWindowController {
   /// A full screen app covers the panel's screen (SPEC § 6).
   private var isFullScreenActive = false
   private var isPreviewing = false
+  private var lastState = NotchState.closed
 
   init(settings: AppSettings, themes: ThemeStore, host: WidgetHost) {
     self.settings = settings
@@ -30,15 +31,49 @@ final class NotchWindowController {
       self?.model.send(.pointerMoved)
     }
     model.onStateChange = { [weak self] state in
-      self?.updateHoverArea()
-      self?.host.panelOpenChanged(state.isOpen)
+      self?.stateChanged(to: state)
     }
     observeSystemEvents()
     observeSettings()
     observeWidgets()
     applySettings()
     refreshFullScreenState()
+    #if DEBUG
+      observeDebugCommands()
+    #endif
   }
+
+  private func stateChanged(to state: NotchState) {
+    updateHoverArea()
+    host.panelOpenChanged(state.isOpen)
+    // A light tap on the trackpad when the panel opens, like a physical detent.
+    if state == .expanded && !lastState.isOpen && settings.hapticFeedback {
+      NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+    }
+    lastState = state
+  }
+
+  #if DEBUG
+    /// Debug builds only: lets scripts open and close the panel for performance and leak
+    /// checks (`scripts/` posts these distributed notifications).
+    private func observeDebugCommands() {
+      let center = DistributedNotificationCenter.default()
+      observers.append(
+        center.addObserver(
+          forName: Notification.Name("io.github.muazfurkan.ljaspnotch.debug.open"), object: nil,
+          queue: .main
+        ) { [weak self] _ in
+          MainActor.assumeIsolated { self?.model.send(.clicked) }
+        })
+      observers.append(
+        center.addObserver(
+          forName: Notification.Name("io.github.muazfurkan.ljaspnotch.debug.close"), object: nil,
+          queue: .main
+        ) { [weak self] _ in
+          MainActor.assumeIsolated { self?.model.send(.reset) }
+        })
+    }
+  #endif
 
   /// Re-places the panel whenever the screen setup, sleep state or space changes (N3).
   private func observeSystemEvents() {

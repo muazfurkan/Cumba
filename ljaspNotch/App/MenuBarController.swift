@@ -6,10 +6,16 @@ final class MenuBarController: NSObject, NSMenuDelegate {
   private let statusItem: NSStatusItem
   private let settings: AppSettings
   private let onOpenSettings: @MainActor () -> Void
+  private let updates: UpdateChecker
   private let pauseItem = NSMenuItem()
+  private let updateItem = NSMenuItem()
 
-  init(settings: AppSettings, onOpenSettings: @escaping @MainActor () -> Void) {
+  init(
+    settings: AppSettings, updates: UpdateChecker,
+    onOpenSettings: @escaping @MainActor () -> Void
+  ) {
     self.settings = settings
+    self.updates = updates
     self.onOpenSettings = onOpenSettings
     statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     super.init()
@@ -19,11 +25,23 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
   func menuNeedsUpdate(_ menu: NSMenu) {
     pauseItem.state = settings.isPaused ? .on : .off
+    if let release = updates.available {
+      updateItem.title = String(
+        localized: "Update Available: \(release.version)…", comment: "Menu item")
+      updateItem.isHidden = false
+    } else {
+      updateItem.isHidden = true
+    }
   }
 
   private func makeMenu() -> NSMenu {
     let menu = NSMenu()
     menu.delegate = self
+
+    updateItem.action = #selector(openUpdate)
+    updateItem.target = self
+    updateItem.isHidden = true
+    menu.addItem(updateItem)
 
     let settingsItem = NSMenuItem(
       title: String(localized: "Settings…", comment: "Menu item that opens the Settings window"),
@@ -57,6 +75,12 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     image.accessibilityDescription = description
     button.image = image
     button.appearsDisabled = settings.isPaused
+  }
+
+  @objc private func openUpdate() {
+    if let url = updates.available?.url {
+      NSWorkspace.shared.open(url)
+    }
   }
 
   @objc private func openSettings() {

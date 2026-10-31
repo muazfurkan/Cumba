@@ -23,6 +23,19 @@ Reports are especially welcome for:
 - The Chrome extension and its WebSocket connection
 - Changes the app makes to `~/.claude/settings.json`
 
+## Threat model
+
+What ljaspNotch defends against:
+
+- **Web pages** can't reach the local server: the extension socket requires our extension's exact Origin and a loopback `Host` header (DNS rebinding), and no CORS headers are sent.
+- **Other users on the same Mac and sandboxed apps** can't answer Claude Code in ljaspNotch's place: hooks go through a Unix socket in a folder only your account can open, not through a TCP port that someone else could take while the app is closed.
+- **A misleading permission request** (prompt-injected text that hides part of a command) is shown in full with hidden characters made visible; suspicious requests get no Allow button, and buttons arm only after the request has been on screen briefly.
+- **Changes to `~/.claude/settings.json`** happen only after you review a diff; a private backup is made, unreadable or changed files are never overwritten, and only ljaspNotch's own entries are removed.
+
+Out of scope: malware already running as your user. It can read your files, the Keychain prompt aside, and edit `~/.claude/settings.json` directly.
+
+Known limit: the HTTP library has no caps on headers, WebSocket frame size or connection count, so a local process can make the extension server use memory or file descriptors before authenticating. The server restarts after such failures.
+
 ## Supported versions
 
 Only the latest release receives security fixes.
