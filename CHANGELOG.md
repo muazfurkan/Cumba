@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-31
+
+### Added
+
+- Update check against GitHub Releases at launch and once a day, with an optional pre-release channel and a menu bar item when a newer version exists.
+- Copy Diagnostics in Settings > General for bug reports, without tokens, paths or personal data.
+- Optional haptic tap when the panel opens.
+- Manual test checklist in docs/manual-tests.md.
+
+### Changed
+
+- Panel polish: content materializes from a slight blur, a hairline edge, hover and press feedback on every control, animated tab and pin symbols, and an album-art glow on the media card.
+- Artwork is decoded once per track off the main thread.
+- README rewritten for the first stable release.
+
+### Security
+
+- GitHub Actions pinned to a commit, checkout without persisted credentials, Dependabot for actions.
+
 ## [0.7.0] - 2026-10-31
 
 ### Added
@@ -83,7 +102,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...v0.5.0
