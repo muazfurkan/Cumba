@@ -111,8 +111,8 @@ ljaspNotch/
 │   ├── SPEC.md
 │   └── claude-code-setup.md
 ├── ljaspNotch/
-│   ├── App/          # LjaspNotchApp, AppDelegate, MenuBarController, MainMenu, AppSettings, AppInfo, Log
-│   ├── Notch/        # NotchPanel, NotchWindowController, NotchGeometry, NotchViewModel, HoverTracker
+│   ├── App/          # LjaspNotchApp, AppDelegate, MenuBarController, MainMenu, AppSettings, AppInfo, Log, Diagnostics, Updates/UpdateChecker
+│   ├── Notch/        # NotchPanel, NotchWindowController, NotchGeometry, NotchViewModel, NotchStateMachine, HoverTracker, FullScreenDetector, Style/PanelStyle
 │   ├── Widgets/
 │   │   ├── Core/     # NotchWidget, WidgetRegistry, LayoutStore, LiveActivity, LiveActivityCenter
 │   │   ├── Media/  Calendar/  ClaudeCode/  Battery/  Timer/
@@ -553,9 +553,15 @@ App Sandbox kapalı, Hardened Runtime açık. Tüm izin istekleri kullanıcını
 - **Manuel testler:** Her fazın sonunda Claude Code kullanıcıya adım adım bir liste verir.
 
 ## 16. Doğrulanacaklar
-1. `PermissionRequest` hook'u cevap beklerken terminaldeki izin diyaloğu da görünüyor mu, yoksa hook bitene kadar bekliyor mu? Sonuca göre "Terminalde yanıtla" davranışı ve timeout süresi kesinleşir.
-2. `Notification` ve `Stop` olaylarının gerçek payload alanları (gerçek oturumdan loglanır, fixture olarak kaydedilir).
-3. Spotify ve Apple Music dağıtık bildirimlerinin macOS 26'daki `userInfo` alanları.
-4. Panel seviyesinin menü çubuğunun ve tam ekran Space'lerin üstünde doğru davranması.
-5. YouTube `<video>` karesinin canvas'a çizilip okunabilmesi (deneysel video önizleme için).
-6. Hook'ların Claude masaüstü uygulamasındaki Code oturumlarında `~/.claude/settings.json` üzerinden tetiklendiği.
+Durum v1.0.0 itibarıyla:
+1. `PermissionRequest` hook'u cevap beklerken terminaldeki izin diyaloğu da görünüyor mu? **Belgelerde yok; gerçek oturumla manuel test bekliyor.** Uygulama her iki duruma da dayanıklı: kullanıcı terminalde yanıtlarsa aynı oturumun sonraki olayı bekleyen isteği düşürür, yanıtlanmazsa 290 sn'de terminale bırakılır.
+2. `Notification` ve `Stop` olaylarının gerçek payload alanları. **Belgelerden alındı (§ 9); gerçek payload'la doğrulama manuel testte.** Fixture'lar belgelenen biçimde.
+3. Spotify ve Apple Music dağıtık bildirimlerinin macOS 26'daki `userInfo` alanları. **Manuel test bekliyor.** Ayrıştırıcılar eksik alanlara dayanıklı; konum ve kapak izin varsa AppleScript'ten de alınır.
+4. Panel seviyesinin menü çubuğu ve tam ekran Space'lerle davranışı. **Doğrulandı:** seviye 26 menü çubuğunun (24) üstünde; tam ekran pencere listesinden algılanır (§ 6).
+5. YouTube `<video>` karesinin canvas'a çizilmesi (video önizleme). **Faz 9'a kaldı.**
+6. Hook'ların Claude masaüstü uygulamasındaki Code oturumlarında tetiklenmesi. **Belgeye göre aynı `settings.json` okunur; manuel test bekliyor.**
+
+## 17. Performans ölçümleri (Faz 8)
+- Boşta CPU %0,0 (`top`), fiziksel bellek ayak izi ~23 MB (`vmmap`), RSS ~76-89 MB.
+- `scripts/perf-cycle.swift` ile 200 aç/kapa (yalnızca Debug derlemesinin dinlediği dağıtık bildirimlerle): donma yok, `leaks` 0 sızıntı, bellek ikinci 100 döngüde sabit. Sürekli animasyon sırasında Debug derlemesinde ~%17 CPU (120 Hz ekranda SwiftUI/Core Animation çizimi); her geçiş ~0,35 sn.
+- Panel kapalıyken sürekli animasyon yok; zamanlayıcı yoklamaları yalnızca widget görünürken (Sistem widget'ı 1 sn, medya ilerleme çubuğu 1 sn).

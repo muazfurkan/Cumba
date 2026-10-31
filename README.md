@@ -4,22 +4,32 @@
 
 [Türkçe](README.tr.md)
 
-A customizable notch app for macOS. It turns the MacBook notch into a panel that expands on hover.
+A free, open source notch app for macOS. It turns the MacBook notch into a panel that grows out of the camera housing when you rest the pointer on it: music from Spotify, Apple Music and YouTube, Claude Code permission requests, and a set of widgets, all in a look you can make your own.
 
-> **Status: work in progress.** Nothing to download yet. The roadmap and technical spec are in [docs/SPEC.md](docs/SPEC.md) (in Turkish).
+## Features
 
-## Planned features
+- **Media**: Spotify, Apple Music, YouTube and YouTube Music in one mini player with artwork, progress, seeking and controls. A small waveform beside the notch shows what's playing.
+- **Claude Code**: permission requests from the terminal, IDE extensions or the Claude desktop app show up in the notch with **Allow**, **Deny** and **In Terminal**. You also see when a session is done or fails.
+- **Widgets in tabs**: calendar, timer, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Add, remove and reorder them in Settings.
+- **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
+- **Themes**: Liquid Glass, solid black or tinted glass; colors, font, panel size, corner radius, shadow and animation. Import and export themes as JSON.
+- **Stays out of the way**: clicks pass through to the menu bar, the panel hides in full screen apps, idle CPU use is zero.
+- English and Turkish interface.
 
-- **YouTube and YouTube Music** mini player for music and videos playing in your browser (Chrome extension)
-- **Spotify and Apple Music** controls with artwork and progress
-- **Claude Code** notifications, and approving or denying permission requests right from the notch
-- **Themes**: Liquid Glass, solid black or tinted glass; custom colors, panel size and animations
-- **Widgets**: calendar, timer, battery, file tray, camera mirror, weather, shortcuts and more
-- English and Turkish interface
+## Download
+
+1. Get `ljaspNotch-vX.Y.Z.zip` from [Releases](https://github.com/muazfurkan/ljaspNotch/releases) and move `ljaspNotch.app` to Applications.
+2. The app is free and not notarized by Apple, so macOS warns the first time you open it. Open it once, then go to **System Settings > Privacy & Security** and click **Open Anyway**. Or run:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/ljaspNotch.app
+   ```
+3. ljaspNotch lives in the menu bar. If the menu bar is crowded and its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
+
+Each release has SHA-256 checksums next to the files. After an update, macOS may ask again for permissions (Automation, Calendar, Camera) and Keychain access, because release builds are signed ad hoc.
 
 ## Requirements
 
-- A Mac with a notch
+- A Mac with a notch (other Macs can show a virtual notch, see Settings > General)
 - macOS 26 or later
 
 ## Build from source
@@ -60,6 +70,7 @@ No telemetry. Everything stays on your Mac. These features make network requests
 | Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
 | Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
 | Weather widget | The coordinates of the place you choose to `api.open-meteo.com`; the city you search for to `geocoding-api.open-meteo.com` |
+| Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
 
 The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac.
 
