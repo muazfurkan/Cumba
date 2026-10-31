@@ -208,6 +208,7 @@ enum WidgetSize: String, Codable {
 - Bir widget yalnızca bir sekmede olabilir. Bilinmeyen ve tekrarlanan türler yüklemede atılır; bozuk dosya boş düzen sayılır.
 - `seenKinds`: düzenin bildiği türler. Güncellemeyle gelen yeni widget'lar bir kez ilk sekmeye eklenir; kullanıcının kaldırdıkları geri gelmez.
 - Panelde sekmeler notch'un solundaki şeritte simge olarak görünür (tek sekmede uygulama adı).
+- Yeni türler sekmelere genişliklerine göre dağıtılır: bir sekme en fazla 6 birim alır, dolunca "Daha Fazla" sekmesi açılır.
 
 ### Canlı etkinlik öncelikleri
 Aynı anda birden fazla etkinlik varsa yüksek öncelikli olan gösterilir (eşitlikte en yenisi):
@@ -226,11 +227,11 @@ Aynı anda birden fazla etkinlik varsa yüksek öncelikli olan gösterilir (eşi
 | Calendar | 3 | Kolay | EventKit, bugünün ve yarının etkinlikleri |
 | Battery | 3 | Kolay | IOKit güç kaynağı bildirimleri |
 | Timer / Pomodoro | 3 | Kolay | Bitince canlı etkinlik + ses |
-| Tray (dosya rafı) | 7 | Orta | Sürükle-bırak, AirDrop için `NSSharingService` |
-| Mirror (kamera) | 7 | Kolay | AVFoundation, yalnızca panel açıkken çalışır |
-| Weather | 7 | Kolay | Open-Meteo (ücretsiz, anahtarsız). WeatherKit ücretli hesap istediği için kullanılmaz |
-| Shortcuts | 7 | Kolay | Kısayollar uygulamasındaki kısayolları `shortcuts run` ile çalıştırır |
-| System Stats | 7 | Kolay | CPU/RAM mini grafik, yalnızca panel açıkken örnekler |
+| Tray (dosya rafı) | 7 | Orta | Sürükle-bırak, AirDrop için `NSSharingService`. Yalnızca dosya yolları saklanır (en fazla 20), dosyalar kopyalanmaz |
+| Mirror (kamera) | 7 | Kolay | AVFoundation, yalnızca panel açıkken çalışır; oturum kendi seri kuyruğunda başlar/durur. İzin Ayarlar'dan istenir |
+| Weather | 7 | Kolay | Open-Meteo (ücretsiz, anahtarsız). WeatherKit ücretli hesap istediği için kullanılmaz. Konum izni yok: şehir Ayarlar'dan aranır, yalnızca koordinatlar gönderilir; önbelleksiz, çerezsiz oturum; en fazla 15 dk'da bir yenilenir |
+| Shortcuts | 7 | Kolay | `shortcuts list` / `shortcuts run <ad>`; ad kabuktan geçmeden argüman olarak verilir. En fazla 6 favori |
+| System Stats | 7 | Kolay | CPU/RAM mini grafik (Mach host istatistikleri), yalnızca panel açıkken saniyede bir örnekler |
 | Lyrics | 9 | Orta | LRCLIB (ücretsiz) üzerinden senkron şarkı sözü, opsiyonel |
 | AirPods | 9 | Zor | Batarya bilgisi için genel API yok, araştırma gerekir |
 

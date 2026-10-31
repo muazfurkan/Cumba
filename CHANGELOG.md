@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-31
+
+### Added
+
+- Tray widget: drop files on the panel, drag them out again, send them with AirDrop.
+- Mirror widget: the camera as a mirror, only while the panel shows it.
+- Weather widget with Open-Meteo for a place you pick; no location permission.
+- Shortcuts widget: run up to six favorite shortcuts.
+- System widget: CPU and memory load with a small graph, sampled only while visible.
+
+### Changed
+
+- New widgets spread over tabs by width instead of all landing in the first tab.
+
 ## [0.6.0] - 2026-10-31
 
 ### Added
@@ -69,7 +83,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.3.0...v0.4.0

@@ -59,6 +59,9 @@ No telemetry. Everything stays on your Mac. These features make network requests
 |---|---|
 | Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
 | Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
+| Weather widget | The coordinates of the place you choose to `api.open-meteo.com`; the city you search for to `geocoding-api.open-meteo.com` |
+
+The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac.
 
 The local server listens only on `127.0.0.1` and requires a token stored in your Keychain. Updating an ad-hoc signed build may make macOS ask once more for Keychain access.
 
