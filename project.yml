@@ -1,0 +1,81 @@
+# XcodeGen spec. Regenerate the project after editing: `xcodegen generate`.
+# Never edit ljaspNotch.xcodeproj by hand; it is generated and gitignored.
+name: ljaspNotch
+
+options:
+  bundleIdPrefix: io.github.muazfurkan
+  deploymentTarget:
+    macOS: "26.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+  indentWidth: 2
+  tabWidth: 2
+  usesTabs: false
+
+configFiles:
+  Debug: Config/Base.xcconfig
+  Release: Config/Base.xcconfig
+
+settings:
+  base:
+    # Single source of the app version. Release builds override it from the git tag.
+    MARKETING_VERSION: 0.0.0
+    CURRENT_PROJECT_VERSION: 1
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+
+targets:
+  ljaspNotch:
+    type: application
+    platform: macOS
+    sources:
+      - path: ljaspNotch
+    info:
+      path: ljaspNotch/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: ljaspNotch
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, tr]
+        LSApplicationCategoryType: public.app-category.utilities
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        # Menu bar app: no Dock icon, no app menu bar.
+        LSUIElement: true
+        NSPrincipalClass: NSApplication
+    entitlements:
+      path: ljaspNotch/Resources/ljaspNotch.entitlements
+      properties:
+        # Sandbox stays off for AppleScript automation and the local server (see SPEC § 13).
+        com.apple.security.app-sandbox: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch
+        PRODUCT_NAME: ljaspNotch
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: Apple Development
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        COMBINE_HIDPI_IMAGES: YES
+    scheme:
+      testTargets:
+        - ljaspNotchTests
+
+  ljaspNotchTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: ljaspNotchTests
+    dependencies:
+      - target: ljaspNotch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch.tests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: Apple Development

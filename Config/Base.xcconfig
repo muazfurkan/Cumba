@@ -1,0 +1,4 @@
+// Shared by every configuration. Personal settings (DEVELOPMENT_TEAM) live in
+// Local.xcconfig at the repository root, which is gitignored and optional.
+
+#include? "../Local.xcconfig"

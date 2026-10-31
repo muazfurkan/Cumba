@@ -1,0 +1,4 @@
+// Personal build settings. Copy this file to Local.xcconfig (gitignored) and fill it in.
+// Your Team ID: Xcode > Settings > Accounts > select your Apple ID > Team.
+
+DEVELOPMENT_TEAM = YOUR_TEAM_ID

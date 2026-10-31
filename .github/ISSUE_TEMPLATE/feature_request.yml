@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an idea or a new widget.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the situation where you miss this feature.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should it look and behave?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Notch panel
+        - Media (Spotify / Apple Music)
+        - YouTube / Chrome extension
+        - Claude Code
+        - New widget
+        - Themes / Settings
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: network
+    attributes:
+      label: Network access
+      description: Would this need to contact an online service? If so, which one? (The app sends no telemetry and lists every network feature in the README.)
