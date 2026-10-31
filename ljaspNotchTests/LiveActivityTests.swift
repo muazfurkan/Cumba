@@ -41,7 +41,9 @@ struct LiveActivityCenterTests {
 struct TimerWidgetTests {
   private func makeTimer() -> (TimerWidget, LiveActivityCenter) {
     let center = LiveActivityCenter()
-    let timer = TimerWidget(context: WidgetContext(liveActivities: center, openSettings: {}))
+    let timer = TimerWidget(
+      context: WidgetContext(
+        liveActivities: center, media: MediaCoordinator(providers: []), openSettings: {}))
     return (timer, center)
   }
 

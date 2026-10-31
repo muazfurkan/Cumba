@@ -5,6 +5,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let settings: AppSettings
   private let themes: ThemeStore
   private let liveActivities: LiveActivityCenter
+  private let media: MediaCoordinator
   private let registry: WidgetRegistry
   private let layoutStore: LayoutStore
   private let settingsWindow: SettingsWindowController
@@ -15,11 +16,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     settings = AppSettings()
     themes = ThemeStore()
     liveActivities = LiveActivityCenter()
+    media = MediaCoordinator.standard()
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
     registry = WidgetRegistry.standard(
       context: WidgetContext(
-        liveActivities: liveActivities, openSettings: { settingsOpener.open() }))
+        liveActivities: liveActivities, media: media, openSettings: { settingsOpener.open() }))
     layoutStore = LayoutStore(knownKinds: registry.kinds)
     settingsWindow = SettingsWindowController(
       settings: settings, themes: themes, layoutStore: layoutStore, registry: registry)
@@ -40,6 +42,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     menuBar = MenuBarController(settings: settings) { [settingsWindow] in
       settingsWindow.show()
     }
+    media.start()
     notchWindow.start()
     Task { [themes, layoutStore] in
       await themes.load()

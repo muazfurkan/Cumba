@@ -54,6 +54,7 @@ extension NotchWidget {
 @MainActor
 struct WidgetContext {
   let liveActivities: LiveActivityCenter
+  let media: MediaCoordinator
   /// Opens the Settings window, e.g. to ask for a permission from there instead of
   /// from the panel.
   let openSettings: @MainActor () -> Void
