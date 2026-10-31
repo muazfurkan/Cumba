@@ -63,6 +63,8 @@ struct WidgetContext {
   let liveActivities: LiveActivityCenter
   let media: MediaCoordinator
   let claude: ClaudeCodeService
+  /// Lets a widget keep the panel open or hide it from screen capture.
+  var panel = PanelControl()
   /// Opens the Settings window, e.g. to ask for a permission from there instead of
   /// from the panel.
   let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
@@ -98,4 +100,15 @@ struct WidgetCard<Content: View>: View {
         .animation(.smooth(duration: 0.6), value: tint)
       }
   }
+}
+
+/// What a widget may ask of the panel itself. The window controller fills in the actions.
+@MainActor
+final class PanelControl {
+  /// Keeps the panel open while `true`, e.g. while the teleprompter runs.
+  var keepOpen: (Bool) -> Void = { _ in }
+  /// Leaves the panel out of screenshots, recordings and screen sharing while `true`.
+  var hideFromCapture: (Bool) -> Void = { _ in }
+  /// Closes the panel, e.g. on Escape in a text field.
+  var close: () -> Void = {}
 }

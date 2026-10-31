@@ -148,6 +148,16 @@
         }
       }
     },
+    "A quick note that's always one hover away" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her zaman bir imleç uzağınızda duran hızlı bir not"
+          }
+        }
+      }
+    },
     "Accent" : {
       "localizations" : {
         "tr" : {
@@ -184,6 +194,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aşağıdaki galeriden widget ekleyin."
+          }
+        }
+      }
+    },
+    "Add your script in Settings > Widgets." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metninizi Ayarlar > Widget'lar'dan ekleyin."
           }
         }
       }
@@ -375,6 +395,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otomasyon"
+          }
+        }
+      }
+    },
+    "Back to Start" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başa Dön"
           }
         }
       }
@@ -663,12 +693,52 @@
         }
       }
     },
+    "Clear History" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçmişi Temizle"
+          }
+        }
+      }
+    },
     "Clear Tray" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rafı Temizle"
+          }
+        }
+      }
+    },
+    "Click to write something down…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir şey yazmak için tıklayın…"
+          }
+        }
+      }
+    },
+    "Clipboard" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pano"
+          }
+        }
+      }
+    },
+    "Clipboard History" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pano Geçmişi"
           }
         }
       }
@@ -745,6 +815,26 @@
         }
       }
     },
+    "Copied" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopyalandı"
+          }
+        }
+      }
+    },
+    "Copied texts appear here." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopyaladığınız metinler burada görünür."
+          }
+        }
+      }
+    },
     "Copied. It contains no personal data." : {
       "localizations" : {
         "tr" : {
@@ -781,6 +871,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook Token'ını Kopyala"
+          }
+        }
+      }
+    },
+    "Copy again" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden kopyala"
           }
         }
       }
@@ -1110,6 +1210,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tam ekran uygulamalarda gizle"
+          }
+        }
+      }
+    },
+    "Hide the panel from screen sharing while it runs" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışırken paneli ekran paylaşımından gizle"
           }
         }
       }
@@ -1548,6 +1658,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalışmıyor"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar"
           }
         }
       }
@@ -2036,6 +2156,26 @@
         }
       }
     },
+    "Script" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metin"
+          }
+        }
+      }
+    },
+    "Scrolls your script under the camera while you talk" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siz konuşurken metninizi kameranın altında kaydırır"
+          }
+        }
+      }
+    },
     "Search" : {
       "localizations" : {
         "tr" : {
@@ -2280,6 +2420,16 @@
         }
       }
     },
+    "Speed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hız"
+          }
+        }
+      }
+    },
     "Spotify, Music and YouTube with artwork and controls" : {
       "localizations" : {
         "tr" : {
@@ -2391,12 +2541,32 @@
         }
       }
     },
+    "Teleprompter" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teleprompter"
+          }
+        }
+      }
+    },
     "Text" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Metin"
+          }
+        }
+      }
+    },
+    "Text Size" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yazı Boyutu"
           }
         }
       }
@@ -2819,6 +2989,16 @@
         }
       }
     },
+    "While this widget is in the panel, ljaspNotch checks once a second whether the clipboard changed and keeps your last %lld copied texts in memory. Passwords and other items apps mark as private are skipped, and nothing is saved to disk. macOS may ask once whether ljaspNotch may read what you copy." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu widget paneldeyken ljaspNotch panonun değişip değişmediğini saniyede bir kontrol eder ve kopyaladığınız son %lld metni bellekte tutar. Parolalar ve uygulamaların gizli olarak işaretlediği öğeler alınmaz, diske hiçbir şey kaydedilmez. macOS, ljaspNotch'un kopyaladıklarınızı okuyup okuyamayacağını bir kez sorabilir."
+          }
+        }
+      }
+    },
     "Widget Gallery" : {
       "localizations" : {
         "tr" : {
@@ -2887,6 +3067,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kameranız hızlı bir ayna olarak"
+          }
+        }
+      }
+    },
+    "Your last copied texts, kept in memory only" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son kopyaladığınız metinler, yalnızca bellekte"
           }
         }
       }

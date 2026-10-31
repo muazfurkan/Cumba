@@ -169,6 +169,9 @@ final class NotchHostingView<Content: View>: NSHostingView<Content> {
     true
   }
 
+  /// Clicks on SwiftUI content don't make the panel key; only text views inside do.
+  override var needsPanelToBecomeKey: Bool { false }
+
   override func menu(for event: NSEvent) -> NSMenu? {
     contextMenu ?? super.menu(for: event)
   }

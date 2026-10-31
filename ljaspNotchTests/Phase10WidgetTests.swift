@@ -64,3 +64,76 @@ struct KeepAwakeTests {
     #expect(!center.contains("keepAwake"))
   }
 }
+
+@MainActor
+private func makeContext(panel: PanelControl = PanelControl()) -> WidgetContext {
+  let center = LiveActivityCenter()
+  return WidgetContext(
+    liveActivities: center, media: MediaCoordinator(providers: []),
+    claude: ClaudeCodeService(liveActivities: center), panel: panel, openSettings: { _ in })
+}
+
+@MainActor
+struct ClipboardHistoryTests {
+  @Test func keepsNewestFirstWithoutDuplicates() {
+    let widget = ClipboardHistoryWidget(context: makeContext())
+    defer { widget.shutdown() }
+    widget.record("one")
+    widget.record("  two \n")
+    widget.record("one")
+    widget.record("   ")
+    #expect(widget.entries.map(\.text) == ["one", "two"])
+  }
+
+  @Test func staysWithinTheLimits() {
+    let widget = ClipboardHistoryWidget(context: makeContext())
+    defer { widget.shutdown() }
+    for index in 0..<(ClipboardHistoryWidget.maxEntries + 5) {
+      widget.record("item \(index)")
+    }
+    widget.record(String(repeating: "x", count: ClipboardHistoryWidget.maxLength + 10))
+    #expect(widget.entries.count == ClipboardHistoryWidget.maxEntries)
+    #expect(widget.entries[0].text.count == ClipboardHistoryWidget.maxLength)
+  }
+}
+
+@MainActor
+struct TeleprompterTests {
+  @Test func runningKeepsThePanelOpenAndHidden() throws {
+    let suite = "TeleprompterTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suite))
+    defer { defaults.removePersistentDomain(forName: suite) }
+    let panel = PanelControl()
+    var keptOpen = false
+    var hidden = false
+    panel.keepOpen = { keptOpen = $0 }
+    panel.hideFromCapture = { hidden = $0 }
+    let widget = TeleprompterWidget(defaults: defaults, panel: panel)
+    widget.start()
+    #expect(!widget.isRunning)  // No script yet.
+    widget.text = "Hello"
+    widget.start()
+    #expect(widget.isRunning && keptOpen && hidden)
+    widget.pause()
+    #expect(!widget.isRunning && !keptOpen && !hidden)
+    #expect(widget.offset(at: .now) >= 0)
+    widget.restart()
+    #expect(widget.offset(at: .now) == 0)
+  }
+}
+
+@MainActor
+struct NotesTests {
+  @Test func savesAndLoads() async throws {
+    let url = FileManager.default.temporaryDirectory.appending(path: "notes-\(UUID()).txt")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let widget = NotesWidget(fileURL: url, panel: PanelControl())
+    await widget.load()
+    widget.text = "Buy milk"
+    widget.shutdown()
+    try await Task.sleep(for: .milliseconds(300))
+    let again = NotesWidget(fileURL: url, panel: PanelControl())
+    await again.load()
+    #expect(again.text == "Buy milk")
+  }
+}

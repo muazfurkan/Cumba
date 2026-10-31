@@ -1,7 +1,8 @@
 import AppKit
 
-/// Borderless, non-activating panel above the menu bar. It never becomes key because the
-/// panel has no text input yet, so hovering or clicking it never steals focus.
+/// Borderless, non-activating panel above the menu bar. It becomes key only when a text
+/// view in it is clicked (the Notes widget), so hovering or clicking buttons never takes
+/// keyboard focus from the app you're working in.
 final class NotchPanel: NSPanel {
   /// Above the menu bar and its status items, below the menus they open.
   static let notchLevel = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
@@ -21,6 +22,7 @@ final class NotchPanel: NSPanel {
     hidesOnDeactivate = false
     animationBehavior = .none
     acceptsMouseMovedEvents = true
+    becomesKeyOnlyIfNeeded = true
     // Clicks pass through to the menu bar until the pointer is over the shape.
     ignoresMouseEvents = true
     // Without .fullScreenAuxiliary the panel stays off full screen spaces.
@@ -30,7 +32,7 @@ final class NotchPanel: NSPanel {
     }
   }
 
-  override var canBecomeKey: Bool { false }
+  override var canBecomeKey: Bool { true }
   override var canBecomeMain: Bool { false }
 
   // Keep the frame exactly where it is placed, even over the menu bar.

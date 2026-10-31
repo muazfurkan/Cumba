@@ -7,6 +7,7 @@ final class NotchWindowController {
   private let settings: AppSettings
   private let themes: ThemeStore
   private let host: WidgetHost
+  private let panelControl: PanelControl
   private let model = NotchViewModel()
   private let hoverTracker = HoverTracker()
   private var panel: NotchPanel?
@@ -22,9 +23,13 @@ final class NotchWindowController {
   /// Opens the Settings window (set by the app delegate).
   var openSettings: (() -> Void)?
 
-  init(settings: AppSettings, themes: ThemeStore, host: WidgetHost) {
+  /// The panel was pinned open for a widget (see `PanelControl.keepOpen`).
+  private var isKeptOpenForWidget = false
+
+  init(settings: AppSettings, themes: ThemeStore, panelControl: PanelControl, host: WidgetHost) {
     self.settings = settings
     self.themes = themes
+    self.panelControl = panelControl
     self.host = host
   }
 
@@ -41,6 +46,7 @@ final class NotchWindowController {
     model.onStateChange = { [weak self] state in
       self?.stateChanged(to: state)
     }
+    connectPanelControl()
     observeSystemEvents()
     observeSettings()
     observeWidgets()
@@ -53,6 +59,12 @@ final class NotchWindowController {
 
   private func stateChanged(to state: NotchState) {
     updateHoverArea()
+    // A closed panel must not keep keyboard focus (after typing in Notes); ordering it out
+    // and in again hands focus back to the app in front.
+    if !state.isOpen, let panel, panel.isKeyWindow {
+      panel.orderOut(nil)
+      panel.orderFrontRegardless()
+    }
     host.panelOpenChanged(state.isOpen)
     // A light tap on the trackpad when the panel opens, like a physical detent.
     if state == .expanded && !lastState.isOpen {
@@ -152,6 +164,38 @@ final class NotchWindowController {
     }
   }
 
+  private func connectPanelControl() {
+    panelControl.keepOpen = { [weak self] keep in
+      guard let self else { return }
+      if keep, model.state == .expanded {
+        isKeptOpenForWidget = true
+        model.send(.pinToggled)
+      } else if !keep, isKeptOpenForWidget {
+        isKeptOpenForWidget = false
+        if model.state == .pinned {
+          model.send(.pinToggled)
+        }
+      }
+    }
+    panelControl.hideFromCapture = { [weak self] hide in
+      self?.panel?.sharingType = hide ? .none : .readOnly
+    }
+    panelControl.close = { [weak self] in
+      self?.model.send(.reset)
+    }
+    // While someone types in the panel it stays open; it closes once focus moves away.
+    observers.append(
+      NotificationCenter.default.addObserver(
+        forName: NSWindow.didResignKeyNotification, object: nil, queue: .main
+      ) { [weak self] notification in
+        let window = notification.object as? NSWindow
+        MainActor.assumeIsolated {
+          guard let self, window === self.panel else { return }
+          self.menuClosed()
+        }
+      })
+  }
+
   /// Closes the panel, e.g. before Settings opens to ask for a permission.
   func collapse() {
     model.send(.reset)
@@ -197,9 +241,11 @@ final class NotchWindowController {
     return menu
   }
 
-  /// The pointer may have left while the menu was open; close the panel then.
+  /// The pointer may have left while a menu was open or the panel had keyboard focus;
+  /// close the panel then.
   private func menuClosed() {
     isMenuOpen = false
+    guard panel?.isKeyWindow != true else { return }
     hoverTracker.update()
     if !hoverTracker.isInside {
       panel?.ignoresMouseEvents = true
@@ -336,7 +382,7 @@ final class NotchWindowController {
   /// The panel takes mouse events only while the pointer is over its shape; everywhere
   /// else clicks go through to the menu bar.
   private func pointerInsideChanged(_ inside: Bool) {
-    if !inside && isMenuOpen {
+    if !inside && (isMenuOpen || panel?.isKeyWindow == true) {
       return
     }
     panel?.ignoresMouseEvents = !inside

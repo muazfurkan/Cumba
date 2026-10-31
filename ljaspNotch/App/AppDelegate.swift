@@ -26,9 +26,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     server = LocalServer(browserHub: BrowserMediaHub(), claude: claude)
     // Widgets are created before the Settings window, so they reach it through this box.
     let settingsOpener = SettingsOpener()
+    let panelControl = PanelControl()
     registry = WidgetRegistry.standard(
       context: WidgetContext(
-        liveActivities: liveActivities, media: media, claude: claude,
+        liveActivities: liveActivities, media: media, claude: claude, panel: panelControl,
         openSettings: { settingsOpener.open($0) }))
     layoutStore = LayoutStore(
       knownKinds: registry.infos.map { ($0.kind, $0.size.units) },
@@ -40,7 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       settingsWindow.show()
     }
     notchWindow = NotchWindowController(
-      settings: settings, themes: themes,
+      settings: settings, themes: themes, panelControl: panelControl,
       host: WidgetHost(
         layoutStore: layoutStore, registry: registry, liveActivities: liveActivities,
         claude: claude))
