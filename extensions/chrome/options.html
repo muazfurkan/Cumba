@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ljaspNotch</title>
+  <style>
+    body { font: 13px -apple-system, system-ui, sans-serif; margin: 16px; min-width: 360px; }
+    label { display: block; margin: 10px 0 4px; font-weight: 600; }
+    input { width: 100%; box-sizing: border-box; padding: 6px; font-family: ui-monospace, monospace; }
+    button { margin-top: 12px; padding: 6px 14px; }
+    p { color: #666; }
+    #status { margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <p data-i18n="hint">Copy the port and token from ljaspNotch &gt; Settings &gt; Connections.</p>
+  <label for="port" data-i18n="port">Port</label>
+  <input id="port" type="number" min="1024" max="65535" value="47823">
+  <label for="token" data-i18n="token">Token</label>
+  <input id="token" type="password" autocomplete="off" spellcheck="false">
+  <button id="save" data-i18n="save">Save</button><span id="status"></span>
+  <script src="options.js"></script>
+</body>
+</html>

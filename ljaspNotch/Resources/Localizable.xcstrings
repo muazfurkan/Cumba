@@ -67,6 +67,16 @@
         }
       }
     },
+    "1. Open chrome://extensions and turn on Developer mode.\n2. Click “Load unpacked” and choose the extension folder.\n3. Open the extension's options and paste the port and the token." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. chrome://extensions adresini açın ve Geliştirici modunu etkinleştirin.\n2. “Paketlenmemiş öğe yükle”ye tıklayın ve eklenti klasörünü seçin.\n3. Eklentinin seçeneklerini açın, portu ve token'ı yapıştırın."
+          }
+        }
+      }
+    },
     "Accent" : {
       "localizations" : {
         "tr" : {
@@ -168,6 +178,16 @@
         }
       }
     },
+    "Apply" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygula"
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "tr" : {
@@ -240,6 +260,16 @@
         }
       }
     },
+    "Chrome Extension" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chrome Eklentisi"
+          }
+        }
+      }
+    },
     "Classic" : {
       "comment" : "Built-in theme name",
       "localizations" : {
@@ -277,6 +307,27 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renkler"
+          }
+        }
+      }
+    },
+    "Connected browsers" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlı tarayıcılar"
+          }
+        }
+      }
+    },
+    "Connections" : {
+      "comment" : "Settings tab",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlantılar"
           }
         }
       }
@@ -424,6 +475,16 @@
         }
       }
     },
+    "Hide" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizle"
+          }
+        }
+      }
+    },
     "Hide in full screen apps" : {
       "localizations" : {
         "tr" : {
@@ -465,6 +526,16 @@
         }
       }
     },
+    "Invalid port." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçersiz port."
+          }
+        }
+      }
+    },
     "Launch at login" : {
       "localizations" : {
         "tr" : {
@@ -481,6 +552,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Liquid Glass"
+          }
+        }
+      }
+    },
+    "Local Server" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerel Sunucu"
           }
         }
       }
@@ -800,6 +881,27 @@
         }
       }
     },
+    "Port" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port"
+          }
+        }
+      }
+    },
+    "Port %@ is in use or unavailable. Choose another port." : {
+      "comment" : "Local server error",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ portu kullanımda veya kullanılamıyor. Başka bir port seçin."
+          }
+        }
+      }
+    },
     "Previous" : {
       "localizations" : {
         "tr" : {
@@ -816,6 +918,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch'tan Çık"
+          }
+        }
+      }
+    },
+    "Regenerate" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yenile"
           }
         }
       }
@@ -866,6 +978,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yuvarlak"
+          }
+        }
+      }
+    },
+    "Running on port %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ portunda çalışıyor"
           }
         }
       }
@@ -921,6 +1043,26 @@
         }
       }
     },
+    "Show" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Göster"
+          }
+        }
+      }
+    },
+    "Show Extension Folder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eklenti Klasörünü Göster"
+          }
+        }
+      }
+    },
     "Show a virtual notch when no screen has one" : {
       "localizations" : {
         "tr" : {
@@ -957,6 +1099,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Başlat"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durum"
+          }
+        }
+      }
+    },
+    "Stopped" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durdu"
           }
         }
       }
@@ -1011,12 +1173,32 @@
         }
       }
     },
+    "The server only listens on this Mac (127.0.0.1) and accepts only requests that carry this token. After regenerating it, paste the new token into the Chrome extension and reinstall the Claude Code hooks." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunucu yalnızca bu Mac'i (127.0.0.1) dinler ve yalnızca bu token'ı taşıyan istekleri kabul eder. Token'ı yeniledikten sonra yenisini Chrome eklentisine yapıştırın ve Claude Code hook'larını yeniden kurun."
+          }
+        }
+      }
+    },
     "The theme file couldn't be used." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tema dosyası kullanılamadı."
+          }
+        }
+      }
+    },
+    "The token couldn't be read from the Keychain." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token Anahtar Zinciri'nden okunamadı."
           }
         }
       }
@@ -1088,6 +1270,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bugün"
+          }
+        }
+      }
+    },
+    "Token" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token"
           }
         }
       }

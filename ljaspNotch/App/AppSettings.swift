@@ -13,6 +13,7 @@ final class AppSettings {
     static let closeDelay = "closeDelay"
     static let hidesInFullScreen = "hidesInFullScreen"
     static let usesVirtualNotch = "usesVirtualNotch"
+    static let serverPort = "serverPort"
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -46,6 +47,11 @@ final class AppSettings {
     didSet { defaults.set(usesVirtualNotch, forKey: Key.usesVirtualNotch) }
   }
 
+  /// Port of the local server for the Chrome extension and Claude Code hooks.
+  var serverPort: UInt16 {
+    didSet { defaults.set(Int(serverPort), forKey: Key.serverPort) }
+  }
+
   /// True while the Appearance settings are visible; the panel stays open as a live preview.
   /// Not saved.
   var isPreviewingAppearance = false
@@ -64,6 +70,8 @@ final class AppSettings {
     closeDelay = defaults.object(forKey: Key.closeDelay) as? Double ?? 0.4
     hidesInFullScreen = defaults.object(forKey: Key.hidesInFullScreen) as? Bool ?? true
     usesVirtualNotch = defaults.bool(forKey: Key.usesVirtualNotch)
+    let port = defaults.integer(forKey: Key.serverPort)
+    serverPort = (1024...65535).contains(port) ? UInt16(port) : LocalServer.defaultPort
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

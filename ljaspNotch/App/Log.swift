@@ -8,6 +8,7 @@ enum Log {
   static let app = Logger(subsystem: subsystem, category: "App")
   static let media = Logger(subsystem: subsystem, category: "Media")
   static let notch = Logger(subsystem: subsystem, category: "Notch")
+  static let server = Logger(subsystem: subsystem, category: "Server")
   static let settings = Logger(subsystem: subsystem, category: "Settings")
   static let theme = Logger(subsystem: subsystem, category: "Theme")
   static let widgets = Logger(subsystem: subsystem, category: "Widgets")

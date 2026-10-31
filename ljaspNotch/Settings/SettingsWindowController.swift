@@ -10,23 +10,27 @@ final class SettingsWindowController {
     case general
     case appearance
     case widgets
+    case connections
   }
 
   private let settings: AppSettings
   private let themes: ThemeStore
   private let layoutStore: LayoutStore
   private let registry: WidgetRegistry
+  private let server: LocalServer
   private var window: NSWindow?
   private var tabController: NSTabViewController?
   private var closeObserver: NSObjectProtocol?
 
   init(
-    settings: AppSettings, themes: ThemeStore, layoutStore: LayoutStore, registry: WidgetRegistry
+    settings: AppSettings, themes: ThemeStore, layoutStore: LayoutStore,
+    registry: WidgetRegistry, server: LocalServer
   ) {
     self.settings = settings
     self.themes = themes
     self.layoutStore = layoutStore
     self.registry = registry
+    self.server = server
   }
 
   func show(tab: Tab? = nil) {
@@ -58,6 +62,11 @@ final class SettingsWindowController {
         WidgetsSettingsView(layoutStore: layoutStore, registry: registry),
         label: String(localized: "Widgets", comment: "Settings tab"),
         symbol: "square.grid.2x2"))
+    tabs.addTabViewItem(
+      tab(
+        ConnectionsSettingsView(server: server, settings: settings),
+        label: String(localized: "Connections", comment: "Settings tab"),
+        symbol: "network"))
     tabController = tabs
 
     let window = NSWindow(contentViewController: tabs)
