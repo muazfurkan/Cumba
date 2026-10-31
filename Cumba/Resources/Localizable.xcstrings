@@ -429,6 +429,26 @@
         }
       }
     },
+    "At the bottom" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altta"
+          }
+        }
+      }
+    },
+    "At the top" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üstte"
+          }
+        }
+      }
+    },
     "Automation" : {
       "localizations" : {
         "tr" : {
@@ -1097,6 +1117,16 @@
         }
       }
     },
+    "Delete Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeyi Sil"
+          }
+        }
+      }
+    },
     "Deny" : {
       "localizations" : {
         "tr" : {
@@ -1175,6 +1205,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Düzen"
+          }
+        }
+      }
+    },
+    "Edit Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeyi Düzenle"
           }
         }
       }
@@ -1781,6 +1821,26 @@
         }
       }
     },
+    "Move Left" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sola Taşı"
+          }
+        }
+      }
+    },
+    "Move Right" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağa Taşı"
+          }
+        }
+      }
+    },
     "Move Up" : {
       "localizations" : {
         "tr" : {
@@ -1911,6 +1971,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kısayol bulunamadı."
+          }
+        }
+      }
+    },
+    "None yet. Use + to add one." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz yok. Eklemek için + düğmesini kullanın."
           }
         }
       }
@@ -2966,6 +3036,16 @@
         }
       }
     },
+    "Tab name" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekme adı"
+          }
+        }
+      }
+    },
     "Tabs" : {
       "localizations" : {
         "tr" : {
@@ -3132,6 +3212,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu istekte gizli karakterler var veya güvenle gösterilemeyecek kadar uzun. Terminalde yanıtlayın."
+          }
+        }
+      }
+    },
+    "This tab is empty." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sekme boş."
           }
         }
       }

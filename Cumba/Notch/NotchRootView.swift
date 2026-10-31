@@ -57,6 +57,7 @@ struct NotchRootView: View {
       .animation(animation(for: state, theme: theme), value: state)
       .animation(.smooth(duration: 0.25), value: theme)
       .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
+      .animation(.smooth(duration: 0.3), value: geometry.layout.panelWidth)
       .environment(\.colorScheme, .dark)
     }
   }
@@ -106,31 +107,49 @@ private struct PanelBackground: View {
   }
 }
 
-/// Tabs and pin button beside the camera housing, widgets below.
+/// The pin button beside the camera housing, the open tab's widgets (or the gallery or the
+/// tab editor) below, and the tabs at the top or bottom.
 private struct ExpandedPanelView: View {
   let model: NotchViewModel
   let host: WidgetHost
   let notchHeight: CGFloat
 
   private var isPinned: Bool { model.state == .pinned }
+  private var tabsAtTop: Bool { model.tabBarPosition == .top }
+  private var secondary: Color { model.theme.secondary.color }
+
+  /// Gallery or editor, which replace the widgets until Done.
+  private var modeTitle: Text? {
+    if host.isShowingGallery {
+      return Text("Add a Widget")
+    }
+    if host.isEditing {
+      return Text("Edit Tab")
+    }
+    return nil
+  }
 
   var body: some View {
     VStack(spacing: 0) {
       // Top band beside the camera housing.
       HStack {
-        if host.isShowingGallery {
-          Text("Add a Widget")
+        if let modeTitle {
+          modeTitle
             .panelFont(.headline)
           Spacer()
           Button("Done") {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
               host.showGallery(false)
+              host.setEditing(false)
             }
           }
           .buttonStyle(.plain)
+          .panelFont(.callout, weight: .semibold)
           .foregroundStyle(model.theme.accent.color)
-        } else {
+        } else if tabsAtTop {
           WidgetTabBar(host: host)
+          Spacer()
+        } else {
           Spacer()
         }
         Button {
@@ -145,27 +164,38 @@ private struct ExpandedPanelView: View {
       }
       .frame(height: notchHeight)
 
-      if let request = host.permissionBanner {
-        PermissionCard(request: request, waiting: host.claude.permissions.pending.count - 1) {
-          decision in
-          host.claude.answer(request, with: decision)
-        }
-        .id(request.id)
-        .padding(10)
-        .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+      content
         .padding(.top, 8)
-      } else if host.isShowingGallery {
-        WidgetGallery(host: host, secondary: model.theme.secondary.color)
-          .padding(.top, 8)
-          .transition(.opacity)
-      } else {
-        WidgetRow(host: host, secondary: model.theme.secondary.color)
-          .padding(.top, 8)
-          .transition(.opacity)
+        .frame(maxHeight: .infinity)
+
+      if !tabsAtTop {
+        WidgetTabBar(host: host)
+          .frame(height: NotchLayout.bottomTabBarHeight)
       }
     }
     .padding(.horizontal, 28)
-    .padding(.bottom, 14)
+    .padding(.bottom, tabsAtTop ? 14 : 4)
+  }
+
+  @ViewBuilder private var content: some View {
+    if let request = host.permissionBanner {
+      PermissionCard(request: request, waiting: host.claude.permissions.pending.count - 1) {
+        decision in
+        host.claude.answer(request, with: decision)
+      }
+      .id(request.id)
+      .padding(10)
+      .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+    } else if host.isShowingGallery {
+      WidgetGallery(host: host, secondary: secondary)
+        .transition(.opacity)
+    } else if host.isEditing {
+      TabEditor(host: host, secondary: secondary)
+        .transition(.opacity)
+    } else {
+      WidgetRow(host: host, secondary: secondary)
+        .transition(.opacity)
+    }
   }
 }
 

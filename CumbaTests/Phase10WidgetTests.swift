@@ -306,4 +306,42 @@ struct WidgetGalleryTests {
     host.remove(TimerWidget.kind)
     #expect(store.layout.tabs[0].widgets.contains(TimerWidget.kind))
   }
+
+  @Test func editsTabsAndSizesThePanelToTheOpenTab() async throws {
+    let file = FileManager.default.temporaryDirectory
+      .appending(path: "TabEditTests-\(UUID().uuidString).json")
+    defer { try? FileManager.default.removeItem(at: file) }
+    let registry = WidgetRegistry(
+      context: makeContext(),
+      types: [TimerWidget.self, KeepAwakeWidget.self, TeleprompterWidget.self])
+    let store = LayoutStore(
+      fileURL: file, knownKinds: registry.infos.map { ($0.kind, $0.size.units) },
+      defaultKinds: [TimerWidget.kind, KeepAwakeWidget.kind, TeleprompterWidget.kind])
+    await store.load()
+    let center = LiveActivityCenter()
+    let host = WidgetHost(
+      layoutStore: store, registry: registry, liveActivities: center,
+      claude: ClaudeCodeService(liveActivities: center))
+
+    // A full tab uses the whole width; a single widget gets four units.
+    #expect(host.preferredPanelWidth(maxWidth: 640) == 640)
+    host.addTab()
+    let single = host.selectedTab?.id
+    host.add(TimerWidget.kind)
+    let unit = (640.0 - 56 - 50) / 6
+    #expect(abs(host.preferredPanelWidth(maxWidth: 640) - (56 + unit * 4 + 30)) < 0.01)
+    host.showGallery(true)
+    #expect(host.preferredPanelWidth(maxWidth: 640) == 640)
+    host.showGallery(false)
+
+    host.moveSelectedTab(by: -1)
+    #expect(store.layout.tabs.first?.id == single)
+    host.select(store.layout.tabs[1].id)
+    host.moveWidget(TeleprompterWidget.kind, by: -1)
+    #expect(host.selectedTab?.widgets.last == KeepAwakeWidget.kind)
+    host.select(try #require(single))
+    host.deleteSelectedTab()
+    #expect(store.layout.tabs.count == 1)
+    #expect(host.selectedTab?.id == store.layout.tabs.first?.id)
+  }
 }

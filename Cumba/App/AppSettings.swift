@@ -21,6 +21,7 @@ final class AppSettings {
     static let browserExtensionEnabled = "browserExtensionEnabled"
     static let notchApprovals = "notchApprovals"
     static let panelScreen = "panelScreen"
+    static let tabBarPosition = "tabBarPosition"
     static let showsVolumeChanges = "showsVolumeChanges"
     static let replacesVolumeIndicator = "replacesVolumeIndicator"
     static let showsBrightnessChanges = "showsBrightnessChanges"
@@ -34,6 +35,12 @@ final class AppSettings {
     case notched
     case main
     case pointer
+  }
+
+  /// Where the panel shows its tabs.
+  enum TabBarPosition: String, CaseIterable, Sendable {
+    case bottom
+    case top
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -64,6 +71,10 @@ final class AppSettings {
 
   var panelScreen: PanelScreen {
     didSet { defaults.set(panelScreen.rawValue, forKey: Key.panelScreen) }
+  }
+
+  var tabBarPosition: TabBarPosition {
+    didSet { defaults.set(tabBarPosition.rawValue, forKey: Key.tabBarPosition) }
   }
 
   /// Draws a notch on the main screen when no screen has one.
@@ -165,6 +176,9 @@ final class AppSettings {
       defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
     panelScreen =
       defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
+    tabBarPosition =
+      defaults.string(forKey: Key.tabBarPosition).flatMap(TabBarPosition.init(rawValue:))
+      ?? .bottom
     showsVolumeChanges = defaults.bool(forKey: Key.showsVolumeChanges)
     replacesVolumeIndicator = defaults.bool(forKey: Key.replacesVolumeIndicator)
     showsBrightnessChanges = defaults.bool(forKey: Key.showsBrightnessChanges)

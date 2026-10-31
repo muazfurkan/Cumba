@@ -29,6 +29,10 @@ struct GeneralSettingsView: View {
           Text("The main display").tag(AppSettings.PanelScreen.main)
           Text("The display with the pointer").tag(AppSettings.PanelScreen.pointer)
         }
+        Picker("Tabs", selection: $settings.tabBarPosition) {
+          Text("At the bottom").tag(AppSettings.TabBarPosition.bottom)
+          Text("At the top").tag(AppSettings.TabBarPosition.top)
+        }
         Picker("Open the panel", selection: $settings.opensOnHover) {
           Text("When the pointer rests on the notch").tag(true)
           Text("Only on click").tag(false)

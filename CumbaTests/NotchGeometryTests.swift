@@ -24,6 +24,23 @@ struct NotchGeometryTests {
     #expect(try geometry().notchRect == CGRect(x: 662, y: 950, width: 188, height: 32))
   }
 
+  @Test func panelWidthNarrowsTheShapeButNotTheWindow() throws {
+    var layout = NotchLayout()
+    layout.panelWidth = 420
+    let narrow = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    #expect(narrow.shapeSize(for: .expanded).width == 420)
+    #expect(narrow.windowFrame == (try geometry().windowFrame))
+    layout.panelWidth = 5000
+    let wide = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    #expect(wide.shapeSize(for: .expanded).width == 640)
+  }
+
   @Test func windowIsCenteredUnderNotchAndTopAligned() throws {
     let frame = try geometry().windowFrame
     // 640 + 2 × 24 shadow margin wide, 190 + 24 tall.
