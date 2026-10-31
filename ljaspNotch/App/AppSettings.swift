@@ -17,6 +17,7 @@ final class AppSettings {
     static let checksForUpdates = "checksForUpdates"
     static let includesPrereleases = "includesPrereleases"
     static let hapticFeedback = "hapticFeedback"
+    static let hasSeenWelcome = "hasSeenWelcome"
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -69,6 +70,11 @@ final class AppSettings {
     didSet { defaults.set(hapticFeedback, forKey: Key.hapticFeedback) }
   }
 
+  /// Set once the welcome window has been shown.
+  var hasSeenWelcome: Bool {
+    didSet { defaults.set(hasSeenWelcome, forKey: Key.hasSeenWelcome) }
+  }
+
   /// True while the Appearance settings are visible; the panel stays open as a live preview.
   /// Not saved.
   var isPreviewingAppearance = false
@@ -92,6 +98,7 @@ final class AppSettings {
     checksForUpdates = defaults.object(forKey: Key.checksForUpdates) as? Bool ?? true
     includesPrereleases = defaults.bool(forKey: Key.includesPrereleases)
     hapticFeedback = defaults.object(forKey: Key.hapticFeedback) as? Bool ?? true
+    hasSeenWelcome = defaults.bool(forKey: Key.hasSeenWelcome)
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

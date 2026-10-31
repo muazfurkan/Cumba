@@ -6,13 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-31
+
 ### Added
 
+- A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
+- Releases include a `.dmg` with an Applications shortcut next to the `.zip`.
+- README sections on uninstalling.
 - Release downloads carry signed build provenance; check them with `gh attestation verify`. Releases are immutable once published.
 - README banner, also used as the GitHub social preview, drawn by `scripts/make-banner.swift`.
 
 ### Changed
 
+- With Reduce Motion turned on in System Settings, the panel opens and closes with a short ease instead of a spring.
 - Questions and ideas go to GitHub Discussions; issues are for bugs and concrete feature requests.
 
 ## [1.0.0] - 2026-10-31
@@ -120,7 +126,8 @@ Fixes from an independent security review:
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/muazfurkan/ljaspNotch/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/muazfurkan/ljaspNotch/compare/v0.5.0...v0.6.0

@@ -25,12 +25,12 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
 
 ## Download
 
-1. Get `ljaspNotch-vX.Y.Z.zip` from [Releases](https://github.com/muazfurkan/ljaspNotch/releases) and move `ljaspNotch.app` to Applications.
+1. Get `ljaspNotch-vX.Y.Z.dmg` from the [latest release](https://github.com/muazfurkan/ljaspNotch/releases/latest), open it and drag ljaspNotch to Applications. A `.zip` is there too.
 2. The app is free and not notarized by Apple, so macOS warns the first time you open it. Open it once, then go to **System Settings > Privacy & Security** and click **Open Anyway**. Or run:
    ```bash
    xattr -dr com.apple.quarantine /Applications/ljaspNotch.app
    ```
-3. ljaspNotch lives in the menu bar. If the menu bar is crowded and its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
+3. A short welcome explains the basics on first launch. ljaspNotch lives in the menu bar; if the menu bar is crowded and its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
 
 Each release has SHA-256 checksums next to the files. Releases after 1.0.0 are also immutable (their files and tag can't change once published) and carry signed build provenance, so you can check that a download was built by this repository's release workflow:
 
@@ -88,6 +88,19 @@ No telemetry. Everything stays on your Mac. These features make network requests
 The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac.
 
 The extension server listens only on `127.0.0.1`, accepts only the ljaspNotch extension and requires a token stored in your Keychain. Updating an ad-hoc signed build may make macOS ask once more for Keychain access.
+
+## Uninstall
+
+1. If you installed the Claude Code hooks, remove them first in **Settings > Claude Code > Remove…**. Hooks left behind do nothing once the app is gone, but they stay in `~/.claude/settings.json`.
+2. Turn off **Launch at login** in Settings > General, quit ljaspNotch from the menu bar and move it to the Trash.
+3. Remove the extension in `chrome://extensions`.
+4. To delete its data too (themes, layout, preferences and the extension token):
+   ```bash
+   rm -rf ~/Library/Application\ Support/ljaspNotch
+   defaults delete io.github.muazfurkan.ljaspnotch
+   security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server
+   ```
+   Backups of your Claude Code settings made during hook setup are next to it as `~/.claude/settings.json.bak-…`; keep or delete them.
 
 ## Contributing
 

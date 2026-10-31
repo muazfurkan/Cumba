@@ -12,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private let registry: WidgetRegistry
   private let layoutStore: LayoutStore
   private let settingsWindow: SettingsWindowController
+  private let welcomeWindow: WelcomeWindowController
   private let notchWindow: NotchWindowController
   private var menuBar: MenuBarController?
 
@@ -33,6 +34,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     settingsWindow = SettingsWindowController(
       settings: settings, themes: themes, layoutStore: layoutStore, registry: registry,
       server: server, updates: updates)
+    welcomeWindow = WelcomeWindowController(settings: settings) { [settingsWindow] in
+      settingsWindow.show()
+    }
     notchWindow = NotchWindowController(
       settings: settings, themes: themes,
       host: WidgetHost(
@@ -62,6 +66,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       await themes.load()
       await layoutStore.load()
     }
+    welcomeWindow.showIfFirstLaunch()
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
   }
