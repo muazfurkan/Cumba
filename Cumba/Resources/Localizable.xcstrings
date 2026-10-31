@@ -198,12 +198,32 @@
         }
       }
     },
+    "Add a Widget" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Ekle"
+          }
+        }
+      }
+    },
     "Add Tab" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sekme Ekle"
+          }
+        }
+      }
+    },
+    "Add Widget" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Ekle"
           }
         }
       }
@@ -1192,6 +1212,16 @@
         }
       }
     },
+    "Every widget is already in the panel." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm widget'lar zaten panelde."
+          }
+        }
+      }
+    },
     "Export…" : {
       "localizations" : {
         "tr" : {
@@ -1851,6 +1881,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pil yok"
+          }
+        }
+      }
+    },
+    "No room in this tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sekmede yer yok"
           }
         }
       }
@@ -3071,16 +3111,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu istekte gizli karakterler var veya güvenle gösterilemeyecek kadar uzun. Terminalde yanıtlayın."
-          }
-        }
-      }
-    },
-    "This tab is empty. Add widgets in Settings." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu sekme boş. Ayarlar'dan widget ekleyin."
           }
         }
       }

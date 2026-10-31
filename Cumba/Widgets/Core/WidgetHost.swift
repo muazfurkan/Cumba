@@ -11,6 +11,8 @@ final class WidgetHost {
   let liveActivities: LiveActivityCenter
   let claude: ClaudeCodeService
   private(set) var selectedTabID: String?
+  /// The widget gallery shows in the panel instead of the open tab's widgets.
+  private(set) var isShowingGallery = false
 
   @ObservationIgnored private var activeKinds: Set<String> = []
   @ObservationIgnored private var isPanelOpen = false
@@ -40,12 +42,38 @@ final class WidgetHost {
 
   func select(_ tabID: String) {
     selectedTabID = tabID
+    isShowingGallery = false
     updateActivation()
   }
 
   func panelOpenChanged(_ isOpen: Bool) {
     isPanelOpen = isOpen
+    if !isOpen {
+      isShowingGallery = false
+    }
     updateActivation()
+  }
+
+  func showGallery(_ isShowing: Bool) {
+    isShowingGallery = isShowing
+  }
+
+  /// Size units still free in the open tab.
+  var freeUnits: Int {
+    let used = (selectedTab?.widgets ?? []).compactMap { registry.info(for: $0)?.size.units }
+    return max(0, WidgetLayout.unitsPerTab - used.reduce(0, +))
+  }
+
+  /// Widgets that aren't in any tab yet.
+  var addableInfos: [WidgetInfo] {
+    registry.infos.filter { !layoutStore.layout.contains($0.kind) }
+  }
+
+  /// Adds a widget to the open tab and closes the gallery.
+  func add(_ kind: String) {
+    guard let tab = selectedTab else { return }
+    layoutStore.add(kind, to: tab.id)
+    isShowingGallery = false
   }
 
   /// Call after the layout changed: creates or shuts down widgets and re-activates.
@@ -96,29 +124,37 @@ struct WidgetTabBar: View {
   }
 }
 
-/// The widgets of the selected tab side by side, sized by their units.
+/// The widgets of the selected tab side by side, sized by their units. Room left in the tab
+/// shows a narrow "+" tile, and an empty tab is one big tile; both open the gallery.
 struct WidgetRow: View {
   let host: WidgetHost
   let secondary: Color
 
+  private static let addTileWidth: CGFloat = 34
+
   var body: some View {
     let kinds = (host.selectedTab?.widgets ?? []).filter { host.registry.widget($0) != nil }
     if kinds.isEmpty {
-      Text("This tab is empty. Add widgets in Settings.")
-        .foregroundStyle(secondary)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+      AddWidgetTile(fillsTab: true) { host.showGallery(true) }
     } else {
       GeometryReader { proxy in
         let spacing: CGFloat = 10
+        let showsAdd = host.freeUnits > 0 && !host.addableInfos.isEmpty
+        let addRoom = showsAdd ? Self.addTileWidth + spacing : 0
         let units = kinds.compactMap { host.registry.info(for: $0)?.size.units }.reduce(0, +)
         let unitWidth =
-          (proxy.size.width - spacing * CGFloat(kinds.count - 1)) / CGFloat(max(units, 1))
+          (proxy.size.width - addRoom - spacing * CGFloat(kinds.count - 1))
+          / CGFloat(max(units, 1))
         HStack(spacing: spacing) {
           ForEach(kinds, id: \.self) { kind in
             if let widget = host.registry.widget(kind), let info = host.registry.info(for: kind) {
               widget.makeView()
                 .frame(width: unitWidth * CGFloat(info.size.units))
             }
+          }
+          if showsAdd {
+            AddWidgetTile(fillsTab: false) { host.showGallery(true) }
+              .frame(width: Self.addTileWidth)
           }
         }
       }

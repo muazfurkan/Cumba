@@ -117,8 +117,21 @@ private struct ExpandedPanelView: View {
     VStack(spacing: 0) {
       // Top band beside the camera housing.
       HStack {
-        WidgetTabBar(host: host)
-        Spacer()
+        if host.isShowingGallery {
+          Text("Add a Widget")
+            .font(.headline)
+          Spacer()
+          Button("Done") {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+              host.showGallery(false)
+            }
+          }
+          .buttonStyle(.plain)
+          .foregroundStyle(model.theme.accent.color)
+        } else {
+          WidgetTabBar(host: host)
+          Spacer()
+        }
         Button {
           model.send(.pinToggled)
         } label: {
@@ -140,9 +153,14 @@ private struct ExpandedPanelView: View {
         .padding(10)
         .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
         .padding(.top, 8)
+      } else if host.isShowingGallery {
+        WidgetGallery(host: host, secondary: model.theme.secondary.color)
+          .padding(.top, 8)
+          .transition(.opacity)
       } else {
         WidgetRow(host: host, secondary: model.theme.secondary.color)
           .padding(.top, 8)
+          .transition(.opacity)
       }
     }
     .padding(.horizontal, 28)
