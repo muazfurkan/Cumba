@@ -131,6 +131,7 @@ struct PeekView: View {
   let activity: LiveActivity
   let notchWidth: CGFloat
   let sideWidth: CGFloat
+  let height: CGFloat
 
   var body: some View {
     HStack(spacing: 0) {
@@ -144,6 +145,12 @@ struct PeekView: View {
         .frame(width: sideWidth)
     }
     .font(.caption)
+    .environment(\.peekHeight, height)
     .accessibilityElement(children: .combine)
   }
+}
+
+extension EnvironmentValues {
+  /// Height of the closed notch, so live activities can size their content to it.
+  @Entry var peekHeight: CGFloat = 32
 }

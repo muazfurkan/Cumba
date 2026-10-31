@@ -531,6 +531,26 @@
         }
       }
     },
+    "Click to Show the Camera" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamerayı Göstermek İçin Tıklayın"
+          }
+        }
+      }
+    },
+    "Click to turn the camera off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamerayı kapatmak için tıklayın"
+          }
+        }
+      }
+    },
     "CPU" : {
       "localizations" : {
         "tr" : {

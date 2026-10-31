@@ -29,6 +29,8 @@ struct LiveActivity: Identifiable {
   let leading: AnyView
   /// Shown right of the notch, usually a short text.
   let trailing: AnyView
+  /// Width of each side when it needs more room than the theme gives, e.g. for a title.
+  var sideWidth: CGFloat? = nil
   var startedAt = Date()
 }
 

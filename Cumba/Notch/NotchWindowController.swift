@@ -159,6 +159,13 @@ final class NotchWindowController {
         guard let self else { return }
         self.host.layoutChanged()
         self.model.send(.liveActivityChanged(self.host.liveActivities.current != nil))
+        // Wider sides for this activity change the geometry.
+        let sideWidth = max(
+          NotchLayout(theme: self.themes.current).peekExtraWidth,
+          self.host.liveActivities.current?.sideWidth ?? 0)
+        if let geometry = self.model.geometry, geometry.layout.peekExtraWidth != sideWidth {
+          self.layoutPanel()
+        }
         self.observeWidgets()
       }
     }
@@ -279,7 +286,11 @@ final class NotchWindowController {
   /// The screen chosen in Settings. "Notched" falls back to the main screen with the virtual
   /// notch setting; the other choices draw a virtual notch where there is no real one.
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
-    let layout = NotchLayout(theme: themes.current)
+    var layout = NotchLayout(theme: themes.current)
+    // A live activity can ask for wider sides, e.g. the song title.
+    if let sideWidth = host.liveActivities.current?.sideWidth {
+      layout.peekExtraWidth = max(layout.peekExtraWidth, sideWidth)
+    }
     let chosen: NSScreen?
     switch settings.panelScreen {
     case .notched: chosen = nil

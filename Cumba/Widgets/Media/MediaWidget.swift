@@ -67,11 +67,46 @@ final class MediaWidget: NotchWidget {
     liveActivities.show(
       LiveActivity(
         id: Self.activityID, priority: .media,
-        leading: AnyView(ArtworkView(nowPlaying: nowPlaying, size: 20, cornerRadius: 5)),
-        trailing: AnyView(
-          Image(systemName: "waveform")
-            .symbolEffect(.variableColor.iterative, options: .repeating)
-            .accessibilityLabel(Text("Playing")))))
+        leading: AnyView(PeekArtwork(nowPlaying: nowPlaying)),
+        trailing: AnyView(PeekNowPlaying(nowPlaying: nowPlaying)),
+        sideWidth: Self.peekSideWidth))
+  }
+
+  /// Room on each side of the closed notch for the artwork and the scrolling title.
+  static let peekSideWidth: CGFloat = 130
+}
+
+/// The artwork beside the closed notch, as tall as the notch allows.
+private struct PeekArtwork: View {
+  let nowPlaying: NowPlaying
+  @Environment(\.peekHeight) private var height
+
+  var body: some View {
+    HStack {
+      ArtworkView(nowPlaying: nowPlaying, size: max(18, height - 10), cornerRadius: 6)
+      Spacer(minLength: 0)
+    }
+    .padding(.leading, 12)
+  }
+}
+
+/// The title and artist scrolling like a ticker, and a waveform, beside the closed notch.
+private struct PeekNowPlaying: View {
+  let nowPlaying: NowPlaying
+  @Environment(\.peekHeight) private var height
+
+  var body: some View {
+    HStack(spacing: 8) {
+      MarqueeText(
+        text: [nowPlaying.title, nowPlaying.artist].compactMap { $0 }.joined(separator: " · ")
+      )
+      .font(.system(size: max(11, height * 0.34), weight: .medium))
+      Image(systemName: "waveform")
+        .font(.system(size: max(13, height * 0.46), weight: .semibold))
+        .symbolEffect(.variableColor.iterative, options: .repeating)
+        .accessibilityLabel(Text("Playing"))
+    }
+    .padding(.trailing, 12)
   }
 }
 

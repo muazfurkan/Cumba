@@ -2,8 +2,9 @@ import AVFoundation
 import Observation
 import SwiftUI
 
-/// Front camera as a mirror. The camera runs only while the widget is on screen; access is
-/// requested from Settings, never from the panel.
+/// Front camera as a mirror. The camera starts only when you click the widget and stops when
+/// the panel closes or the tab changes; access is requested from Settings, never from the
+/// panel.
 @MainActor
 @Observable
 final class MirrorWidget: NotchWidget {
@@ -16,6 +17,7 @@ final class MirrorWidget: NotchWidget {
   }
 
   private(set) var authorization = AVCaptureDevice.authorizationStatus(for: .video)
+  private(set) var isOn = false
   @ObservationIgnored let camera = CameraSession()
   @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
@@ -33,17 +35,25 @@ final class MirrorWidget: NotchWidget {
 
   func activate() {
     authorization = AVCaptureDevice.authorizationStatus(for: .video)
-    if authorization == .authorized {
-      camera.start()
-    }
   }
 
   func deactivate() {
-    camera.stop()
+    turnOff()
   }
 
   func shutdown() {
+    turnOff()
+  }
+
+  func turnOn() {
+    guard authorization == .authorized else { return }
+    camera.start()
+    isOn = true
+  }
+
+  func turnOff() {
     camera.stop()
+    isOn = false
   }
 
   func requestAccess() async {
@@ -106,12 +116,36 @@ private struct MirrorView: View {
 
   var body: some View {
     switch widget.authorization {
-    case .authorized:
+    case .authorized where widget.isOn:
       CameraPreview(session: widget.camera.session)
         // A mirror shows you flipped, like a real one.
         .scaleEffect(x: -1, y: 1)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .contentShape(Rectangle())
+        .onTapGesture { widget.turnOff() }
+        .help(Text("Click to turn the camera off"))
         .accessibilityLabel(Text("Camera mirror"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction { widget.turnOff() }
+    case .authorized:
+      Button {
+        widget.turnOn()
+      } label: {
+        WidgetCard {
+          VStack(spacing: 6) {
+            Image(systemName: "web.camera")
+              .font(.title2)
+              .accessibilityHidden(true)
+            Text("Click to Show the Camera")
+              .font(.caption)
+              .multilineTextAlignment(.center)
+          }
+          .foregroundStyle(.secondary)
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .contentShape(Rectangle())
+      }
+      .buttonStyle(.plain)
     default:
       WidgetCard {
         VStack(alignment: .leading, spacing: 6) {

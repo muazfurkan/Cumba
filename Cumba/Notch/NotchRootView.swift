@@ -28,7 +28,7 @@ struct NotchRootView: View {
         } else if state == .peek, let activity = host.liveActivities.current {
           PeekView(
             activity: activity, notchWidth: geometry.notchRect.width,
-            sideWidth: geometry.layout.peekExtraWidth
+            sideWidth: geometry.layout.peekExtraWidth, height: geometry.notchRect.height
           )
           .frame(height: geometry.notchRect.height)
           .transition(.opacity.combined(with: .scale(scale: 0.8)))
@@ -55,6 +55,7 @@ struct NotchRootView: View {
       .fontDesign(theme.fontDesign.swiftUI)
       .animation(animation(for: state, theme: theme), value: state)
       .animation(.smooth(duration: 0.25), value: theme)
+      .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
       .environment(\.colorScheme, .dark)
     }
   }
