@@ -135,14 +135,17 @@ struct PeekView: View {
 
   var body: some View {
     HStack(spacing: 0) {
+      // Clipped, so nothing can slide under the camera housing where it can't be seen.
       activity.leading
         .frame(width: sideWidth)
+        .clipped()
       Color.clear
         .frame(width: notchWidth)
       activity.trailing
         .lineLimit(1)
         .minimumScaleFactor(0.7)
         .frame(width: sideWidth)
+        .clipped()
     }
     .font(.caption)
     .environment(\.peekHeight, height)

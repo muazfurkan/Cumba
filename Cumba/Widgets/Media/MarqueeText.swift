@@ -20,8 +20,11 @@ struct MarqueeText: View {
   private var scrolls: Bool { !reduceMotion && textWidth > boxWidth && boxWidth > 0 }
 
   var body: some View {
+    // Takes the width it's offered (never the text's own) and one line's height; the
+    // scrolling copies sit on top and are clipped to it.
     Text(text)
-      .fixedSize()
+      .lineLimit(1)
+      .minimumScaleFactor(1)
       .hidden()
       .frame(maxWidth: .infinity, alignment: .leading)
       .overlay(alignment: .leading) {
