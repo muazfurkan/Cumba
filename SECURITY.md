@@ -36,6 +36,16 @@ Out of scope: malware already running as your user. It can read your files, the 
 
 Known limit: the HTTP library has no caps on headers, WebSocket frame size or connection count, so a local process can make the extension server use memory or file descriptors before authenticating. The server restarts after such failures.
 
+## Verifying downloads
+
+Every release lists SHA-256 checksums. Releases after 1.0.0 are immutable and carry signed build provenance from the release workflow:
+
+```bash
+gh attestation verify ljaspNotch-vX.Y.Z.zip --repo muazfurkan/ljaspNotch
+```
+
+If verification fails, don't open the app, and please report it privately.
+
 ## Supported versions
 
 Only the latest release receives security fixes.

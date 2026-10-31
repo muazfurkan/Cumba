@@ -1,8 +1,15 @@
-<p align="center"><img src="docs/icon.png" width="128" alt="ljaspNotch simgesi"></p>
+<p align="center"><img src="docs/banner.png" alt="Notch'un altında açılmış ljaspNotch paneli ve mini oynatıcı"></p>
 
-# ljaspNotch
+<h1 align="center">ljaspNotch</h1>
 
-[English](README.md)
+<p align="center">
+  <a href="https://github.com/muazfurkan/ljaspNotch/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/ljaspNotch?label=download&color=DCB669" alt="Son sürüm"></a>
+  <a href="https://github.com/muazfurkan/ljaspNotch/actions/workflows/build.yml"><img src="https://github.com/muazfurkan/ljaspNotch/actions/workflows/build.yml/badge.svg?branch=main" alt="Derleme durumu"></a>
+  <img src="https://img.shields.io/badge/macOS-26%2B-111111?logo=apple" alt="macOS 26 veya üstü">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/muazfurkan/ljaspNotch?color=111111" alt="MIT lisansı"></a>
+</p>
+
+<p align="center"><a href="README.md">English</a></p>
 
 macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu, imleci üzerinde tuttuğunuzda kamera yuvasından büyüyen bir panele çevirir: Spotify, Apple Music ve YouTube'dan müzik, Claude Code izin istekleri ve bir dizi widget; hepsi size göre ayarlanabilen bir görünümle.
 
@@ -25,7 +32,13 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
    ```
 3. ljaspNotch menü çubuğunda yaşar. Menü çubuğu kalabalıksa ve simgesi notch'un arkasında kalırsa, Ayarlar'a ulaşmak için uygulamayı Finder'dan veya Spotlight'tan yeniden açın.
 
-Her sürümde dosyaların yanında SHA-256 değerleri vardır. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS izinleri (Otomasyon, Takvim, Kamera) ve Anahtar Zinciri erişimini yeniden sorabilir.
+Her sürümde dosyaların yanında SHA-256 değerleri vardır. 1.0.0'dan sonraki sürümler ayrıca değiştirilemezdir (yayımlandıktan sonra dosyaları ve etiketi değişemez) ve imzalı derleme kaynağı (build provenance) taşır; indirdiğiniz dosyanın bu reponun yayın iş akışında derlendiğini şöyle doğrulayabilirsiniz:
+
+```bash
+gh attestation verify ljaspNotch-vX.Y.Z.zip --repo muazfurkan/ljaspNotch
+```
+
+Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS izinleri (Otomasyon, Takvim, Kamera) ve Anahtar Zinciri erişimini yeniden sorabilir.
 
 ## Gereksinimler
 
@@ -78,7 +91,7 @@ Eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca ljaspNotch ekl
 
 ## Katkı
 
-Katkılara açığız. Lütfen [CONTRIBUTING.md](CONTRIBUTING.md) ve [Davranış Kuralları](CODE_OF_CONDUCT.md) belgelerini okuyun. Güvenlik açıklarını [SECURITY.md](SECURITY.md) dosyasında anlatıldığı gibi gizli olarak bildirin.
+Sorular ve fikirler için [Discussions](https://github.com/muazfurkan/ljaspNotch/discussions) bölümünü kullanabilirsiniz. Katkılara da açığız; lütfen [CONTRIBUTING.md](CONTRIBUTING.md) ve [Davranış Kuralları](CODE_OF_CONDUCT.md) belgelerini okuyun. Güvenlik açıklarını [SECURITY.md](SECURITY.md) dosyasında anlatıldığı gibi gizli olarak bildirin.
 
 ## Lisans
 
