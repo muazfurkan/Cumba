@@ -11,10 +11,13 @@ final class MirrorWidget: NotchWidget {
   static var title: String { String(localized: "Mirror", comment: "Widget name") }
   static let symbol = "web.camera"
   static let size = WidgetSize.compact
+  static var summary: String {
+    String(localized: "Your camera as a quick mirror", comment: "Widget description")
+  }
 
   private(set) var authorization = AVCaptureDevice.authorizationStatus(for: .video)
   @ObservationIgnored let camera = CameraSession()
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
   required init(context: WidgetContext) {
     openSettings = context.openSettings
@@ -49,7 +52,7 @@ final class MirrorWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.permissions)
   }
 }
 

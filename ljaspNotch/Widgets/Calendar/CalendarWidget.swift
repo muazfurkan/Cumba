@@ -11,12 +11,16 @@ final class CalendarWidget: NotchWidget {
   static var title: String { String(localized: "Calendar", comment: "Widget name") }
   static let symbol = "calendar"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(localized: "Today's and tomorrow's events", comment: "Widget description")
+  }
+  static let addedByDefault = true
 
   private(set) var events: [CalendarEvent] = []
   private(set) var hasAccess = CalendarService.hasAccess
 
   @ObservationIgnored let service = CalendarService()
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
   @ObservationIgnored private var changeObserver: NSObjectProtocol?
 
   required init(context: WidgetContext) {
@@ -65,7 +69,7 @@ final class CalendarWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.permissions)
   }
 }
 

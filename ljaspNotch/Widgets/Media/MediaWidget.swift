@@ -11,11 +11,17 @@ final class MediaWidget: NotchWidget {
   static var title: String { String(localized: "Media", comment: "Widget name") }
   static let symbol = "music.note"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(
+      localized: "Spotify, Music and YouTube with artwork and controls",
+      comment: "Widget description")
+  }
+  static let addedByDefault = true
 
   let media: MediaCoordinator
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
   @ObservationIgnored private var isRunning = true
 
   private static let activityID = "media"
@@ -41,7 +47,7 @@ final class MediaWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.permissions)
   }
 
   private func observeNowPlaying() {

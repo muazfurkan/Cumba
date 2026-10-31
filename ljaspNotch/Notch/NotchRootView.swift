@@ -82,12 +82,18 @@ private struct PanelBackground: View {
   let material: Theme.Material
   let theme: Theme
   let shadowOpacity: Double
+  /// Reduce Transparency replaces glass with an opaque fill of the same character.
+  @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
   var body: some View {
     Group {
       switch material {
       case .solid:
         shape.fill(theme.background.color)
+      case .glass where reduceTransparency:
+        shape.fill(Color(white: 0.11))
+      case .tinted where reduceTransparency:
+        shape.fill(theme.tint.color.mix(with: .black, by: 0.75))
       case .glass:
         Color.clear.glassEffect(.regular, in: shape)
       case .tinted:
@@ -156,7 +162,35 @@ extension Theme.FontDesign {
 
 /// Hosting view that reacts to the first click even though the panel never becomes key.
 final class NotchHostingView<Content: View>: NSHostingView<Content> {
+  /// Shown on right-click or Control-click anywhere on the notch.
+  var contextMenu: NSMenu?
+
   override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
     true
+  }
+
+  override func menu(for event: NSEvent) -> NSMenu? {
+    contextMenu ?? super.menu(for: event)
+  }
+}
+
+/// A menu item that runs a closure.
+@MainActor
+final class ClosureMenuItem: NSMenuItem {
+  private let handler: @MainActor () -> Void
+
+  init(title: String, handler: @escaping @MainActor () -> Void) {
+    self.handler = handler
+    super.init(title: title, action: #selector(run), keyEquivalent: "")
+    target = self
+  }
+
+  @available(*, unavailable)
+  required init(coder: NSCoder) {
+    fatalError("Not used")
+  }
+
+  @objc private func run() {
+    handler()
   }
 }

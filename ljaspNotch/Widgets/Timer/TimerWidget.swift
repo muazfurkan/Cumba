@@ -12,6 +12,12 @@ final class TimerWidget: NotchWidget {
   static var title: String { String(localized: "Timer", comment: "Widget name") }
   static let symbol = "timer"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(
+      localized: "A countdown that keeps running when the panel closes",
+      comment: "Widget description")
+  }
+  static let addedByDefault = true
 
   enum Phase: Equatable {
     case idle

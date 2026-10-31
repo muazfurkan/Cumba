@@ -9,20 +9,26 @@ final class ClaudeCodeWidget: NotchWidget {
   static let title = "Claude Code"
   static let symbol = "terminal"
   static let size = WidgetSize.regular
+  static var summary: String {
+    String(localized: "Claude Code sessions and permission requests", comment: "Widget description")
+  }
 
   let service: ClaudeCodeService
+  private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
   required init(context: WidgetContext) {
     service = context.claude
+    openSettings = context.openSettings
   }
 
   func makeView() -> AnyView {
-    AnyView(ClaudeCodeWidgetView(service: service))
+    AnyView(ClaudeCodeWidgetView(service: service) { [openSettings] in openSettings(.claudeCode) })
   }
 }
 
 private struct ClaudeCodeWidgetView: View {
   let service: ClaudeCodeService
+  let setUp: () -> Void
 
   var body: some View {
     WidgetCard {
@@ -39,10 +45,12 @@ private struct ClaudeCodeWidgetView: View {
             .font(.caption)
             .foregroundStyle(.secondary)
           if service.sessions.isEmpty {
-            Text("No sessions yet. Install the hooks in Settings > Claude Code.")
+            Text("No sessions yet. Claude Code shows up here once its hooks are installed.")
               .font(.caption)
               .foregroundStyle(.secondary)
               .fixedSize(horizontal: false, vertical: true)
+            Button("Set Up…", action: setUp)
+              .controlSize(.small)
           } else {
             ForEach(service.sessions.prefix(3)) { session in
               SessionRow(session: session)

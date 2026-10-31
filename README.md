@@ -19,10 +19,10 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
 
 - **Media**: Spotify, Apple Music, YouTube and YouTube Music in one mini player with artwork, progress, seeking and controls. A small waveform beside the notch shows what's playing.
 - **Claude Code**: permission requests from the terminal, IDE extensions or the Claude desktop app show up in the notch with **Allow**, **Deny** and **In Terminal**. You also see when a session is done or fails.
-- **Widgets in tabs**: calendar, timer, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Add, remove and reorder them in Settings.
+- **Widgets in tabs**: calendar, timer, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Pick them from a gallery in Settings and drag to reorder; a new installation starts with just three.
 - **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
 - **Themes**: Liquid Glass, solid black or tinted glass; colors, font, panel size, corner radius, shadow and animation. Import and export themes as JSON.
-- **Stays out of the way**: clicks pass through to the menu bar, the panel hides in full screen apps, idle CPU use is zero.
+- **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
 - English and Turkish interface.
 
 ## Download and install
@@ -38,7 +38,7 @@ A free, open source notch app for macOS. It turns the MacBook notch into a panel
    ```
 3. Open the disk image and drag ljaspNotch to Applications.
 4. ljaspNotch isn't notarized by Apple, because that needs a paid developer account, so macOS blocks the first launch. Open it once, then click **Open Anyway** in **System Settings > Privacy & Security**. If you'd rather not run a downloaded build at all, [build it from source](#build-from-source).
-5. A short welcome explains the basics. ljaspNotch lives in the menu bar; if its icon hides behind the notch, open the app again from Finder or Spotlight to get to Settings.
+5. A short welcome lets you try the panel. ljaspNotch lives in the menu bar; if its icon hides behind the notch, right-click the notch for Settings.
 
 <details>
 <summary>Terminal alternative to Open Anyway</summary>
@@ -70,7 +70,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Permissions and what runs
 
-Everything below is off or unused until you turn on the feature that needs it.
+Everything below is off or unused until you turn on the feature that needs it. Settings > Permissions shows the current state of each.
 
 | What | Why | When |
 |---|---|---|

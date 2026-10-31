@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
+- A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
+- Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
+
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
 - Releases include a `.dmg` with an Applications shortcut next to the `.zip`.
 - README sections on uninstalling.
@@ -18,6 +22,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- New installations start with Media, Calendar and Timer; the other widgets, and widgets added in later versions, wait in the gallery. Installing the Claude Code hooks adds the Claude Code widget.
+- Dragging a window or a browser tab past the notch no longer opens the panel; dragging files still does.
+- Settings has no minimize button, reopens on the last pane and shows the pane's name as its title.
+- Calmer motion: the lowest spring damping a theme can use is 0.7. Increase Contrast draws a clear panel rim, and Reduce Transparency replaces glass with an opaque fill.
+- Empty and error states in widgets open the Settings pane that fixes them. The welcome window starts with a live "try it" step.
 - The Chrome extension connection is off until you turn it on in Settings > Connections; if you use the extension, turn it on and paste the new extension token into its options.
 - With Reduce Motion turned on in System Settings, the panel opens and closes with a short ease instead of a spring.
 - Questions and ideas go to GitHub Discussions; issues are for bugs and concrete feature requests.

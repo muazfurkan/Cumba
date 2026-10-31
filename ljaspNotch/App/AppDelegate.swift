@@ -29,8 +29,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     registry = WidgetRegistry.standard(
       context: WidgetContext(
         liveActivities: liveActivities, media: media, claude: claude,
-        openSettings: { settingsOpener.open() }))
-    layoutStore = LayoutStore(knownKinds: registry.infos.map { ($0.kind, $0.size.units) })
+        openSettings: { settingsOpener.open($0) }))
+    layoutStore = LayoutStore(
+      knownKinds: registry.infos.map { ($0.kind, $0.size.units) },
+      defaultKinds: Set(registry.infos.filter(\.addedByDefault).map(\.kind)))
     settingsWindow = SettingsWindowController(
       settings: settings, themes: themes, layoutStore: layoutStore, registry: registry,
       server: server, updates: updates)
@@ -43,14 +45,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         layoutStore: layoutStore, registry: registry, liveActivities: liveActivities,
         claude: claude))
     super.init()
-    settingsOpener.open = { [notchWindow, settingsWindow] in
+    settingsOpener.open = { [notchWindow, settingsWindow] tab in
       // Close the panel first so permission prompts can't end up behind it.
       notchWindow.collapse()
-      settingsWindow.show(tab: .widgets)
+      settingsWindow.show(tab: tab)
     }
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    notchWindow.openSettings = { [settingsWindow] in settingsWindow.show() }
     NSApp.mainMenu = MainMenu.make()
     menuBar = MenuBarController(settings: settings, updates: updates) { [settingsWindow] in
       settingsWindow.show()
@@ -121,5 +124,5 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// Holds the action that opens Settings once the window controller exists.
 @MainActor
 private final class SettingsOpener {
-  var open: () -> Void = {}
+  var open: (SettingsWindowController.Tab) -> Void = { _ in }
 }

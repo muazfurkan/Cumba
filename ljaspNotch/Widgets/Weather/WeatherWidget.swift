@@ -10,6 +10,9 @@ final class WeatherWidget: NotchWidget {
   static var title: String { String(localized: "Weather", comment: "Widget name") }
   static let symbol = "cloud.sun"
   static let size = WidgetSize.compact
+  static var summary: String {
+    String(localized: "Current weather for a place you choose", comment: "Widget description")
+  }
 
   private static let placeKey = "weather.place"
   private static let refreshInterval: TimeInterval = 15 * 60
@@ -21,7 +24,7 @@ final class WeatherWidget: NotchWidget {
   @ObservationIgnored let service = WeatherService()
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private var fetchedAt: Date?
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
   required convenience init(context: WidgetContext) {
     self.init(context: context, defaults: .standard)
@@ -63,7 +66,7 @@ final class WeatherWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.widgets)
   }
 
   private func refresh() {

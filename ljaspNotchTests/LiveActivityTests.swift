@@ -44,7 +44,7 @@ struct TimerWidgetTests {
     let timer = TimerWidget(
       context: WidgetContext(
         liveActivities: center, media: MediaCoordinator(providers: []),
-        claude: ClaudeCodeService(liveActivities: center), openSettings: {}))
+        claude: ClaudeCodeService(liveActivities: center), openSettings: { _ in }))
     return (timer, center)
   }
 

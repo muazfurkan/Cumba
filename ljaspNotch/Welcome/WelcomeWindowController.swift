@@ -48,6 +48,8 @@ final class WelcomeWindowController {
     window.titlebarAppearsTransparent = true
     window.isMovableByWindowBackground = true
     window.isReleasedWhenClosed = false
+    // While this window is in front, pointer moves reach the notch only through it.
+    window.acceptsMouseMovedEvents = true
     window.center()
     return window
   }

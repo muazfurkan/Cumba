@@ -27,6 +27,10 @@ protocol NotchWidget: AnyObject {
   /// SF Symbol shown in Settings.
   static var symbol: String { get }
   static var size: WidgetSize { get }
+  /// One line for the widget gallery in Settings.
+  static var summary: String { get }
+  /// Part of the layout of a new installation. Everything else starts in the gallery.
+  static var addedByDefault: Bool { get }
 
   init(context: WidgetContext)
 
@@ -40,6 +44,10 @@ protocol NotchWidget: AnyObject {
 
   /// Called when the widget is removed from the layout; stop any background work.
   func shutdown()
+}
+
+extension NotchWidget {
+  static var addedByDefault: Bool { false }
 }
 
 extension NotchWidget {
@@ -57,7 +65,7 @@ struct WidgetContext {
   let claude: ClaudeCodeService
   /// Opens the Settings window, e.g. to ask for a permission from there instead of
   /// from the panel.
-  let openSettings: @MainActor () -> Void
+  let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 }
 
 /// Rounded card that every widget draws its content in.

@@ -2,6 +2,10 @@ import AppKit
 
 /// Reports when the pointer enters or leaves a screen rect. Uses mouse event monitors
 /// instead of polling; monitoring mouse (not keyboard) events needs no permission.
+///
+/// While a mouse button is held, the pointer only counts as entering when files are being
+/// dragged (to drop them on the tray), so dragging a window or a browser tab past the
+/// notch doesn't open the panel.
 @MainActor
 final class HoverTracker {
   /// Area to watch, in screen coordinates.
@@ -13,15 +17,20 @@ final class HoverTracker {
   var onMoveInside: (() -> Void)?
   private(set) var isInside = false
   private var monitors: [Any] = []
+  /// Drag pasteboard change count at the last mouse down; a new drag writes to it.
+  private var dragChangeCountAtMouseDown = 0
 
   func start() {
     guard monitors.isEmpty else { return }
-    let events: NSEvent.EventTypeMask = [.mouseMoved, .leftMouseDragged, .rightMouseDragged]
+    let events: NSEvent.EventTypeMask = [
+      .mouseMoved, .leftMouseDragged, .rightMouseDragged, .leftMouseDown,
+    ]
     // Global monitors see events sent to other apps, local ones events sent to this app.
     if let monitor = NSEvent.addGlobalMonitorForEvents(
       matching: events,
-      handler: { [weak self] _ in
-        MainActor.assumeIsolated { self?.pointerMoved() }
+      handler: { [weak self] event in
+        let type = event.type
+        MainActor.assumeIsolated { self?.handle(type) }
       })
     {
       monitors.append(monitor)
@@ -29,7 +38,8 @@ final class HoverTracker {
     if let monitor = NSEvent.addLocalMonitorForEvents(
       matching: events,
       handler: { [weak self] event in
-        MainActor.assumeIsolated { self?.pointerMoved() }
+        let type = event.type
+        MainActor.assumeIsolated { self?.handle(type) }
         return event
       })
     {
@@ -50,12 +60,32 @@ final class HoverTracker {
     setInside(!monitors.isEmpty && rect.contains(NSEvent.mouseLocation))
   }
 
-  private func pointerMoved() {
-    let wasInside = isInside
-    update()
-    if wasInside && isInside {
-      onMoveInside?()
+  private func handle(_ type: NSEvent.EventType) {
+    switch type {
+    case .leftMouseDown:
+      dragChangeCountAtMouseDown = NSPasteboard(name: .drag).changeCount
+    case .leftMouseDragged, .rightMouseDragged:
+      let wasInside = isInside
+      let inside = !monitors.isEmpty && rect.contains(NSEvent.mouseLocation)
+      // Entering during a drag counts only for files; leaving always counts.
+      setInside(inside && (wasInside || isDraggingFiles))
+      if wasInside && isInside {
+        onMoveInside?()
+      }
+    default:
+      let wasInside = isInside
+      update()
+      if wasInside && isInside {
+        onMoveInside?()
+      }
     }
+  }
+
+  /// True when the current drag started after the last mouse down and carries file URLs.
+  private var isDraggingFiles: Bool {
+    let pasteboard = NSPasteboard(name: .drag)
+    return pasteboard.changeCount != dragChangeCountAtMouseDown
+      && pasteboard.types?.contains(.fileURL) == true
   }
 
   private func setInside(_ inside: Bool) {

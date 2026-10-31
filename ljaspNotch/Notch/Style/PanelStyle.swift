@@ -64,12 +64,16 @@ extension AnyTransition {
 /// towards the top so it never draws a line along the screen edge.
 struct PanelEdge: View {
   let shape: NotchShape
+  /// Increase Contrast turns the faint rim into a clear outline.
+  @Environment(\.colorSchemeContrast) private var contrast
 
   var body: some View {
     shape
       .stroke(
         LinearGradient(
-          colors: [.white.opacity(0), .white.opacity(0.10)],
+          colors: contrast == .increased
+            ? [.white.opacity(0.35), .white.opacity(0.45)]
+            : [.white.opacity(0.03), .white.opacity(0.12)],
           startPoint: .top, endPoint: .bottom),
         lineWidth: 1
       )

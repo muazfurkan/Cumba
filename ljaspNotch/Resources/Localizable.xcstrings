@@ -128,12 +128,32 @@
         }
       }
     },
+    "A countdown that keeps running when the panel closes" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel kapansa da çalışmaya devam eden bir geri sayım"
+          }
+        }
+      }
+    },
     "Accent" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vurgu"
+          }
+        }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekle"
           }
         }
       }
@@ -148,12 +168,22 @@
         }
       }
     },
-    "Add Widget" : {
+    "Add widgets from the gallery below." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Widget Ekle"
+            "value" : "Aşağıdaki galeriden widget ekleyin."
+          }
+        }
+      }
+    },
+    "Add, remove and reorder widgets in Settings > Widgets, and connect Spotify, YouTube or Claude Code." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget'ları Ayarlar > Widget'lar'dan ekleyin, kaldırın ve sıralayın; Spotify, YouTube veya Claude Code'u bağlayın."
           }
         }
       }
@@ -278,6 +308,16 @@
         }
       }
     },
+    "Allow…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin Ver…"
+          }
+        }
+      }
+    },
     "Animation" : {
       "localizations" : {
         "tr" : {
@@ -315,6 +355,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uygula"
+          }
+        }
+      }
+    },
+    "Automation" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomasyon"
           }
         }
       }
@@ -370,6 +420,16 @@
         }
       }
     },
+    "CPU and memory use" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU ve bellek kullanımı"
+          }
+        }
+      }
+    },
     "Calendar" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -397,6 +457,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Takvim erişimi reddedildi. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
+    "Calendar widget: today's and tomorrow's events" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim widget'ı: bugünün ve yarının etkinlikleri"
+          }
+        }
+      }
+    },
+    "Camera" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera"
           }
         }
       }
@@ -437,6 +517,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vazgeç"
+          }
+        }
+      }
+    },
+    "Charge level, charging and time left" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj düzeyi, şarj durumu ve kalan süre"
           }
         }
       }
@@ -522,6 +612,16 @@
         }
       }
     },
+    "Claude Code sessions and permission requests" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code oturumları ve izin istekleri"
+          }
+        }
+      }
+    },
     "Clear" : {
       "comment" : "Weather",
       "localizations" : {
@@ -590,16 +690,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube eklentisini bağla"
-          }
-        }
-      }
-    },
-    "Connect your apps" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uygulamalarınızı bağlayın"
           }
         }
       }
@@ -695,6 +785,16 @@
         }
       }
     },
+    "Current weather for a place you choose" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçtiğiniz yerin anlık hava durumu"
+          }
+        }
+      }
+    },
     "Cut" : {
       "localizations" : {
         "tr" : {
@@ -742,6 +842,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bitti"
+          }
+        }
+      }
+    },
+    "Drag to reorder." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıralamak için sürükleyin."
           }
         }
       }
@@ -985,16 +1095,6 @@
         }
       }
     },
-    "If the icon hides behind the notch, open ljaspNotch again from Finder or Spotlight." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simge notch'un arkasında kalırsa ljaspNotch'u Finder'dan veya Spotlight'tan yeniden açın."
-          }
-        }
-      }
-    },
     "Import…" : {
       "localizations" : {
         "tr" : {
@@ -1075,6 +1175,26 @@
         }
       }
     },
+    "It closes when you move away. Change the delay or switch to click-only in Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmleci uzaklaştırınca kapanır. Gecikmeyi değiştirmek veya yalnızca tıklamayla açmak için Ayarlar'a bakın."
+          }
+        }
+      }
+    },
+    "Keep dropped files at hand or AirDrop them" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bırakılan dosyaları elinizin altında tutun veya AirDrop ile gönderin"
+          }
+        }
+      }
+    },
     "Launch at login" : {
       "localizations" : {
         "tr" : {
@@ -1111,6 +1231,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yerel Sunucu"
+          }
+        }
+      }
+    },
+    "Make it yours" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Size göre ayarlayın"
           }
         }
       }
@@ -1174,6 +1304,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayna"
+          }
+        }
+      }
+    },
+    "Mirror widget, only while the panel shows it" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayna widget'ı, yalnızca panel onu gösterirken"
           }
         }
       }
@@ -1302,12 +1442,12 @@
         }
       }
     },
-    "No sessions yet. Install the hooks in Settings > Claude Code." : {
+    "No sessions yet. Claude Code shows up here once its hooks are installed." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz oturum yok. Hook'ları Ayarlar > Claude Code'dan kurun."
+            "value" : "Henüz oturum yok. Hook'lar kurulunca Claude Code burada görünür."
           }
         }
       }
@@ -1318,16 +1458,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kısayol bulunamadı."
-          }
-        }
-      }
-    },
-    "No widgets yet." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Henüz widget yok."
           }
         }
       }
@@ -1452,6 +1582,16 @@
         }
       }
     },
+    "Open System Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem Ayarları'nı Aç"
+          }
+        }
+      }
+    },
     "Open delay" : {
       "localizations" : {
         "tr" : {
@@ -1520,6 +1660,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duraklat"
+          }
+        }
+      }
+    },
+    "Permissions" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzinler"
           }
         }
       }
@@ -1686,12 +1836,12 @@
         }
       }
     },
-    "Rest the pointer on the notch" : {
+    "Reset Panel" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İmleci notch'un üzerinde tutun"
+            "value" : "Paneli Sıfırla"
           }
         }
       }
@@ -1716,12 +1866,32 @@
         }
       }
     },
+    "Right-click the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'a sağ tıklayın"
+          }
+        }
+      }
+    },
     "Rounded" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yuvarlak"
+          }
+        }
+      }
+    },
+    "Run your favorite shortcuts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sık kullandığınız kısayolları çalıştırın"
           }
         }
       }
@@ -1836,6 +2006,16 @@
         }
       }
     },
+    "Set Up…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kur…"
+          }
+        }
+      }
+    },
     "Set up by hand" : {
       "localizations" : {
         "tr" : {
@@ -1846,12 +2026,12 @@
         }
       }
     },
-    "Settings are in the menu bar" : {
+    "Settings, Reset Panel and Quit are always there, even when the menu bar icon is hidden." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ayarlar menü çubuğunda"
+            "value" : "Ayarlar, Paneli Sıfırla ve Çık her zaman oradadır; menü çubuğu simgesi gizlense bile."
           }
         }
       }
@@ -1980,12 +2160,12 @@
         }
       }
     },
-    "Spotify and Music work right away. YouTube needs the Chrome extension and Claude Code needs its hooks; Settings walks you through both." : {
+    "Spotify, Music and YouTube with artwork and controls" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spotify ve Müzik hemen çalışır. YouTube için Chrome eklentisi, Claude Code için hook'lar gerekir; Ayarlar ikisini de adım adım anlatır."
+            "value" : "Kapak görseli ve kontrollerle Spotify, Müzik ve YouTube"
           }
         }
       }
@@ -2081,6 +2261,16 @@
         }
       }
     },
+    "That's the panel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İşte panel bu"
+          }
+        }
+      }
+    },
     "The Claude Code socket couldn't be opened." : {
       "localizations" : {
         "tr" : {
@@ -2091,12 +2281,12 @@
         }
       }
     },
-    "The panel opens; move away and it closes. Delays and a click-only mode are in Settings." : {
+    "The panel opens after a short moment." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Panel açılır; imleci uzaklaştırınca kapanır. Gecikmeleri ve yalnızca tıklamayla açmayı Ayarlar'da bulabilirsiniz."
+            "value" : "Panel kısa bir an sonra açılır."
           }
         }
       }
@@ -2223,6 +2413,16 @@
         }
       }
     },
+    "Today's and tomorrow's events" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünün ve yarının etkinlikleri"
+          }
+        }
+      }
+    },
     "Token" : {
       "localizations" : {
         "tr" : {
@@ -2250,6 +2450,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Raf"
+          }
+        }
+      }
+    },
+    "Try it: rest the pointer on the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deneyin: imleci notch'un üzerinde tutun"
           }
         }
       }
@@ -2399,6 +2609,16 @@
         }
       }
     },
+    "Widget Gallery" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Galerisi"
+          }
+        }
+      }
+    },
     "Widgets" : {
       "comment" : "Settings tab",
       "localizations" : {
@@ -2451,6 +2671,16 @@
         }
       }
     },
+    "Your camera as a quick mirror" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kameranız hızlı bir ayna olarak"
+          }
+        }
+      }
+    },
     "Your notch is now a panel. Here's how to use it." : {
       "localizations" : {
         "tr" : {
@@ -2488,6 +2718,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch (duraklatıldı)"
+          }
+        }
+      }
+    },
+    "ljaspNotch asks for a permission only when you use the feature that needs it. Everything here can be changed again in System Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch bir izni yalnızca onu gerektiren özelliği kullandığınızda ister. Buradaki her şeyi Sistem Ayarları'ndan yeniden değiştirebilirsiniz."
           }
         }
       }
