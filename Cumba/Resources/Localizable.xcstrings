@@ -480,12 +480,12 @@
         }
       }
     },
-    "Built-in themes can't be changed. Duplicate one to customize it." : {
+    "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hazır temalar değiştirilemez. Özelleştirmek için birini çoğaltın."
+            "value" : "Hazır temalar olduğu gibi kalır. Aşağıda bir şeyi değiştirdiğinizde değişiklik, adını değiştirebileceğiniz bir kopya olarak kaydedilir."
           }
         }
       }

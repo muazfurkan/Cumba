@@ -27,6 +27,25 @@ struct ThemeStoreTests {
     #expect(store.themes.count == Theme.builtIns.count)
   }
 
+  @Test func editingABuiltInThemeEditsACopy() throws {
+    defer { cleanUp() }
+    let store = try makeStore()
+    var edited = store.current
+    edited.cornerRadius += 4
+    store.edit(edited, copyName: "Classic Copy")
+    #expect(store.userThemes.count == 1)
+    #expect(store.current.name == "Classic Copy")
+    #expect(store.current.cornerRadius == Theme.classic.cornerRadius + 4)
+    #expect(store.isBuiltIn(store.current) == false)
+    #expect(store.themes.contains(.classic))
+
+    var again = store.current
+    again.cornerRadius += 2
+    store.edit(again, copyName: "Classic Copy")
+    #expect(store.userThemes.count == 1)
+    #expect(store.current.cornerRadius == Theme.classic.cornerRadius + 6)
+  }
+
   @Test func corruptFilesAreSkipped() async throws {
     defer { cleanUp() }
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
