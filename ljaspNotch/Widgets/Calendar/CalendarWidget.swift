@@ -20,7 +20,7 @@ final class CalendarWidget: NotchWidget {
   private(set) var hasAccess = CalendarService.hasAccess
 
   @ObservationIgnored let service = CalendarService()
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
   @ObservationIgnored private var changeObserver: NSObjectProtocol?
 
   required init(context: WidgetContext) {
@@ -69,7 +69,7 @@ final class CalendarWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.permissions)
   }
 }
 

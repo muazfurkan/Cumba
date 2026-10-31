@@ -51,8 +51,11 @@ final class NotchWindowController {
     updateHoverArea()
     host.panelOpenChanged(state.isOpen)
     // A light tap on the trackpad when the panel opens, like a physical detent.
-    if state == .expanded && !lastState.isOpen && settings.hapticFeedback {
-      NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+    if state == .expanded && !lastState.isOpen {
+      if settings.hapticFeedback {
+        NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+      }
+      NotificationCenter.default.post(name: .notchPanelDidOpen, object: nil)
     }
     lastState = state
   }
@@ -321,4 +324,9 @@ final class NotchWindowController {
     panel.contentView = hostingView
     return panel
   }
+}
+
+extension Notification.Name {
+  /// Posted when the panel opens, e.g. for the welcome window's "try it" step.
+  static let notchPanelDidOpen = Notification.Name("io.github.muazfurkan.ljaspnotch.panelDidOpen")
 }

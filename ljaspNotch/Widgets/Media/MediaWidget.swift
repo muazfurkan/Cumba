@@ -21,7 +21,7 @@ final class MediaWidget: NotchWidget {
   let media: MediaCoordinator
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
   @ObservationIgnored private var isRunning = true
 
   private static let activityID = "media"
@@ -47,7 +47,7 @@ final class MediaWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.permissions)
   }
 
   private func observeNowPlaying() {

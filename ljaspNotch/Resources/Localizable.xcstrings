@@ -168,22 +168,22 @@
         }
       }
     },
-    "Add Widget" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Widget Ekle"
-          }
-        }
-      }
-    },
     "Add widgets from the gallery below." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aşağıdaki galeriden widget ekleyin."
+          }
+        }
+      }
+    },
+    "Add, remove and reorder widgets in Settings > Widgets, and connect Spotify, YouTube or Claude Code." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget'ları Ayarlar > Widget'lar'dan ekleyin, kaldırın ve sıralayın; Spotify, YouTube veya Claude Code'u bağlayın."
           }
         }
       }
@@ -694,16 +694,6 @@
         }
       }
     },
-    "Connect your apps" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uygulamalarınızı bağlayın"
-          }
-        }
-      }
-    },
     "Connected browsers" : {
       "localizations" : {
         "tr" : {
@@ -1105,16 +1095,6 @@
         }
       }
     },
-    "If the icon hides behind the notch, open ljaspNotch again from Finder or Spotlight." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simge notch'un arkasında kalırsa ljaspNotch'u Finder'dan veya Spotlight'tan yeniden açın."
-          }
-        }
-      }
-    },
     "Import…" : {
       "localizations" : {
         "tr" : {
@@ -1195,6 +1175,16 @@
         }
       }
     },
+    "It closes when you move away. Change the delay or switch to click-only in Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmleci uzaklaştırınca kapanır. Gecikmeyi değiştirmek veya yalnızca tıklamayla açmak için Ayarlar'a bakın."
+          }
+        }
+      }
+    },
     "Keep dropped files at hand or AirDrop them" : {
       "localizations" : {
         "tr" : {
@@ -1241,6 +1231,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yerel Sunucu"
+          }
+        }
+      }
+    },
+    "Make it yours" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Size göre ayarlayın"
           }
         }
       }
@@ -1442,12 +1442,12 @@
         }
       }
     },
-    "No sessions yet. Install the hooks in Settings > Claude Code." : {
+    "No sessions yet. Claude Code shows up here once its hooks are installed." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz oturum yok. Hook'ları Ayarlar > Claude Code'dan kurun."
+            "value" : "Henüz oturum yok. Hook'lar kurulunca Claude Code burada görünür."
           }
         }
       }
@@ -1458,16 +1458,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kısayol bulunamadı."
-          }
-        }
-      }
-    },
-    "No widgets yet." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Henüz widget yok."
           }
         }
       }
@@ -1856,16 +1846,6 @@
         }
       }
     },
-    "Rest the pointer on the notch" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İmleci notch'un üzerinde tutun"
-          }
-        }
-      }
-    },
     "Resume" : {
       "localizations" : {
         "tr" : {
@@ -1882,6 +1862,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "~/.claude/settings.json değişikliklerini gözden geçirin"
+          }
+        }
+      }
+    },
+    "Right-click the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'a sağ tıklayın"
           }
         }
       }
@@ -2016,6 +2006,16 @@
         }
       }
     },
+    "Set Up…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kur…"
+          }
+        }
+      }
+    },
     "Set up by hand" : {
       "localizations" : {
         "tr" : {
@@ -2026,12 +2026,12 @@
         }
       }
     },
-    "Settings are in the menu bar" : {
+    "Settings, Reset Panel and Quit are always there, even when the menu bar icon is hidden." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ayarlar menü çubuğunda"
+            "value" : "Ayarlar, Paneli Sıfırla ve Çık her zaman oradadır; menü çubuğu simgesi gizlense bile."
           }
         }
       }
@@ -2160,16 +2160,6 @@
         }
       }
     },
-    "Spotify and Music work right away. YouTube needs the Chrome extension and Claude Code needs its hooks; Settings walks you through both." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spotify ve Müzik hemen çalışır. YouTube için Chrome eklentisi, Claude Code için hook'lar gerekir; Ayarlar ikisini de adım adım anlatır."
-          }
-        }
-      }
-    },
     "Spotify, Music and YouTube with artwork and controls" : {
       "localizations" : {
         "tr" : {
@@ -2271,6 +2261,16 @@
         }
       }
     },
+    "That's the panel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İşte panel bu"
+          }
+        }
+      }
+    },
     "The Claude Code socket couldn't be opened." : {
       "localizations" : {
         "tr" : {
@@ -2281,12 +2281,12 @@
         }
       }
     },
-    "The panel opens; move away and it closes. Delays and a click-only mode are in Settings." : {
+    "The panel opens after a short moment." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Panel açılır; imleci uzaklaştırınca kapanır. Gecikmeleri ve yalnızca tıklamayla açmayı Ayarlar'da bulabilirsiniz."
+            "value" : "Panel kısa bir an sonra açılır."
           }
         }
       }
@@ -2450,6 +2450,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Raf"
+          }
+        }
+      }
+    },
+    "Try it: rest the pointer on the notch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deneyin: imleci notch'un üzerinde tutun"
           }
         }
       }

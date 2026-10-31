@@ -64,7 +64,8 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   static let heightRange = 120.0...480
   static let peekWidthRange = 0.0...200
   static let responseRange = 0.1...1.2
-  static let dampingRange = 0.4...1.0
+  /// Below 0.7 the panel wobbles past the notch, which reads as cheap rather than lively.
+  static let dampingRange = 0.7...1.0
 }
 
 extension Theme {

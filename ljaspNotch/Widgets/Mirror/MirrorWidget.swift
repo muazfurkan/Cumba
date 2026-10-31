@@ -17,7 +17,7 @@ final class MirrorWidget: NotchWidget {
 
   private(set) var authorization = AVCaptureDevice.authorizationStatus(for: .video)
   @ObservationIgnored let camera = CameraSession()
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
   required init(context: WidgetContext) {
     openSettings = context.openSettings
@@ -52,7 +52,7 @@ final class MirrorWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.permissions)
   }
 }
 

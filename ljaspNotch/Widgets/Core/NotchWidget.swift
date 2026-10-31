@@ -65,7 +65,7 @@ struct WidgetContext {
   let claude: ClaudeCodeService
   /// Opens the Settings window, e.g. to ask for a permission from there instead of
   /// from the panel.
-  let openSettings: @MainActor () -> Void
+  let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 }
 
 /// Rounded card that every widget draws its content in.

@@ -82,12 +82,18 @@ private struct PanelBackground: View {
   let material: Theme.Material
   let theme: Theme
   let shadowOpacity: Double
+  /// Reduce Transparency replaces glass with an opaque fill of the same character.
+  @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
   var body: some View {
     Group {
       switch material {
       case .solid:
         shape.fill(theme.background.color)
+      case .glass where reduceTransparency:
+        shape.fill(Color(white: 0.11))
+      case .tinted where reduceTransparency:
+        shape.fill(theme.tint.color.mix(with: .black, by: 0.75))
       case .glass:
         Color.clear.glassEffect(.regular, in: shape)
       case .tinted:

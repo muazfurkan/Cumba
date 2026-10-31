@@ -24,7 +24,7 @@ final class WeatherWidget: NotchWidget {
   @ObservationIgnored let service = WeatherService()
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private var fetchedAt: Date?
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
   required convenience init(context: WidgetContext) {
     self.init(context: context, defaults: .standard)
@@ -66,7 +66,7 @@ final class WeatherWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.widgets)
   }
 
   private func refresh() {

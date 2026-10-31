@@ -24,13 +24,16 @@ final class ShortcutsWidget: NotchWidget {
   private(set) var failed: String?
 
   @ObservationIgnored private let defaults: UserDefaults
-  @ObservationIgnored private let openSettings: @MainActor () -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
 
   required convenience init(context: WidgetContext) {
     self.init(defaults: .standard, openSettings: context.openSettings)
   }
 
-  init(defaults: UserDefaults, openSettings: @escaping @MainActor () -> Void) {
+  init(
+    defaults: UserDefaults,
+    openSettings: @escaping @MainActor (SettingsWindowController.Tab) -> Void
+  ) {
     self.defaults = defaults
     self.openSettings = openSettings
     favorites = defaults.stringArray(forKey: Self.favoritesKey) ?? []
@@ -83,7 +86,7 @@ final class ShortcutsWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings()
+    openSettings(.widgets)
   }
 
   /// One shortcut name per line.
