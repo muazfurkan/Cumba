@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-31
+
 ### Added
 
 - Notch panel: opens when the pointer rests on the notch or on click, closes when the pointer leaves, and can be pinned open.
@@ -18,3 +20,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - XcodeGen project, `os.Logger` setup and a single source for the app version.
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
+
+[Unreleased]: https://github.com/muazfurkan/ljaspNotch/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/muazfurkan/ljaspNotch/releases/tag/v0.1.0
