@@ -6,6 +6,7 @@ import AppKit
 final class NotchWindowController {
   private let settings: AppSettings
   private let themes: ThemeStore
+  private let host: WidgetHost
   private let model = NotchViewModel()
   private let hoverTracker = HoverTracker()
   private var panel: NotchPanel?
@@ -15,9 +16,10 @@ final class NotchWindowController {
   private var isFullScreenActive = false
   private var isPreviewing = false
 
-  init(settings: AppSettings, themes: ThemeStore) {
+  init(settings: AppSettings, themes: ThemeStore, host: WidgetHost) {
     self.settings = settings
     self.themes = themes
+    self.host = host
   }
 
   func start() {
@@ -27,11 +29,13 @@ final class NotchWindowController {
     hoverTracker.onMoveInside = { [weak self] in
       self?.model.send(.pointerMoved)
     }
-    model.onStateChange = { [weak self] _ in
+    model.onStateChange = { [weak self] state in
       self?.updateHoverArea()
+      self?.host.panelOpenChanged(state.isOpen)
     }
     observeSystemEvents()
     observeSettings()
+    observeWidgets()
     applySettings()
     refreshFullScreenState()
   }
@@ -79,6 +83,26 @@ final class NotchWindowController {
         self?.observeSettings()
       }
     }
+  }
+
+  /// Live activities drive the peek state; layout changes create or remove widgets.
+  private func observeWidgets() {
+    withObservationTracking {
+      _ = host.liveActivities.current?.id
+      _ = host.layoutStore.layout
+    } onChange: { [weak self] in
+      Task { @MainActor in
+        guard let self else { return }
+        self.host.layoutChanged()
+        self.model.send(.liveActivityChanged(self.host.liveActivities.current != nil))
+        self.observeWidgets()
+      }
+    }
+  }
+
+  /// Closes the panel, e.g. before Settings opens to ask for a permission.
+  func collapse() {
+    model.send(.reset)
   }
 
   private func applySettings() {
@@ -193,7 +217,7 @@ final class NotchWindowController {
 
   private func makePanel() -> NotchPanel {
     let panel = NotchPanel(showsInFullScreen: false)
-    let hostingView = NotchHostingView(rootView: NotchRootView(model: model))
+    let hostingView = NotchHostingView(rootView: NotchRootView(model: model, host: host))
     // The window size is fixed; SwiftUI must not resize it.
     hostingView.sizingOptions = []
     panel.contentView = hostingView

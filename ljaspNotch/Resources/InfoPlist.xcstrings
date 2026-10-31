@@ -1,0 +1,24 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSCalendarsFullAccessUsageDescription" : {
+      "comment" : "Privacy - Calendars Full Access Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "ljaspNotch shows your upcoming events in the notch. Nothing leaves your Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ljaspNotch yaklaşan etkinliklerinizi notch'ta gösterir. Hiçbir veri Mac'inizden çıkmaz."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

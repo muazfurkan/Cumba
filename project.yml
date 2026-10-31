@@ -48,11 +48,15 @@ targets:
         # Menu bar app: no Dock icon, no app menu bar.
         LSUIElement: true
         NSPrincipalClass: NSApplication
+        # Translations live in InfoPlist.xcstrings.
+        NSCalendarsFullAccessUsageDescription: ljaspNotch shows your upcoming events in the notch. Nothing leaves your Mac.
     entitlements:
       path: ljaspNotch/Resources/ljaspNotch.entitlements
       properties:
         # Sandbox stays off for AppleScript automation and the local server (see SPEC § 13).
         com.apple.security.app-sandbox: false
+        # Hardened Runtime needs these for the matching permission prompts.
+        com.apple.security.personal-information.calendars: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.github.muazfurkan.ljaspnotch

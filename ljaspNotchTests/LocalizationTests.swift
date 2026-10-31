@@ -24,14 +24,16 @@ struct LocalizationTests {
     var variations: [String: [String: Localization]]?
   }
 
-  @Test func catalogIsNotEmpty() throws {
-    let catalog = try loadCatalog()
+  @Test(arguments: ["Localizable", "InfoPlist"])
+  func catalogIsNotEmpty(name: String) throws {
+    let catalog = try loadCatalog(name)
     #expect(catalog.sourceLanguage == "en")
     #expect(!catalog.strings.isEmpty)
   }
 
-  @Test func everyStringHasTurkishTranslation() throws {
-    let catalog = try loadCatalog()
+  @Test(arguments: ["Localizable", "InfoPlist"])
+  func everyStringHasTurkishTranslation(name: String) throws {
+    let catalog = try loadCatalog(name)
     let missing = catalog.strings
       .filter { _, entry in
         guard entry.shouldTranslate != false else { return false }
@@ -53,11 +55,11 @@ struct LocalizationTests {
     return false
   }
 
-  private func loadCatalog() throws -> Catalog {
+  private func loadCatalog(_ name: String) throws -> Catalog {
     let url = URL(filePath: #filePath)
       .deletingLastPathComponent()
       .deletingLastPathComponent()
-      .appending(path: "ljaspNotch/Resources/Localizable.xcstrings")
+      .appending(path: "ljaspNotch/Resources/\(name).xcstrings")
     return try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: url))
   }
 }

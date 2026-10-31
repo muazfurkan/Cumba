@@ -9,4 +9,5 @@ enum Log {
   static let notch = Logger(subsystem: subsystem, category: "Notch")
   static let settings = Logger(subsystem: subsystem, category: "Settings")
   static let theme = Logger(subsystem: subsystem, category: "Theme")
+  static let widgets = Logger(subsystem: subsystem, category: "Widgets")
 }
