@@ -12,12 +12,107 @@
         }
       }
     },
+    "%@ left" : {
+      "comment" : "Battery time remaining",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kaldı"
+          }
+        }
+      }
+    },
+    "%@ to full" : {
+      "comment" : "Battery charging time",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dolmasına %@"
+          }
+        }
+      }
+    },
+    "%@, %@" : {
+      "comment" : "Calendar event day and time",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %@"
+          }
+        }
+      }
+    },
+    "%@, all day" : {
+      "comment" : "Calendar event time",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, tüm gün"
+          }
+        }
+      }
+    },
+    "%lldm" : {
+      "comment" : "Timer preset in minutes",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dk"
+          }
+        }
+      }
+    },
     "Accent" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vurgu"
+          }
+        }
+      }
+    },
+    "Add Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekme Ekle"
+          }
+        }
+      }
+    },
+    "Add Widget" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Ekle"
+          }
+        }
+      }
+    },
+    "Allow Calendar Access" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim Erişimine İzin Ver"
+          }
+        }
+      }
+    },
+    "Allow calendar access in Settings to see your events." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etkinliklerinizi görmek için Ayarlar'dan takvim erişimine izin verin."
           }
         }
       }
@@ -53,6 +148,17 @@
         }
       }
     },
+    "Battery" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pil"
+          }
+        }
+      }
+    },
     "Bounce" : {
       "localizations" : {
         "tr" : {
@@ -69,6 +175,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hazır temalar değiştirilemez. Özelleştirmek için birini çoğaltın."
+          }
+        }
+      }
+    },
+    "Calendar" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim"
+          }
+        }
+      }
+    },
+    "Calendar access granted" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim erişimine izin verildi"
+          }
+        }
+      }
+    },
+    "Calendar access was denied. You can allow it in System Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takvim erişimi reddedildi. Sistem Ayarları'ndan izin verebilirsiniz."
           }
         }
       }
@@ -160,6 +297,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sil"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "comment" : "Timer finished",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
           }
         }
       }
@@ -256,6 +404,17 @@
         }
       }
     },
+    "Home" : {
+      "comment" : "Default panel tab",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana Sayfa"
+          }
+        }
+      }
+    },
     "Import…" : {
       "localizations" : {
         "tr" : {
@@ -337,12 +496,73 @@
         }
       }
     },
+    "Move Down" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşağı Taşı"
+          }
+        }
+      }
+    },
+    "Move Up" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yukarı Taşı"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ad"
+          }
+        }
+      }
+    },
+    "New Tab" : {
+      "comment" : "Default name of a new panel tab",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Sekme"
+          }
+        }
+      }
+    },
+    "No battery" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pil yok"
+          }
+        }
+      }
+    },
+    "No widgets yet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz widget yok."
+          }
+        }
+      }
+    },
+    "Nothing planned for today and tomorrow." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün ve yarın için plan yok."
           }
         }
       }
@@ -373,6 +593,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Giriş Öğeleri Ayarlarını Aç"
+          }
+        }
+      }
+    },
+    "Open Privacy Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizlilik Ayarlarını Aç"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarları Aç"
           }
         }
       }
@@ -444,6 +684,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch'tan Çık"
+          }
+        }
+      }
+    },
+    "Remove" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaldır"
+          }
+        }
+      }
+    },
+    "Remove Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeyi Kaldır"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıfırla"
+          }
+        }
+      }
+    },
+    "Resume" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam Et"
           }
         }
       }
@@ -539,6 +819,46 @@
         }
       }
     },
+    "Start" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlat"
+          }
+        }
+      }
+    },
+    "Symbol" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simge"
+          }
+        }
+      }
+    },
+    "Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekme"
+          }
+        }
+      }
+    },
+    "Tabs" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeler"
+          }
+        }
+      }
+    },
     "Text" : {
       "localizations" : {
         "tr" : {
@@ -569,6 +889,27 @@
         }
       }
     },
+    "This tab is empty. Add widgets in Settings." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sekme boş. Ayarlar'dan widget ekleyin."
+          }
+        }
+      }
+    },
+    "Timer" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zamanlayıcı"
+          }
+        }
+      }
+    },
     "Tint" : {
       "localizations" : {
         "tr" : {
@@ -585,6 +926,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renkli cam"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün"
+          }
+        }
+      }
+    },
+    "Tomorrow" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yarın"
           }
         }
       }
@@ -619,12 +980,23 @@
         }
       }
     },
-    "Widgets are coming soon." : {
+    "Widgets" : {
+      "comment" : "Settings tab",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Widget'lar yakında geliyor."
+            "value" : "Widget'lar"
+          }
+        }
+      }
+    },
+    "Widgets in This Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Sekmedeki Widget'lar"
           }
         }
       }

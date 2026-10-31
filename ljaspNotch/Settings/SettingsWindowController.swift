@@ -6,19 +6,35 @@ import SwiftUI
 /// needs an undocumented selector.
 @MainActor
 final class SettingsWindowController {
-  private let settings: AppSettings
-  private let themes: ThemeStore
-  private var window: NSWindow?
-  private var closeObserver: NSObjectProtocol?
-
-  init(settings: AppSettings, themes: ThemeStore) {
-    self.settings = settings
-    self.themes = themes
+  enum Tab: Int {
+    case general
+    case appearance
+    case widgets
   }
 
-  func show() {
+  private let settings: AppSettings
+  private let themes: ThemeStore
+  private let layoutStore: LayoutStore
+  private let registry: WidgetRegistry
+  private var window: NSWindow?
+  private var tabController: NSTabViewController?
+  private var closeObserver: NSObjectProtocol?
+
+  init(
+    settings: AppSettings, themes: ThemeStore, layoutStore: LayoutStore, registry: WidgetRegistry
+  ) {
+    self.settings = settings
+    self.themes = themes
+    self.layoutStore = layoutStore
+    self.registry = registry
+  }
+
+  func show(tab: Tab? = nil) {
     let window = window ?? makeWindow()
     self.window = window
+    if let tab {
+      tabController?.selectedTabViewItemIndex = tab.rawValue
+    }
     Task { await settings.refreshLaunchAtLogin() }
     NSApp.activate()
     window.makeKeyAndOrderFront(nil)
@@ -37,6 +53,12 @@ final class SettingsWindowController {
         AppearanceSettingsView(themes: themes, settings: settings),
         label: String(localized: "Appearance", comment: "Settings tab"),
         symbol: "paintpalette"))
+    tabs.addTabViewItem(
+      tab(
+        WidgetsSettingsView(layoutStore: layoutStore, registry: registry),
+        label: String(localized: "Widgets", comment: "Settings tab"),
+        symbol: "square.grid.2x2"))
+    tabController = tabs
 
     let window = NSWindow(contentViewController: tabs)
     window.styleMask = [.titled, .closable, .miniaturizable]

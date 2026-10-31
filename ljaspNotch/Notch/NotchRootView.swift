@@ -6,6 +6,7 @@ import SwiftUI
 /// so nothing reflows while the panel animates.
 struct NotchRootView: View {
   let model: NotchViewModel
+  let host: WidgetHost
 
   var body: some View {
     if let geometry = model.geometry {
@@ -20,9 +21,16 @@ struct NotchRootView: View {
 
       ZStack(alignment: .top) {
         if state.isOpen {
-          ExpandedPanelView(model: model, notchHeight: geometry.notchRect.height)
+          ExpandedPanelView(model: model, host: host, notchHeight: geometry.notchRect.height)
             .frame(width: canvas.width, height: canvas.height)
             .transition(Self.contentTransition)
+        } else if state == .peek, let activity = host.liveActivities.current {
+          PeekView(
+            activity: activity, notchWidth: geometry.notchRect.width,
+            sideWidth: geometry.layout.peekExtraWidth
+          )
+          .frame(height: geometry.notchRect.height)
+          .transition(.opacity)
         }
       }
       .frame(width: size.width, height: size.height, alignment: .top)
@@ -81,9 +89,10 @@ private struct PanelBackground: View {
   }
 }
 
-/// Placeholder content until widgets arrive in Phase 3.
+/// Tabs and pin button beside the camera housing, widgets below.
 private struct ExpandedPanelView: View {
   let model: NotchViewModel
+  let host: WidgetHost
   let notchHeight: CGFloat
 
   private var isPinned: Bool { model.state == .pinned }
@@ -92,8 +101,7 @@ private struct ExpandedPanelView: View {
     VStack(spacing: 0) {
       // Top band beside the camera housing.
       HStack {
-        Text("ljaspNotch")
-          .font(.headline)
+        WidgetTabBar(host: host)
         Spacer()
         Button {
           model.send(.pinToggled)
@@ -108,13 +116,11 @@ private struct ExpandedPanelView: View {
       }
       .frame(height: notchHeight)
 
-      Spacer()
-      Text("Widgets are coming soon.")
-        .foregroundStyle(model.theme.secondary.color)
-      Spacer()
+      WidgetRow(host: host, secondary: model.theme.secondary.color)
+        .padding(.top, 8)
     }
-    .padding(.horizontal, 32)
-    .padding(.bottom, 12)
+    .padding(.horizontal, 28)
+    .padding(.bottom, 14)
   }
 }
 
