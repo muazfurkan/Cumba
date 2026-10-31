@@ -46,6 +46,10 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee xcodebuild.log | xcbeautify --renderer github-actions
 
+      # Command line builds don't add new strings to the catalog; catch missing ones here.
+      - name: Check string catalog
+        run: python3 scripts/check-strings.py build
+
       # xcbeautify can hide compiler errors; print the raw ones when the build fails.
       - name: Show compiler errors
         if: failure()
