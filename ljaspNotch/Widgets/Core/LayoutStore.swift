@@ -9,7 +9,7 @@ final class LayoutStore {
   private(set) var layout = WidgetLayout(tabs: [])
 
   @ObservationIgnored private let fileURL: URL
-  @ObservationIgnored private let knownKinds: [String]
+  @ObservationIgnored private let knownKinds: [(kind: String, units: Int)]
   @ObservationIgnored private var saveTask: Task<Void, Never>?
 
   /// `~/Library/Application Support/ljaspNotch/layout.json`
@@ -20,8 +20,9 @@ final class LayoutStore {
     return base.appending(path: "ljaspNotch/layout.json")
   }
 
-  /// - Parameter knownKinds: Widget kinds of this app version, in default order.
-  init(fileURL: URL = LayoutStore.standardURL, knownKinds: [String]) {
+  /// - Parameter knownKinds: Widget kinds of this app version with their width in units,
+  ///   in default order.
+  init(fileURL: URL = LayoutStore.standardURL, knownKinds: [(kind: String, units: Int)]) {
     self.fileURL = fileURL
     self.knownKinds = knownKinds
   }
@@ -39,7 +40,7 @@ final class LayoutStore {
       }
     }.value
     var layout = saved ?? WidgetLayout(tabs: [])
-    layout.removeUnknown(knownKinds: knownKinds)
+    layout.removeUnknown(knownKinds: knownKinds.map(\.kind))
     layout.adoptNewKinds(knownKinds)
     apply(layout, save: layout != saved)
   }

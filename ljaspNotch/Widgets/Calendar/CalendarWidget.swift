@@ -10,10 +10,10 @@ final class CalendarWidget: NotchWidget {
   static let kind = "calendar"
   static var title: String { String(localized: "Calendar", comment: "Widget name") }
   static let symbol = "calendar"
+  static let size = WidgetSize.regular
 
   private(set) var events: [CalendarEvent] = []
   private(set) var hasAccess = CalendarService.hasAccess
-  let size = WidgetSize.regular
 
   @ObservationIgnored let service = CalendarService()
   @ObservationIgnored private let openSettings: @MainActor () -> Void

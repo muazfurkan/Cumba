@@ -26,10 +26,9 @@ protocol NotchWidget: AnyObject {
   static var title: String { get }
   /// SF Symbol shown in Settings.
   static var symbol: String { get }
+  static var size: WidgetSize { get }
 
   init(context: WidgetContext)
-
-  var size: WidgetSize { get }
 
   func makeView() -> AnyView
   func makeSettingsView() -> AnyView?

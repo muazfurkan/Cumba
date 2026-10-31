@@ -27,20 +27,27 @@ struct WidgetLayoutTests {
     #expect(layout.tabs.isEmpty)
   }
 
-  @Test func newKindsAreAddedOnceToTheFirstTab() {
+  @Test func newKindsAreAddedOnceToATabWithRoom() {
     var layout = WidgetLayout(tabs: [Tab(id: "a", title: "A", symbol: "star", widgets: ["timer"])])
-    layout.adoptNewKinds(["calendar", "timer", "battery"])
+    layout.adoptNewKinds([("calendar", 2), ("timer", 2), ("battery", 1)])
     #expect(layout.tabs[0].widgets == ["timer", "calendar", "battery"])
 
     // The user removes calendar; it must not come back on the next launch.
     layout.tabs[0].widgets.removeAll { $0 == "calendar" }
-    layout.adoptNewKinds(["calendar", "timer", "battery"])
+    layout.adoptNewKinds([("calendar", 2), ("timer", 2), ("battery", 1)])
     #expect(layout.tabs[0].widgets == ["timer", "battery"])
+  }
+
+  @Test func fullTabsOverflowIntoMoreTabs() {
+    var layout = WidgetLayout(tabs: [])
+    layout.adoptNewKinds([("a", 2), ("b", 2), ("c", 2), ("d", 2), ("e", 1)])
+    #expect(layout.tabs.map(\.widgets) == [["a", "b", "c"], ["d", "e"]])
+    #expect(layout.tabs[1].id == "more-1")
   }
 
   @Test func emptyLayoutGetsAHomeTab() {
     var layout = WidgetLayout(tabs: [])
-    layout.adoptNewKinds(["calendar"])
+    layout.adoptNewKinds([("calendar", 2)])
     #expect(layout.tabs.map(\.id) == ["home"])
     #expect(layout.tabs[0].widgets == ["calendar"])
   }
@@ -66,7 +73,8 @@ struct LayoutStoreTests {
   }
 
   private func makeStore() async -> LayoutStore {
-    let store = LayoutStore(fileURL: fileURL, knownKinds: ["calendar", "timer", "battery"])
+    let store = LayoutStore(
+      fileURL: fileURL, knownKinds: [("calendar", 2), ("timer", 2), ("battery", 1)])
     await store.load()
     return store
   }

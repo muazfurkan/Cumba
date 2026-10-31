@@ -8,8 +8,8 @@ final class ClaudeCodeWidget: NotchWidget {
   static let kind = "claude-code"
   static let title = "Claude Code"
   static let symbol = "terminal"
+  static let size = WidgetSize.regular
 
-  let size = WidgetSize.regular
   let service: ClaudeCodeService
 
   required init(context: WidgetContext) {

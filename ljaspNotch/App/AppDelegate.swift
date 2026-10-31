@@ -27,7 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       context: WidgetContext(
         liveActivities: liveActivities, media: media, claude: claude,
         openSettings: { settingsOpener.open() }))
-    layoutStore = LayoutStore(knownKinds: registry.kinds)
+    layoutStore = LayoutStore(knownKinds: registry.infos.map { ($0.kind, $0.size.units) })
     settingsWindow = SettingsWindowController(
       settings: settings, themes: themes, layoutStore: layoutStore, registry: registry,
       server: server)

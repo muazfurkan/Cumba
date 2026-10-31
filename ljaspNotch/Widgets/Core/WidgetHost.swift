@@ -110,14 +110,14 @@ struct WidgetRow: View {
     } else {
       GeometryReader { proxy in
         let spacing: CGFloat = 10
-        let units = kinds.compactMap { host.registry.widget($0)?.size.units }.reduce(0, +)
+        let units = kinds.compactMap { host.registry.info(for: $0)?.size.units }.reduce(0, +)
         let unitWidth =
           (proxy.size.width - spacing * CGFloat(kinds.count - 1)) / CGFloat(max(units, 1))
         HStack(spacing: spacing) {
           ForEach(kinds, id: \.self) { kind in
-            if let widget = host.registry.widget(kind) {
+            if let widget = host.registry.widget(kind), let info = host.registry.info(for: kind) {
               widget.makeView()
-                .frame(width: unitWidth * CGFloat(widget.size.units))
+                .frame(width: unitWidth * CGFloat(info.size.units))
             }
           }
         }

@@ -35,6 +35,8 @@
 	<string>ljaspNotch reads what Spotify and Music are playing and sends play, pause, next and seek commands to them.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>ljaspNotch shows your upcoming events in the notch. Nothing leaves your Mac.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The Mirror widget shows your camera while the panel is open. Nothing is recorded or sent.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

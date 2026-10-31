@@ -36,6 +36,24 @@
           }
         }
       }
+    },
+    "NSCameraUsageDescription" : {
+      "comment" : "Privacy - Camera Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The Mirror widget shows your camera while the panel is open. Nothing is recorded or sent."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayna widget'ı panel açıkken kameranızı gösterir. Hiçbir şey kaydedilmez veya gönderilmez."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
