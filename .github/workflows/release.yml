@@ -50,7 +50,8 @@ jobs:
 
       - name: Show compiler errors
         if: failure()
-        run: grep -E "(error|warning): " xcodebuild.log | sort -u | head -50 || true
+        run: |
+          grep -E "(error|warning): " xcodebuild.log | sort -u | head -50 || true
 
       # Apple Silicon refuses to run unsigned apps; an ad-hoc signature is enough.
       # Hardened runtime and entitlements are kept so automation permissions work.

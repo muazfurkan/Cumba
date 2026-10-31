@@ -49,4 +49,5 @@ jobs:
       # xcbeautify can hide compiler errors; print the raw ones when the build fails.
       - name: Show compiler errors
         if: failure()
-        run: grep -E "(error|warning): " xcodebuild.log | sort -u | head -50 || true
+        run: |
+          grep -E "(error|warning): " xcodebuild.log | sort -u | head -50 || true
