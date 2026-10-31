@@ -116,8 +116,18 @@ private struct ExpandedPanelView: View {
       }
       .frame(height: notchHeight)
 
-      WidgetRow(host: host, secondary: model.theme.secondary.color)
+      if let request = host.permissionBanner {
+        PermissionCard(request: request, waiting: host.claude.permissions.pending.count - 1) {
+          decision in
+          host.claude.answer(request, with: decision)
+        }
+        .padding(10)
+        .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
         .padding(.top, 8)
+      } else {
+        WidgetRow(host: host, secondary: model.theme.secondary.color)
+          .padding(.top, 8)
+      }
     }
     .padding(.horizontal, 28)
     .padding(.bottom, 14)

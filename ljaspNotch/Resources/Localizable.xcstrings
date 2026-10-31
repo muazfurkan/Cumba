@@ -34,6 +34,17 @@
         }
       }
     },
+    "%@ wants to use %@" : {
+      "comment" : "Permission request",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %@ kullanmak istiyor"
+          }
+        }
+      }
+    },
     "%@, %@" : {
       "comment" : "Calendar event day and time",
       "localizations" : {
@@ -56,6 +67,26 @@
         }
       }
     },
+    "%@: %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: %@"
+          }
+        }
+      }
+    },
+    "%lld more requests waiting" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld istek daha bekliyor"
+          }
+        }
+      }
+    },
     "%lldm" : {
       "comment" : "Timer preset in minutes",
       "localizations" : {
@@ -67,12 +98,32 @@
         }
       }
     },
+    "+%lld" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
+          }
+        }
+      }
+    },
     "1. Open chrome://extensions and turn on Developer mode.\n2. Click “Load unpacked” and choose the extension folder.\n3. Open the extension's options and paste the port and the token." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1. chrome://extensions adresini açın ve Geliştirici modunu etkinleştirin.\n2. “Paketlenmemiş öğe yükle”ye tıklayın ve eklenti klasörünü seçin.\n3. Eklentinin seçeneklerini açın, portu ve token'ı yapıştırın."
+          }
+        }
+      }
+    },
+    "A backup of the current file is made before saving." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydetmeden önce mevcut dosyanın yedeği alınır."
           }
         }
       }
@@ -163,6 +214,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Animasyon"
+          }
+        }
+      }
+    },
+    "Answer in Claude Code instead" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunun yerine Claude Code'da yanıtla"
           }
         }
       }
@@ -260,6 +321,16 @@
         }
       }
     },
+    "Cancel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vazgeç"
+          }
+        }
+      }
+    },
     "Chrome Extension" : {
       "localizations" : {
         "tr" : {
@@ -277,6 +348,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klasik"
+          }
+        }
+      }
+    },
+    "Claude Code" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code"
           }
         }
       }
@@ -352,6 +433,16 @@
         }
       }
     },
+    "Couldn't write settings.json: %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "settings.json yazılamadı: %@"
+          }
+        }
+      }
+    },
     "Cut" : {
       "localizations" : {
         "tr" : {
@@ -378,6 +469,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sil"
+          }
+        }
+      }
+    },
+    "Deny" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reddet"
           }
         }
       }
@@ -419,6 +520,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Düzen"
+          }
+        }
+      }
+    },
+    "Ended" : {
+      "comment" : "Claude Code session state",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
+          }
+        }
+      }
+    },
+    "Error" : {
+      "comment" : "Claude Code stopped with an error",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hata"
+          }
+        }
+      }
+    },
+    "Error: %@" : {
+      "comment" : "Claude Code error",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hata: %@"
           }
         }
       }
@@ -506,6 +640,26 @@
         }
       }
     },
+    "Hooks" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hook'lar"
+          }
+        }
+      }
+    },
+    "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to ljaspNotch on 127.0.0.1. Permission requests then appear in the notch. When ljaspNotch isn't running, Claude Code carries on as usual. Session data stays in memory." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hook'lar terminaldeki, IDE eklentilerindeki ve Claude masaüstü uygulamasındaki Claude Code olaylarını 127.0.0.1 üzerinden ljaspNotch'a gönderir. İzin istekleri böylece notch'ta görünür. ljaspNotch çalışmıyorsa Claude Code her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
+          }
+        }
+      }
+    },
     "Import…" : {
       "localizations" : {
         "tr" : {
@@ -516,12 +670,42 @@
         }
       }
     },
+    "In Terminal" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminalde"
+          }
+        }
+      }
+    },
     "Indicator width" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gösterge genişliği"
+          }
+        }
+      }
+    },
+    "Installed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurulu"
+          }
+        }
+      }
+    },
+    "Install…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kur…"
           }
         }
       }
@@ -659,6 +843,17 @@
         }
       }
     },
+    "Needs permission" : {
+      "comment" : "Claude Code session state",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin bekliyor"
+          }
+        }
+      }
+    },
     "New Tab" : {
       "comment" : "Default name of a new panel tab",
       "localizations" : {
@@ -690,12 +885,32 @@
         }
       }
     },
+    "No sessions yet. Install the hooks in Settings > Claude Code." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz oturum yok. Hook'ları Ayarlar > Claude Code'dan kurun."
+          }
+        }
+      }
+    },
     "No widgets yet." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Henüz widget yok."
+          }
+        }
+      }
+    },
+    "Not installed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurulu değil"
           }
         }
       }
@@ -806,6 +1021,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paneli aç"
+          }
+        }
+      }
+    },
+    "Out of date (port or token changed)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncel değil (port veya token değişti)"
           }
         }
       }
@@ -952,6 +1177,16 @@
         }
       }
     },
+    "Remove…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaldır…"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "tr" : {
@@ -972,6 +1207,16 @@
         }
       }
     },
+    "Review changes to ~/.claude/settings.json" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "~/.claude/settings.json değişikliklerini gözden geçirin"
+          }
+        }
+      }
+    },
     "Rounded" : {
       "localizations" : {
         "tr" : {
@@ -988,6 +1233,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ portunda çalışıyor"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydet"
+          }
+        }
+      }
+    },
+    "Saved." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydedildi."
+          }
+        }
+      }
+    },
+    "Saved. The previous file was backed up to %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydedildi. Önceki dosya %@ olarak yedeklendi."
           }
         }
       }
@@ -1018,6 +1293,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tırnaklı"
+          }
+        }
+      }
+    },
+    "Set up by hand" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elle kurulum"
           }
         }
       }
@@ -1304,12 +1589,33 @@
         }
       }
     },
+    "Update…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncelle…"
+          }
+        }
+      }
+    },
     "Version" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sürüm"
+          }
+        }
+      }
+    },
+    "Waiting" : {
+      "comment" : "Claude Code is waiting for the user",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekliyor"
           }
         }
       }
@@ -1365,6 +1671,27 @@
         }
       }
     },
+    "Working" : {
+      "comment" : "Claude Code session state",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışıyor"
+          }
+        }
+      }
+    },
+    "allowedHttpHookUrls in settings.json doesn't include ljaspNotch's address, so Claude Code will skip these hooks." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "settings.json'daki allowedHttpHookUrls ljaspNotch'un adresini içermiyor; Claude Code bu hook'ları atlayacak."
+          }
+        }
+      }
+    },
     "ljaspNotch" : {
       "localizations" : {
         "tr" : {
@@ -1402,6 +1729,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ljaspNotch'un oturum açıldığında başlayabilmesi için Sistem Ayarları'nda onay vermeniz gerekiyor."
+          }
+        }
+      }
+    },
+    "settings.json changed while you were reviewing it. Nothing was written; please review again." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "settings.json siz incelerken değişti. Hiçbir şey yazılmadı; lütfen yeniden inceleyin."
+          }
+        }
+      }
+    },
+    "~/.claude/settings.json isn't valid JSON. Fix it first; nothing was changed." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "~/.claude/settings.json geçerli bir JSON değil. Önce onu düzeltin; hiçbir şey değiştirilmedi."
           }
         }
       }

@@ -47,6 +47,10 @@ Küçük bir Chrome eklentisi (diğer Chromium tarayıcılarda da çalışır) Y
 
 Eklentinin depolama dışında izni yoktur, yalnızca `youtube.com` ve `music.youtube.com` sayfalarını okur ve yalnızca `127.0.0.1` ile konuşur.
 
+## Claude Code
+
+Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür; bir oturum bitince veya hata verince de görürsünüz. Hook'ları **Ayarlar > Claude Code**'dan kurun; `~/.claude/settings.json` değişikliğini önce siz görürsünüz ve yedek alınır. Elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
+
 ## Gizlilik
 
 Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, yalnızca siz kullanırken:
