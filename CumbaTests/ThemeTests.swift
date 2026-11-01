@@ -28,6 +28,17 @@ struct ThemeTests {
     try JSONDecoder().decode(Theme.self, from: Data(json.utf8))
   }
 
+  /// Resources/BuiltInThemes.json is the built-in themes in the export format, for anyone
+  /// reading them without Swift. Regenerate it whenever a built-in theme changes.
+  @Test func builtInThemesFileMatchesTheCode() throws {
+    let url = try #require(Bundle.main.url(forResource: "BuiltInThemes", withExtension: "json"))
+    let data = try Data(contentsOf: url)
+    #expect(try JSONDecoder().decode([Theme].self, from: data) == Theme.builtIns)
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+    #expect(try encoder.encode(Theme.builtIns) == data)
+  }
+
   @Test func volumeAndBrightnessAreWhiteInClassicThemesAndTheThemesOwnInTheOthers() throws {
     for theme in [Theme.classic, .glass, .midnight] {
       #expect(theme.indicatorColor == .white)
