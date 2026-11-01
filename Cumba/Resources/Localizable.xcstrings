@@ -3179,6 +3179,17 @@
         }
       }
     },
+    "Show the next session" : {
+      "comment" : "AI Agents widget: steps to another session",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki oturumu göster"
+          }
+        }
+      }
+    },
     "Show volume changes in the notch" : {
       "localizations" : {
         "tr" : {

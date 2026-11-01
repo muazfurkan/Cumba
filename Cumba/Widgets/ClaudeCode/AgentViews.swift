@@ -41,10 +41,12 @@ struct AgentSpinner: View {
 
 /// The busiest session on two pages: Progress (what it's doing and its last answer) and
 /// Usage (how full its context window is). Alone in its tab the answer sits beside the
-/// status in a bubble.
+/// status in a bubble. With several sessions, "+N" steps through them.
 struct AgentPanel: View {
   let service: ClaudeCodeService
   @State private var page = Page.progress
+  /// A session picked with "+N"; nil follows the busiest one.
+  @State private var pickedSessionID: String?
   @Environment(\.showsDetailedWidget) private var isDetailed
 
   enum Page {
@@ -53,7 +55,18 @@ struct AgentPanel: View {
   }
 
   private var session: ClaudeCodeService.Session? {
-    service.sessions.first(where: \.isActive) ?? service.sessions.first
+    service.sessions.first { $0.id == pickedSessionID }
+      ?? service.sessions.first(where: \.isActive) ?? service.sessions.first
+  }
+
+  /// Shows the next session in the list, round to the first.
+  private func showNextSession() {
+    let sessions = service.sessions
+    guard sessions.count > 1 else { return }
+    let index = sessions.firstIndex { $0.id == session?.id } ?? 0
+    withAnimation(.easeOut(duration: 0.2)) {
+      pickedSessionID = sessions[(index + 1) % sessions.count].id
+    }
   }
 
   var body: some View {
@@ -67,11 +80,15 @@ struct AgentPanel: View {
         .panelFont(.caption)
         .foregroundStyle(.secondary)
         Spacer()
-        let others = service.sessions.filter(\.isActive).count - 1
+        let others = service.sessions.count - 1
         if others > 0 {
-          Text("+\(others)", comment: "More AI agent sessions are running")
-            .panelFont(.caption2, weight: .semibold)
-            .foregroundStyle(.secondary)
+          Button(action: showNextSession) {
+            Text("+\(others)", comment: "More AI agent sessions are running")
+              .panelFont(.caption2, weight: .semibold)
+              .foregroundStyle(.secondary)
+          }
+          .buttonStyle(PanelButtonStyle(size: 24))
+          .help(Text("Show the next session"))
         }
         pageButton(.progress, symbol: "list.bullet", label: Text("Progress"))
         pageButton(.usage, symbol: "gauge.with.dots.needle.33percent", label: Text("Usage"))

@@ -21,7 +21,7 @@ struct WeatherService: Sendable {
     var code: Int
     var isDay: Bool
     var unit: String
-    /// The next hours, starting with the current one.
+    /// Every hour from the current one to the end of the last day.
     var hours: [Hour] = []
     /// Today and the next days.
     var days: [Day] = []
@@ -177,7 +177,7 @@ struct WeatherService: Sendable {
     let currentHour = now.addingTimeInterval(-3599)
     var hours: [Hour] = []
     if let hourly = response.hourly {
-      for index in hourly.time.indices where hours.count < 6 {
+      for index in hourly.time.indices {
         guard let time = hourDate(hourly.time[index]), time > currentHour,
           let temperature = hourly.temperature[safe: index] ?? nil,
           let code = hourly.code[safe: index] ?? nil
