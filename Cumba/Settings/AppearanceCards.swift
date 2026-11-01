@@ -175,6 +175,52 @@ struct TabStylePreview: View {
   }
 }
 
+/// The open panel with three widgets, set apart by faint lines or on cards of their own.
+struct WidgetStylePreview: View {
+  let style: AppSettings.WidgetStyle
+
+  var body: some View {
+    GeometryReader { proxy in
+      let panel = CGSize(width: proxy.size.width * 0.82, height: proxy.size.height * 0.7)
+      ZStack(alignment: .top) {
+        Wallpaper()
+        UnevenRoundedRectangle(
+          bottomLeadingRadius: 10, bottomTrailingRadius: 10, style: .continuous
+        )
+        .fill(.black)
+        .frame(width: panel.width, height: panel.height)
+        .overlay {
+          HStack(spacing: 6) {
+            ForEach(0..<3, id: \.self) { index in
+              VStack(alignment: .leading, spacing: 3) {
+                Capsule().fill(.white.opacity(0.85)).frame(width: 16, height: 3)
+                Capsule().fill(.white.opacity(0.4)).frame(width: 22, height: 3)
+              }
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+              .padding(5)
+              .background {
+                if style == .cards {
+                  RoundedRectangle(cornerRadius: 5, style: .continuous)
+                    .fill(.white.opacity(0.13))
+                }
+              }
+              .overlay(alignment: .leading) {
+                if style == .lines, index > 0 {
+                  Rectangle().fill(.white.opacity(0.25)).frame(width: 1)
+                    .padding(.vertical, 6).offset(x: -3.5)
+                }
+              }
+            }
+          }
+          .padding(.horizontal, 8)
+          .padding(.top, 12)
+          .padding(.bottom, 6)
+        }
+      }
+    }
+  }
+}
+
 /// A calm desktop behind the previews.
 private struct Wallpaper: View {
   var body: some View {

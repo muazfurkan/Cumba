@@ -82,6 +82,23 @@ struct AppearanceSettingsView: View {
       } footer: {
         Text("Where the open panel's tabs are and how they look.")
       }
+      Section {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 14) {
+          ForEach(AppSettings.WidgetStyle.allCases, id: \.self) { style in
+            ChoiceCard(
+              title: style.title, isSelected: settings.widgetStyle == style,
+              select: { settings.widgetStyle = style }
+            ) {
+              WidgetStylePreview(style: style)
+            }
+          }
+        }
+        .padding(.vertical, 4)
+      } header: {
+        Text("Widgets")
+      } footer: {
+        Text("How widgets side by side are set apart.")
+      }
       PanelSizeSection(size: Bindable(settings).panelSize) { preview in
         settings.notchPreview = preview
       }
@@ -144,6 +161,15 @@ struct AppearanceSettingsView: View {
       } catch {
         errorMessage = error.localizedDescription
       }
+    }
+  }
+}
+
+extension AppSettings.WidgetStyle {
+  var title: String {
+    switch self {
+    case .lines: String(localized: "Lines", comment: "Widget style: a faint line between widgets")
+    case .cards: String(localized: "Cards", comment: "Widget style: each widget on a card")
     }
   }
 }

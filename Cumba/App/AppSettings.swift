@@ -23,6 +23,7 @@ final class AppSettings {
     static let panelScreen = "panelScreen"
     static let tabBarStyle = "tabBarStyle"
     static let openingTab = "openingTab"
+    static let widgetStyle = "widgetStyle"
     static let opensAgentTab = "opensAgentTab"
     /// Before tab bar styles: "bottom" or "top".
     static let tabBarPosition = "tabBarPosition"
@@ -44,6 +45,14 @@ final class AppSettings {
   }
 
   /// Where the panel shows its tabs.
+  /// How widgets side by side are set apart.
+  enum WidgetStyle: String, CaseIterable, Sendable {
+    /// No backgrounds; a faint line between widgets.
+    case lines
+    /// Each widget on a card of its own.
+    case cards
+  }
+
   /// Where the open panel's tabs are and how they look.
   enum TabBarStyle: String, CaseIterable, Sendable {
     /// A bar of its own under the panel; the open tab shows its name.
@@ -98,6 +107,10 @@ final class AppSettings {
 
   var tabBarStyle: TabBarStyle {
     didSet { defaults.set(tabBarStyle.rawValue, forKey: Key.tabBarStyle) }
+  }
+
+  var widgetStyle: WidgetStyle {
+    didSet { defaults.set(widgetStyle.rawValue, forKey: Key.widgetStyle) }
   }
 
   /// The tab the panel opens on; nil opens the tab it was left on.
@@ -228,6 +241,8 @@ final class AppSettings {
       defaults.string(forKey: Key.tabBarStyle).flatMap(TabBarStyle.init(rawValue:))
       ?? Self.legacyTabBarStyle(defaults.string(forKey: Key.tabBarPosition))
     openingTab = defaults.string(forKey: Key.openingTab)
+    widgetStyle =
+      defaults.string(forKey: Key.widgetStyle).flatMap(WidgetStyle.init(rawValue:)) ?? .lines
     opensAgentTab = defaults.object(forKey: Key.opensAgentTab) as? Bool ?? true
     panelSize =
       defaults.data(forKey: Key.panelSize).flatMap {

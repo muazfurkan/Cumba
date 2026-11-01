@@ -66,6 +66,7 @@ struct NotchRootView: View {
       .foregroundStyle(theme.foreground.color)
       .tint(theme.accent.color)
       .environment(\.indicatorColors, theme.indicatorColors)
+      .environment(\.widgetStyle, model.widgetStyle)
       .fontDesign(theme.fontDesign.swiftUI)
       .environment(\.panelTextScale, model.textScale)
       .animation(animation(for: state, theme: theme), value: state)

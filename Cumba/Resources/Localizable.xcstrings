@@ -793,6 +793,17 @@
         }
       }
     },
+    "Cards" : {
+      "comment" : "Widget style: each widget on a card",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kartlar"
+          }
+        }
+      }
+    },
     "Choose a City" : {
       "localizations" : {
         "tr" : {
@@ -1974,6 +1985,17 @@
         }
       }
     },
+    "How widgets side by side are set apart." : {
+      "comment" : "Settings section footer",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yan yana widget'ların birbirinden nasıl ayrılacağı."
+          }
+        }
+      }
+    },
     "Image" : {
       "comment" : "Clipboard item kind",
       "localizations" : {
@@ -2143,6 +2165,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Script'lerin notch'ta etkinlik göstermesine izin ver"
+          }
+        }
+      }
+    },
+    "Lines" : {
+      "comment" : "Widget style: a faint line between widgets",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çizgiler"
           }
         }
       }

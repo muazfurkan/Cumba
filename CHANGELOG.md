@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - A new Settings window, laid out like System Settings: a searchable sidebar with pages in three groups (General, Appearance, Displays, Behavior, Indicators and Permissions; Widgets, with a page for each widget that has settings; Agents and Connections). Each page starts with its icon, title and what it's for, rows explain themselves with an ⓘ, and switches sit on the right.
+- Widgets are set apart by a faint line instead of cards (Appearance > Widgets: Lines or Cards).
+- A tab holds as many widgets as fit on the screen: the panel grows wider instead of squeezing them, and only when the screen is full does it say there's no room, in the panel and in Settings alike. The panel also grows taller when a widget needs it, such as a long answer from an AI agent, and switching tabs animates both.
 - Settings > Behavior > Opening Tab: open the panel on a tab of your choice or the one it was left on, and choose whether it opens on the agents' tab while Claude Code or Codex works.
 - Tab bar styles (Appearance > Tabs): Compact, a bar of its own under the panel with the open tab's name; Symbols; Dots; In the Panel; and At the Top. New installations use Compact; your earlier choice carries over. Themes and tab styles are picked from cards with a small preview.
 

@@ -165,6 +165,7 @@ final class NotchWindowController {
       _ = settings.usesVirtualNotch
       _ = settings.panelScreen
       _ = settings.tabBarStyle
+      _ = settings.widgetStyle
       _ = settings.openingTab
       _ = settings.opensAgentTab
       _ = settings.panelSize
@@ -302,6 +303,7 @@ final class NotchWindowController {
     model.theme = themes.current
     model.textScale = settings.panelSize.textScale
     model.tabBarStyle = settings.tabBarStyle
+    model.widgetStyle = settings.widgetStyle
     host.openingTab = settings.openingTab
     host.opensAgentTab = settings.opensAgentTab
     model.opensOnHover = settings.opensOnHover

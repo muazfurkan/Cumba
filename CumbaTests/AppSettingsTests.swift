@@ -59,6 +59,9 @@ struct AppSettingsTests {
     #expect(settings.tabBarStyle == .top)
     settings.tabBarStyle = .dots
     #expect(AppSettings(defaults: defaults).tabBarStyle == .dots)
+    #expect(settings.widgetStyle == .lines)
+    settings.widgetStyle = .cards
+    #expect(AppSettings(defaults: defaults).widgetStyle == .cards)
   }
 
   @Test(arguments: [

@@ -244,6 +244,8 @@ struct WidgetRow: View {
   let tab: WidgetLayout.Tab?
   let secondary: Color
 
+  @Environment(\.widgetStyle) private var style
+
   var body: some View {
     let kinds = (tab?.widgets ?? []).filter { host.registry.widget($0) != nil }
     if kinds.isEmpty {
@@ -264,6 +266,18 @@ struct WidgetRow: View {
               widget.makeView()
                 .environment(\.showsDetailedWidget, kinds.count == 1)
                 .frame(width: unitWidth * CGFloat(info.size.units))
+                .overlay(alignment: .leading) {
+                  // With the lines style, a faint line in the gap before every widget but
+                  // the first.
+                  if style == .lines, kind != kinds.first {
+                    Rectangle()
+                      .fill(.white.opacity(0.1))
+                      .frame(width: 1)
+                      .padding(.vertical, 14)
+                      .offset(x: -spacing / 2 - 0.5)
+                      .accessibilityHidden(true)
+                  }
+                }
                 .contextMenu {
                   Button("Remove \(info.title)") {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
