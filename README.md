@@ -13,7 +13,7 @@
 
 <p align="center"><a href="README.tr.md">Türkçe</a></p>
 
-A free, open source notch app for macOS. It turns the MacBook notch into a panel that grows out of the camera housing when you rest the pointer on it: music from Spotify, Apple Music and YouTube, Claude Code permission requests, and a set of widgets, all in a look you can make your own.
+A free, open source notch app for macOS. It turns the MacBook notch into a panel that grows out of the camera housing when you rest the pointer on it: whatever is playing, what your AI coding agents (Claude Code and Codex) are doing, and a set of widgets, all in a look you can make your own.
 
 A *cumba* is the small bay window that juts out from the upper floor of old Turkish houses: a quiet place to sit and see what's happening in the street. The panel does the same from the top of your screen.
 
@@ -22,10 +22,11 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 ## Features
 
 - **Media**: whatever any app plays (Safari, Chrome, YouTube, Spotify, Music, podcasts and more) in one mini player with artwork, progress, seeking and controls, with no extension or setup. A small waveform beside the notch shows what's playing.
-- **AI agents (Claude Code and Codex)**: what the agent is doing right now, its last answer and how full its context window is, with a ring beside the notch while it works and a line under it when it's done. Permission requests show up with **Allow**, **Deny** and **In Terminal**.
+- **AI agents (Claude Code and Codex)**: what the agent is doing right now, its last answer and how full its context window is, with a ring beside the notch while it works and a line under it when it's done. Opening the panel while an agent works shows its tab. Permission requests show up with **Allow**, **Deny** and **In Terminal**; questions and plans stay in the agent, and the notch tells you it's waiting.
 - **Widgets in tabs**: calendar with a Join button for video calls, timer, Pomodoro, notes, clipboard history, keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Add them from a gallery in the panel or in Settings, switch tabs with a two-finger swipe; a new installation starts with just three.
+- **A panel that fits**: tabs at the bottom or the top, edited right in the panel (name, symbol, order, widgets). The panel is as wide as the open tab, and a widget alone in its tab shows a detailed view: weather with the next hours and days like Apple's widget, the whole month beside your events, large album art. Text size is adjustable.
 - **Optional extras**, off until you turn them on: show the panel on any display, volume and brightness levels in the notch (optionally instead of the system indicators), a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
-- **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
+- **Live activities**: a running timer, a working AI agent, a pending request, charging or the current song appear on both sides of the closed notch.
 - **Themes**: seven built in, from plain black and Liquid Glass to Neon Tokyo, Sakura and Synthwave. Make your own: glass, solid or tinted, a gradient background, a neon edge, colors, font, corner radius, shadow and animation. Panel size and text size stay the same whichever theme you pick. Import and export themes as JSON.
 - **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
 - English and Turkish interface.
@@ -53,7 +54,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 
 **Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Location, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
 
-**Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Claude Code. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
+**Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Agents. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
 
 ## Requirements
 
@@ -87,7 +88,7 @@ Everything below is off or unused until you turn on the feature that needs it. S
 | Location | Weather widget, for the weather where you are | Asked when you click Use My Location; off if you choose a city instead |
 | Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
 | Local server on `127.0.0.1` | Optional YouTube extension connection | Only after you turn it on in Settings > Connections |
-| Private Unix socket | Claude Code hooks and [script activities](#scripts) | Only while the hooks are installed or script activities are on |
+| Private Unix socket | Claude Code and Codex hooks, and [script activities](#scripts) | Only while hooks are installed or script activities are on |
 | `~/.claude/settings.json`, `~/.codex/hooks.json` | Installing and removing the Claude Code and Codex hooks | Only after you review the change; a backup is kept |
 | Claude Code transcripts in `~/.claude/projects` | Context use and session title in the AI Agents widget | Read on this Mac only, the last 256 KB, while a session runs |
 | Accessibility | Handling the volume or brightness keys | Only if you turn on "Replace the system volume indicator" or "…brightness indicator" |
@@ -120,13 +121,13 @@ Not needed while Media reads from every app. A small Chrome extension (also work
 
 Chrome will say the extension can read and change your data on `youtube.com` and `music.youtube.com`: it reads the player (title, artwork, progress) and presses play, pause, next and seek there. It runs on no other site, its only other permission is storage (for the port and token), and it talks only to `127.0.0.1`.
 
-## Claude Code
+## Claude Code and Codex
 
-Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. The card shows the full request with hidden characters made visible. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. Hooks reach the app through a private socket that only your user account can open, so nothing else can answer Claude Code in its place; they use their own token, separate from the extension's.
+The AI Agents widget shows what a session is doing right now ("Editing Notch.swift", "Running tests"), its title and last answer, and how full its context window is. Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. The card shows the full request with hidden characters made visible. Questions and plan approvals aren't permission requests: Claude Code asks them itself, and the notch shows the session is waiting. Install the hooks in **Settings > Agents**; you review the change to `~/.claude/settings.json` first and a backup is made. Hooks reach the app through a private socket that only your user account can open, so nothing else can answer Claude Code in its place; they use their own token, separate from the extension's.
 
 **Codex** works the same way: install its hooks in **Settings > Agents > Codex** (they go to `~/.codex/hooks.json`), then run `/hooks` in Codex once and trust them, since Codex runs new hooks only after that.
 
-**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Claude Code you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
+**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Agents you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 
 ## Scripts
 
@@ -158,7 +159,7 @@ When turned on, the extension server listens only on `127.0.0.1`, accepts only t
 
 ## Uninstall
 
-1. If you installed the Claude Code hooks, remove them first in **Settings > Claude Code > Remove…**. Hooks left behind do nothing once the app is gone, but they stay in `~/.claude/settings.json`.
+1. If you installed the Claude Code or Codex hooks, remove them first in **Settings > Agents > Remove…** (for each agent). Hooks left behind do nothing once the app is gone, but they stay in `~/.claude/settings.json` and `~/.codex/hooks.json`.
 2. Turn off **Launch at login** in Settings > General, quit Cumba from the menu bar and move it to the Trash.
 3. Remove the extension in `chrome://extensions`.
 4. To delete its data too (themes, layout, notes, preferences and the tokens):

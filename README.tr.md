@@ -13,7 +13,7 @@
 
 <p align="center"><a href="README.md">English</a></p>
 
-macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu, imleci üzerinde tuttuğunuzda kamera yuvasından büyüyen bir panele çevirir: her uygulamadan müzik ve video, Claude Code izin istekleri ve bir dizi widget; hepsi size göre ayarlanabilen bir görünümle.
+macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu, imleci üzerinde tuttuğunuzda kamera yuvasından büyüyen bir panele çevirir: her uygulamadan müzik ve video, yapay zeka kodlama ajanlarınızın (Claude Code ve Codex) ne yaptığı ve bir dizi widget; hepsi size göre ayarlanabilen bir görünümle.
 
 *Cumba*, eski Türk evlerinin üst katından sokağa taşan küçük çıkmadır: oturup sokakta olup biteni izlediğiniz sakin bir köşe. Panel de aynısını ekranınızın tepesinden yapar.
 
@@ -22,10 +22,11 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 ## Özellikler
 
 - **Medya**: hangi uygulama ne çalıyorsa (Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası) tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller, eklenti ya da kurulum gerekmeden. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
-- **Yapay zeka ajanları (Claude Code ve Codex)**: ajanın o an ne yaptığı, son yanıtı ve bağlam penceresinin ne kadar dolu olduğu; çalışırken notch'un yanında dönen bir halka, bitince altında bir satır. İzin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle görünür.
+- **Yapay zeka ajanları (Claude Code ve Codex)**: ajanın o an ne yaptığı, son yanıtı ve bağlam penceresinin ne kadar dolu olduğu; çalışırken notch'un yanında dönen bir halka, bitince altında bir satır. Ajan çalışırken paneli açınca onun sekmesi gelir. İzin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle görünür; sorular ve planlar ajanda kalır, notch sizi beklediğini söyler.
 - **Sekmelerde widget'lar**: görüntülü görüşmeler için Katıl düğmeli takvim, zamanlayıcı, Pomodoro, notlar, pano geçmişi, uyanık tut, teleprompter, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Panelden ya da Ayarlar'daki galeriden ekleyin, sekmeler arasında iki parmakla kaydırarak geçin; yeni kurulum yalnızca üçüyle başlar.
+- **Size uyan bir panel**: sekmeler altta ya da üstte, doğrudan panelde düzenlenir (ad, simge, sıra, widget'lar). Panel açık sekme kadar geniştir; sekmesinde tek başına olan widget ayrıntılı görünür: Apple'ın widget'ı gibi önümüzdeki saatler ve günlerle hava durumu, etkinliklerinizin yanında ayın tamamı, büyük albüm kapağı. Yazı boyutu ayarlanabilir.
 - **İsteğe bağlı ekstralar** (siz açana kadar kapalı): paneli istediğiniz ekranda gösterme, ses ve parlaklık düzeyini notch'ta gösterme (isterseniz sistem göstergelerinin yerine), mikrofon veya kamera kullanılırken bir nokta, toplantılardan önce geri sayım, medya kaynağı seçimi ve [kendi script'leriniz için bir API](#scriptler).
-- **Canlı etkinlikler**: çalışan zamanlayıcı, bekleyen Claude isteği, şarj veya çalan şarkı kapalı notch'un iki yanında görünür.
+- **Canlı etkinlikler**: çalışan zamanlayıcı, çalışan bir yapay zeka ajanı, bekleyen bir istek, şarj veya çalan şarkı kapalı notch'un iki yanında görünür.
 - **Temalar**: düz siyah ve Liquid Glass'tan Neon Tokyo, Sakura ve Synthwave'e yedi hazır tema. Kendi temanızı yapın: cam, düz veya renkli cam, renk geçişli zemin, neon kenar, renkler, yazı tipi, köşe yuvarlaklığı, gölge ve animasyon. Panel boyutu ve yazı boyutu hangi temayı seçerseniz seçin aynı kalır. Temaları JSON olarak içe/dışa aktarın.
 - **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda gizlenir ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
 - Türkçe ve İngilizce arayüz.
@@ -55,7 +56,7 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 **Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Konum, Kamera) ve Cumba'nın token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
 
-**ljaspNotch'tan mı geçiyorsunuz?** Cumba aynı uygulamanın yeni adı. ljaspNotch'tan çıkın, `ljaspNotch.app`'i Çöp Sepeti'ne taşıyın ve Cumba'yı kurun; ayarlarınız, düzeniniz, notlarınız ve temalarınız aynen gelir. Claude Code hook'larını kullanıyorsanız Ayarlar > Claude Code'da bir kez **Güncelle…**'ye tıklayın. Chrome eklentisini kullanıyorsanız onu `chrome://extensions` sayfasından kaldırın, [YouTube ve YouTube Music](#youtube-ve-youtube-music) bölümündeki gibi yeni uygulamadan tekrar yükleyin ve token'ı yapıştırın.
+**ljaspNotch'tan mı geçiyorsunuz?** Cumba aynı uygulamanın yeni adı. ljaspNotch'tan çıkın, `ljaspNotch.app`'i Çöp Sepeti'ne taşıyın ve Cumba'yı kurun; ayarlarınız, düzeniniz, notlarınız ve temalarınız aynen gelir. Claude Code hook'larını kullanıyorsanız Ayarlar > Ajanlar'da bir kez **Güncelle…**'ye tıklayın. Chrome eklentisini kullanıyorsanız onu `chrome://extensions` sayfasından kaldırın, [YouTube ve YouTube Music](#youtube-ve-youtube-music) bölümündeki gibi yeni uygulamadan tekrar yükleyin ve token'ı yapıştırın.
 
 ## Gereksinimler
 
@@ -91,7 +92,7 @@ Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kul
 | Konum | Hava durumu widget'ı, bulunduğunuz yerin havası için | Konumumu Kullan'a tıkladığınızda istenir; şehir seçerseniz kullanılmaz |
 | Kamera | Ayna widget'ı | Yalnızca panel onu gösterirken; hiçbir şey kaydedilmez |
 | `127.0.0.1` üzerinde yerel sunucu | İsteğe bağlı YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
-| Özel Unix soketi | Claude Code hook'ları ve [script etkinlikleri](#scriptler) | Yalnızca hook'lar kuruluyken veya script etkinlikleri açıkken |
+| Özel Unix soketi | Claude Code ve Codex hook'ları ve [script etkinlikleri](#scriptler) | Yalnızca hook'lar kuruluyken veya script etkinlikleri açıkken |
 | `~/.claude/settings.json`, `~/.codex/hooks.json` | Claude Code ve Codex hook'larını kurmak ve kaldırmak | Yalnızca değişikliği gözden geçirdikten sonra; yedek alınır |
 | `~/.claude/projects` içindeki Claude Code oturum kayıtları | Yapay Zeka Ajanları widget'ında bağlam kullanımı ve oturum başlığı | Yalnızca bu Mac'te, son 256 KB, oturum sürerken okunur |
 | Erişilebilirlik | Ses veya parlaklık tuşlarını yönetmek | Yalnızca "Sistemin ses göstergesinin yerine geç" veya "…parlaklık göstergesinin…" açıksa |
@@ -124,16 +125,16 @@ Medya her uygulamadan okurken gerekmez. Küçük bir Chrome eklentisi (diğer Ch
 
 Chrome, eklentinin `youtube.com` ve `music.youtube.com` üzerindeki verilerinizi okuyup değiştirebileceğini söyler: eklenti oynatıcıyı okur (başlık, kapak, ilerleme) ve orada oynat, duraklat, sonraki ve sarma düğmelerine basar. Başka hiçbir sitede çalışmaz, tek diğer izni depolamadır (port ve token için) ve yalnızca `127.0.0.1` ile konuşur.
 
-## Claude Code
+## Claude Code ve Codex
 
-Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür; bir oturum bitince veya hata verince de görürsünüz. Kart, isteğin tamamını gizli karakterleri görünür hale getirerek gösterir. Hook'ları **Ayarlar > Claude Code**'dan kurun; `~/.claude/settings.json` değişikliğini önce siz görürsünüz ve yedek alınır. Hook'lar uygulamaya yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ulaşır; böylece başka hiçbir şey Claude Code'a uygulama adına cevap veremez; hook'lar eklentininkinden ayrı, kendi token'larını kullanır.
+Yapay Zeka Ajanları widget'ı bir oturumun o an ne yaptığını ("Notch.swift düzenleniyor", "Testler çalıştırılıyor"), başlığını ve son yanıtını, bağlam penceresinin ne kadar dolu olduğunu gösterir. Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür; bir oturum bitince veya hata verince de görürsünüz. Kart, isteğin tamamını gizli karakterleri görünür hale getirerek gösterir. Sorular ve plan onayları izin isteği değildir: onları Claude Code kendisi sorar, notch oturumun sizi beklediğini gösterir. Hook'ları **Ayarlar > Ajanlar**'dan kurun; `~/.claude/settings.json` değişikliğini önce siz görürsünüz ve yedek alınır. Hook'lar uygulamaya yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ulaşır; böylece başka hiçbir şey Claude Code'a uygulama adına cevap veremez; hook'lar eklentininkinden ayrı, kendi token'larını kullanır.
 
-**Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır.** Ayarlar > Claude Code'dan notch'ta kabuk komutları dışındaki her şeye izin verilmesini seçebilir ya da İzin Ver'i tamamen kapatıp yalnızca Reddet ve Terminalde seçeneklerini bırakabilirsiniz. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
+**Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır.** Ayarlar > Ajanlar'dan notch'ta kabuk komutları dışındaki her şeye izin verilmesini seçebilir ya da İzin Ver'i tamamen kapatıp yalnızca Reddet ve Terminalde seçeneklerini bırakabilirsiniz. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
+
+**Codex** de aynı şekilde çalışır: hook'larını **Ayarlar > Ajanlar > Codex**'ten kurun (`~/.codex/hooks.json` dosyasına yazılır), ardından Codex'te bir kez `/hooks` komutunu çalıştırıp onlara güvenin; Codex yeni hook'ları ancak bundan sonra çalıştırır.
 
 <a name="scriptler"></a>
 
-
-**Codex** de aynı şekilde çalışır: hook'larını **Ayarlar > Ajanlar > Codex**'ten kurun (`~/.codex/hooks.json` dosyasına yazılır), ardından Codex'te bir kez `/hooks` komutunu çalıştırıp onlara güvenin; Codex yeni hook'ları ancak bundan sonra çalıştırır.
 ## Script'ler
 
 Kendi script'lerinizin, Kısayollar'ın veya derleme araçlarınızın notch'un yanında kısa bir durum göstermesi için **Ayarlar > Bağlantılar > Script'ler**'i açın. **Örnek Komutu Kopyala**, token'ınızla çalışmaya hazır bir komut kopyalar:
@@ -164,7 +165,7 @@ Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnız
 
 ## Kaldırma
 
-1. Claude Code hook'larını kurduysanız önce **Ayarlar > Claude Code > Kaldır…** ile kaldırın. Uygulama silindikten sonra kalan hook'lar hiçbir şey yapmaz ama `~/.claude/settings.json` içinde kalır.
+1. Claude Code veya Codex hook'larını kurduysanız önce **Ayarlar > Ajanlar > Kaldır…** ile (her ajan için) kaldırın. Uygulama silindikten sonra kalan hook'lar hiçbir şey yapmaz ama `~/.claude/settings.json` ve `~/.codex/hooks.json` içinde kalır.
 2. Ayarlar > Genel'de **Oturum açıldığında başlat**'ı kapatın, menü çubuğundan Cumba'dan çıkın ve uygulamayı Çöp Sepeti'ne taşıyın.
 3. Eklentiyi `chrome://extensions` sayfasından kaldırın.
 4. Verilerini de silmek için (temalar, düzen, notlar, tercihler ve token'lar):
