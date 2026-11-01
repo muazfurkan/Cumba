@@ -6,6 +6,8 @@ struct LiveActivity: Identifiable {
   /// Higher wins when several activities are active at once.
   enum Priority: Int, Comparable, Sendable {
     case media
+    /// Stays while the battery is low, above music but below anything that comes and goes.
+    case lowBattery
     case keepAwake
     case timerRunning
     case battery

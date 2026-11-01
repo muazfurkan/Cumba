@@ -1837,6 +1837,17 @@
         }
       }
     },
+    "Low battery" : {
+      "comment" : "Accessibility label of the low battery percentage beside the notch",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pil zayıf"
+          }
+        }
+      }
+    },
     "Make it yours" : {
       "localizations" : {
         "tr" : {
@@ -3125,6 +3136,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Göster"
+          }
+        }
+      }
+    },
+    "Show a low battery in the notch" : {
+      "comment" : "Settings toggle",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düşük pili notch'ta göster"
           }
         }
       }

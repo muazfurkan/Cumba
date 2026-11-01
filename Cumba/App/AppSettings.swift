@@ -28,6 +28,7 @@ final class AppSettings {
     static let showsBrightnessChanges = "showsBrightnessChanges"
     static let replacesBrightnessIndicator = "replacesBrightnessIndicator"
     static let showsPrivacyIndicators = "showsPrivacyIndicators"
+    static let showsLowBattery = "showsLowBattery"
     static let scriptActivitiesEnabled = "scriptActivitiesEnabled"
   }
 
@@ -145,6 +146,11 @@ final class AppSettings {
     didSet { defaults.set(showsPrivacyIndicators, forKey: Key.showsPrivacyIndicators) }
   }
 
+  /// Shows the battery beside the notch while it's low and the charger isn't plugged in.
+  var showsLowBattery: Bool {
+    didSet { defaults.set(showsLowBattery, forKey: Key.showsLowBattery) }
+  }
+
   /// Lets local scripts show activities through `/activity` on the private socket.
   var scriptActivitiesEnabled: Bool {
     didSet { defaults.set(scriptActivitiesEnabled, forKey: Key.scriptActivitiesEnabled) }
@@ -196,6 +202,7 @@ final class AppSettings {
     showsBrightnessChanges = defaults.object(forKey: Key.showsBrightnessChanges) as? Bool ?? true
     replacesBrightnessIndicator = defaults.bool(forKey: Key.replacesBrightnessIndicator)
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
+    showsLowBattery = defaults.object(forKey: Key.showsLowBattery) as? Bool ?? true
     scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
   }
 
