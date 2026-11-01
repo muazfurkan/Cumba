@@ -191,9 +191,9 @@ final class AppSettings {
       defaults.data(forKey: Key.panelSize).flatMap {
         try? JSONDecoder().decode(PanelSize.self, from: $0)
       } ?? PanelSize()
-    showsVolumeChanges = defaults.bool(forKey: Key.showsVolumeChanges)
+    showsVolumeChanges = defaults.object(forKey: Key.showsVolumeChanges) as? Bool ?? true
     replacesVolumeIndicator = defaults.bool(forKey: Key.replacesVolumeIndicator)
-    showsBrightnessChanges = defaults.bool(forKey: Key.showsBrightnessChanges)
+    showsBrightnessChanges = defaults.object(forKey: Key.showsBrightnessChanges) as? Bool ?? true
     replacesBrightnessIndicator = defaults.bool(forKey: Key.replacesBrightnessIndicator)
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
     scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)

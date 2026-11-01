@@ -17,6 +17,24 @@ struct AppSettingsTests {
     #expect(AppSettings(defaults: defaults).isPaused)
   }
 
+  @Test func volumeAndBrightnessShowByDefaultWithoutTheKeyTap() throws {
+    let suiteName = "AppSettingsTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+
+    let settings = AppSettings(defaults: defaults)
+    #expect(settings.showsVolumeChanges)
+    #expect(settings.showsBrightnessChanges)
+    #expect(settings.replacesVolumeIndicator == false)
+    #expect(settings.replacesBrightnessIndicator == false)
+
+    settings.showsVolumeChanges = false
+    settings.showsBrightnessChanges = false
+    let reloaded = AppSettings(defaults: defaults)
+    #expect(reloaded.showsVolumeChanges == false)
+    #expect(reloaded.showsBrightnessChanges == false)
+  }
+
   @Test func panelSizePersistsAndTakesAnOldThemeSizeOnce() throws {
     let suiteName = "AppSettingsTests-\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))

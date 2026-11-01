@@ -8,13 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Brightness changes in the notch (Settings > General > Indicators), optionally replacing the system brightness indicator. It uses the private DisplayServices framework, since Apple silicon has no public brightness API.
+- Volume and brightness changes show in the notch, on by default (Settings > General > Indicators). Either can also replace the system indicator, which needs Accessibility. Brightness uses the private DisplayServices framework, since Apple silicon has no public brightness API.
 - New widgets in the gallery: Notes (one quick note, saved as plain text), Clipboard History (last 20 copied texts, in memory only, passwords skipped), Keep Awake, Pomodoro and Teleprompter (scrolls a script under the camera and can hide the panel from screen sharing).
 - Calendar: a Join button for Zoom, Meet, Teams, Webex, FaceTime, Whereby and Jitsi links, and an optional countdown before the next event.
-- Settings > General: show the panel on the display with a notch, the main display or the display with the pointer; the volume level in the notch, optionally replacing the system volume indicator (needs Accessibility); a dot while the microphone or camera is in use; and the app's own CPU and memory use.
+- Settings > General: show the panel on the display with a notch, the main display or the display with the pointer; a dot while the microphone or camera is in use; and the app's own CPU and memory use.
 - Media sources can be turned off one by one.
 - Script activities (Settings > Connections > Scripts): your own scripts can show a status or progress beside the notch through the private socket, with their own token.
-
 - Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
 - A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
 - Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
@@ -23,7 +22,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Weather: click one of the coming days to see it, and click it again to go back to now; alone in its tab, the hours scroll sideways through the next day or the day you picked.
 - AI Agents: with several sessions, click "+N" to step through them.
 - Four new built-in themes: Neon Tokyo (deep indigo with a pink to cyan neon edge and monospaced text), Sakura, Synthwave and Violet Night. Themes can now fade the background into a second color (Appearance > Material > Gradient) and draw a glowing neon edge around the open panel (Appearance > Colors > Neon edge).
-
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
 - Releases include a `.dmg` with an Applications shortcut next to the `.zip`.
 - README sections on uninstalling.
