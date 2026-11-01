@@ -91,12 +91,17 @@ struct NotchGeometry: Equatable, Sendable {
     let largest = CGSize(
       width: max(
         layout.expandedSize.width, expanded.width, layout.largestPanel?.width ?? 0,
-        notchRect.width, shapeSize(for: .peek).width),
-      height: max(expanded.height, layout.largestPanel?.height ?? 0))
+        notchRect.width, shapeSize(for: .peek).width, greetingSize.width),
+      height: max(expanded.height, layout.largestPanel?.height ?? 0, greetingSize.height))
     let width = largest.width + layout.shadowMargin * 2
     let height = largest.height + max(layout.shadowMargin, layout.tabBarRoom)
     return CGRect(
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
+  }
+
+  /// The shape while it says hello: room for the word under the camera housing.
+  var greetingSize: CGSize {
+    CGSize(width: max(notchRect.width + 120, 340), height: notchRect.height + 132)
   }
 
   /// Width of each side of the peek; never narrower than the closed notch.

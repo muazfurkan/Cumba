@@ -12,6 +12,8 @@ final class NotchViewModel {
   var textScale = PanelSize().textScale
   var tabBarStyle = AppSettings.TabBarStyle.compact
   var widgetStyle = AppSettings.WidgetStyle.lines
+  /// The closed notch opens to write "hello" (see `HelloView`).
+  var isGreeting = false
 
   /// Called after every state change, e.g. to update the hover area.
   @ObservationIgnored var onStateChange: ((NotchState) -> Void)?

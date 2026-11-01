@@ -90,7 +90,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       settings.adoptLegacyPanelSize(themes.current.legacySize)
       await layoutStore.load()
     }
-    welcomeWindow.showIfFirstLaunch()
+    // The first time, the notch says hello before the welcome window comes up.
+    if !settings.hasSeenWelcome {
+      Task { [notchWindow, welcomeWindow] in
+        try? await Task.sleep(for: .milliseconds(600))
+        await notchWindow.sayHello()
+        welcomeWindow.showIfFirstLaunch()
+      }
+    }
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
   }

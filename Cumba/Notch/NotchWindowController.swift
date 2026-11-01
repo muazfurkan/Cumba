@@ -60,6 +60,7 @@ final class NotchWindowController {
     startTabSwipes()
     connectPanelControl()
     observeSystemEvents()
+    observeHelloRequests()
     observeSettings()
     observeWidgets()
     applySettings()
@@ -132,6 +133,18 @@ final class NotchWindowController {
         })
     }
   #endif
+
+  /// Settings > General can play the greeting again.
+  private func observeHelloRequests() {
+    observers.append(
+      NotificationCenter.default.addObserver(forName: .notchSayHello, object: nil, queue: .main) {
+        [weak self] _ in
+        MainActor.assumeIsolated {
+          guard let self else { return }
+          Task { await self.sayHello() }
+        }
+      })
+  }
 
   /// Re-places the panel whenever the screen setup, sleep state or space changes (N3).
   private func observeSystemEvents() {
@@ -244,6 +257,17 @@ final class NotchWindowController {
           self.menuClosed()
         }
       })
+  }
+
+  /// Writes "hello" under the notch, like a new Mac does; returns once the notch has closed
+  /// again. Not while the panel is hidden or already saying it.
+  func sayHello() async {
+    guard !model.isGreeting, panel?.isVisible == true else { return }
+    model.isGreeting = true
+    try? await Task.sleep(for: HelloView.duration)
+    model.isGreeting = false
+    // Let the notch close before anything else comes up.
+    try? await Task.sleep(for: .milliseconds(500))
   }
 
   /// Closes the panel, e.g. before Settings opens to ask for a permission.
@@ -497,4 +521,6 @@ final class NotchWindowController {
 extension Notification.Name {
   /// Posted when the panel opens, e.g. for the welcome window's "try it" step.
   static let notchPanelDidOpen = Notification.Name("io.github.muazfurkan.ljaspnotch.panelDidOpen")
+  /// Asks the notch to write "hello" (Settings > General).
+  static let notchSayHello = Notification.Name("io.github.muazfurkan.ljaspnotch.sayHello")
 }

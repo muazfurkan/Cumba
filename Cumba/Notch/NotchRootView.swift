@@ -13,16 +13,25 @@ struct NotchRootView: View {
     if let geometry = model.geometry {
       let state = model.state
       let theme = model.theme
-      let size = geometry.shapeSize(for: state)
+      // Opening the panel ends the greeting.
+      let isGreeting = model.isGreeting && !state.isOpen
+      let size = isGreeting ? geometry.greetingSize : geometry.shapeSize(for: state)
       let canvas = geometry.shapeSize(for: .expanded)
       let shape = NotchShape(
-        topRadius: state.isOpen ? 14 : 6, bottomRadius: state.isOpen ? theme.cornerRadius : 10)
-      // Over the hardware notch the closed shape is plain black so it blends in.
-      let isBlended = state == .closed && !geometry.isVirtual
+        topRadius: state.isOpen || isGreeting ? 14 : 6,
+        bottomRadius: state.isOpen ? theme.cornerRadius : isGreeting ? 26 : 10)
+      // Over the hardware notch the closed shape is plain black so it blends in, and the
+      // greeting is black like a new Mac's.
+      let isBlended = (state == .closed || isGreeting) && !geometry.isVirtual
 
       VStack(spacing: 8) {
         ZStack(alignment: .top) {
-          if state.isOpen {
+          if isGreeting {
+            HelloView()
+              .frame(width: 260, height: 120)
+              .padding(.top, geometry.notchRect.height + 4)
+              .transition(.opacity.animation(.easeOut(duration: 0.3)))
+          } else if state.isOpen {
             ExpandedPanelView(model: model, host: host, notchHeight: geometry.notchRect.height)
               .frame(width: canvas.width, height: canvas.height)
               .transition(Self.contentTransition)
@@ -52,7 +61,7 @@ struct NotchRootView: View {
         .background {
           PanelBackground(
             shape: shape, theme: theme, isBlended: isBlended,
-            shadowOpacity: theme.shadow && state.isOpen ? 0.45 : 0)
+            shadowOpacity: theme.shadow && (state.isOpen || isGreeting) ? 0.45 : 0)
         }
         .contentShape(shape)
         .onTapGesture { model.send(.clicked) }
@@ -70,6 +79,7 @@ struct NotchRootView: View {
       .fontDesign(theme.fontDesign.swiftUI)
       .environment(\.panelTextScale, model.textScale)
       .animation(animation(for: state, theme: theme), value: state)
+      .animation(.spring(response: 0.5, dampingFraction: 0.85), value: model.isGreeting)
       .animation(.smooth(duration: 0.25), value: theme)
       .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
       .animation(.smooth(duration: 0.35), value: geometry.layout.peekNotificationHeight)

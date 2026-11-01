@@ -1,4 +1,5 @@
 import CoreGraphics
+import SwiftUI
 import Testing
 
 @testable import Cumba
@@ -153,5 +154,31 @@ struct NotchGeometryTests {
     let layout = NotchLayout(size: size)
     #expect(layout.expandedSize == CGSize(width: 800, height: 300))
     #expect(layout.peekExtraWidth == 40)
+  }
+
+  @Test func theGreetingFitsTheWindowEvenWithTheSmallestPanel() throws {
+    var layout = NotchLayout()
+    layout.expandedSize = CGSize(
+      width: PanelSize.widthRange.lowerBound, height: PanelSize.heightRange.lowerBound)
+    let geometry = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    let greeting = geometry.greetingSize
+    #expect(greeting.width > geometry.notchRect.width)
+    #expect(greeting.height > geometry.notchRect.height + 100)
+    #expect(geometry.windowFrame.width >= greeting.width)
+    #expect(geometry.windowFrame.height >= greeting.height)
+  }
+}
+
+struct HelloShapeTests {
+  @Test func theWordFillsTheRectWithoutLeavingIt() {
+    let rect = CGRect(x: 10, y: 20, width: 260, height: 120)
+    let bounds = HelloShape().path(in: rect).boundingRect
+    #expect(rect.contains(bounds))
+    // Scaled to fit, keeping its proportions: most of the width is written on.
+    #expect(bounds.width > rect.width * 0.75)
+    #expect(bounds.height > rect.height * 0.6)
   }
 }

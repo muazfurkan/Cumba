@@ -1960,6 +1960,28 @@
         }
       }
     },
+    "Hello" : {
+      "comment" : "Accessibility label of the hello written under the notch",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merhaba"
+          }
+        }
+      }
+    },
+    "Hello animation" : {
+      "comment" : "Settings row that replays the greeting written under the notch",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merhaba animasyonu"
+          }
+        }
+      }
+    },
     "Hide" : {
       "localizations" : {
         "tr" : {
@@ -4380,6 +4402,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bir video ya da uygulama ekranı kaplarken notch kenara çekilir."
+          }
+        }
+      }
+    },
+    "The notch writes hello, as it does the first time Cumba starts." : {
+      "comment" : "Help for the hello animation row in Settings",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch, Cumba ilk açıldığında olduğu gibi hello yazar."
           }
         }
       }

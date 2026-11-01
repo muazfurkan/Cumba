@@ -45,6 +45,15 @@ struct GeneralSettingsView: View {
       Section("About") {
         LabeledContent("Version", value: "\(AppInfo.version) (\(AppInfo.build))")
         LabeledContent("Resource use") { ResourceUsageLabel() }
+        LabeledContent {
+          Button("Play") {
+            NotificationCenter.default.post(name: .notchSayHello, object: nil)
+          }
+        } label: {
+          InfoLabel(
+            "Hello animation",
+            help: "The notch writes hello, as it does the first time Cumba starts.")
+        }
         HStack {
           if copiedDiagnostics {
             Text("Copied. It contains no personal data.")
