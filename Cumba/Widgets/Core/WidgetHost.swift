@@ -291,16 +291,17 @@ struct PeekView: View {
 
   private var row: some View {
     HStack(spacing: 0) {
-      // Clipped, so nothing can slide under the camera housing where it can't be seen.
+      // Clipped to the side, so nothing can slide under the camera housing where it can't
+      // be seen; the full height keeps strokes and glyph edges whole.
       activity.leading
-        .frame(width: sideWidth)
+        .frame(width: sideWidth, height: height)
         .clipped()
       Color.clear
         .frame(width: notchWidth)
       activity.trailing
         .lineLimit(1)
         .minimumScaleFactor(0.7)
-        .frame(width: sideWidth)
+        .frame(width: sideWidth, height: height)
         .clipped()
     }
   }

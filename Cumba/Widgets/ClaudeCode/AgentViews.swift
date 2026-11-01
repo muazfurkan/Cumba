@@ -23,10 +23,12 @@ struct AgentSpinner: View {
 
   var body: some View {
     let size = max(14, height * 0.45)
+    // Inset by half the line so the stroke stays inside the frame.
     Circle()
+      .inset(by: 1.5)
       .trim(from: 0, to: 0.72)
       .stroke(agent.color, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-      .background(Circle().stroke(agent.color.opacity(0.22), lineWidth: 3))
+      .background(Circle().inset(by: 1.5).stroke(agent.color.opacity(0.22), lineWidth: 3))
       .frame(width: size, height: size)
       .rotationEffect(.degrees(turned ? 360 : 0))
       .onAppear {
