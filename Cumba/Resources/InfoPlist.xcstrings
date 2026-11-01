@@ -8,13 +8,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Cumba reads what Spotify and Music are playing and sends play, pause, next and seek commands to them."
+            "value" : "Cumba reads what Spotify and Music are playing and sends play, pause, next and seek commands to them, and shows your recent Apple Notes and makes new ones."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cumba, Spotify ve Müzik'te ne çaldığını okur ve onlara oynat, duraklat, sonraki ve sarma komutları gönderir."
+            "value" : "Cumba, Spotify ve Müzik'te çalanı okur ve onlara oynat, duraklat, sonraki ve sarma komutlarını gönderir; ayrıca son Apple Notlar'ınızı gösterir ve yeni not oluşturur."
           }
         }
       }
@@ -87,6 +87,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hava Durumu widget'ı bulunduğunuz yerin havasını gösterir. Konumunuz önce yaklaşık 10 km'ye yuvarlanır."
+          }
+        }
+      }
+    },
+    "NSRemindersFullAccessUsageDescription" : {
+      "comment" : "Privacy - Reminders Full Access Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The To-dos widget shows your reminders and lets you tick them off and add new ones. Nothing leaves your Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapılacaklar widget'ı anımsatıcılarınızı gösterir; onları işaretleyip yenilerini eklemenizi sağlar. Hiçbir şey Mac'inizden çıkmaz."
+          }
+        }
+      }
+    },
+    "NSRemindersUsageDescription" : {
+      "comment" : "Privacy - Reminders Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The To-dos widget shows your reminders and lets you tick them off and add new ones. Nothing leaves your Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapılacaklar widget'ı anımsatıcılarınızı gösterir; onları işaretleyip yenilerini eklemenizi sağlar. Hiçbir şey Mac'inizden çıkmaz."
           }
         }
       }

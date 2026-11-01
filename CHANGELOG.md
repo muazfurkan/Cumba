@@ -9,7 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - A new Settings window, laid out like System Settings: a searchable sidebar with pages in three groups (General, Appearance, Displays, Behavior, Indicators and Permissions; Widgets, with a page for each widget that has settings; Agents and Connections). Each page starts with its icon, title and what it's for, rows explain themselves with an ⓘ, and switches sit on the right.
-- Widgets look like Apple's: each one's symbol and name in its own color above the content. Notes reads like Apple Notes, with the first line as a bold title, the rest in gray and when it last changed; click it to type.
+- Notes is your Apple Notes: the most recent notes like Apple's Notes widget, a click opens one in Notes, and a new note can be typed in the panel. Cumba reads Notes through AppleScript (Automation access, asked once), starts Notes in the background when needed and never changes an existing note. The note kept by earlier versions moves to Apple Notes once.
+- A To-dos widget for Apple Reminders: a list's open reminders with round checkboxes, overdue dates in red, and a line to add one. Ticks and new reminders sync to your other devices through Reminders.
+- Widgets look like Apple's: each one's symbol and name in its own color above the content.
 - Widgets are set apart by a faint line instead of cards (Appearance > Widgets: Lines or Cards).
 - A tab holds as many widgets as fit on the screen: the panel grows wider instead of squeezing them, and only when the screen is full does it say there's no room, in the panel and in Settings alike. The panel also grows taller when a widget needs it, such as a long answer from an AI agent, and switching tabs animates both.
 - Settings > Behavior > Opening Tab: open the panel on a tab of your choice or the one it was left on, and choose whether it opens on the agents' tab while Claude Code or Codex works.

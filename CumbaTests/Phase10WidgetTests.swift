@@ -187,23 +187,54 @@ struct TeleprompterTests {
   }
 }
 
-@MainActor
-struct NotesTests {
-  @Test func savesAndLoads() async throws {
-    let url = FileManager.default.temporaryDirectory.appending(path: "notes-\(UUID()).txt")
-    defer { try? FileManager.default.removeItem(at: url) }
-    let widget = NotesWidget(fileURL: url, panel: PanelControl())
-    await widget.load()
-    widget.text = "Buy milk"
-    widget.shutdown()
-    try await Task.sleep(for: .milliseconds(300))
-    let again = NotesWidget(fileURL: url, panel: PanelControl())
-    await again.load()
-    #expect(again.text == "Buy milk")
-    let permissions =
-      try FileManager.default.attributesOfItem(atPath: url.path(percentEncoded: false))[
-        .posixPermissions] as? Int
-    #expect(permissions == 0o600)
+struct AppleNotesTests {
+  @Test func readsTheListNewestFirstAndSkipsBrokenRecords() throws {
+    let output =
+      "x-coredata://a/ICNote/p1\u{1F}Notes\u{1F}2026-10-30T09:15:00\u{1F}Groceries\u{1E}"
+      + "x-coredata://a/ICNote/p2\u{1F}Work\u{1F}2026-11-01T14:32:10\u{1F}Cumba site\u{1E}"
+      + "broken record\u{1E}"
+    let notes = AppleNotes.parseList(output)
+    #expect(notes.map(\.title) == ["Cumba site", "Groceries"])
+    #expect(notes[0].folder == "Work")
+    #expect(notes[0].id == "x-coredata://a/ICNote/p2")
+    let components = Calendar.current.dateComponents([.hour, .minute], from: notes[0].modified)
+    #expect(components.hour == 14 && components.minute == 32)
+  }
+
+  @Test func previewsLeaveOutTheTitleLine() {
+    let output = "p1\u{1F}Groceries\nMilk\n\n  Bread  \u{1E}p2\u{1F}Only a title\u{1E}"
+    let previews = AppleNotes.parsePreviews(output)
+    #expect(previews["p1"] == "Milk Bread")
+    #expect(previews["p2"] == "")
+  }
+
+  @Test func newNotesAreEscapedForHTMLAndAppleScript() {
+    let html = AppleNotes.html(for: "  Plan <b>\n\nA & B  ")
+    #expect(html == "<div>Plan &lt;b&gt;</div><div><br></div><div>A &amp; B</div>")
+    #expect(AppleNotes.escaped(#"say "hi" \ bye"#) == #"say \"hi\" \\ bye"#)
+  }
+}
+
+struct ReminderTests {
+  @Test func overdueMeansPastTheTimeOrBeforeTodayForADateAlone() throws {
+    let now = try #require(
+      Calendar.current.date(from: DateComponents(year: 2026, month: 11, day: 1, hour: 15)))
+    let earlierToday = now.addingTimeInterval(-3600)
+    let yesterday = now.addingTimeInterval(-86_400)
+    #expect(
+      ReminderItem(id: "a", title: "", due: earlierToday, dueHasTime: true).isOverdue(now: now))
+    #expect(
+      !ReminderItem(id: "b", title: "", due: earlierToday, dueHasTime: false).isOverdue(now: now))
+    #expect(ReminderItem(id: "c", title: "", due: yesterday, dueHasTime: false).isOverdue(now: now))
+    #expect(!ReminderItem(id: "d", title: "", due: nil, dueHasTime: false).isOverdue(now: now))
+  }
+
+  @MainActor
+  @Test func dueDatesReadLikeReminders() {
+    let today = Calendar.current.startOfDay(for: .now)
+    #expect(RemindersView.when(today, hasTime: false) == String(localized: "Today"))
+    let tomorrow = today.addingTimeInterval(86_400 + 3600 * 9)
+    #expect(RemindersView.when(tomorrow, hasTime: true).hasPrefix(String(localized: "Tomorrow")))
   }
 }
 

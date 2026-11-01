@@ -32,7 +32,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Cumba reads what Spotify and Music are playing and sends play, pause, next and seek commands to them.</string>
+	<string>Cumba reads what Spotify and Music are playing and sends play, pause, next and seek commands to them, and shows your recent Apple Notes and makes new ones.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Cumba shows your upcoming events in the notch. Nothing leaves your Mac.</string>
 	<key>NSCameraUsageDescription</key>
@@ -43,5 +43,9 @@
 	<string>The Weather widget shows the weather where you are. Your location is rounded to about 10 km first.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>The To-dos widget shows your reminders and lets you tick them off and add new ones. Nothing leaves your Mac.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>The To-dos widget shows your reminders and lets you tick them off and add new ones. Nothing leaves your Mac.</string>
 </dict>
 </plist>

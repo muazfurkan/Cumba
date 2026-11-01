@@ -278,16 +278,6 @@
         }
       }
     },
-    "A quick note that's always one hover away" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Her zaman bir imleç uzağınızda duran hızlı bir not"
-          }
-        }
-      }
-    },
     "About" : {
       "comment" : "Settings section",
       "localizations" : {
@@ -543,6 +533,17 @@
         }
       }
     },
+    "Allow Reminders Access" : {
+      "comment" : "Button",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anımsatıcılara Erişime İzin Ver"
+          }
+        }
+      }
+    },
     "Allowed" : {
       "localizations" : {
         "tr" : {
@@ -642,6 +643,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otomasyon"
+          }
+        }
+      }
+    },
+    "Automation access to Notes is off." : {
+      "comment" : "Settings note",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar için Otomasyon izni kapalı."
           }
         }
       }
@@ -825,17 +837,6 @@
         }
       }
     },
-    "Click to edit" : {
-      "comment" : "Notes widget help",
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Düzenlemek için tıklayın"
-          }
-        }
-      }
-    },
     "Click to Show the Camera" : {
       "localizations" : {
         "tr" : {
@@ -906,6 +907,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kompakt"
+          }
+        }
+      }
+    },
+    "Complete" : {
+      "comment" : "Accessibility: ticks a reminder off",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamla"
+          }
+        }
+      }
+    },
+    "Connect Notes" : {
+      "comment" : "Button",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar'ı Bağla"
+          }
+        }
+      }
+    },
+    "Connected to Notes" : {
+      "comment" : "Settings status",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar'a bağlı"
           }
         }
       }
@@ -1173,16 +1207,6 @@
         }
       }
     },
-    "Click to write something down…" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bir şey yazmak için tıklayın…"
-          }
-        }
-      }
-    },
     "Clipboard" : {
       "localizations" : {
         "tr" : {
@@ -1396,6 +1420,17 @@
         }
       }
     },
+    "Cumba can't read Notes. Allow it in System Settings > Privacy & Security > Automation." : {
+      "comment" : "Notes widget",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba Notlar'ı okuyamıyor. Sistem Ayarları > Gizlilik ve Güvenlik > Otomasyon'dan izin verin."
+          }
+        }
+      }
+    },
     "Cumba can't read that folder. Allow it in Privacy & Security > Files and Folders." : {
       "comment" : "Clipboard History setting, when the screenshot folder can't be read",
       "localizations" : {
@@ -1477,6 +1512,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Varsayılan"
+          }
+        }
+      }
+    },
+    "Default list" : {
+      "comment" : "Reminders list picker",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılan liste"
           }
         }
       }
@@ -2212,6 +2258,17 @@
         }
       }
     },
+    "List" : {
+      "comment" : "Settings row: reminders list",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste"
+          }
+        }
+      }
+    },
     "Listening" : {
       "localizations" : {
         "tr" : {
@@ -2542,6 +2599,28 @@
         }
       }
     },
+    "New Note" : {
+      "comment" : "Notes widget button",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Not"
+          }
+        }
+      }
+    },
+    "New Reminder" : {
+      "comment" : "Reminders widget field placeholder",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Anımsatıcı"
+          }
+        }
+      }
+    },
     "New Tab" : {
       "comment" : "Default name of a new panel tab",
       "localizations" : {
@@ -2591,6 +2670,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pil yok"
+          }
+        }
+      }
+    },
+    "No notes yet." : {
+      "comment" : "Notes widget, empty",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz not yok."
           }
         }
       }
@@ -2661,6 +2751,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notlar"
+          }
+        }
+      }
+    },
+    "Notes didn't answer." : {
+      "comment" : "Notes widget error",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar yanıt vermedi."
+          }
+        }
+      }
+    },
+    "Notes widget: your recent notes, and new ones from the panel" : {
+      "comment" : "Permissions row",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar widget'ı: son notlarınız ve panelden yeni notlar"
           }
         }
       }
@@ -2817,6 +2929,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otomasyon Ayarlarını Aç"
+          }
+        }
+      }
+    },
+    "Open in Notes" : {
+      "comment" : "Notes widget help",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar'da Aç"
           }
         }
       }
@@ -3228,6 +3351,39 @@
         }
       }
     },
+    "Reminders" : {
+      "comment" : "Permissions row",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anımsatıcılar"
+          }
+        }
+      }
+    },
+    "Reminders access is off." : {
+      "comment" : "Settings note",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anımsatıcılar erişimi kapalı."
+          }
+        }
+      }
+    },
+    "Reminders access is off. You can allow it in System Settings." : {
+      "comment" : "To-dos widget",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anımsatıcılar erişimi kapalı. Sistem Ayarları'ndan izin verebilirsiniz."
+          }
+        }
+      }
+    },
     "Remove" : {
       "localizations" : {
         "tr" : {
@@ -3465,6 +3621,17 @@
         }
       }
     },
+    "Save to Notes" : {
+      "comment" : "Button",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar'a Kaydet"
+          }
+        }
+      }
+    },
     "Saved." : {
       "localizations" : {
         "tr" : {
@@ -3596,6 +3763,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İkincil metin"
+          }
+        }
+      }
+    },
+    "See and add to your Apple Notes here." : {
+      "comment" : "Notes widget, not connected",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Notlar'ınızı burada görün ve not ekleyin."
           }
         }
       }
@@ -4174,6 +4352,17 @@
         }
       }
     },
+    "The first line becomes the title." : {
+      "comment" : "Notes widget editor placeholder",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk satır başlık olur."
+          }
+        }
+      }
+    },
     "The main display" : {
       "localizations" : {
         "tr" : {
@@ -4191,6 +4380,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bir video ya da uygulama ekranı kaplarken notch kenara çekilir."
+          }
+        }
+      }
+    },
+    "The Notes widget shows your most recent Apple Notes and makes new ones. Cumba reads Notes through AppleScript, starting Notes in the background when it isn't open, and never changes or deletes an existing note. Nothing leaves your Mac." : {
+      "comment" : "Notes widget settings",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notlar widget'ı son Apple Notlar'ınızı gösterir ve yeni not oluşturur. Cumba Notlar'ı AppleScript ile okur, Notlar kapalıysa onu arka planda başlatır ve var olan hiçbir notu değiştirmez ya da silmez. Hiçbir şey Mac'inizden çıkmaz."
           }
         }
       }
@@ -4374,6 +4574,17 @@
         }
       }
     },
+    "Tick off and add your Apple Reminders here." : {
+      "comment" : "To-dos widget, no access",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Anımsatıcılar'ınızı burada işaretleyin ve ekleyin."
+          }
+        }
+      }
+    },
     "Timer" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -4411,6 +4622,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kapak görselini göstermek ve kontrolleri kullanmak için Cumba'nın her oynatıcıya Otomasyon erişimi olmalı. Oynatıcıyı açın, ardından buradan izin verin."
+          }
+        }
+      }
+    },
+    "To-dos" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapılacaklar"
+          }
+        }
+      }
+    },
+    "To-dos widget: your reminders, to tick off and add to" : {
+      "comment" : "Permissions row",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapılacaklar widget'ı: işaretleyip ekleyebileceğiniz anımsatıcılarınız"
           }
         }
       }
@@ -4472,6 +4705,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Raf"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "comment" : "Button",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tekrar Dene"
           }
         }
       }
@@ -4971,6 +5215,17 @@
         }
       }
     },
+    "Your Apple Reminders: tick them off and add new ones" : {
+      "comment" : "Widget description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Anımsatıcılar'ınız: işaretleyin, yenilerini ekleyin"
+          }
+        }
+      }
+    },
     "Your camera as a quick mirror" : {
       "localizations" : {
         "tr" : {
@@ -5088,6 +5343,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "settings.json siz incelerken değişti. Hiçbir şey yazılmadı; lütfen yeniden inceleyin."
+          }
+        }
+      }
+    },
+    "Your recent Apple Notes, and new notes typed in the panel" : {
+      "comment" : "Widget description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son Apple Notlar'ınız ve panelde yazılan yeni notlar"
           }
         }
       }
