@@ -1,19 +1,5 @@
 import SwiftUI
 
-/// The mark for an AI agent session: a sparkle in the agent's color. (Not any company's
-/// logo; the name says which agent it is.)
-struct AgentGlyph: View {
-  var agent = Agent.claude
-  var size: CGFloat = 16
-
-  var body: some View {
-    Image(systemName: "sparkle")
-      .font(.system(size: size, weight: .semibold))
-      .foregroundStyle(agent.color)
-      .accessibilityHidden(true)
-  }
-}
-
 /// A turning ring beside the closed notch while an agent works. Still with Reduce Motion.
 struct AgentSpinner: View {
   var agent = Agent.claude

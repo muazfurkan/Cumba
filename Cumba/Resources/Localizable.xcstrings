@@ -12,6 +12,50 @@
         }
       }
     },
+    "%@ has a plan for you to review" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ planını onayına sunuyor"
+          }
+        }
+      }
+    },
+    "%@ is asking a question" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bir soru soruyor"
+          }
+        }
+      }
+    },
+    "%@ is done" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bitirdi"
+          }
+        }
+      }
+    },
+    "%@ is waiting for you" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ seni bekliyor"
+          }
+        }
+      }
+    },
     "%@ isn't valid JSON. Fix it first; nothing was changed." : {
       "localizations" : {
         "tr" : {
@@ -33,6 +77,17 @@
         }
       }
     },
+    "%@ needs your permission" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ izin istiyor"
+          }
+        }
+      }
+    },
     "%@ of the context window used" : {
       "comment" : "How full an AI agent session's context is",
       "localizations" : {
@@ -40,6 +95,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bağlam penceresinin %@ kadarı kullanıldı"
+          }
+        }
+      }
+    },
+    "%@ stopped with an error" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bir hatayla durdu"
           }
         }
       }
@@ -1344,17 +1410,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bitti"
-          }
-        }
-      }
-    },
-    "Error" : {
-      "comment" : "Claude Code stopped with an error",
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hata"
           }
         }
       }
@@ -2791,6 +2846,17 @@
         }
       }
     },
+    "Review" : {
+      "comment" : "Notification button: opens the request",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İncele"
+          }
+        }
+      }
+    },
     "Review changes to ~/.claude/settings.json" : {
       "localizations" : {
         "tr" : {
@@ -3953,17 +4019,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ses"
-          }
-        }
-      }
-    },
-    "Waiting" : {
-      "comment" : "Claude Code is waiting for the user",
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bekliyor"
           }
         }
       }

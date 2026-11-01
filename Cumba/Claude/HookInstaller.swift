@@ -169,7 +169,10 @@ struct HookInstaller: Sendable {
   // MARK: - Pure transformations
 
   /// The shell command of one hook. curl fails quietly (`-sf`, `|| true`) when the app isn't
-  /// running, and gives up a second before Claude Code's own timeout.
+  /// running, and gives up a second before Claude Code's own timeout. It also sends the
+  /// bundle identifier of the app the agent runs in (`__CFBundleIdentifier`, set by macOS),
+  /// so a notification's Open button can bring that app forward; without it curl sends no
+  /// such header.
   static func command(
     socketPath: String, token: String, timeout: Int, agent: Agent = .claude
   ) -> String {
@@ -178,6 +181,7 @@ struct HookInstaller: Sendable {
       "/usr/bin/curl -sf --max-time \(max(1, timeout - 1))",
       "--unix-socket \(shellQuoted(socketPath))",
       "-H \(shellQuoted(header)) -H 'Content-Type: application/json'",
+      "-H \"\(ClaudeHookRoute.appHeader): ${__CFBundleIdentifier:-}\"",
       "--data-binary @- http://localhost\(agent.hookRoute) || true",
     ].joined(separator: " ")
   }

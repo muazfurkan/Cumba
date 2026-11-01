@@ -271,22 +271,24 @@ struct PeekView: View {
   let notchWidth: CGFloat
   let sideWidth: CGFloat
   let height: CGFloat
+  /// Opens the panel, for a notification without an action that can run.
+  var openPanel: () -> Void = {}
 
   var body: some View {
     VStack(spacing: 0) {
       row
         .frame(height: height)
-      if let banner = activity.banner {
-        banner
-          .padding(.horizontal, 16)
-          .frame(height: NotchLayout.bannerHeight)
+        .accessibilityElement(children: .combine)
+      if let notification = activity.notification {
+        NotificationCard(notification: notification, openPanel: openPanel)
+          .frame(height: NotchLayout.notificationHeight, alignment: .top)
+          .transition(.opacity)
       }
     }
     .panelFont(.caption)
     .environment(\.peekHeight, height)
     // Beside the notch there is no room to grow, so the text size setting doesn't apply.
     .environment(\.panelTextScale, 1)
-    .accessibilityElement(children: .combine)
   }
 
   private var row: some View {

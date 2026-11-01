@@ -52,6 +52,17 @@ struct HookInstallerTests {
     #expect(command.contains(#"--unix-socket '/tmp/it'\''s here/hook.sock'"#))
     #expect(command.contains("--max-time 1 "))
     #expect(command.contains("-H 'X-Cumba-Token: t'"))
+    #expect(command.contains(#"-H "X-Cumba-App: ${__CFBundleIdentifier:-}""#))
+  }
+
+  @Test func onlyBundleIdentifiersCountAsTheAgentsApp() {
+    #expect(ClaudeHookRoute.appIdentifier("com.anthropic.claudefordesktop") != nil)
+    #expect(ClaudeHookRoute.appIdentifier("com.apple.Terminal") == "com.apple.Terminal")
+    #expect(ClaudeHookRoute.appIdentifier(nil) == nil)
+    #expect(ClaudeHookRoute.appIdentifier("") == nil)
+    #expect(ClaudeHookRoute.appIdentifier("a b") == nil)
+    #expect(ClaudeHookRoute.appIdentifier("x/../y") == nil)
+    #expect(ClaudeHookRoute.appIdentifier(String(repeating: "a", count: 256)) == nil)
   }
 
   @Test func keepsOtherSettingsAndHooksAndBacksUpPrivately() throws {

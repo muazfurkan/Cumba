@@ -182,6 +182,7 @@ final class NotchWindowController {
       Task { @MainActor in
         guard let self else { return }
         self.host.layoutChanged()
+        self.model.isShowingNotification = self.host.liveActivities.current?.notification != nil
         self.model.send(.liveActivityChanged(self.host.liveActivities.current != nil))
         self.updateGeometry()
         self.observeWidgets()
@@ -322,8 +323,8 @@ final class NotchWindowController {
     if let sideWidth = host.liveActivities.current?.sideWidth {
       layout.peekExtraWidth = max(layout.peekExtraWidth, sideWidth)
     }
-    if host.liveActivities.current?.banner != nil {
-      layout.peekBannerHeight = NotchLayout.bannerHeight
+    if host.liveActivities.current?.notification != nil {
+      layout.peekNotificationHeight = NotchLayout.notificationHeight
     }
     layout.panelWidth = host.preferredPanelWidth(maxWidth: layout.expandedSize.width)
     let chosen: NSScreen?
@@ -446,6 +447,7 @@ final class NotchWindowController {
       return
     }
     panel?.ignoresMouseEvents = !inside
+    host.liveActivities.isPointerOver = inside
     model.send(inside ? .pointerEntered : .pointerExited)
   }
 

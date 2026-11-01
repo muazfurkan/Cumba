@@ -28,7 +28,8 @@ struct NotchRootView: View {
         } else if state == .peek, let activity = host.liveActivities.current {
           PeekView(
             activity: activity, notchWidth: geometry.notchRect.width,
-            sideWidth: geometry.layout.peekExtraWidth, height: geometry.peekRowHeight
+            sideWidth: geometry.layout.peekExtraWidth, height: geometry.peekRowHeight,
+            openPanel: { model.send(.clicked) }
           )
           .frame(height: geometry.shapeSize(for: .peek).height, alignment: .top)
           .transition(.opacity.combined(with: .scale(scale: 0.8)))
@@ -65,6 +66,7 @@ struct NotchRootView: View {
       .animation(animation(for: state, theme: theme), value: state)
       .animation(.smooth(duration: 0.25), value: theme)
       .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
+      .animation(.smooth(duration: 0.35), value: geometry.layout.peekNotificationHeight)
       .animation(.smooth(duration: 0.3), value: geometry.layout.panelWidth)
       .environment(\.colorScheme, .dark)
     }

@@ -76,7 +76,7 @@ struct AgentSessionTests {
     #expect(service.sessions.first?.state == .done)
     #expect(service.sessions.first?.detail == "All done.")
     #expect(!center.contains("claude.working"))
-    #expect(center.current?.banner != nil)
+    #expect(center.current?.notification != nil)
   }
 }
 

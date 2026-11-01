@@ -13,8 +13,8 @@ struct NotchLayout: Equatable, Sendable {
   /// Extra horizontal room around the closed notch that still counts as hovering it.
   var hoverMargin: CGFloat = 8
 
-  /// Room under the closed notch for a live activity's banner line; 0 without one.
-  var peekBannerHeight: CGFloat = 0
+  /// Room under the closed notch for a live activity's notification; 0 without one.
+  var peekNotificationHeight: CGFloat = 0
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
@@ -23,7 +23,9 @@ struct NotchLayout: Equatable, Sendable {
   static let closedGrowth = CGSize(width: 8, height: 5)
   /// The peek's row is this much taller than the notch, for larger icons.
   static let peekExtraHeight: CGFloat = 10
-  static let bannerHeight: CGFloat = 26
+  static let notificationHeight: CGFloat = 62
+  /// The peek is at least this wide while a notification is open.
+  static let notificationWidth: CGFloat = 440
 }
 
 extension NotchLayout {
@@ -88,7 +90,7 @@ struct NotchGeometry: Equatable, Sendable {
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
   }
 
-  /// Height of the peek's row of icons, without a banner.
+  /// Height of the peek's row of icons, without a notification.
   var peekRowHeight: CGFloat { notchRect.height + NotchLayout.peekExtraHeight }
 
   func shapeSize(for state: NotchState) -> CGSize {
@@ -99,8 +101,10 @@ struct NotchGeometry: Equatable, Sendable {
         height: notchRect.height + NotchLayout.closedGrowth.height)
     case .peek:
       CGSize(
-        width: notchRect.width + layout.peekExtraWidth * 2,
-        height: peekRowHeight + layout.peekBannerHeight)
+        width: max(
+          notchRect.width + layout.peekExtraWidth * 2,
+          layout.peekNotificationHeight > 0 ? NotchLayout.notificationWidth : 0),
+        height: peekRowHeight + layout.peekNotificationHeight)
     case .expanded, .pinned:
       CGSize(
         width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),

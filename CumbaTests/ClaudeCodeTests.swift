@@ -161,9 +161,38 @@ struct ClaudeCodeServiceTests {
     #expect(service.sessions.first?.state == .waitingInput)
     #expect(service.sessions.first?.detail == "Which theme should be the default?")
     #expect(center.current?.priority == .claudeStatus)
+    #expect(center.current?.notification?.title == AgentNotice.question.title(for: .claude))
+    #expect(center.current?.notification?.message == "Which theme should be the default?")
     // Claude Code's own notice for the same question doesn't replace it.
     service.handle(try payload("notification-permission"))
     #expect(service.sessions.first?.detail == "Which theme should be the default?")
+    // It stays beside the notch until the session moves on.
+    #expect(center.contains("claude.status"))
+    let answered = try #require(
+      HookPayload.decode(
+        Data(
+          #"{"session_id":"\#(question.sessionID)","hook_event_name":"PostToolUse","cwd":"/r/x"}"#
+            .utf8)))
+    service.handle(answered)
+    #expect(!center.contains("claude.status"))
+  }
+
+  @Test func doneSaysWhichAgentFinishedAndOpensItsApp() throws {
+    let center = LiveActivityCenter()
+    let service = ClaudeCodeService(liveActivities: center)
+    let stop = try #require(
+      HookPayload.decode(
+        Data(
+          #"{"session_id":"s9","hook_event_name":"Stop","cwd":"/r/Cumba","last_assistant_message":"Done.\n\nAll   tests pass."}"#
+            .utf8)))
+    service.handle(stop, agent: .codex, app: "com.example.NotRunning")
+    let notification = try #require(center.current?.notification)
+    #expect(notification.title == AgentNotice.done.title(for: .codex))
+    #expect(notification.message == "Done. All tests pass.")
+    #expect(notification.context == "Cumba")
+    #expect(service.sessions.first?.app == "com.example.NotRunning")
+    // Not running, so the panel opens instead; nothing is launched.
+    #expect(notification.action?.perform() == false)
   }
 
   @Test func mcpToolNamesAreShortBesideTheNotch() {
