@@ -4,13 +4,14 @@ import SwiftUI
 /// The Chrome extension connection: on/off, how to install the extension, and the local
 /// server's status, port and token. The server runs only while the connection is on.
 struct ConnectionsSettingsView: View {
+  let info: SettingsPageInfo
   let server: LocalServer
   @Bindable var settings: AppSettings
   @State private var portText = ""
   @State private var showsToken = false
 
   var body: some View {
-    Form {
+    SettingsForm(info: info) {
       Section("Chrome Extension") {
         Toggle("Connect the YouTube extension", isOn: extensionEnabled)
         Text(
@@ -86,8 +87,6 @@ struct ConnectionsSettingsView: View {
         }
       }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 600)
     .onAppear { portText = String(settings.serverPort) }
   }
 

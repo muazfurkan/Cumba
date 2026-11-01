@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Tabs of the panel and the widgets in them, the gallery of every widget, and per-widget
-/// settings. Every widget can be added, removed and reordered.
+/// Tabs of the panel and the widgets in them, and the gallery of every widget. Every widget
+/// can be added, removed and reordered; each one's own settings have a page in the sidebar.
 struct WidgetsSettingsView: View {
+  let info: SettingsPageInfo
   let layoutStore: LayoutStore
   let registry: WidgetRegistry
   @State private var selectedTabID: String?
@@ -13,7 +14,7 @@ struct WidgetsSettingsView: View {
   }
 
   var body: some View {
-    Form {
+    SettingsForm(info: info) {
       Section("Tabs") {
         Picker("Tab", selection: tabSelection) {
           ForEach(tabs) { tab in
@@ -91,16 +92,7 @@ struct WidgetsSettingsView: View {
         .padding(.vertical, 4)
       }
 
-      ForEach(registry.infos) { info in
-        if let settingsView = registry.widget(info.kind)?.makeSettingsView() {
-          Section(info.title) {
-            settingsView
-          }
-        }
-      }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 620)
   }
 
   private var tabSelection: Binding<String> {

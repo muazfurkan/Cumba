@@ -24,7 +24,7 @@ final class ShortcutsWidget: NotchWidget {
   private(set) var failed: String?
 
   @ObservationIgnored private let defaults: UserDefaults
-  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsPage) -> Void
 
   required convenience init(context: WidgetContext) {
     self.init(defaults: .standard, openSettings: context.openSettings)
@@ -32,7 +32,7 @@ final class ShortcutsWidget: NotchWidget {
 
   init(
     defaults: UserDefaults,
-    openSettings: @escaping @MainActor (SettingsWindowController.Tab) -> Void
+    openSettings: @escaping @MainActor (SettingsPage) -> Void
   ) {
     self.defaults = defaults
     self.openSettings = openSettings
@@ -86,7 +86,7 @@ final class ShortcutsWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings(.widgets)
+    openSettings(.widget(Self.kind))
   }
 
   /// One shortcut name per line.

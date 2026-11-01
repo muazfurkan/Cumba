@@ -61,6 +61,14 @@ struct AppSettingsTests {
     #expect(AppSettings(defaults: defaults).tabBarStyle == .dots)
   }
 
+  @Test(arguments: [
+    SettingsPage.general, .appearance, .displays, .behavior, .indicators, .permissions,
+    .widgets, .widget("calendar"), .agents, .connections,
+  ])
+  func settingsPagesComeBackFromTheirIDs(page: SettingsPage) {
+    #expect(SettingsPage(id: page.id) == page)
+  }
+
   @Test func panelSizePersistsAndTakesAnOldThemeSizeOnce() throws {
     let suiteName = "AppSettingsTests-\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))

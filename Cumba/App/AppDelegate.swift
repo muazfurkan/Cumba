@@ -52,7 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     settingsOpener.open = { [notchWindow, settingsWindow] tab in
       // Close the panel first so permission prompts can't end up behind it.
       notchWindow.collapse()
-      settingsWindow.show(tab: tab)
+      settingsWindow.show(page: tab)
     }
   }
 
@@ -131,5 +131,5 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// Holds the action that opens Settings once the window controller exists.
 @MainActor
 private final class SettingsOpener {
-  var open: (SettingsWindowController.Tab) -> Void = { _ in }
+  var open: (SettingsPage) -> Void = { _ in }
 }

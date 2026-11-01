@@ -6,6 +6,7 @@ import SwiftUI
 /// Every permission Cumba can use, with its live state and one way to change it.
 /// Nothing is asked at launch; each prompt starts from here or from the feature's settings.
 struct PermissionsSettingsView: View {
+  let info: SettingsPageInfo
   @State private var calendar = EKEventStore.authorizationStatus(for: .event)
   @State private var camera = AVCaptureDevice.authorizationStatus(for: .video)
   @State private var accessibility = MediaKeyTap.isTrusted
@@ -13,7 +14,7 @@ struct PermissionsSettingsView: View {
   @State private var locationAccess = LocationProvider.Access.notAsked
 
   var body: some View {
-    Form {
+    SettingsForm(info: info) {
       Section {
         Text(
           "Cumba asks for a permission only when you use the feature that needs it. Everything here can be changed again in System Settings."
@@ -56,8 +57,6 @@ struct PermissionsSettingsView: View {
         }
       }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 520)
     .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification))
     { _ in
       refresh()

@@ -1,17 +1,20 @@
 import ServiceManagement
 import SwiftUI
 
+/// Starting with the Mac, updates, and the app's version and resource use.
 struct GeneralSettingsView: View {
+  let info: SettingsPageInfo
   @Bindable var settings: AppSettings
   let updates: UpdateChecker
   let diagnostics: Diagnostics.Sources
   @State private var copiedDiagnostics = false
-  @State private var isTrusted = MediaKeyTap.isTrusted
 
   var body: some View {
-    Form {
-      Section {
-        Toggle("Launch at login", isOn: .launchAtLogin(settings))
+    SettingsForm(info: info) {
+      Section("Startup") {
+        Toggle(isOn: .launchAtLogin(settings)) {
+          InfoLabel("Launch at login", help: "Cumba starts when you log in to your Mac.")
+        }
         if settings.launchAtLogin == .requiresApproval {
           VStack(alignment: .leading, spacing: 8) {
             Text("Cumba needs your approval in System Settings to launch at login.")
@@ -23,112 +26,48 @@ struct GeneralSettingsView: View {
         }
       }
 
-      Section("Panel") {
-        Picker("Show on", selection: $settings.panelScreen) {
-          Text("The display with a notch").tag(AppSettings.PanelScreen.notched)
-          Text("The main display").tag(AppSettings.PanelScreen.main)
-          Text("The display with the pointer").tag(AppSettings.PanelScreen.pointer)
-        }
-        Picker("Tabs", selection: $settings.tabBarStyle) {
-          ForEach(AppSettings.TabBarStyle.allCases, id: \.self) { style in
-            Text(style.title).tag(style)
-          }
-        }
-        Picker("Open the panel", selection: $settings.opensOnHover) {
-          Text("When the pointer rests on the notch").tag(true)
-          Text("Only on click").tag(false)
-        }
-        if settings.opensOnHover {
-          DelaySlider(
-            title: "Open delay", value: $settings.openDelay, range: AppSettings.openDelayRange)
-        }
-        DelaySlider(
-          title: "Close delay", value: $settings.closeDelay, range: AppSettings.closeDelayRange)
-        Toggle("Hide in full screen apps", isOn: $settings.hidesInFullScreen)
-        Toggle("Show a virtual notch when no screen has one", isOn: $settings.usesVirtualNotch)
-        Toggle("Haptic feedback when the panel opens", isOn: $settings.hapticFeedback)
-      }
-
-      Section("Indicators") {
-        Toggle("Show volume changes in the notch", isOn: $settings.showsVolumeChanges)
-        if settings.showsVolumeChanges {
-          Toggle("Replace the system volume indicator", isOn: replaces(\.replacesVolumeIndicator))
-        }
-        Toggle("Show brightness changes in the notch", isOn: $settings.showsBrightnessChanges)
-        if settings.showsBrightnessChanges {
-          Toggle(
-            "Replace the system brightness indicator",
-            isOn: replaces(\.replacesBrightnessIndicator))
-        }
-        if settings.showsVolumeChanges || settings.showsBrightnessChanges {
-          Text(
-            "Replacing handles those keys so only the notch shows the change. It needs Accessibility access."
-          )
-          .font(.callout)
-          .foregroundStyle(.secondary)
-          .fixedSize(horizontal: false, vertical: true)
-          if replacesAny && !isTrusted {
-            OpenPrivacySettings(pane: "Privacy_Accessibility")
-          }
-        }
-        Toggle("Show a low battery in the notch", isOn: $settings.showsLowBattery)
-        Toggle(
-          "Show when the microphone or camera is in use", isOn: $settings.showsPrivacyIndicators)
-      }
-
       Section("Updates") {
-        Toggle("Check for updates automatically", isOn: $settings.checksForUpdates)
+        Toggle(isOn: $settings.checksForUpdates) {
+          InfoLabel(
+            "Check for updates automatically",
+            help: "Once a day, Cumba asks GitHub for the latest release. Nothing else is sent.")
+        }
         Toggle("Include pre-releases", isOn: $settings.includesPrereleases)
         HStack {
+          updateStatus
+          Spacer()
           Button("Check Now") {
             Task { await updates.checkNow() }
           }
-          Spacer()
-          updateStatus
         }
       }
 
-      Section {
+      Section("About") {
         LabeledContent("Version", value: "\(AppInfo.version) (\(AppInfo.build))")
         LabeledContent("Resource use") { ResourceUsageLabel() }
         HStack {
+          if copiedDiagnostics {
+            Text("Copied. It contains no personal data.")
+              .foregroundStyle(.secondary)
+          }
+          Spacer()
           Button("Copy Diagnostics") {
             Task {
               await Diagnostics.copy(diagnostics)
               copiedDiagnostics = true
             }
           }
-          if copiedDiagnostics {
-            Text("Copied. It contains no personal data.")
-              .foregroundStyle(.secondary)
-          }
+        }
+      }
+
+      Section {
+        LabeledContent {
+          Button("Quit") { NSApp.terminate(nil) }
+        } label: {
+          Text("Quit Cumba")
         }
       }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 600)
-    .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification))
-    { _ in
-      isTrusted = MediaKeyTap.isTrusted
-    }
-  }
-
-  private var replacesAny: Bool {
-    (settings.showsVolumeChanges && settings.replacesVolumeIndicator)
-      || (settings.showsBrightnessChanges && settings.replacesBrightnessIndicator)
-  }
-
-  /// Turning it on without Accessibility access shows the system prompt first.
-  private func replaces(_ setting: ReferenceWritableKeyPath<AppSettings, Bool>) -> Binding<Bool> {
-    Binding(
-      get: { settings[keyPath: setting] },
-      set: { isOn in
-        if isOn && !MediaKeyTap.isTrusted {
-          MediaKeyTap.requestAccess()
-        }
-        settings[keyPath: setting] = isOn
-        isTrusted = MediaKeyTap.isTrusted
-      })
   }
 
   @ViewBuilder private var updateStatus: some View {

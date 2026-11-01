@@ -21,7 +21,7 @@ final class MediaWidget: NotchWidget {
   let media: MediaCoordinator
 
   @ObservationIgnored private let liveActivities: LiveActivityCenter
-  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsPage) -> Void
   @ObservationIgnored private var isRunning = true
 
   private static let activityID = "media"

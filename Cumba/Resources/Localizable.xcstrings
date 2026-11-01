@@ -267,12 +267,34 @@
         }
       }
     },
+    "A dot beside the notch, like the one in the menu bar." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menü çubuğundaki gibi notch'un yanında bir nokta."
+          }
+        }
+      }
+    },
     "A quick note that's always one hover away" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Her zaman bir imleç uzağınızda duran hızlı bir not"
+          }
+        }
+      }
+    },
+    "About" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakkında"
           }
         }
       }
@@ -334,6 +356,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sekme Ekle"
+          }
+        }
+      }
+    },
+    "Add this widget to the panel to change its settings." : {
+      "comment" : "Settings, widget page",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlarını değiştirmek için bu widget'ı panele ekleyin."
           }
         }
       }
@@ -581,6 +614,17 @@
         }
       }
     },
+    "At 20% or less on battery, a red ring and the percentage stay beside the notch." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pille çalışırken %20 ve altında, notch'un yanında kırmızı bir halka ve yüzde kalır."
+          }
+        }
+      }
+    },
     "At the Top" : {
       "comment" : "Tab bar style",
       "localizations" : {
@@ -639,6 +683,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pil"
+          }
+        }
+      }
+    },
+    "Battery and Privacy" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pil ve Gizlilik"
+          }
+        }
+      }
+    },
+    "Behavior" : {
+      "comment" : "Settings page",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Davranış"
           }
         }
       }
@@ -733,6 +799,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Şehir Seç"
+          }
+        }
+      }
+    },
+    "Choose the display the panel is on and what happens in full screen." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panelin hangi ekranda olacağını ve tam ekranda ne olacağını seçin."
           }
         }
       }
@@ -1308,6 +1385,39 @@
         }
       }
     },
+    "Cumba handles the brightness keys so only the notch shows the change." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba parlaklık tuşlarını kendisi işler, değişikliği yalnızca notch gösterir."
+          }
+        }
+      }
+    },
+    "Cumba handles the volume keys so only the notch shows the change." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba ses tuşlarını kendisi işler, değişikliği yalnızca notch gösterir."
+          }
+        }
+      }
+    },
+    "Cumba starts when you log in to your Mac." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac'inize giriş yaptığınızda Cumba başlar."
+          }
+        }
+      }
+    },
     "Current location" : {
       "localizations" : {
         "tr" : {
@@ -1375,6 +1485,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reddet"
+          }
+        }
+      }
+    },
+    "Display" : {
+      "comment" : "Settings row",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran"
+          }
+        }
+      }
+    },
+    "Displays" : {
+      "comment" : "Settings page",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekranlar"
+          }
+        }
+      }
+    },
+    "Displays without a notch get a notch drawn in the middle of the menu bar." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'u olmayan ekranlarda menü çubuğunun ortasına bir notch çizilir."
           }
         }
       }
@@ -1526,6 +1669,28 @@
         }
       }
     },
+    "Features" : {
+      "comment" : "Settings sidebar group",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Özellikler"
+          }
+        }
+      }
+    },
+    "Feedback" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri Bildirim"
+          }
+        }
+      }
+    },
     "File" : {
       "comment" : "Clipboard item kind",
       "localizations" : {
@@ -1578,6 +1743,17 @@
         }
       }
     },
+    "Follow Claude Code and Codex in the notch and answer their requests." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code ve Codex'i notch'ta izleyin, isteklerini yanıtlayın."
+          }
+        }
+      }
+    },
     "Font" : {
       "localizations" : {
         "tr" : {
@@ -1594,6 +1770,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ücretsiz ve açık kaynak. Telemetri yok."
+          }
+        }
+      }
+    },
+    "Full Screen" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam Ekran"
+          }
+        }
+      }
+    },
+    "Full screen" : {
+      "comment" : "Settings search keyword",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam ekran"
           }
         }
       }
@@ -1662,12 +1860,13 @@
         }
       }
     },
-    "Haptic feedback when the panel opens" : {
+    "Haptic feedback" : {
+      "comment" : "Settings row",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Panel açılınca dokunsal geri bildirim"
+            "value" : "Dokunsal geri bildirim"
           }
         }
       }
@@ -1760,6 +1959,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook'lar Codex CLI olaylarını aynı özel soket üzerinden Cumba'ya gönderir. Böylece adımları ve izin istekleri notch'ta görünür. Cumba çalışmıyorsa Codex her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
+          }
+        }
+      }
+    },
+    "How the panel opens and closes." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panelin nasıl açılıp kapandığı."
           }
         }
       }
@@ -2483,12 +2693,46 @@
         }
       }
     },
-    "Only on click" : {
+    "On click" : {
+      "comment" : "Open the panel",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yalnızca tıklayınca"
+            "value" : "Tıklayınca"
+          }
+        }
+      }
+    },
+    "On hover" : {
+      "comment" : "Open the panel",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üzerine gelince"
+          }
+        }
+      }
+    },
+    "On hover, the panel opens once the pointer rests on the notch for a moment." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üzerine gelince seçiliyse, imleç notch'ta bir an durunca panel açılır."
+          }
+        }
+      }
+    },
+    "Once a day, Cumba asks GitHub for the latest release. Nothing else is sent." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba günde bir kez GitHub'a en son sürümü sorar. Başka hiçbir şey gönderilmez."
           }
         }
       }
@@ -2593,6 +2837,17 @@
         }
       }
     },
+    "Opening" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açılış"
+          }
+        }
+      }
+    },
     "Optional: volume keys, when the notch replaces the system volume indicator" : {
       "localizations" : {
         "tr" : {
@@ -2631,16 +2886,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Güncel değil (token veya biçim değişti)"
-          }
-        }
-      }
-    },
-    "Panel" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Panel"
           }
         }
       }
@@ -2694,6 +2939,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İzinler"
+          }
+        }
+      }
+    },
+    "Pick a theme and the tabs' style, size the panel and make your own look." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir tema ve sekme stili seçin, paneli boyutlandırın ve kendi görünümünüzü yapın."
           }
         }
       }
@@ -2832,6 +3088,17 @@
         }
       }
     },
+    "Quit" : {
+      "comment" : "Button",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çık"
+          }
+        }
+      }
+    },
     "Quit Cumba" : {
       "localizations" : {
         "tr" : {
@@ -2955,12 +3222,13 @@
         }
       }
     },
-    "Replacing handles those keys so only the notch shows the change. It needs Accessibility access." : {
+    "Replacing needs Accessibility access." : {
+      "comment" : "Settings note",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yerine geçmek, bu tuşları Cumba'nın işlemesi demektir; değişikliği yalnızca notch gösterir. Erişilebilirlik izni gerekir."
+            "value" : "Yerine geçmek için Erişilebilirlik izni gerekir."
           }
         }
       }
@@ -3212,6 +3480,17 @@
         }
       }
     },
+    "Search Settings" : {
+      "comment" : "Settings sidebar search field",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlarda Ara"
+          }
+        }
+      }
+    },
     "Searching the code" : {
       "comment" : "An AI agent searches files",
       "localizations" : {
@@ -3449,16 +3728,6 @@
         }
       }
     },
-    "Show on" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gösterileceği ekran"
-          }
-        }
-      }
-    },
     "Show the next session" : {
       "comment" : "AI Agents widget: steps to another session",
       "localizations" : {
@@ -3466,6 +3735,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sonraki oturumu göster"
+          }
+        }
+      }
+    },
+    "Show the Panel On" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paneli Göster"
           }
         }
       }
@@ -3582,12 +3862,34 @@
         }
       }
     },
+    "Start Cumba with your Mac, keep it up to date and see how it's doing." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba'yı Mac'inizle başlatın, güncel tutun ve nasıl çalıştığını görün."
+          }
+        }
+      }
+    },
     "Start the next round automatically" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sonraki turu kendiliğinden başlat"
+          }
+        }
+      }
+    },
+    "Startup" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlangıç"
           }
         }
       }
@@ -3805,6 +4107,17 @@
         }
       }
     },
+    "The notch steps aside while a video or an app fills the screen." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir video ya da uygulama ekranı kaplarken notch kenara çekilir."
+          }
+        }
+      }
+    },
     "The panel opens after a short moment." : {
       "localizations" : {
         "tr" : {
@@ -3873,6 +4186,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Token Anahtar Zinciri'nden okunamadı."
+          }
+        }
+      }
+    },
+    "The trackpad taps lightly when the panel opens or tabs change." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel açılınca ya da sekme değişince trackpad hafifçe tıklar."
+          }
+        }
+      }
+    },
+    "The YouTube extension and your own scripts." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube eklentisi ve kendi script'leriniz."
           }
         }
       }
@@ -4227,6 +4562,17 @@
         }
       }
     },
+    "Virtual notch" : {
+      "comment" : "Settings search keyword",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanal notch"
+          }
+        }
+      }
+    },
     "Volume" : {
       "localizations" : {
         "tr" : {
@@ -4244,6 +4590,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ses ve parlaklık"
+          }
+        }
+      }
+    },
+    "Volume and Brightness" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses ve Parlaklık"
+          }
+        }
+      }
+    },
+    "Volume, brightness, battery and the microphone or camera, beside the notch." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'un yanında ses, parlaklık, pil ve mikrofon ya da kamera."
           }
         }
       }
@@ -4333,6 +4701,17 @@
         }
       }
     },
+    "What Cumba may use, and one click to ask or to open System Settings." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba'nın neleri kullanabildiği; izin istemek ya da Sistem Ayarları'nı açmak için tek tık."
+          }
+        }
+      }
+    },
     "What you copied lately: text, links, images and files, kept in memory only" : {
       "comment" : "Widget description",
       "localizations" : {
@@ -4355,12 +4734,13 @@
         }
       }
     },
-    "When the pointer rests on the notch" : {
+    "Where the open panel's tabs are and how they look." : {
+      "comment" : "Settings section footer",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İmleç notch'ta durunca"
+            "value" : "Açık paneldeki sekmelerin yeri ve görünüşü."
           }
         }
       }
@@ -4445,6 +4825,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pencere"
+          }
+        }
+      }
+    },
+    "With no notch at all, for example with the lid closed, the main display gets one." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiç notch yoksa, örneğin kapak kapalıyken, ana ekranda bir tane gösterilir."
           }
         }
       }
@@ -4587,6 +4978,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "settings.json siz incelerken değişti. Hiçbir şey yazılmadı; lütfen yeniden inceleyin."
+          }
+        }
+      }
+    },
+    "Your tabs and the widgets in them, and every widget there is." : {
+      "comment" : "Settings page description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeleriniz, içlerindeki widget'lar ve tüm widget'lar."
           }
         }
       }

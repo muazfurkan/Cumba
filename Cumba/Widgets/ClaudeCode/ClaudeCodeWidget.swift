@@ -17,7 +17,7 @@ final class ClaudeCodeWidget: NotchWidget {
   }
 
   let service: ClaudeCodeService
-  private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  private let openSettings: @MainActor (SettingsPage) -> Void
 
   required init(context: WidgetContext) {
     service = context.claude
@@ -25,7 +25,7 @@ final class ClaudeCodeWidget: NotchWidget {
   }
 
   func makeView() -> AnyView {
-    AnyView(ClaudeCodeWidgetView(service: service) { [openSettings] in openSettings(.claudeCode) })
+    AnyView(ClaudeCodeWidgetView(service: service) { [openSettings] in openSettings(.agents) })
   }
 }
 

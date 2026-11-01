@@ -38,7 +38,7 @@ final class WeatherWidget: NotchWidget {
   @ObservationIgnored private let location = LocationProvider()
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private var fetchedAt: Date?
-  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsPage) -> Void
   @ObservationIgnored private let panel: PanelControl
 
   required convenience init(context: WidgetContext) {
@@ -109,7 +109,7 @@ final class WeatherWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings(.widgets)
+    openSettings(.widget(Self.kind))
   }
 
   /// Forgets the last forecast and fetches again.
