@@ -581,17 +581,8 @@
         }
       }
     },
-    "At the bottom" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Altta"
-          }
-        }
-      }
-    },
-    "At the top" : {
+    "At the Top" : {
+      "comment" : "Tab bar style",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
@@ -805,6 +796,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notch'un yanındaki ses ve parlaklık göstergelerinin rengi."
+          }
+        }
+      }
+    },
+    "Compact" : {
+      "comment" : "Tab bar style",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kompakt"
           }
         }
       }
@@ -1388,6 +1390,17 @@
         }
       }
     },
+    "Dots" : {
+      "comment" : "Tab bar style",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noktalar"
+          }
+        }
+      }
+    },
     "Drag to reorder." : {
       "localizations" : {
         "tr" : {
@@ -1788,6 +1801,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notch'ta"
+          }
+        }
+      }
+    },
+    "In the Panel" : {
+      "comment" : "Tab bar style",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panelde"
           }
         }
       }
@@ -3614,6 +3638,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Simge"
+          }
+        }
+      }
+    },
+    "Symbols" : {
+      "comment" : "Tab bar style",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simgeler"
           }
         }
       }

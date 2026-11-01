@@ -197,55 +197,6 @@ final class WidgetHost {
   }
 }
 
-/// Tab buttons, then "+" to add a widget to the open tab and a button to edit it.
-struct WidgetTabBar: View {
-  let host: WidgetHost
-
-  var body: some View {
-    HStack(spacing: 4) {
-      if host.tabs.count > 1 {
-        ForEach(host.tabs) { tab in
-          let isSelected = tab.id == host.selectedTab?.id
-          Button {
-            host.slide(to: tab.id)
-          } label: {
-            Image(systemName: tab.symbol)
-              .symbolVariant(isSelected ? .fill : .none)
-          }
-          .buttonStyle(PanelButtonStyle(isSelected: isSelected))
-          .help(tab.title)
-          .accessibilityLabel(tab.title)
-          .accessibilityAddTraits(isSelected ? .isSelected : [])
-        }
-        Rectangle()
-          .fill(.white.opacity(0.15))
-          .frame(width: 1, height: 16)
-          .padding(.horizontal, 4)
-      }
-      Button {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-          host.showGallery(!host.isShowingGallery)
-        }
-      } label: {
-        Image(systemName: "plus")
-      }
-      .buttonStyle(PanelButtonStyle(size: 24, isSelected: host.isShowingGallery))
-      .help(Text("Add Widget"))
-      .accessibilityLabel(Text("Add Widget"))
-      Button {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-          host.setEditing(!host.isEditing)
-        }
-      } label: {
-        Image(systemName: "slider.horizontal.3")
-      }
-      .buttonStyle(PanelButtonStyle(size: 24, isSelected: host.isEditing))
-      .help(Text("Edit Tab"))
-      .accessibilityLabel(Text("Edit Tab"))
-    }
-  }
-}
-
 /// A tab's widgets side by side, sized by their units. An empty tab offers to add one.
 struct WidgetRow: View {
   let host: WidgetHost

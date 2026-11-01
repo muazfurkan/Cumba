@@ -47,6 +47,20 @@ struct AppSettingsTests {
     #expect(status.isLow == expected)
   }
 
+  @Test func tabBarStyleCarriesOverTheOldPositionAndStartsCompact() throws {
+    #expect(AppSettings.legacyTabBarStyle("top") == .top)
+    #expect(AppSettings.legacyTabBarStyle("bottom") == .inPanel)
+    #expect(AppSettings.legacyTabBarStyle(nil) == .compact)
+    let suiteName = "AppSettingsTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+    defaults.set("top", forKey: "tabBarPosition")
+    let settings = AppSettings(defaults: defaults)
+    #expect(settings.tabBarStyle == .top)
+    settings.tabBarStyle = .dots
+    #expect(AppSettings(defaults: defaults).tabBarStyle == .dots)
+  }
+
   @Test func panelSizePersistsAndTakesAnOldThemeSizeOnce() throws {
     let suiteName = "AppSettingsTests-\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))

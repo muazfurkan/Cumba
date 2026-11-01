@@ -10,7 +10,7 @@ final class NotchViewModel {
   var geometry: NotchGeometry?
   var theme = Theme.classic
   var textScale = PanelSize().textScale
-  var tabBarPosition = AppSettings.TabBarPosition.bottom
+  var tabBarStyle = AppSettings.TabBarStyle.compact
 
   /// Called after every state change, e.g. to update the hover area.
   @ObservationIgnored var onStateChange: ((NotchState) -> Void)?

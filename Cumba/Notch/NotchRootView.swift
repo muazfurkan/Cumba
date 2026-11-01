@@ -20,41 +20,48 @@ struct NotchRootView: View {
       // Over the hardware notch the closed shape is plain black so it blends in.
       let isBlended = state == .closed && !geometry.isVirtual
 
-      ZStack(alignment: .top) {
-        if state.isOpen {
-          ExpandedPanelView(model: model, host: host, notchHeight: geometry.notchRect.height)
-            .frame(width: canvas.width, height: canvas.height)
-            .transition(Self.contentTransition)
-        } else if state == .peek, let activity = host.liveActivities.current {
-          PeekView(
-            activity: activity, notchWidth: geometry.notchRect.width,
-            sideWidth: geometry.peekSideWidth, height: geometry.peekRowHeight,
-            openPanel: { model.send(.clicked) }
-          )
-          .frame(height: geometry.shapeSize(for: .peek).height, alignment: .top)
-          .transition(.opacity.combined(with: .scale(scale: 0.8)))
-        }
-      }
-      .frame(width: size.width, height: size.height, alignment: .top)
-      .clipShape(shape)
-      .overlay {
-        if state.isOpen {
-          if let glow = theme.glow {
-            NeonEdge(shape: shape, colors: [glow.color, theme.accent.color])
-              .transition(.opacity)
-          } else {
-            PanelEdge(shape: shape)
-              .transition(.opacity)
+      VStack(spacing: 8) {
+        ZStack(alignment: .top) {
+          if state.isOpen {
+            ExpandedPanelView(model: model, host: host, notchHeight: geometry.notchRect.height)
+              .frame(width: canvas.width, height: canvas.height)
+              .transition(Self.contentTransition)
+          } else if state == .peek, let activity = host.liveActivities.current {
+            PeekView(
+              activity: activity, notchWidth: geometry.notchRect.width,
+              sideWidth: geometry.peekSideWidth, height: geometry.peekRowHeight,
+              openPanel: { model.send(.clicked) }
+            )
+            .frame(height: geometry.shapeSize(for: .peek).height, alignment: .top)
+            .transition(.opacity.combined(with: .scale(scale: 0.8)))
           }
         }
+        .frame(width: size.width, height: size.height, alignment: .top)
+        .clipShape(shape)
+        .overlay {
+          if state.isOpen {
+            if let glow = theme.glow {
+              NeonEdge(shape: shape, colors: [glow.color, theme.accent.color])
+                .transition(.opacity)
+            } else {
+              PanelEdge(shape: shape)
+                .transition(.opacity)
+            }
+          }
+        }
+        .background {
+          PanelBackground(
+            shape: shape, theme: theme, isBlended: isBlended,
+            shadowOpacity: theme.shadow && state.isOpen ? 0.45 : 0)
+        }
+        .contentShape(shape)
+        .onTapGesture { model.send(.clicked) }
+        // Tabs in a bar of their own come in under the panel once it's open.
+        if state.isOpen, model.tabBarStyle.isFloating, host.tabs.count > 1 {
+          FloatingTabBar(host: host, style: model.tabBarStyle, theme: theme)
+            .transition(Self.tabBarTransition)
+        }
       }
-      .background {
-        PanelBackground(
-          shape: shape, theme: theme, isBlended: isBlended,
-          shadowOpacity: theme.shadow && state.isOpen ? 0.45 : 0)
-      }
-      .contentShape(shape)
-      .onTapGesture { model.send(.clicked) }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
       .foregroundStyle(theme.foreground.color)
       .tint(theme.accent.color)
@@ -80,6 +87,11 @@ struct NotchRootView: View {
       ? .spring(response: theme.spring.response, dampingFraction: theme.spring.damping)
       : .spring(response: theme.spring.response * 0.85, dampingFraction: 1)
   }
+
+  private static let tabBarTransition = AnyTransition.asymmetric(
+    insertion: .opacity.combined(with: .offset(y: -10)).combined(with: .scale(scale: 0.9))
+      .animation(.spring(response: 0.35, dampingFraction: 0.85).delay(0.08)),
+    removal: .opacity.animation(.easeIn(duration: 0.08)))
 
   /// Content materializes once the shape is mostly open and fades out quickly on close.
   private static let contentTransition = AnyTransition.asymmetric(
@@ -132,7 +144,7 @@ private struct ExpandedPanelView: View {
   let notchHeight: CGFloat
 
   private var isPinned: Bool { model.state == .pinned }
-  private var tabsAtTop: Bool { model.tabBarPosition == .top }
+  private var style: AppSettings.TabBarStyle { model.tabBarStyle }
   private var secondary: Color { model.theme.secondary.color }
 
   /// Gallery or editor, which replace the widgets until Done.
@@ -163,11 +175,15 @@ private struct ExpandedPanelView: View {
           .buttonStyle(.plain)
           .panelFont(.callout, weight: .semibold)
           .foregroundStyle(model.theme.accent.color)
-        } else if tabsAtTop {
+        } else if style == .top {
           WidgetTabBar(host: host)
           Spacer()
         } else {
           Spacer()
+          // With the tabs under the panel, adding and editing sit here.
+          if style.isFloating {
+            TabActions(host: host)
+          }
         }
         Button {
           model.send(.pinToggled)
@@ -185,13 +201,13 @@ private struct ExpandedPanelView: View {
         .padding(.top, 8)
         .frame(maxHeight: .infinity)
 
-      if !tabsAtTop {
+      if style == .inPanel {
         WidgetTabBar(host: host)
           .frame(height: NotchLayout.bottomTabBarHeight)
       }
     }
     .padding(.horizontal, 28)
-    .padding(.bottom, tabsAtTop ? 14 : 4)
+    .padding(.bottom, style == .inPanel ? 4 : 14)
   }
 
   @ViewBuilder private var content: some View {

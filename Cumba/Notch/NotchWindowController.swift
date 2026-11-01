@@ -164,7 +164,7 @@ final class NotchWindowController {
       _ = settings.hidesInFullScreen
       _ = settings.usesVirtualNotch
       _ = settings.panelScreen
-      _ = settings.tabBarPosition
+      _ = settings.tabBarStyle
       _ = settings.panelSize
       _ = settings.isPreviewingAppearance
       _ = settings.notchPreview
@@ -297,7 +297,7 @@ final class NotchWindowController {
   private func applySettings() {
     model.theme = themes.current
     model.textScale = settings.panelSize.textScale
-    model.tabBarPosition = settings.tabBarPosition
+    model.tabBarStyle = settings.tabBarStyle
     model.opensOnHover = settings.opensOnHover
     model.openDelay = .milliseconds(Int(settings.openDelay * 1000))
     model.closeDelay = .milliseconds(Int(settings.closeDelay * 1000))
@@ -339,8 +339,10 @@ final class NotchWindowController {
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
     var layout = NotchLayout(size: settings.panelSize)
     // Tabs at the bottom get their own strip below the widgets.
-    if settings.tabBarPosition == .bottom {
-      layout.expandedSize.height += NotchLayout.bottomTabBarHeight
+    switch settings.tabBarStyle {
+    case .inPanel: layout.expandedSize.height += NotchLayout.bottomTabBarHeight
+    case .compact, .icons, .dots: layout.tabBarRoom = NotchLayout.floatingTabBarRoom
+    case .top: break
     }
     // A live activity can ask for wider sides.
     if let sideWidth = host.liveActivities.current?.sideWidth {

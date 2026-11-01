@@ -10,6 +10,8 @@ struct NotchLayout: Equatable, Sendable {
   var panelWidth: CGFloat?
   /// Room for the expanded panel's shadow, part of the fixed window size.
   var shadowMargin: CGFloat = 24
+  /// Room under the open panel for a tab bar of its own; 0 when the tabs are inside it.
+  var tabBarRoom: CGFloat = 0
   /// Extra horizontal room around the closed notch that still counts as hovering it.
   var hoverMargin: CGFloat = 8
 
@@ -21,6 +23,8 @@ struct NotchLayout: Equatable, Sendable {
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
+  /// Room under the open panel for a tab bar of its own: the gap, the bar and its shadow.
+  static let floatingTabBarRoom: CGFloat = 52
   static let notificationHeight: CGFloat = 62
   /// The peek is at least this wide while a notification is open.
   static let notificationWidth: CGFloat = 440
@@ -84,7 +88,7 @@ struct NotchGeometry: Equatable, Sendable {
       width: max(layout.expandedSize.width, notchRect.width, shapeSize(for: .peek).width),
       height: shapeSize(for: .expanded).height)
     let width = largest.width + layout.shadowMargin * 2
-    let height = largest.height + layout.shadowMargin
+    let height = largest.height + max(layout.shadowMargin, layout.tabBarRoom)
     return CGRect(
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
   }
@@ -133,6 +137,10 @@ struct NotchGeometry: Equatable, Sendable {
     var rect = shapeRect(for: state)
     if !state.isOpen {
       rect = rect.insetBy(dx: -layout.hoverMargin, dy: 0)
+    } else if layout.tabBarRoom > 0 {
+      // The tab bar under the panel counts as part of it.
+      rect.origin.y -= layout.tabBarRoom
+      rect.size.height += layout.tabBarRoom
     }
     rect.size.height += 1
     return rect

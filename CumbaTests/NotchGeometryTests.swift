@@ -91,6 +91,20 @@ struct NotchGeometryTests {
     #expect(flat.peekRowHeight == 32)
   }
 
+  @Test func aTabBarUnderThePanelGetsRoomAndCountsAsHovering() throws {
+    var layout = NotchLayout()
+    layout.tabBarRoom = NotchLayout.floatingTabBarRoom
+    let geometry = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    let panel = geometry.shapeRect(for: .expanded)
+    #expect(geometry.windowFrame.minY <= panel.minY - NotchLayout.floatingTabBarRoom)
+    let underPanel = CGPoint(x: panel.midX, y: panel.minY - 20)
+    #expect(geometry.hoverRect(for: .expanded).contains(underPanel))
+    #expect(!geometry.hoverRect(for: .closed).contains(underPanel))
+  }
+
   @Test func peekAddsWidthOnBothSidesAndARowBelowTheNotch() throws {
     #expect(
       try geometry().shapeSize(for: .peek)
