@@ -32,6 +32,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; click **Update** in Settings > Agents.
 - The notch works in full screen apps too. Hiding it there is now off by default; turn on **Hide in full screen apps** in Settings > Displays to keep the old behavior. A choice you made earlier stays.
 
+### Fixed
+
+- In full screen apps the notch no longer hides behind the app's title bar when the menu bar slides down.
+- Opening the gallery or editing a tab no longer makes the panel narrower, which could leave the pointer outside and close it. The panel keeps its width until it closes or you switch tabs.
+
 ## [1.1.0] - 2026-11-01
 
 ### Added

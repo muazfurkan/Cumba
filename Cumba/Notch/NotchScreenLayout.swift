@@ -6,9 +6,10 @@ import AppKit
 enum NotchScreenLayout {
   /// The screen chosen in Settings. "Notched" falls back to the main screen with the virtual
   /// notch setting; the other choices draw a virtual notch where there is no real one.
+  /// - Parameter minimumPanelWidth: The open panel is at least this wide.
   static func target(
     settings: AppSettings, host: WidgetHost, layoutStore: LayoutStore,
-    screenUnderPointer: NSScreen?
+    screenUnderPointer: NSScreen?, minimumPanelWidth: CGFloat? = nil
   ) -> (screen: NSScreen, geometry: NotchGeometry)? {
     let chosen: NSScreen?
     switch settings.panelScreen {
@@ -25,6 +26,11 @@ enum NotchScreenLayout {
     size(
       &layout, on: screen, notchHeight: geometry().notchRect.height, settings: settings,
       host: host, layoutStore: layoutStore)
+    if let minimumPanelWidth, let width = layout.panelWidth, width < minimumPanelWidth {
+      layout.panelWidth = minimumPanelWidth
+      let largest = layout.largestPanel?.width ?? 0
+      layout.largestPanel?.width = max(largest, minimumPanelWidth)
+    }
     return (screen, geometry())
   }
 

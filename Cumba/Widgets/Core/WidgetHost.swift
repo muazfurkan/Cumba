@@ -147,7 +147,7 @@ final class WidgetHost {
   }
 
   /// The gallery, the editor and permission requests use the panel's own size.
-  private var showsTab: Bool {
+  var showsTab: Bool {
     !isShowingGallery && !isEditing && permissionBanner == nil
   }
 

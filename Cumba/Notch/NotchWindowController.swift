@@ -31,6 +31,12 @@ final class NotchWindowController {
   /// The panel was pinned open for a widget (see `PanelControl.keepOpen`).
   private var isKeptOpenForWidget = false
 
+  /// While the gallery, the tab editor or a permission request replaces the tab, the panel
+  /// keeps the width the tab had, and keeps it after Done until it closes or another tab
+  /// opens: getting narrower would leave the pointer outside, and the panel would close.
+  private var heldWidth: CGFloat?
+  private var heldWidthTab: String?
+
   init(settings: AppSettings, themes: ThemeStore, panelControl: PanelControl, host: WidgetHost) {
     self.settings = settings
     self.themes = themes
@@ -83,6 +89,10 @@ final class NotchWindowController {
   }
 
   private func stateChanged(to state: NotchState) {
+    if !state.isOpen && heldWidth != nil {
+      updateHeldWidth()
+      updateGeometry()
+    }
     updateHoverArea()
     // A closed panel must not keep keyboard focus (after typing in Notes); ordering it out
     // and in again hands focus back to the app in front.
@@ -197,6 +207,7 @@ final class NotchWindowController {
         self.host.layoutChanged()
         self.model.isShowingNotification = self.host.liveActivities.current?.notification != nil
         self.model.send(.liveActivityChanged(self.host.liveActivities.current != nil))
+        self.updateHeldWidth()
         self.updateGeometry()
         self.observeWidgets()
       }
@@ -345,7 +356,20 @@ final class NotchWindowController {
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
     NotchScreenLayout.target(
       settings: settings, host: host, layoutStore: host.layoutStore,
-      screenUnderPointer: Self.screenUnderPointer)
+      screenUnderPointer: Self.screenUnderPointer, minimumPanelWidth: heldWidth)
+  }
+
+  /// Holds the open panel's width when the gallery, editor or a permission request comes
+  /// up; lets go once the panel closes or another tab opens.
+  private func updateHeldWidth() {
+    let tab = host.selectedTab?.id
+    if !model.state.isOpen || tab != heldWidthTab {
+      heldWidth = nil
+    }
+    if heldWidth == nil, model.state.isOpen, !host.showsTab, let geometry = model.geometry {
+      heldWidth = geometry.shapeSize(for: .expanded).width
+      heldWidthTab = tab
+    }
   }
 
   static var screenUnderPointer: NSScreen? {
