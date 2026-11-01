@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
 - Tabs sit at the bottom of the panel by default (Settings > General > Tabs: at the bottom or at the top), with "+" to add a widget from a gallery and an Edit button. Editing a tab in the panel renames it, picks its symbol, moves it, adds or deletes tabs, and reorders or removes its widgets. Right-click a widget to remove it.
 - The panel's width follows the open tab: as wide as its widgets, with room for a detailed view when a tab has one widget.
+- Widgets alone in a tab show a detailed view, and a compact one beside others. Weather looks like Apple's widget (sky colors, place, high and low, the next days, and the next hours when alone) and is now two units wide. Calendar shows the month with a week strip and the next events, or the whole month beside the list when alone. Media shows large artwork with the title and controls when alone.
 - While something plays, the closed notch shows larger artwork and a larger waveform, sized to the notch. The Mirror widget turns the camera on only when you click it.
 - Text size for the panel (Appearance > Colors > Text size), larger by default.
 - A widget can be in several tabs; adding it to one tab no longer takes it out of another.

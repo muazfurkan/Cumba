@@ -240,6 +240,7 @@ struct WidgetRow: View {
           ForEach(kinds, id: \.self) { kind in
             if let widget = host.registry.widget(kind), let info = host.registry.info(for: kind) {
               widget.makeView()
+                .environment(\.showsDetailedWidget, kinds.count == 1)
                 .frame(width: unitWidth * CGFloat(info.size.units))
                 .contextMenu {
                   Button("Remove \(info.title)") {
@@ -289,4 +290,7 @@ struct PeekView: View {
 extension EnvironmentValues {
   /// Height of the closed notch, so live activities can size their content to it.
   @Entry var peekHeight: CGFloat = 32
+  /// The widget is alone in its tab and has room for its detailed view; with others it
+  /// shows a compact summary.
+  @Entry var showsDetailedWidget = false
 }

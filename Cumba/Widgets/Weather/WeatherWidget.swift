@@ -10,7 +10,7 @@ final class WeatherWidget: NotchWidget {
   static let kind = "weather"
   static var title: String { String(localized: "Weather", comment: "Widget name") }
   static let symbol = "cloud.sun"
-  static let size = WidgetSize.compact
+  static let size = WidgetSize.regular
   static var summary: String {
     String(
       localized: "Current weather where you are, or for a place you choose",
@@ -163,6 +163,15 @@ private struct WeatherView: View {
   let widget: WeatherWidget
 
   var body: some View {
+    if let place = widget.place, let forecast = widget.forecast {
+      WeatherCard(
+        place: place, forecast: forecast, isCurrentLocation: widget.usesCurrentLocation)
+    } else {
+      setupCard
+    }
+  }
+
+  private var setupCard: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 4) {
         if let place = widget.place {
@@ -170,9 +179,7 @@ private struct WeatherView: View {
             .panelFont(.caption)
             .foregroundStyle(.secondary)
             .lineLimit(1)
-          if let forecast = widget.forecast {
-            ForecastView(forecast: forecast)
-          } else if widget.failed {
+          if widget.failed {
             Text("Weather is unavailable.")
               .panelFont(.caption)
               .foregroundStyle(.secondary)
@@ -222,31 +229,5 @@ private struct WeatherView: View {
       .buttonStyle(.plain)
       .panelFont(.caption2)
       .foregroundStyle(.secondary)
-  }
-}
-
-private struct ForecastView: View {
-  let forecast: WeatherService.Forecast
-
-  var body: some View {
-    let condition = WeatherService.condition(for: forecast.code, isDay: forecast.isDay)
-    Image(systemName: condition.symbol)
-      .symbolRenderingMode(.multicolor)
-      .panelFont(.title2)
-      .accessibilityLabel(Text(condition.text))
-    Text(
-      Measurement(value: forecast.temperature, unit: unit),
-      format: .measurement(width: .narrow, numberFormatStyle: .number.precision(.fractionLength(0)))
-    )
-    .panelFont(size: 22, weight: .semibold, monospacedDigit: true)
-    if let high = forecast.high, let low = forecast.low {
-      Text("↑\(Int(high.rounded()))° ↓\(Int(low.rounded()))°")
-        .panelFont(.caption2, monospacedDigit: true)
-        .foregroundStyle(.secondary)
-    }
-  }
-
-  private var unit: UnitTemperature {
-    forecast.unit.contains("F") ? .fahrenheit : .celsius
   }
 }

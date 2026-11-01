@@ -175,6 +175,16 @@ private struct CalendarWidgetView: View {
   let widget: CalendarWidget
 
   var body: some View {
+    if widget.hasAccess {
+      WidgetCard {
+        CalendarAgenda(events: widget.events)
+      }
+    } else {
+      accessCard
+    }
+  }
+
+  private var accessCard: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("Calendar", systemImage: "calendar")
@@ -194,21 +204,13 @@ private struct CalendarWidgetView: View {
             Button("Allow Calendar Access") { widget.requestAccessFromPanel() }
               .controlSize(.small)
           }
-        } else if widget.events.isEmpty {
-          Text("Nothing planned for today and tomorrow.")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
-        } else {
-          ForEach(widget.events.prefix(3)) { event in
-            EventRow(event: event)
-          }
         }
       }
     }
   }
 }
 
-private struct EventRow: View {
+struct EventRow: View {
   let event: CalendarEvent
 
   var body: some View {

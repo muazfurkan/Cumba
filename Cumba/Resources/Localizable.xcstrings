@@ -1076,6 +1076,16 @@
         }
       }
     },
+    "Current location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anki konum"
+          }
+        }
+      }
+    },
     "Current weather where you are, or for a place you choose" : {
       "comment" : "Widget description",
       "localizations" : {
@@ -1361,6 +1371,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cam"
+          }
+        }
+      }
+    },
+    "H:%@ L:%@" : {
+      "comment" : "Today's high and low",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y:%1$@ D:%2$@"
           }
         }
       }
@@ -2031,6 +2052,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bugün ve yarın için plan yok."
+          }
+        }
+      }
+    },
+    "Now" : {
+      "comment" : "Weather: the current hour",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi"
           }
         }
       }
