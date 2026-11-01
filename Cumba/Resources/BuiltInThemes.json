@@ -1,0 +1,136 @@
+[
+  {
+    "accent" : "#3B82F6",
+    "animation" : {
+      "damping" : 1,
+      "response" : 0.36
+    },
+    "background" : "#000000",
+    "cornerRadius" : 24,
+    "fontDesign" : "default",
+    "foreground" : "#FFFFFF",
+    "id" : "classic",
+    "indicatorColor" : "white",
+    "material" : "solid",
+    "name" : "Classic",
+    "secondary" : "#9CA3AF",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  },
+  {
+    "accent" : "#3B82F6",
+    "animation" : {
+      "damping" : 1,
+      "response" : 0.36
+    },
+    "background" : "#000000",
+    "cornerRadius" : 28,
+    "fontDesign" : "rounded",
+    "foreground" : "#FFFFFF",
+    "id" : "glass",
+    "indicatorColor" : "white",
+    "material" : "glass",
+    "name" : "Glass",
+    "secondary" : "#9CA3AF",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  },
+  {
+    "accent" : "#3B82F6",
+    "animation" : {
+      "damping" : 0.86,
+      "response" : 0.42
+    },
+    "background" : "#000000",
+    "cornerRadius" : 22,
+    "fontDesign" : "rounded",
+    "foreground" : "#FFFFFF",
+    "id" : "midnight",
+    "indicatorColor" : "white",
+    "material" : "tinted",
+    "name" : "Midnight",
+    "secondary" : "#9CA3AF",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  },
+  {
+    "accent" : "#00E5FF",
+    "animation" : {
+      "damping" : 0.9,
+      "response" : 0.32
+    },
+    "background" : "#070512",
+    "cornerRadius" : 16,
+    "fontDesign" : "monospaced",
+    "foreground" : "#E9FBFF",
+    "glow" : "#FF2E97",
+    "gradient" : "#1C0B42",
+    "id" : "neon-tokyo",
+    "indicatorColor" : "theme",
+    "material" : "solid",
+    "name" : "Neon Tokyo",
+    "secondary" : "#8E93C4",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  },
+  {
+    "accent" : "#FF8FB8",
+    "animation" : {
+      "damping" : 0.85,
+      "response" : 0.42
+    },
+    "background" : "#0E080B",
+    "cornerRadius" : 30,
+    "fontDesign" : "rounded",
+    "foreground" : "#FFF1F5",
+    "glow" : "#FFC4D8",
+    "gradient" : "#2E1522",
+    "id" : "sakura",
+    "indicatorColor" : "theme",
+    "material" : "solid",
+    "name" : "Sakura",
+    "secondary" : "#C9A3B4",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  },
+  {
+    "accent" : "#FF9E3D",
+    "animation" : {
+      "damping" : 0.88,
+      "response" : 0.38
+    },
+    "background" : "#0B021C",
+    "cornerRadius" : 22,
+    "fontDesign" : "default",
+    "foreground" : "#FFF4E0",
+    "glow" : "#FF2BD6",
+    "gradient" : "#4A0E4E",
+    "id" : "synthwave",
+    "indicatorColor" : "theme",
+    "material" : "solid",
+    "name" : "Synthwave",
+    "secondary" : "#C09CD8",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  },
+  {
+    "accent" : "#C49BFF",
+    "animation" : {
+      "damping" : 1,
+      "response" : 0.36
+    },
+    "background" : "#14131C",
+    "cornerRadius" : 22,
+    "fontDesign" : "rounded",
+    "foreground" : "#F6F5F0",
+    "glow" : "#FF7AC8",
+    "gradient" : "#242135",
+    "id" : "violet-night",
+    "indicatorColor" : "theme",
+    "material" : "solid",
+    "name" : "Violet Night",
+    "secondary" : "#8A90B8",
+    "shadow" : true,
+    "tint" : "#1E3A8A"
+  }
+]

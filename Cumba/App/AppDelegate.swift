@@ -52,7 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     settingsOpener.open = { [notchWindow, settingsWindow] tab in
       // Close the panel first so permission prompts can't end up behind it.
       notchWindow.collapse()
-      settingsWindow.show(tab: tab)
+      settingsWindow.show(page: tab)
     }
   }
 
@@ -68,20 +68,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     media.add(server.browserHub.youtube)
     media.add(server.browserHub.youtubeMusic)
     observeApprovals()
-    Task { [server, settings] in
+    Task { [server, settings, settingsWindow] in
       await server.loadTokens()
       if settings.browserExtensionEnabled {
         server.startExtensionServer(port: settings.serverPort)
       }
       // The hook socket runs only while hooks are installed (or left over from an update).
       let token = server.hookToken
-      let hooksPresent = await Task.detached {
-        [HookInstaller.standard, .codex].contains {
-          (try? $0.status(token: token)).map { $0 != .notInstalled } ?? false
-        }
+      let statuses = await Task.detached {
+        [HookInstaller.standard, .codex].compactMap { try? $0.status(token: token) }
       }.value
       server.setScriptsEnabled(settings.scriptActivitiesEnabled)
-      server.setHooksInstalled(hooksPresent)
+      server.setHooksInstalled(statuses.contains { $0 != .notInstalled })
+      // Out-of-date hooks don't reach the app; those of early versions even post to a port
+      // another app could take. Show them, with their Update button, until they're fixed.
+      if statuses.contains(.outdated) {
+        settingsWindow.show(page: .agents)
+      }
     }
     notchWindow.start()
     systemIndicators.start()
@@ -90,7 +93,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       settings.adoptLegacyPanelSize(themes.current.legacySize)
       await layoutStore.load()
     }
-    welcomeWindow.showIfFirstLaunch()
+    // The first time, the notch says hello before the welcome window comes up.
+    if !settings.hasSeenWelcome {
+      Task { [notchWindow, welcomeWindow] in
+        try? await Task.sleep(for: .milliseconds(600))
+        await notchWindow.sayHello()
+        welcomeWindow.showIfFirstLaunch()
+      }
+    }
     Log.app.info(
       "Launched version \(AppInfo.version, privacy: .public) (\(AppInfo.build, privacy: .public))")
   }
@@ -131,5 +141,5 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// Holds the action that opens Settings once the window controller exists.
 @MainActor
 private final class SettingsOpener {
-  var open: (SettingsWindowController.Tab) -> Void = { _ in }
+  var open: (SettingsPage) -> Void = { _ in }
 }

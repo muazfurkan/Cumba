@@ -6,8 +6,8 @@ enum NotchApprovals: String, CaseIterable, Sendable {
   case exceptShell
   case never
 
-  /// Claude Code tools that run shell commands.
-  static let shellTools: Set<String> = ["Bash"]
+  /// Tools that run shell commands: Claude Code's, and the names Codex has used for its own.
+  static let shellTools: Set<String> = ["Bash", "shell", "local_shell", "exec_command"]
 
   func allows(toolName: String) -> Bool {
     switch self {

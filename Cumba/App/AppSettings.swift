@@ -21,6 +21,11 @@ final class AppSettings {
     static let browserExtensionEnabled = "browserExtensionEnabled"
     static let notchApprovals = "notchApprovals"
     static let panelScreen = "panelScreen"
+    static let tabBarStyle = "tabBarStyle"
+    static let openingTab = "openingTab"
+    static let widgetStyle = "widgetStyle"
+    static let opensAgentTab = "opensAgentTab"
+    /// Before tab bar styles: "bottom" or "top".
     static let tabBarPosition = "tabBarPosition"
     static let panelSize = "panelSize"
     static let showsVolumeChanges = "showsVolumeChanges"
@@ -40,9 +45,34 @@ final class AppSettings {
   }
 
   /// Where the panel shows its tabs.
-  enum TabBarPosition: String, CaseIterable, Sendable {
-    case bottom
+  /// How widgets side by side are set apart.
+  enum WidgetStyle: String, CaseIterable, Sendable {
+    /// No backgrounds; a faint line between widgets.
+    case lines
+    /// Each widget on a card of its own.
+    case cards
+  }
+
+  /// Where the open panel's tabs are and how they look.
+  enum TabBarStyle: String, CaseIterable, Sendable {
+    /// A bar of its own under the panel; the open tab shows its name.
+    case compact
+    /// A bar of its own under the panel, with symbols only.
+    case icons
+    /// Inside the panel, at its bottom.
+    case inPanel
+    /// Inside the panel, beside the camera.
     case top
+    /// A small bar of dots under the panel.
+    case dots
+
+    /// Drawn as a bar of its own under the panel.
+    var isFloating: Bool {
+      switch self {
+      case .compact, .icons, .dots: true
+      case .inPanel, .top: false
+      }
+    }
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -75,8 +105,22 @@ final class AppSettings {
     didSet { defaults.set(panelScreen.rawValue, forKey: Key.panelScreen) }
   }
 
-  var tabBarPosition: TabBarPosition {
-    didSet { defaults.set(tabBarPosition.rawValue, forKey: Key.tabBarPosition) }
+  var tabBarStyle: TabBarStyle {
+    didSet { defaults.set(tabBarStyle.rawValue, forKey: Key.tabBarStyle) }
+  }
+
+  var widgetStyle: WidgetStyle {
+    didSet { defaults.set(widgetStyle.rawValue, forKey: Key.widgetStyle) }
+  }
+
+  /// The tab the panel opens on; nil opens the tab it was left on.
+  var openingTab: String? {
+    didSet { defaults.set(openingTab, forKey: Key.openingTab) }
+  }
+
+  /// While an agent works, the panel opens on the tab with the AI Agents widget instead.
+  var opensAgentTab: Bool {
+    didSet { defaults.set(opensAgentTab, forKey: Key.opensAgentTab) }
   }
 
   /// The panel's size and text size, the same for every theme.
@@ -180,7 +224,7 @@ final class AppSettings {
     opensOnHover = defaults.object(forKey: Key.opensOnHover) as? Bool ?? true
     openDelay = defaults.object(forKey: Key.openDelay) as? Double ?? 0.15
     closeDelay = defaults.object(forKey: Key.closeDelay) as? Double ?? 0.4
-    hidesInFullScreen = defaults.object(forKey: Key.hidesInFullScreen) as? Bool ?? true
+    hidesInFullScreen = defaults.object(forKey: Key.hidesInFullScreen) as? Bool ?? false
     usesVirtualNotch = defaults.bool(forKey: Key.usesVirtualNotch)
     let port = defaults.integer(forKey: Key.serverPort)
     serverPort = (1024...65535).contains(port) ? UInt16(port) : LocalServer.defaultPort
@@ -190,12 +234,17 @@ final class AppSettings {
     hasSeenWelcome = defaults.bool(forKey: Key.hasSeenWelcome)
     browserExtensionEnabled = defaults.bool(forKey: Key.browserExtensionEnabled)
     notchApprovals =
-      defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
+      defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:))
+      ?? .exceptShell
     panelScreen =
       defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
-    tabBarPosition =
-      defaults.string(forKey: Key.tabBarPosition).flatMap(TabBarPosition.init(rawValue:))
-      ?? .bottom
+    tabBarStyle =
+      defaults.string(forKey: Key.tabBarStyle).flatMap(TabBarStyle.init(rawValue:))
+      ?? Self.legacyTabBarStyle(defaults.string(forKey: Key.tabBarPosition))
+    openingTab = defaults.string(forKey: Key.openingTab)
+    widgetStyle =
+      defaults.string(forKey: Key.widgetStyle).flatMap(WidgetStyle.init(rawValue:)) ?? .lines
+    opensAgentTab = defaults.object(forKey: Key.opensAgentTab) as? Bool ?? true
     panelSize =
       defaults.data(forKey: Key.panelSize).flatMap {
         try? JSONDecoder().decode(PanelSize.self, from: $0)
@@ -207,6 +256,16 @@ final class AppSettings {
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
     showsLowBattery = defaults.object(forKey: Key.showsLowBattery) as? Bool ?? true
     scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
+  }
+
+  /// The style matching a tab position chosen before there were styles; new installations
+  /// get the compact bar.
+  static func legacyTabBarStyle(_ position: String?) -> TabBarStyle {
+    switch position {
+    case "top": .top
+    case "bottom": .inPanel
+    default: .compact
+    }
   }
 
   /// Takes the size a theme file carried before size became a setting, once: only while no

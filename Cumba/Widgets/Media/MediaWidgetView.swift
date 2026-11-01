@@ -38,9 +38,7 @@ struct MediaWidgetView: View {
         }
       } else {
         VStack(alignment: .leading, spacing: 6) {
-          Label("Media", systemImage: "music.note")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
+          WidgetHeader("Media", symbol: "music.note", color: .pink)
           Text("Nothing is playing.")
             .panelFont(.caption)
             .foregroundStyle(.secondary)

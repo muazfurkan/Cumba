@@ -4,8 +4,10 @@ import AppKit
 /// view in it is clicked (the Notes widget), so hovering or clicking buttons never takes
 /// keyboard focus from the app you're working in.
 final class NotchPanel: NSPanel {
-  /// Above the menu bar and its status items, below the menus they open.
-  static let notchLevel = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
+  /// Above the menu bar and its status items, below the menus they open. Full screen apps
+  /// put their title bar in a window one level above the status items (26); sharing that
+  /// level, the notch went behind it whenever the menu bar slid down, so it sits one higher.
+  static let notchLevel = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 2)
 
   init(showsInFullScreen: Bool) {
     super.init(

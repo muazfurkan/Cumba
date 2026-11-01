@@ -5,11 +5,16 @@ struct NotchLayout: Equatable, Sendable {
   var expandedSize = CGSize(width: 640, height: 190)
   /// Width added on each side of the notch in the peek state.
   var peekExtraWidth: CGFloat = 70
-  /// Width of the expanded panel for what it shows now, at most `expandedSize.width`;
-  /// `nil` uses the full width. The window stays sized for the full width.
+  /// Size of the expanded panel for what it shows now; `nil` uses `expandedSize`. A tab with
+  /// many widgets or a long text can make it larger than `expandedSize`.
   var panelWidth: CGFloat?
+  var panelHeight: CGFloat?
+  /// The largest panel any tab asks for, so the window doesn't change size between tabs.
+  var largestPanel: CGSize?
   /// Room for the expanded panel's shadow, part of the fixed window size.
   var shadowMargin: CGFloat = 24
+  /// Room under the open panel for a tab bar of its own; 0 when the tabs are inside it.
+  var tabBarRoom: CGFloat = 0
   /// Extra horizontal room around the closed notch that still counts as hovering it.
   var hoverMargin: CGFloat = 8
 
@@ -21,6 +26,8 @@ struct NotchLayout: Equatable, Sendable {
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
+  /// Room under the open panel for a tab bar of its own: the gap, the bar and its shadow.
+  static let floatingTabBarRoom: CGFloat = 52
   static let notificationHeight: CGFloat = 62
   /// The peek is at least this wide while a notification is open.
   static let notificationWidth: CGFloat = 440
@@ -80,13 +87,21 @@ struct NotchGeometry: Equatable, Sendable {
   /// The window never changes size: it fits the largest shape plus its shadow and is
   /// centered under the notch. State changes only animate the shape inside it.
   var windowFrame: CGRect {
+    let expanded = shapeSize(for: .expanded)
     let largest = CGSize(
-      width: max(layout.expandedSize.width, notchRect.width, shapeSize(for: .peek).width),
-      height: shapeSize(for: .expanded).height)
+      width: max(
+        layout.expandedSize.width, expanded.width, layout.largestPanel?.width ?? 0,
+        notchRect.width, shapeSize(for: .peek).width, greetingSize.width),
+      height: max(expanded.height, layout.largestPanel?.height ?? 0, greetingSize.height))
     let width = largest.width + layout.shadowMargin * 2
-    let height = largest.height + layout.shadowMargin
+    let height = largest.height + max(layout.shadowMargin, layout.tabBarRoom)
     return CGRect(
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
+  }
+
+  /// The shape while it says hello: room for the word under the camera housing.
+  var greetingSize: CGSize {
+    CGSize(width: max(notchRect.width + 120, 340), height: notchRect.height + 132)
   }
 
   /// Width of each side of the peek; never narrower than the closed notch.
@@ -112,8 +127,8 @@ struct NotchGeometry: Equatable, Sendable {
         height: peekRowHeight + layout.peekNotificationHeight)
     case .expanded, .pinned:
       CGSize(
-        width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),
-        height: max(layout.expandedSize.height, notchRect.height))
+        width: max(layout.panelWidth ?? layout.expandedSize.width, notchRect.width),
+        height: max(layout.panelHeight ?? layout.expandedSize.height, notchRect.height))
     }
   }
 
@@ -133,6 +148,10 @@ struct NotchGeometry: Equatable, Sendable {
     var rect = shapeRect(for: state)
     if !state.isOpen {
       rect = rect.insetBy(dx: -layout.hoverMargin, dy: 0)
+    } else if layout.tabBarRoom > 0 {
+      // The tab bar under the panel counts as part of it.
+      rect.origin.y -= layout.tabBarRoom
+      rect.size.height += layout.tabBarRoom
     }
     rect.size.height += 1
     return rect

@@ -19,7 +19,7 @@ final class MirrorWidget: NotchWidget {
   private(set) var authorization = AVCaptureDevice.authorizationStatus(for: .video)
   private(set) var isOn = false
   @ObservationIgnored let camera = CameraSession()
-  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  @ObservationIgnored private let openSettings: @MainActor (SettingsPage) -> Void
 
   required init(context: WidgetContext) {
     openSettings = context.openSettings
@@ -149,9 +149,7 @@ private struct MirrorView: View {
     default:
       WidgetCard {
         VStack(alignment: .leading, spacing: 6) {
-          Label("Mirror", systemImage: "web.camera")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
+          WidgetHeader("Mirror", symbol: "web.camera", color: .gray)
           Button("Allow in Settings") { widget.showSettings() }
             .controlSize(.small)
         }

@@ -58,7 +58,8 @@ enum AgentNotice: Equatable, Sendable {
     switch self {
     case .question, .plan: "questionmark.bubble.fill"
     case .waiting: "ellipsis.bubble.fill"
-    case .permission: "hand.raised.fill"
+    // Two layers, so the palette draws the hand on an orange shape like the others.
+    case .permission: "hand.raised.circle.fill"
     case .done: "checkmark.circle.fill"
     case .failed: "exclamationmark.triangle.fill"
     }

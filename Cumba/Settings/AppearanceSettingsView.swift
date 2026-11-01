@@ -2,9 +2,10 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Theme picker, theme file actions and the editor. Every change shows live in the panel,
-/// which stays open while this tab is visible.
+/// Themes and tab styles as cards, theme file actions, the panel's size and the theme
+/// editor. Every change shows live in the panel, which stays open while this page is visible.
 struct AppearanceSettingsView: View {
+  let info: SettingsPageInfo
   let themes: ThemeStore
   let settings: AppSettings
   @State private var errorMessage: String?
@@ -15,16 +16,19 @@ struct AppearanceSettingsView: View {
   private var isBuiltIn: Bool { themes.isBuiltIn(current) }
 
   var body: some View {
-    Form {
-      PanelSizeSection(size: Bindable(settings).panelSize) { preview in
-        settings.notchPreview = preview
-      }
+    SettingsForm(info: info) {
       Section("Theme") {
-        Picker("Theme", selection: selection) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 112), spacing: 12)], spacing: 14) {
           ForEach(themes.themes) { theme in
-            Text(theme.displayName).tag(theme.id)
+            ChoiceCard(
+              title: theme.displayName, isSelected: theme.id == themes.selectedID,
+              select: { themes.select(theme.id) }
+            ) {
+              ThemePreview(theme: theme)
+            }
           }
         }
+        .padding(.vertical, 4)
         HStack {
           Button("New Theme…") {
             newThemeName = copyName
@@ -61,10 +65,45 @@ struct AppearanceSettingsView: View {
           TextField("Name", text: themeBinding.name)
         }
       }
+      Section {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 12)], spacing: 14) {
+          ForEach(AppSettings.TabBarStyle.allCases, id: \.self) { style in
+            ChoiceCard(
+              title: style.title, isSelected: settings.tabBarStyle == style,
+              select: { settings.tabBarStyle = style }
+            ) {
+              TabStylePreview(style: style)
+            }
+          }
+        }
+        .padding(.vertical, 4)
+      } header: {
+        Text("Tabs")
+      } footer: {
+        Text("Where the open panel's tabs are and how they look.")
+      }
+      Section {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 14) {
+          ForEach(AppSettings.WidgetStyle.allCases, id: \.self) { style in
+            ChoiceCard(
+              title: style.title, isSelected: settings.widgetStyle == style,
+              select: { settings.widgetStyle = style }
+            ) {
+              WidgetStylePreview(style: style)
+            }
+          }
+        }
+        .padding(.vertical, 4)
+      } header: {
+        Text("Widgets")
+      } footer: {
+        Text("How widgets side by side are set apart.")
+      }
+      PanelSizeSection(size: Bindable(settings).panelSize) { preview in
+        settings.notchPreview = preview
+      }
       ThemeEditorSections(theme: themeBinding)
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 620)
     .onAppear { settings.isPreviewingAppearance = true }
     .onDisappear {
       settings.isPreviewingAppearance = false
@@ -79,10 +118,6 @@ struct AppearanceSettingsView: View {
     } message: {
       Text(errorMessage ?? "")
     }
-  }
-
-  private var selection: Binding<String> {
-    Binding(get: { themes.selectedID }, set: { themes.select($0) })
   }
 
   private var copyName: String {
@@ -126,6 +161,15 @@ struct AppearanceSettingsView: View {
       } catch {
         errorMessage = error.localizedDescription
       }
+    }
+  }
+}
+
+extension AppSettings.WidgetStyle {
+  var title: String {
+    switch self {
+    case .lines: String(localized: "Lines", comment: "Widget style: a faint line between widgets")
+    case .cards: String(localized: "Cards", comment: "Widget style: each widget on a card")
     }
   }
 }

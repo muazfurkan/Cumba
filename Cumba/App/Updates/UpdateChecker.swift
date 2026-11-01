@@ -97,6 +97,8 @@ final class UpdateChecker {
           version: $0.tag.hasPrefix("v") ? String($0.tag.dropFirst()) : $0.tag,
           url: $0.url, isPrerelease: $0.prerelease)
       }
+      // A mistyped tag ("v", "latest") is not a version.
+      .filter { $0.version.wholeMatch(of: /\d+(\.\d+)*(-[0-9A-Za-z.]+)?/) != nil }
   }
 
   nonisolated static func newest(
@@ -112,7 +114,7 @@ final class UpdateChecker {
   nonisolated static func isVersion(_ lhs: String, newerThan rhs: String) -> Bool {
     func parts(_ version: String) -> (numbers: [Int], prerelease: String?) {
       let pieces = version.split(separator: "-", maxSplits: 1).map(String.init)
-      let numbers = pieces[0].split(separator: ".").map { Int($0) ?? 0 }
+      let numbers = (pieces.first ?? "").split(separator: ".").map { Int($0) ?? 0 }
       return (numbers, pieces.count > 1 ? pieces[1] : nil)
     }
     let left = parts(lhs)

@@ -6,14 +6,16 @@ import SwiftUI
 /// Every permission Cumba can use, with its live state and one way to change it.
 /// Nothing is asked at launch; each prompt starts from here or from the feature's settings.
 struct PermissionsSettingsView: View {
+  let info: SettingsPageInfo
   @State private var calendar = EKEventStore.authorizationStatus(for: .event)
+  @State private var reminders = EKEventStore.authorizationStatus(for: .reminder)
   @State private var camera = AVCaptureDevice.authorizationStatus(for: .video)
   @State private var accessibility = MediaKeyTap.isTrusted
   @State private var location = LocationProvider()
   @State private var locationAccess = LocationProvider.Access.notAsked
 
   var body: some View {
-    Form {
+    SettingsForm(info: info) {
       Section {
         Text(
           "Cumba asks for a permission only when you use the feature that needs it. Everything here can be changed again in System Settings."
@@ -24,6 +26,7 @@ struct PermissionsSettingsView: View {
       }
       Section("Automation") {
         MediaPermissionsView()
+        NotesPermissionRow()
       }
       Section {
         LabeledContent {
@@ -31,6 +34,12 @@ struct PermissionsSettingsView: View {
         } label: {
           Label("Calendar", systemImage: "calendar")
           Text("Calendar widget: today's and tomorrow's events")
+        }
+        LabeledContent {
+          remindersControl
+        } label: {
+          Label("Reminders", systemImage: "checklist")
+          Text("To-dos widget: your reminders, to tick off and add to")
         }
         LabeledContent {
           locationControl
@@ -56,13 +65,28 @@ struct PermissionsSettingsView: View {
         }
       }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 520)
     .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification))
     { _ in
       refresh()
     }
     .onAppear(perform: refresh)
+  }
+
+  @ViewBuilder private var remindersControl: some View {
+    switch reminders {
+    case .fullAccess:
+      PermissionGranted()
+    case .notDetermined:
+      Button("Allow…") {
+        Task {
+          NSApp.activate()
+          _ = try? await EKEventStore().requestFullAccessToReminders()
+          refresh()
+        }
+      }
+    default:
+      OpenPrivacySettings(pane: "Privacy_Reminders")
+    }
   }
 
   @ViewBuilder private var calendarControl: some View {
@@ -117,6 +141,7 @@ struct PermissionsSettingsView: View {
 
   private func refresh() {
     calendar = EKEventStore.authorizationStatus(for: .event)
+    reminders = EKEventStore.authorizationStatus(for: .reminder)
     camera = AVCaptureDevice.authorizationStatus(for: .video)
     accessibility = MediaKeyTap.isTrusted
     locationAccess = location.access
@@ -139,6 +164,38 @@ struct OpenPrivacySettings: View {
       if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(pane)") {
         NSWorkspace.shared.open(url)
       }
+    }
+  }
+}
+
+/// Automation access to Notes, for the Notes widget. Asking starts Notes in the background,
+/// because macOS asks only about an app that's running.
+private struct NotesPermissionRow: View {
+  @State private var permission = AppleScriptRunner.Permission.notDetermined
+
+  var body: some View {
+    LabeledContent {
+      switch permission {
+      case .granted:
+        PermissionGranted()
+      case .notDetermined:
+        Button("Allow…") {
+          Task {
+            NSApp.activate()
+            guard await AppleNotes.launchHidden() else { return }
+            permission = await AppleScriptRunner.shared.permission(
+              for: AppleNotes.bundleID, ask: true)
+          }
+        }
+      case .denied:
+        OpenPrivacySettings(pane: "Privacy_Automation")
+      }
+    } label: {
+      Label("Notes", systemImage: "note.text")
+      Text("Notes widget: your recent notes, and new ones from the panel")
+    }
+    .task {
+      permission = await AppleScriptRunner.shared.permission(for: AppleNotes.bundleID, ask: false)
     }
   }
 }

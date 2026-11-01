@@ -36,6 +36,8 @@ protocol NotchWidget: AnyObject {
 
   func makeView() -> AnyView
   func makeSettingsView() -> AnyView?
+  /// Height the view needs for what it shows now at this width; nil fits any height.
+  func preferredContentHeight(width: CGFloat, textScale: CGFloat, isDetailed: Bool) -> CGFloat?
 
   /// Called while the widget is on screen. Cameras, sampling and similar resources are
   /// only used between `activate()` and `deactivate()`.
@@ -51,6 +53,11 @@ extension NotchWidget {
 }
 
 extension NotchWidget {
+  /// Height the widget's view needs for what it shows now at this width, when the panel's
+  /// own height may be too short; nil fits any height.
+  func preferredContentHeight(width: CGFloat, textScale: CGFloat, isDetailed: Bool) -> CGFloat? {
+    nil
+  }
   func makeSettingsView() -> AnyView? { nil }
   func activate() {}
   func deactivate() {}
@@ -67,14 +74,21 @@ struct WidgetContext {
   var panel = PanelControl()
   /// Opens the Settings window, e.g. to ask for a permission from there instead of
   /// from the panel.
-  let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  let openSettings: @MainActor (SettingsPage) -> Void
 }
 
-/// Rounded card that every widget draws its content in.
+extension EnvironmentValues {
+  /// How widgets side by side are set apart, from Settings.
+  @Entry var widgetStyle = AppSettings.WidgetStyle.lines
+}
+
+/// The frame every widget draws its content in: a rounded card, or with the lines style just
+/// the padding, the row drawing a faint line between widgets.
 struct WidgetCard<Content: View>: View {
   /// Optional color that glows from the top left, e.g. from album art.
   var tint: Color?
   @ViewBuilder let content: Content
+  @Environment(\.widgetStyle) private var style
 
   init(tint: Color? = nil, @ViewBuilder content: () -> Content) {
     self.tint = tint
@@ -87,18 +101,24 @@ struct WidgetCard<Content: View>: View {
       .padding(10)
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
       .background {
-        ZStack {
-          shape.fill(.white.opacity(0.07))
-          if let tint {
-            shape.fill(
-              RadialGradient(
-                colors: [tint.opacity(0.45), tint.opacity(0)], center: .topLeading,
-                startRadius: 0, endRadius: 220))
-          }
-          shape.strokeBorder(.white.opacity(0.06), lineWidth: 1)
+        if style == .cards {
+          card(shape)
         }
-        .animation(.smooth(duration: 0.6), value: tint)
       }
+  }
+
+  private func card(_ shape: RoundedRectangle) -> some View {
+    ZStack {
+      shape.fill(.white.opacity(0.07))
+      if let tint {
+        shape.fill(
+          RadialGradient(
+            colors: [tint.opacity(0.45), tint.opacity(0)], center: .topLeading,
+            startRadius: 0, endRadius: 220))
+      }
+      shape.strokeBorder(.white.opacity(0.06), lineWidth: 1)
+    }
+    .animation(.smooth(duration: 0.6), value: tint)
   }
 }
 

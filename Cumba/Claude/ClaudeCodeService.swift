@@ -125,11 +125,14 @@ final class ClaudeCodeService {
       return .askInTerminal
     }
     let detail = payload.permissionDetail
-    let toolName = SafeText(payload.toolName ?? "?").text
+    // The folder and tool names are shown above the Allow button too.
+    let project = SafeText(payload.project)
+    let tool = SafeText(payload.toolName ?? "?")
+    let isSuspicious = detail.isSuspicious || project.isSuspicious || tool.isSuspicious
     let request = PermissionBroker.Request(
-      id: UUID(), sessionID: payload.sessionID, project: payload.project, toolName: toolName,
-      detail: detail.text, isSuspicious: detail.isSuspicious,
-      canAllow: !detail.isSuspicious && notchApprovals.allows(toolName: toolName),
+      id: UUID(), sessionID: payload.sessionID, project: project.text, toolName: tool.text,
+      detail: detail.text, isSuspicious: isSuspicious,
+      canAllow: !isSuspicious && notchApprovals.allows(toolName: tool.text),
       receivedAt: Date())
     update(payload.sessionID, payload, state: .waitingPermission)
     tag(payload.sessionID, with: agent, app: app)

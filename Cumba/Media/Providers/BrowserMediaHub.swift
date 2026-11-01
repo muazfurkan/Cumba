@@ -1,4 +1,3 @@
-import FlyingFox
 import Foundation
 import Observation
 
@@ -21,7 +20,8 @@ final class BrowserMediaHub {
 
   private(set) var connectionCount = 0
   @ObservationIgnored private var tabs: [TabKey: Tab] = [:]
-  @ObservationIgnored private var connections: [UUID: AsyncStream<WSMessage>.Continuation] = [:]
+  @ObservationIgnored private var connections:
+    [UUID: AsyncStream<MediaSocketMessage>.Continuation] = [:]
   @ObservationIgnored let youtube: BrowserProvider
   @ObservationIgnored let youtubeMusic: BrowserProvider
 
@@ -32,7 +32,7 @@ final class BrowserMediaHub {
     youtubeMusic.hub = self
   }
 
-  func connected(_ id: UUID, outbound: AsyncStream<WSMessage>.Continuation) {
+  func connected(_ id: UUID, outbound: AsyncStream<MediaSocketMessage>.Continuation) {
     connections[id] = outbound
     connectionCount = connections.count
     Log.media.info("Browser extension connected")

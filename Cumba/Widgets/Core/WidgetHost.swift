@@ -24,6 +24,11 @@ final class WidgetHost {
   /// that way.
   private(set) var pageDirection = 1
 
+  /// The tab the panel opens on, from Settings; nil opens the tab it was left on.
+  @ObservationIgnored var openingTab: String?
+  /// While an agent works, the panel opens on the tab with its widget.
+  @ObservationIgnored var opensAgentTab = true
+
   @ObservationIgnored private var activeKinds: Set<String> = []
   @ObservationIgnored private var isPanelOpen = false
 
@@ -61,6 +66,18 @@ final class WidgetHost {
     updateActivation()
   }
 
+  /// The tab opening the panel shows: the agents' tab while one works (if wanted), else the
+  /// chosen opening tab; nil keeps the tab it was left on.
+  var tabToOpen: String? {
+    if opensAgentTab, claude.sessions.contains(where: \.isActive),
+      let tab = tabs.first(where: { $0.widgets.contains(ClaudeCodeWidget.kind) })
+    {
+      return tab.id
+    }
+    guard let openingTab, tabs.contains(where: { $0.id == openingTab }) else { return nil }
+    return openingTab
+  }
+
   /// The tab a swipe in progress is revealing, beside the open one.
   var swipeNeighbor: WidgetLayout.Tab? {
     guard pageDrag != 0, let index = tabs.firstIndex(where: { $0.id == selectedTab?.id })
@@ -71,12 +88,8 @@ final class WidgetHost {
 
   func panelOpenChanged(_ isOpen: Bool) {
     isPanelOpen = isOpen
-    // While an agent works, opening the panel shows the tab with its widget.
-    if isOpen, claude.sessions.contains(where: \.isActive),
-      selectedTab?.widgets.contains(ClaudeCodeWidget.kind) != true,
-      let tab = tabs.first(where: { $0.widgets.contains(ClaudeCodeWidget.kind) })
-    {
-      selectedTabID = tab.id
+    if isOpen, let tab = tabToOpen {
+      selectedTabID = tab
     }
     if !isOpen {
       isShowingGallery = false
@@ -133,29 +146,58 @@ final class WidgetHost {
       in: tab.id, from: IndexSet(integer: index), to: offset > 0 ? target + 1 : target)
   }
 
-  /// Width of the expanded panel for the open tab, up to the theme's width: a tab is as wide
-  /// as its widgets, a single widget gets room for its detailed view, and the gallery, the
-  /// editor and permission requests use the full width.
-  func preferredPanelWidth(maxWidth: CGFloat) -> CGFloat {
-    let padding: CGFloat = 56
-    let spacing: CGFloat = 10
-    let units = WidgetLayout.unitsPerTab
-    guard !isShowingGallery, !isEditing, permissionBanner == nil, let tab = selectedTab else {
-      return maxWidth
-    }
-    let unitWidth = (maxWidth - padding - spacing * CGFloat(units - 1)) / CGFloat(units)
+  /// The gallery, the editor and permission requests use the panel's own size.
+  var showsTab: Bool {
+    !isShowingGallery && !isEditing && permissionBanner == nil
+  }
+
+  /// Width of the expanded panel for a tab: as wide as its widgets, each size unit as wide as
+  /// in a panel `baseWidth` wide, and a single widget gets room for its detailed view. Past
+  /// six units it grows up to `maxWidth`.
+  func preferredPanelWidth(
+    for tab: WidgetLayout.Tab?, baseWidth: CGFloat, maxWidth: CGFloat
+  ) -> CGFloat {
+    guard showsTab, let tab else { return baseWidth }
+    let unitWidth = WidgetLayout.unitWidth(panelWidth: baseWidth)
     let kinds = tab.widgets.filter { registry.info(for: $0) != nil }
     let used = kinds.compactMap { registry.info(for: $0)?.size.units }.reduce(0, +)
     let shown = kinds.count > 1 ? used : max(used, 4)
     let width =
-      padding + unitWidth * CGFloat(shown) + spacing * CGFloat(max(kinds.count - 1, shown - 1))
-    return min(max(width, 360), maxWidth)
+      WidgetLayout.panelPadding + unitWidth * CGFloat(shown)
+      + WidgetLayout.widgetSpacing * CGFloat(max(kinds.count - 1, shown - 1))
+    return min(max(width, 360), max(baseWidth, maxWidth))
   }
 
-  /// Size units still free in the open tab.
+  /// Height of the expanded panel for a tab: its own height, or taller when a widget needs
+  /// more room for what it shows now (a long agent answer, say), up to `maxHeight`.
+  /// - Parameter chrome: Height of the panel around the widgets: the band beside the camera,
+  ///   the padding and any tab bar inside it.
+  func preferredPanelHeight(
+    for tab: WidgetLayout.Tab?, width: CGFloat, baseHeight: CGFloat, maxHeight: CGFloat,
+    chrome: CGFloat, textScale: CGFloat
+  ) -> CGFloat {
+    guard showsTab, let tab else { return baseHeight }
+    let kinds = tab.widgets.filter { registry.widget($0) != nil }
+    let units = kinds.compactMap { registry.info(for: $0)?.size.units }.reduce(0, +)
+    guard units > 0 else { return baseHeight }
+    let rowWidth =
+      width - WidgetLayout.panelPadding - WidgetLayout.widgetSpacing * CGFloat(kinds.count - 1)
+    let unitWidth = rowWidth / CGFloat(units)
+    let needed = kinds.compactMap { kind -> CGFloat? in
+      guard let widget = registry.widget(kind), let info = registry.info(for: kind) else {
+        return nil
+      }
+      return widget.preferredContentHeight(
+        width: unitWidth * CGFloat(info.size.units), textScale: textScale,
+        isDetailed: kinds.count == 1)
+    }.max()
+    guard let needed else { return baseHeight }
+    return min(max(baseHeight, chrome + needed), max(baseHeight, maxHeight))
+  }
+
+  /// Size units still free in the open tab on the current screen.
   var freeUnits: Int {
-    let used = (selectedTab?.widgets ?? []).compactMap { registry.info(for: $0)?.size.units }
-    return max(0, WidgetLayout.unitsPerTab - used.reduce(0, +))
+    selectedTab.map { layoutStore.freeUnits(in: $0.id) } ?? 0
   }
 
   /// Widgets that aren't in the open tab yet; they may be in other tabs.
@@ -170,10 +212,9 @@ final class WidgetHost {
     layoutStore.remove(kind, from: tab.id)
   }
 
-  /// Adds a widget to the open tab and closes the gallery.
+  /// Adds a widget to the open tab, when it fits, and closes the gallery.
   func add(_ kind: String) {
-    guard let tab = selectedTab else { return }
-    layoutStore.add(kind, to: tab.id)
+    guard let tab = selectedTab, layoutStore.add(kind, to: tab.id) else { return }
     isShowingGallery = false
   }
 
@@ -197,60 +238,13 @@ final class WidgetHost {
   }
 }
 
-/// Tab buttons, then "+" to add a widget to the open tab and a button to edit it.
-struct WidgetTabBar: View {
-  let host: WidgetHost
-
-  var body: some View {
-    HStack(spacing: 4) {
-      if host.tabs.count > 1 {
-        ForEach(host.tabs) { tab in
-          let isSelected = tab.id == host.selectedTab?.id
-          Button {
-            host.slide(to: tab.id)
-          } label: {
-            Image(systemName: tab.symbol)
-              .symbolVariant(isSelected ? .fill : .none)
-          }
-          .buttonStyle(PanelButtonStyle(isSelected: isSelected))
-          .help(tab.title)
-          .accessibilityLabel(tab.title)
-          .accessibilityAddTraits(isSelected ? .isSelected : [])
-        }
-        Rectangle()
-          .fill(.white.opacity(0.15))
-          .frame(width: 1, height: 16)
-          .padding(.horizontal, 4)
-      }
-      Button {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-          host.showGallery(!host.isShowingGallery)
-        }
-      } label: {
-        Image(systemName: "plus")
-      }
-      .buttonStyle(PanelButtonStyle(size: 24, isSelected: host.isShowingGallery))
-      .help(Text("Add Widget"))
-      .accessibilityLabel(Text("Add Widget"))
-      Button {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-          host.setEditing(!host.isEditing)
-        }
-      } label: {
-        Image(systemName: "slider.horizontal.3")
-      }
-      .buttonStyle(PanelButtonStyle(size: 24, isSelected: host.isEditing))
-      .help(Text("Edit Tab"))
-      .accessibilityLabel(Text("Edit Tab"))
-    }
-  }
-}
-
 /// A tab's widgets side by side, sized by their units. An empty tab offers to add one.
 struct WidgetRow: View {
   let host: WidgetHost
   let tab: WidgetLayout.Tab?
   let secondary: Color
+
+  @Environment(\.widgetStyle) private var style
 
   var body: some View {
     let kinds = (tab?.widgets ?? []).filter { host.registry.widget($0) != nil }
@@ -272,6 +266,18 @@ struct WidgetRow: View {
               widget.makeView()
                 .environment(\.showsDetailedWidget, kinds.count == 1)
                 .frame(width: unitWidth * CGFloat(info.size.units))
+                .overlay(alignment: .leading) {
+                  // With the lines style, a faint line in the gap before every widget but
+                  // the first.
+                  if style == .lines, kind != kinds.first {
+                    Rectangle()
+                      .fill(.white.opacity(0.1))
+                      .frame(width: 1)
+                      .padding(.vertical, 14)
+                      .offset(x: -spacing / 2 - 0.5)
+                      .accessibilityHidden(true)
+                  }
+                }
                 .contextMenu {
                   Button("Remove \(info.title)") {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {

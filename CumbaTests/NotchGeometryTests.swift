@@ -1,4 +1,5 @@
 import CoreGraphics
+import SwiftUI
 import Testing
 
 @testable import Cumba
@@ -24,7 +25,7 @@ struct NotchGeometryTests {
     #expect(try geometry().notchRect == CGRect(x: 662, y: 950, width: 188, height: 32))
   }
 
-  @Test func panelWidthNarrowsTheShapeButNotTheWindow() throws {
+  @Test func panelSizeSetsTheShapeAndTheLargestTabSetsTheWindow() throws {
     var layout = NotchLayout()
     layout.panelWidth = 420
     let narrow = try #require(
@@ -33,12 +34,23 @@ struct NotchGeometryTests {
         layout: layout))
     #expect(narrow.shapeSize(for: .expanded).width == 420)
     #expect(narrow.windowFrame == (try geometry().windowFrame))
-    layout.panelWidth = 5000
+    // A tab with many widgets or a long text makes the panel larger, and the window with it.
+    layout.panelWidth = 900
+    layout.panelHeight = 320
     let wide = try #require(
       NotchGeometry(
         screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
         layout: layout))
-    #expect(wide.shapeSize(for: .expanded).width == 640)
+    #expect(wide.shapeSize(for: .expanded) == CGSize(width: 900, height: 320))
+    #expect(wide.windowFrame.contains(wide.shapeRect(for: .expanded)))
+    // The window is sized for the largest tab, so switching tabs doesn't resize it.
+    layout.panelWidth = 420
+    layout.largestPanel = CGSize(width: 900, height: 320)
+    let sized = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    #expect(sized.windowFrame.width == wide.windowFrame.width)
   }
 
   @Test func windowIsCenteredUnderNotchAndTopAligned() throws {
@@ -91,6 +103,20 @@ struct NotchGeometryTests {
     #expect(flat.peekRowHeight == 32)
   }
 
+  @Test func aTabBarUnderThePanelGetsRoomAndCountsAsHovering() throws {
+    var layout = NotchLayout()
+    layout.tabBarRoom = NotchLayout.floatingTabBarRoom
+    let geometry = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    let panel = geometry.shapeRect(for: .expanded)
+    #expect(geometry.windowFrame.minY <= panel.minY - NotchLayout.floatingTabBarRoom)
+    let underPanel = CGPoint(x: panel.midX, y: panel.minY - 20)
+    #expect(geometry.hoverRect(for: .expanded).contains(underPanel))
+    #expect(!geometry.hoverRect(for: .closed).contains(underPanel))
+  }
+
   @Test func peekAddsWidthOnBothSidesAndARowBelowTheNotch() throws {
     #expect(
       try geometry().shapeSize(for: .peek)
@@ -128,5 +154,43 @@ struct NotchGeometryTests {
     let layout = NotchLayout(size: size)
     #expect(layout.expandedSize == CGSize(width: 800, height: 300))
     #expect(layout.peekExtraWidth == 40)
+  }
+
+  @Test func theGreetingFitsTheWindowEvenWithTheSmallestPanel() throws {
+    var layout = NotchLayout()
+    layout.expandedSize = CGSize(
+      width: PanelSize.widthRange.lowerBound, height: PanelSize.heightRange.lowerBound)
+    let geometry = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    let greeting = geometry.greetingSize
+    #expect(greeting.width > geometry.notchRect.width)
+    #expect(greeting.height > geometry.notchRect.height + 100)
+    #expect(geometry.windowFrame.width >= greeting.width)
+    #expect(geometry.windowFrame.height >= greeting.height)
+  }
+}
+
+struct HelloShapeTests {
+  @Test func theWordFillsTheRectWithoutLeavingIt() {
+    let rect = CGRect(x: 10, y: 20, width: 260, height: 120)
+    let bounds = HelloShape().path(in: rect).boundingRect
+    #expect(rect.contains(bounds))
+    // Scaled to fit, keeping its proportions: most of the width is written on.
+    #expect(bounds.width > rect.width * 0.75)
+    #expect(bounds.height > rect.height * 0.6)
+  }
+
+  @Test func thePenSlowsDownInTurns() throws {
+    let pace = HelloShape.pace()
+    #expect(pace.values.count == pace.times.count)
+    #expect(pace.values.first == 0 && pace.values.last == 1)
+    #expect(pace.times.first == 0 && pace.times.last == 1)
+    #expect(zip(pace.values, pace.values.dropFirst()).allSatisfy { $0 <= $1 })
+    #expect(zip(pace.times, pace.times.dropFirst()).allSatisfy { $0 < $1 })
+    // Turns take time of their own, so the pace isn't just the distance.
+    let largestGap = zip(pace.values, pace.times).map { abs($0 - $1) }.max() ?? 0
+    #expect(largestGap > 0.02)
   }
 }

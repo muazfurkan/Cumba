@@ -38,7 +38,9 @@ final class WeatherWidget: NotchWidget {
   @ObservationIgnored private let location = LocationProvider()
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private var fetchedAt: Date?
-  @ObservationIgnored private let openSettings: @MainActor (SettingsWindowController.Tab) -> Void
+  /// On screen in the open panel (or its settings), between `activate` and `deactivate`.
+  @ObservationIgnored private var isActive = false
+  @ObservationIgnored private let openSettings: @MainActor (SettingsPage) -> Void
   @ObservationIgnored private let panel: PanelControl
 
   required convenience init(context: WidgetContext) {
@@ -56,9 +58,15 @@ final class WeatherWidget: NotchWidget {
     usesCurrentLocation =
       defaults.object(forKey: Self.currentLocationKey) as? Bool ?? (saved == nil)
     locationAccess = location.access
+    // Called once at launch too: only fetch while the widget is on screen.
     location.onAccessChange = { [weak self] in
-      self?.locationAccess = self?.location.access ?? .notAsked
-      self?.reload()
+      guard let self else { return }
+      locationAccess = location.access
+      if isActive {
+        reload()
+      } else {
+        fetchedAt = nil
+      }
     }
   }
 
@@ -71,10 +79,15 @@ final class WeatherWidget: NotchWidget {
   }
 
   func activate() {
+    isActive = true
     if let fetchedAt, Date().timeIntervalSince(fetchedAt) < Self.refreshInterval {
       return
     }
     refresh()
+  }
+
+  func deactivate() {
+    isActive = false
   }
 
   func choose(_ place: WeatherService.Place?) {
@@ -109,7 +122,7 @@ final class WeatherWidget: NotchWidget {
   }
 
   func showSettings() {
-    openSettings(.widgets)
+    openSettings(.widget(Self.kind))
   }
 
   /// Forgets the last forecast and fetches again.
@@ -187,9 +200,7 @@ private struct WeatherView: View {
             ProgressView().controlSize(.small)
           }
         } else {
-          Label("Weather", systemImage: "cloud.sun")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
+          WidgetHeader("Weather", symbol: "cloud.sun", color: .blue)
           setup
         }
       }

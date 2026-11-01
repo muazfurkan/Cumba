@@ -31,6 +31,12 @@ final class NotchWindowController {
   /// The panel was pinned open for a widget (see `PanelControl.keepOpen`).
   private var isKeptOpenForWidget = false
 
+  /// While the gallery, the tab editor or a permission request replaces the tab, the panel
+  /// keeps the width the tab had, and keeps it after Done until it closes or another tab
+  /// opens: getting narrower would leave the pointer outside, and the panel would close.
+  private var heldWidth: CGFloat?
+  private var heldWidthTab: String?
+
   init(settings: AppSettings, themes: ThemeStore, panelControl: PanelControl, host: WidgetHost) {
     self.settings = settings
     self.themes = themes
@@ -54,6 +60,7 @@ final class NotchWindowController {
     startTabSwipes()
     connectPanelControl()
     observeSystemEvents()
+    observeHelloRequests()
     observeSettings()
     observeWidgets()
     applySettings()
@@ -83,6 +90,10 @@ final class NotchWindowController {
   }
 
   private func stateChanged(to state: NotchState) {
+    if !state.isOpen && heldWidth != nil {
+      updateHeldWidth()
+      updateGeometry()
+    }
     updateHoverArea()
     // A closed panel must not keep keyboard focus (after typing in Notes); ordering it out
     // and in again hands focus back to the app in front.
@@ -102,8 +113,8 @@ final class NotchWindowController {
   }
 
   #if DEBUG
-    /// Debug builds only: lets scripts open and close the panel for performance and leak
-    /// checks (`scripts/` posts these distributed notifications).
+    /// Debug builds only: lets a local script open and close the panel for performance and
+    /// leak checks by posting these distributed notifications.
     private func observeDebugCommands() {
       let center = DistributedNotificationCenter.default()
       observers.append(
@@ -122,6 +133,18 @@ final class NotchWindowController {
         })
     }
   #endif
+
+  /// Settings > General can play the greeting again.
+  private func observeHelloRequests() {
+    observers.append(
+      NotificationCenter.default.addObserver(forName: .notchSayHello, object: nil, queue: .main) {
+        [weak self] _ in
+        MainActor.assumeIsolated {
+          guard let self else { return }
+          Task { await self.sayHello() }
+        }
+      })
+  }
 
   /// Re-places the panel whenever the screen setup, sleep state or space changes (N3).
   private func observeSystemEvents() {
@@ -164,7 +187,10 @@ final class NotchWindowController {
       _ = settings.hidesInFullScreen
       _ = settings.usesVirtualNotch
       _ = settings.panelScreen
-      _ = settings.tabBarPosition
+      _ = settings.tabBarStyle
+      _ = settings.widgetStyle
+      _ = settings.openingTab
+      _ = settings.opensAgentTab
       _ = settings.panelSize
       _ = settings.isPreviewingAppearance
       _ = settings.notchPreview
@@ -186,12 +212,15 @@ final class NotchWindowController {
       _ = host.isShowingGallery
       _ = host.isEditing
       _ = host.permissionBanner?.id
+      // What an agent shows can make its tab taller.
+      _ = host.claude.sessions
     } onChange: { [weak self] in
       Task { @MainActor in
         guard let self else { return }
         self.host.layoutChanged()
         self.model.isShowingNotification = self.host.liveActivities.current?.notification != nil
         self.model.send(.liveActivityChanged(self.host.liveActivities.current != nil))
+        self.updateHeldWidth()
         self.updateGeometry()
         self.observeWidgets()
       }
@@ -228,6 +257,17 @@ final class NotchWindowController {
           self.menuClosed()
         }
       })
+  }
+
+  /// Writes "hello" under the notch, like a new Mac does; returns once the notch has closed
+  /// again. Not while the panel is hidden or already saying it.
+  func sayHello() async {
+    guard !model.isGreeting, panel?.isVisible == true else { return }
+    model.isGreeting = true
+    try? await Task.sleep(for: HelloView.duration)
+    model.isGreeting = false
+    // Let the notch close before anything else comes up.
+    try? await Task.sleep(for: .milliseconds(500))
   }
 
   /// Closes the panel, e.g. before Settings opens to ask for a permission.
@@ -297,7 +337,10 @@ final class NotchWindowController {
   private func applySettings() {
     model.theme = themes.current
     model.textScale = settings.panelSize.textScale
-    model.tabBarPosition = settings.tabBarPosition
+    model.tabBarStyle = settings.tabBarStyle
+    model.widgetStyle = settings.widgetStyle
+    host.openingTab = settings.openingTab
+    host.opensAgentTab = settings.opensAgentTab
     model.opensOnHover = settings.opensOnHover
     model.openDelay = .milliseconds(Int(settings.openDelay * 1000))
     model.closeDelay = .milliseconds(Int(settings.closeDelay * 1000))
@@ -334,41 +377,26 @@ final class NotchWindowController {
     }
   }
 
-  /// The screen chosen in Settings. "Notched" falls back to the main screen with the virtual
-  /// notch setting; the other choices draw a virtual notch where there is no real one.
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
-    var layout = NotchLayout(size: settings.panelSize)
-    // Tabs at the bottom get their own strip below the widgets.
-    if settings.tabBarPosition == .bottom {
-      layout.expandedSize.height += NotchLayout.bottomTabBarHeight
-    }
-    // A live activity can ask for wider sides.
-    if let sideWidth = host.liveActivities.current?.sideWidth {
-      layout.peekExtraWidth = max(layout.peekExtraWidth, sideWidth)
-    }
-    if host.liveActivities.current?.notification != nil {
-      layout.peekNotificationHeight = NotchLayout.notificationHeight
-    }
-    layout.panelWidth = host.preferredPanelWidth(maxWidth: layout.expandedSize.width)
-    let chosen: NSScreen?
-    switch settings.panelScreen {
-    case .notched: chosen = nil
-    case .main: chosen = NSScreen.screens.first
-    case .pointer: chosen = Self.screenUnderPointer
-    }
-    if let chosen {
-      return (
-        chosen, chosen.notchGeometry(layout: layout) ?? chosen.virtualNotchGeometry(layout: layout)
-      )
-    }
-    if let screen = NSScreen.notched, let geometry = screen.notchGeometry(layout: layout) {
-      return (screen, geometry)
-    }
-    guard settings.usesVirtualNotch, let screen = NSScreen.screens.first else { return nil }
-    return (screen, screen.virtualNotchGeometry(layout: layout))
+    NotchScreenLayout.target(
+      settings: settings, host: host, layoutStore: host.layoutStore,
+      screenUnderPointer: Self.screenUnderPointer, minimumPanelWidth: heldWidth)
   }
 
-  private static var screenUnderPointer: NSScreen? {
+  /// Holds the open panel's width when the gallery, editor or a permission request comes
+  /// up; lets go once the panel closes or another tab opens.
+  private func updateHeldWidth() {
+    let tab = host.selectedTab?.id
+    if !model.state.isOpen || tab != heldWidthTab {
+      heldWidth = nil
+    }
+    if heldWidth == nil, model.state.isOpen, !host.showsTab, let geometry = model.geometry {
+      heldWidth = geometry.shapeSize(for: .expanded).width
+      heldWidthTab = tab
+    }
+  }
+
+  static var screenUnderPointer: NSScreen? {
     let location = NSEvent.mouseLocation
     return NSScreen.screens.first { NSMouseInRect(location, $0.frame, false) }
   }
@@ -479,7 +507,7 @@ final class NotchWindowController {
   }
 
   private func makePanel() -> NotchPanel {
-    let panel = NotchPanel(showsInFullScreen: false)
+    let panel = NotchPanel(showsInFullScreen: true)
     let hostingView = NotchHostingView(rootView: NotchRootView(model: model, host: host))
     // The window size is fixed; SwiftUI must not resize it.
     hostingView.sizingOptions = []
@@ -493,4 +521,6 @@ final class NotchWindowController {
 extension Notification.Name {
   /// Posted when the panel opens, e.g. for the welcome window's "try it" step.
   static let notchPanelDidOpen = Notification.Name("io.github.muazfurkan.ljaspnotch.panelDidOpen")
+  /// Asks the notch to write "hello" (Settings > General).
+  static let notchSayHello = Notification.Name("io.github.muazfurkan.ljaspnotch.sayHello")
 }

@@ -73,9 +73,7 @@ private struct SystemStatsView: View {
   var body: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
-        Label("System", systemImage: "cpu")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("System", symbol: "cpu", color: .mint)
         HStack(alignment: .firstTextBaseline) {
           stat(
             title: Text("CPU"), value: widget.cpuHistory.last ?? 0)

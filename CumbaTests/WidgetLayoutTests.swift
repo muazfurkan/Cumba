@@ -134,6 +134,23 @@ struct LayoutStoreTests {
     #expect(reloaded.layout.tabs[1].widgets == ["calendar", "battery"])
   }
 
+  @Test func aFullTabRefusesMoreUntilTheScreenMakesRoom() async {
+    defer { cleanUp() }
+    let store = LayoutStore(
+      fileURL: fileURL, knownKinds: [("a", 2), ("b", 2), ("c", 2), ("d", 2)],
+      defaultKinds: ["a", "b", "c"])
+    await store.load()
+    let home = store.layout.tabs[0].id
+    #expect(store.freeUnits(in: home) == 0)
+    #expect(!store.fits("d", in: home))
+    #expect(!store.add("d", to: home))
+    #expect(store.layout.tabs[0].widgets == ["a", "b", "c"])
+    // A wider screen lets the panel grow, so the same tab takes it.
+    store.unitsPerTab = 8
+    #expect(store.add("d", to: home))
+    #expect(store.layout.tabs[0].widgets == ["a", "b", "c", "d"])
+  }
+
   @Test func removingATabMovesItsWidgetsToTheFirstTab() async {
     defer { cleanUp() }
     let store = await makeStore()
@@ -145,5 +162,19 @@ struct LayoutStoreTests {
     #expect(store.layout.tabs[0].widgets.contains("timer"))
     store.removeTab(store.layout.tabs[0].id)
     #expect(store.layout.tabs.count == 1)
+  }
+}
+
+struct TabCapacityTests {
+  @Test func tabsHoldMoreWidgetsOnWiderScreensButNeverFewerThanSix() {
+    #expect(WidgetLayout.capacity(panelWidth: 640, screenWidth: 700) == WidgetLayout.unitsPerTab)
+    let wide = WidgetLayout.capacity(panelWidth: 640, screenWidth: 1800)
+    #expect(wide > WidgetLayout.unitsPerTab)
+    // Each unit keeps its width, so the widest tab still fits the screen with its margins.
+    let unit = WidgetLayout.unitWidth(panelWidth: 640)
+    let needed =
+      WidgetLayout.panelPadding + unit * CGFloat(wide)
+      + WidgetLayout.widgetSpacing * CGFloat(wide - 1)
+    #expect(needed <= 1800 - WidgetLayout.screenMargin * 2)
   }
 }

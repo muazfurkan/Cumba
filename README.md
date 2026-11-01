@@ -2,7 +2,7 @@
 
 <h1 align="center">Cumba</h1>
 
-<p align="center"><sub>by LJASP · formerly ljaspNotch</sub></p>
+<p align="center"><sub>by LJASP · formerly cumbaNotch</sub></p>
 
 <p align="center">
   <a href="https://github.com/muazfurkan/Cumba/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/Cumba?label=download&color=DCB669" alt="Latest release"></a>
@@ -23,12 +23,12 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 
 - **Media**: whatever any app plays (Safari, Chrome, YouTube, Spotify, Music, podcasts and more) in one mini player with artwork, progress, seeking and controls, with no extension or setup. A small waveform beside the notch shows what's playing.
 - **AI agents (Claude Code and Codex)**: what the agent is doing right now, its last answer and how full its context window is, with a ring beside the notch while it works. When it asks a question, needs permission or finishes, a notification opens under the notch with what happened and **Open**, which brings the agent's app forward. Opening the panel while an agent works shows its tab. Permission requests show up with **Allow**, **Deny** and **In Terminal**; questions and plans stay in the agent, and the notch tells you it's waiting.
-- **Widgets in tabs**: calendar with a Join button for video calls (scroll through the days to see any day's events), timer, Pomodoro, notes, clipboard history (text, links, images, files and new screenshots as cards), keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Add them from a gallery in the panel or in Settings, switch tabs with a two-finger swipe; a new installation starts with just three.
+- **Widgets in tabs**: calendar with a Join button for video calls (scroll through the days to see any day's events), timer, Pomodoro, your Apple Notes (recent notes, and new ones from the panel), to-dos from Apple Reminders (tick them off, add new ones), clipboard history (text, links, images, files and new screenshots as cards), keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Add them from a gallery in the panel or in Settings, switch tabs with a two-finger swipe; a new installation starts with just three.
 - **A panel that fits**: tabs at the bottom or the top, edited right in the panel (name, symbol, order, widgets). The panel is as wide as the open tab, and a widget alone in its tab shows a detailed view: weather with the next hours and days like Apple's widget, the whole month beside your events, large album art. Text size is adjustable, and so is how far the closed notch reaches past the camera.
 - **Optional extras**, off until you turn them on: show the panel on any display, the notch in place of the system volume and brightness indicators, a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
 - **Live activities**: a running timer, a working AI agent, a pending request, charging, the current song or a volume or brightness change appear on both sides of the closed notch.
 - **Themes**: seven built in, from plain black and Liquid Glass to Neon Tokyo, Sakura and Synthwave. Make your own: glass, solid or tinted, a gradient background, a neon edge, colors, font, corner radius, shadow and animation. Panel size and text size stay the same whichever theme you pick. Import and export themes as JSON.
-- **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
+- **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, it works in full screen apps too (or hides there, if you like), and idle CPU use is zero. Right-click the notch for Settings.
 - English and Turkish interface.
 
 ## Download and install
@@ -54,7 +54,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 
 **Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Location, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
 
-**Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Agents. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
+**Coming from cumbaNotch?** Cumba is the same app under a new name. Quit cumbaNotch, move the old app to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Agents. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
 
 ## Requirements
 
@@ -84,7 +84,9 @@ Everything below is off or unused until you turn on the feature that needs it. S
 |---|---|---|
 | System Now Playing helper | Media from every app, and its controls | Runs while the app runs; turn off "Read media from every app" to use AppleScript instead. See [below](#media-and-private-apis) |
 | Automation (Apple Events) for Spotify and Music | Read the current track; play, pause, skip, seek | Only with "Read media from every app" off; asked from Settings, scripts are sent only while that app is already running |
+| Automation (Apple Events) for Notes | Notes widget: list your recent notes, open one, make new ones | Asked when you connect Notes in the widget or in Settings; Cumba starts Notes in the background and never changes an existing note |
 | Calendar (full access) | Calendar widget | Asked when you click Allow in the widget or in Settings |
+| Reminders (full access) | To-dos widget: show, tick off and add reminders | Asked when you click Allow in the widget or in Settings |
 | Location | Weather widget, for the weather where you are | Asked when you click Use My Location; off if you choose a city instead |
 | Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
 | Local server on `127.0.0.1` | Optional YouTube extension connection | Only after you turn it on in Settings > Connections |
@@ -128,7 +130,7 @@ The AI Agents widget shows what a session is doing right now ("Editing Notch.swi
 
 **Codex** works the same way: install its hooks in **Settings > Agents > Codex** (they go to `~/.codex/hooks.json`), then run `/hooks` in Codex once and trust them, since Codex runs new hooks only after that.
 
-**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Agents you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
+**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** By default, shell commands are answered in the terminal and everything else can be allowed from the notch; in Settings > Agents you can allow everything, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button, and when a request is longer than its box, Allow waits until you've scrolled to its end. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 
 ## Scripts
 
@@ -149,12 +151,12 @@ No telemetry. Everything stays on your Mac. These features make network requests
 
 | Feature | Request |
 |---|---|
-| Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
-| Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
-| Weather widget | Your location rounded to about 10 km (or the coordinates of the city you choose) to `api.open-meteo.com`; with your location, the same rounded coordinates to Apple Maps for the city name; a city you search for to `geocoding-api.open-meteo.com` |
-| Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
+| Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`), for the panel and the closed notch |
+| Media widget with YouTube | Thumbnails from YouTube's image servers (`*.ytimg.com`, `*.googleusercontent.com`, `*.ggpht.com`; the URL the page itself uses), for the panel and the closed notch |
+| Weather widget | Your location rounded to about 10 km (or the coordinates of the city you choose) to `api.open-meteo.com`; with your location, the same rounded coordinates to Apple Maps for the city name; a city you search for, with your language, to `geocoding-api.open-meteo.com`. Only while the widget is on screen, at most every 15 minutes |
+| Update check | The list of releases from `api.github.com` at launch and once a day, with Cumba's version as the user agent; turn it off in Settings > General |
 
-The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes are saved as plain text in `~/Library/Application Support/Cumba/notes.txt`. Clipboard History keeps your last 20 copies (text, links, images and files) in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. With "Add new screenshots" on, it watches the screenshot folder for new screenshots and keeps only their location. The microphone and camera indicator reads only whether a device is in use, never audio or video.
+The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes and To-dos read and write Apple Notes and Apple Reminders on your Mac; nothing is copied or sent anywhere. The note of earlier versions (`notes.txt`) is moved to Apple Notes once, and the file is left in place. Clipboard History keeps your last 20 copies (text, links, images and files) in memory only and skips items apps mark as passwords; while it's in one of your tabs it checks once a second whether the clipboard changed, even with the panel closed, so it doesn't miss a copy. With "Add new screenshots" on, it watches the screenshot folder for new screenshots and keeps only their location. The microphone and camera indicator reads only whether a device is in use, never audio or video.
 
 When turned on, the extension server listens only on `127.0.0.1`, accepts only the Cumba extension and requires its own token, stored in your Keychain.
 
@@ -171,7 +173,7 @@ When turned on, the extension server listens only on `127.0.0.1`, accepts only t
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a scripts-token
    ```
-   Backups of your Claude Code settings made during hook setup are next to it as `~/.claude/settings.json.bak-…`; keep or delete them.
+   Backups made during hook setup are next to the files they back up, as `~/.claude/settings.json.bak-…` and `~/.codex/hooks.json.bak-…`; keep or delete them.
 
 ## Contributing
 

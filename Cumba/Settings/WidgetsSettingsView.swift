@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Tabs of the panel and the widgets in them, the gallery of every widget, and per-widget
-/// settings. Every widget can be added, removed and reordered.
+/// Tabs of the panel and the widgets in them, and the gallery of every widget. Every widget
+/// can be added, removed and reordered; each one's own settings have a page in the sidebar.
 struct WidgetsSettingsView: View {
+  let info: SettingsPageInfo
   let layoutStore: LayoutStore
   let registry: WidgetRegistry
   @State private var selectedTabID: String?
@@ -13,7 +14,7 @@ struct WidgetsSettingsView: View {
   }
 
   var body: some View {
-    Form {
+    SettingsForm(info: info) {
       Section("Tabs") {
         Picker("Tab", selection: tabSelection) {
           ForEach(tabs) { tab in
@@ -76,6 +77,7 @@ struct WidgetsSettingsView: View {
             GalleryCard(
               info: info,
               tabTitle: tab.flatMap { $0.widgets.contains(info.kind) ? $0.title : nil },
+              fits: tab.map { layoutStore.fits(info.kind, in: $0.id) } ?? false,
               add: {
                 if let tab {
                   layoutStore.add(info.kind, to: tab.id)
@@ -91,16 +93,7 @@ struct WidgetsSettingsView: View {
         .padding(.vertical, 4)
       }
 
-      ForEach(registry.infos) { info in
-        if let settingsView = registry.widget(info.kind)?.makeSettingsView() {
-          Section(info.title) {
-            settingsView
-          }
-        }
-      }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 620)
   }
 
   private var tabSelection: Binding<String> {
@@ -160,6 +153,8 @@ private struct GalleryCard: View {
   let info: WidgetInfo
   /// The tab that shows it, or nil when it isn't in the panel.
   let tabTitle: String?
+  /// There is room for it in the tab.
+  let fits: Bool
   let add: () -> Void
   let remove: () -> Void
 
@@ -189,7 +184,13 @@ private struct GalleryCard: View {
         .foregroundStyle(.secondary)
         .lineLimit(2, reservesSpace: true)
       if tabTitle == nil {
-        Button("Add", action: add)
+        if fits {
+          Button("Add", action: add)
+        } else {
+          Text("No room in this tab")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
       } else {
         Button("Remove", role: .destructive, action: remove)
       }

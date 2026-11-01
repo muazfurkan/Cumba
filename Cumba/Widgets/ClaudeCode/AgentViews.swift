@@ -58,14 +58,23 @@ struct AgentPanel: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       HStack(spacing: 6) {
-        Label {
-          page == .progress ? Text("Progress") : Text("Usage")
-        } icon: {
-          Image(systemName: page == .progress ? "list.bullet" : "gauge.with.dots.needle.33percent")
+        let title = page == .progress ? Text("Progress") : Text("Usage")
+        let icon = Image(
+          systemName: page == .progress ? "list.bullet" : "gauge.with.dots.needle.33percent")
+        // In a narrow widget the name gives way to its symbol instead of wrapping.
+        ViewThatFits(in: .horizontal) {
+          Label {
+            title
+          } icon: {
+            icon
+          }
+          .fixedSize()
+          icon
+            .accessibilityLabel(title)
         }
         .panelFont(.caption)
         .foregroundStyle(.secondary)
-        Spacer()
+        Spacer(minLength: 0)
         let others = service.sessions.count - 1
         if others > 0 {
           Button(action: showNextSession) {
@@ -127,22 +136,23 @@ struct AgentPanel: View {
           .foregroundStyle(.secondary)
           .lineLimit(1)
         if !isDetailed, let detail = session.detail {
-          bubble(detail, lines: 2)
+          bubble(detail)
         }
       }
       if isDetailed, let detail = session.detail {
         Spacer(minLength: 0)
-        bubble(detail, lines: 4)
+        bubble(detail)
           .frame(maxWidth: 260, alignment: .trailing)
       }
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
 
-  private func bubble(_ text: String, lines: Int) -> some View {
+  /// The answer as tall as the panel allows; the tab grows for it up to a limit, and
+  /// whatever doesn't fit then is cut off at the end.
+  private func bubble(_ text: String) -> some View {
     Text(text)
       .panelFont(.callout)
-      .lineLimit(lines)
       .padding(.horizontal, 10)
       .padding(.vertical, 6)
       .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))

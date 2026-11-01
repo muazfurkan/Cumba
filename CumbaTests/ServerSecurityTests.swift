@@ -1,4 +1,3 @@
-import FlyingFox
 import Foundation
 import Testing
 
@@ -120,11 +119,11 @@ struct MediaSocketHandlerTests {
 
   @Test func wrongTokenClosesTheConnection() async throws {
     let hub = BrowserMediaHub()
-    let (client, input) = AsyncStream.makeStream(of: WSMessage.self)
-    let outbound = try await MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
+    let (client, input) = AsyncStream.makeStream(of: MediaSocketMessage.self)
+    let outbound = MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
     input.yield(.text(#"{ "type": "hello", "version": 1, "token": "wrong" }"#))
     var iterator = outbound.makeAsyncIterator()
-    #expect(await iterator.next() == .close(.policyViolation))
+    #expect(await iterator.next() == .close)
     #expect(hub.connectionCount == 0)
     input.finish()
   }
@@ -133,13 +132,13 @@ struct MediaSocketHandlerTests {
     let hub = BrowserMediaHub()
     var shown: NowPlaying?
     hub.youtube.onUpdate = { shown = $0 }
-    let (client, input) = AsyncStream.makeStream(of: WSMessage.self)
-    let outbound = try await MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
+    let (client, input) = AsyncStream.makeStream(of: MediaSocketMessage.self)
+    let outbound = MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
     input.yield(
       .text(#"{ "type": "state", "tabId": 1, "site": "youtube", "title": "x", "isPlaying": true }"#)
     )
     var iterator = outbound.makeAsyncIterator()
-    #expect(await iterator.next() == .close(.policyViolation))
+    #expect(await iterator.next() == .close)
     #expect(shown == nil)
     #expect(hub.connectionCount == 0)
     input.finish()
@@ -149,8 +148,8 @@ struct MediaSocketHandlerTests {
     let hub = BrowserMediaHub()
     var shown: NowPlaying?
     hub.youtube.onUpdate = { shown = $0 }
-    let (client, input) = AsyncStream.makeStream(of: WSMessage.self)
-    _ = try await MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
+    let (client, input) = AsyncStream.makeStream(of: MediaSocketMessage.self)
+    _ = MediaSocketHandler(token: token, hub: hub).makeMessages(for: client)
     input.yield(.text(#"{ "type": "hello", "version": 1, "token": "\#(token)" }"#))
     input.yield(
       .text(#"{ "type": "state", "tabId": 1, "site": "youtube", "title": "x", "isPlaying": true }"#)
@@ -164,6 +163,75 @@ struct MediaSocketHandlerTests {
     for _ in 0..<50 where hub.connectionCount > 0 {
       try await Task.sleep(for: .milliseconds(10))
     }
+    #expect(hub.connectionCount == 0)
+  }
+}
+
+/// The real listener on a free port, with URLSession as the extension.
+@MainActor
+@Suite(.timeLimit(.minutes(1)))
+struct MediaSocketServerTests {
+  private let token = String(repeating: "c", count: 64)
+  private let extensionOrigin = RequestGuard.extensionOrigin
+
+  private func start(_ hub: BrowserMediaHub) async -> (port: UInt16, task: Task<Void, Error>) {
+    let port = UInt16.random(in: 50_000...59_000)
+    let server = MediaSocketServer(port: port, token: token, hub: hub)
+    let (ready, signal) = AsyncStream.makeStream(of: Void.self)
+    // If the port can't be opened, the stream ends and the test fails instead of waiting.
+    let task = Task {
+      defer { signal.finish() }
+      try await server.run { signal.yield() }
+    }
+    var iterator = ready.makeAsyncIterator()
+    _ = await iterator.next()
+    return (port, task)
+  }
+
+  private func connect(port: UInt16, origin: String) throws -> URLSessionWebSocketTask {
+    var request = URLRequest(url: try #require(URL(string: "ws://127.0.0.1:\(port)/media")))
+    request.setValue(origin, forHTTPHeaderField: "Origin")
+    let socket = URLSession(configuration: .ephemeral).webSocketTask(with: request)
+    socket.resume()
+    return socket
+  }
+
+  @Test func ourExtensionWithTheTokenGetsThrough() async throws {
+    let hub = BrowserMediaHub()
+    var shown: NowPlaying?
+    hub.youtube.onUpdate = { shown = $0 }
+    let (port, task) = await start(hub)
+    defer { task.cancel() }
+    let socket = try connect(port: port, origin: extensionOrigin)
+    try await socket.send(.string(#"{ "type": "hello", "version": 1, "token": "\#(token)" }"#))
+    try await socket.send(
+      .string(
+        #"{ "type": "state", "tabId": 1, "site": "youtube", "title": "x", "isPlaying": true }"#))
+    for _ in 0..<100 where shown == nil {
+      try await Task.sleep(for: .milliseconds(10))
+    }
+    #expect(shown?.title == "x")
+    socket.cancel(with: .goingAway, reason: nil)
+  }
+
+  @Test(arguments: ["https://evil.example", "chrome-extension://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"])
+  func otherOriginsAreTurnedAway(origin: String) async throws {
+    let hub = BrowserMediaHub()
+    let (port, task) = await start(hub)
+    defer { task.cancel() }
+    let socket = try connect(port: port, origin: origin)
+    await #expect(throws: (any Error).self) { try await socket.receive() }
+    #expect(hub.connectionCount == 0)
+  }
+
+  @Test func aWrongTokenIsClosed() async throws {
+    let hub = BrowserMediaHub()
+    let (port, task) = await start(hub)
+    defer { task.cancel() }
+    let socket = try connect(port: port, origin: extensionOrigin)
+    try await socket.send(.string(#"{ "type": "hello", "version": 1, "token": "wrong" }"#))
+    await #expect(throws: (any Error).self) { try await socket.receive() }
+    #expect(socket.closeCode == .policyViolation)
     #expect(hub.connectionCount == 0)
   }
 }

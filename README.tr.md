@@ -2,7 +2,7 @@
 
 <h1 align="center">Cumba</h1>
 
-<p align="center"><sub>by LJASP · eski adıyla ljaspNotch</sub></p>
+<p align="center"><sub>by LJASP · eski adıyla cumbaNotch</sub></p>
 
 <p align="center">
   <a href="https://github.com/muazfurkan/Cumba/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/Cumba?label=download&color=DCB669" alt="Son sürüm"></a>
@@ -23,12 +23,12 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 - **Medya**: hangi uygulama ne çalıyorsa (Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası) tek bir mini oynatıcıda; kapak görseli, ilerleme, sarma ve kontroller, eklenti ya da kurulum gerekmeden. Notch'un yanındaki küçük ses dalgası neyin çaldığını gösterir.
 - **Yapay zeka ajanları (Claude Code ve Codex)**: ajanın o an ne yaptığı, son yanıtı ve bağlam penceresinin ne kadar dolu olduğu; çalışırken notch'un yanında dönen bir halka. Soru sorduğunda, izin istediğinde veya bitirdiğinde notch'un altında ne olduğunu söyleyen bir bildirim açılır; **Aç** ajanın çalıştığı uygulamayı öne getirir. Ajan çalışırken paneli açınca onun sekmesi gelir. İzin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle görünür; sorular ve planlar ajanda kalır, notch sizi beklediğini söyler.
-- **Sekmelerde widget'lar**: görüntülü görüşmeler için Katıl düğmeli takvim (günler arasında kaydırarak herhangi bir günün etkinliklerine bakın), zamanlayıcı, Pomodoro, notlar, pano geçmişi (metin, bağlantı, görsel, dosya ve yeni ekran görüntüleri kartlar halinde), uyanık tut, teleprompter, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Panelden ya da Ayarlar'daki galeriden ekleyin, sekmeler arasında iki parmakla kaydırarak geçin; yeni kurulum yalnızca üçüyle başlar.
+- **Sekmelerde widget'lar**: görüntülü görüşmeler için Katıl düğmeli takvim (günler arasında kaydırarak herhangi bir günün etkinliklerine bakın), zamanlayıcı, Pomodoro, Apple Notlar'ınız (son notlar ve panelden yeni not), Apple Anımsatıcılar'dan yapılacaklar (işaretleyin, yenisini ekleyin), pano geçmişi (metin, bağlantı, görsel, dosya ve yeni ekran görüntüleri kartlar halinde), uyanık tut, teleprompter, pil, AirDrop destekli dosya rafı, kamera aynası, hava durumu, Kısayollar ve CPU/bellek grafiği. Panelden ya da Ayarlar'daki galeriden ekleyin, sekmeler arasında iki parmakla kaydırarak geçin; yeni kurulum yalnızca üçüyle başlar.
 - **Size uyan bir panel**: sekmeler altta ya da üstte, doğrudan panelde düzenlenir (ad, simge, sıra, widget'lar). Panel açık sekme kadar geniştir; sekmesinde tek başına olan widget ayrıntılı görünür: Apple'ın widget'ı gibi önümüzdeki saatler ve günlerle hava durumu, etkinliklerinizin yanında ayın tamamı, büyük albüm kapağı. Yazı boyutu ve kapalı notch'un kameranın ne kadar dışına taşacağı ayarlanabilir.
 - **İsteğe bağlı ekstralar** (siz açana kadar kapalı): paneli istediğiniz ekranda gösterme, sistemin ses ve parlaklık göstergeleri yerine notch, mikrofon veya kamera kullanılırken bir nokta, toplantılardan önce geri sayım, medya kaynağı seçimi ve [kendi script'leriniz için bir API](#scriptler).
 - **Canlı etkinlikler**: çalışan zamanlayıcı, çalışan bir yapay zeka ajanı, bekleyen bir istek, şarj, çalan şarkı ya da ses veya parlaklık değişikliği kapalı notch'un iki yanında görünür.
 - **Temalar**: düz siyah ve Liquid Glass'tan Neon Tokyo, Sakura ve Synthwave'e yedi hazır tema. Kendi temanızı yapın: cam, düz veya renkli cam, renk geçişli zemin, neon kenar, renkler, yazı tipi, köşe yuvarlaklığı, gölge ve animasyon. Panel boyutu ve yazı boyutu hangi temayı seçerseniz seçin aynı kalır. Temaları JSON olarak içe/dışa aktarın.
-- **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda gizlenir ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
+- **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda da çalışır (isterseniz orada gizlenir) ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
 - Türkçe ve İngilizce arayüz.
 
 <a name="indirme"></a>
@@ -56,7 +56,7 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 
 **Güncellemeler:** Uygulama yeni sürüm çıktığında haber verir; kendi başına hiçbir şey indirmez veya kurmaz. Sürümler ad-hoc imzalı olduğu için güncellemeden sonra macOS verdiğiniz izinleri (Otomasyon, Takvim, Konum, Kamera) ve Cumba'nın token'ları için Anahtar Zinciri erişimini yeniden sorar. Önce yeni dosyayı doğrulayın, sonra izin verin.
 
-**ljaspNotch'tan mı geçiyorsunuz?** Cumba aynı uygulamanın yeni adı. ljaspNotch'tan çıkın, `ljaspNotch.app`'i Çöp Sepeti'ne taşıyın ve Cumba'yı kurun; ayarlarınız, düzeniniz, notlarınız ve temalarınız aynen gelir. Claude Code hook'larını kullanıyorsanız Ayarlar > Ajanlar'da bir kez **Güncelle…**'ye tıklayın. Chrome eklentisini kullanıyorsanız onu `chrome://extensions` sayfasından kaldırın, [YouTube ve YouTube Music](#youtube-ve-youtube-music) bölümündeki gibi yeni uygulamadan tekrar yükleyin ve token'ı yapıştırın.
+**cumbaNotch'tan mı geçiyorsunuz?** Cumba aynı uygulamanın yeni adı. cumbaNotch'tan çıkın, eski uygulamayı Çöp Sepeti'ne taşıyın ve Cumba'yı kurun; ayarlarınız, düzeniniz, notlarınız ve temalarınız aynen gelir. Claude Code hook'larını kullanıyorsanız Ayarlar > Ajanlar'da bir kez **Güncelle…**'ye tıklayın. Chrome eklentisini kullanıyorsanız onu `chrome://extensions` sayfasından kaldırın, [YouTube ve YouTube Music](#youtube-ve-youtube-music) bölümündeki gibi yeni uygulamadan tekrar yükleyin ve token'ı yapıştırın.
 
 ## Gereksinimler
 
@@ -88,7 +88,9 @@ Aşağıdakilerin hepsi, gerektiren özelliği açana kadar kapalıdır veya kul
 |---|---|---|
 | Sistemin Şu An Çalan yardımcısı | Her uygulamadaki medya ve kontrolleri | Uygulama açıkken çalışır; yerine AppleScript kullanmak için "Medyayı her uygulamadan oku"yu kapatın. Bkz. [aşağısı](#medya-ve-ozel-apiler) |
 | Spotify ve Müzik için Otomasyon (Apple Events) | Çalan parçayı okumak; oynat, duraklat, atla, sar | Yalnızca "Medyayı her uygulamadan oku" kapalıyken; Ayarlar'dan istenir, komutlar yalnızca o uygulama zaten açıkken gönderilir |
+| Notlar için Otomasyon (Apple Events) | Notlar widget'ı: son notları listelemek, açmak, yeni not oluşturmak | Notlar'ı widget'ta ya da Ayarlar'da bağladığınızda istenir; Cumba Notlar'ı arka planda başlatır ve var olan hiçbir notu değiştirmez |
 | Takvim (tam erişim) | Takvim widget'ı | Widget'ta veya Ayarlar'da İzin Ver'e tıkladığınızda istenir |
+| Anımsatıcılar (tam erişim) | Yapılacaklar widget'ı: anımsatıcıları göstermek, işaretlemek ve eklemek | Widget'ta veya Ayarlar'da İzin Ver'e tıkladığınızda istenir |
 | Konum | Hava durumu widget'ı, bulunduğunuz yerin havası için | Konumumu Kullan'a tıkladığınızda istenir; şehir seçerseniz kullanılmaz |
 | Kamera | Ayna widget'ı | Yalnızca panel onu gösterirken; hiçbir şey kaydedilmez |
 | `127.0.0.1` üzerinde yerel sunucu | İsteğe bağlı YouTube eklentisi bağlantısı | Yalnızca Ayarlar > Bağlantılar'dan açtıktan sonra |
@@ -130,7 +132,7 @@ Chrome, eklentinin `youtube.com` ve `music.youtube.com` üzerindeki verilerinizi
 
 Yapay Zeka Ajanları widget'ı bir oturumun o an ne yaptığını ("Notch.swift düzenleniyor", "Testler çalıştırılıyor"), başlığını ve son yanıtını, bağlam penceresinin ne kadar dolu olduğunu gösterir. Claude Code'un (terminal, IDE eklentileri ve Claude masaüstü uygulaması) izin istekleri **İzin Ver**, **Reddet** ve **Terminalde** seçenekleriyle notch'ta görünür; bir oturum bitince veya hata verince de görürsünüz. Kart, isteğin tamamını gizli karakterleri görünür hale getirerek gösterir. Sorular ve plan onayları izin isteği değildir: onları Claude Code kendisi sorar, notch oturumun sizi beklediğini gösterir. Hook'ları **Ayarlar > Ajanlar**'dan kurun; `~/.claude/settings.json` değişikliğini önce siz görürsünüz ve yedek alınır. Hook'lar uygulamaya yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden ulaşır; böylece başka hiçbir şey Claude Code'a uygulama adına cevap veremez; hook'lar eklentininkinden ayrı, kendi token'larını kullanır.
 
-**Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır.** Ayarlar > Ajanlar'dan notch'ta kabuk komutları dışındaki her şeye izin verilmesini seçebilir ya da İzin Ver'i tamamen kapatıp yalnızca Reddet ve Terminalde seçeneklerini bırakabilirsiniz. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
+**Notch'taki İzin Ver, Claude Code'daki İzin Ver ile aynıdır: araç hemen çalışır.** Varsayılan olarak kabuk komutları terminalde yanıtlanır, geri kalan her şeye notch'tan izin verilebilir; Ayarlar > Ajanlar'dan her şeye izin verilmesini seçebilir ya da İzin Ver'i tamamen kapatıp yalnızca Reddet ve Terminalde seçeneklerini bırakabilirsiniz. Gizli karakter içeren isteklerde İzin Ver düğmesi hiç gösterilmez; kutusuna sığmayan bir istekte İzin Ver, sonuna kadar kaydırana kadar bekler. Ayrıntılar ve elle kurulum için [docs/claude-code-setup.md](docs/claude-code-setup.md) dosyasına bakın.
 
 **Codex** de aynı şekilde çalışır: hook'larını **Ayarlar > Ajanlar > Codex**'ten kurun (`~/.codex/hooks.json` dosyasına yazılır), ardından Codex'te bir kez `/hooks` komutunu çalıştırıp onlara güvenin; Codex yeni hook'ları ancak bundan sonra çalıştırır.
 
@@ -155,12 +157,12 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 
 | Özellik | İstek |
 |---|---|
-| Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
-| YouTube ile medya widget'ı | YouTube'un görsel sunucularından küçük resim (sayfanın kendi kullandığı adres) |
-| Hava durumu widget'ı | Yaklaşık 10 km'ye yuvarlanmış konumunuz (ya da seçtiğiniz şehrin koordinatları) `api.open-meteo.com`'a; konumunuzla birlikte şehir adı için aynı yuvarlanmış koordinatlar Apple Haritalar'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
-| Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi; Ayarlar > Genel'den kapatılabilir |
+| Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) panel ve kapalı notch için kapak görseli |
+| YouTube ile medya widget'ı | YouTube'un görsel sunucularından (`*.ytimg.com`, `*.googleusercontent.com`, `*.ggpht.com`; sayfanın kendi kullandığı adres) panel ve kapalı notch için küçük resim |
+| Hava durumu widget'ı | Yaklaşık 10 km'ye yuvarlanmış konumunuz (ya da seçtiğiniz şehrin koordinatları) `api.open-meteo.com`'a; konumunuzla birlikte şehir adı için aynı yuvarlanmış koordinatlar Apple Haritalar'a; aradığınız şehir adı, dilinizle birlikte `geocoding-api.open-meteo.com`'a. Yalnızca widget ekrandayken, en fazla 15 dakikada bir |
+| Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi, kullanıcı aracısı olarak Cumba'nın sürümüyle; Ayarlar > Genel'den kapatılabilir |
 
-Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar `~/Library/Application Support/Cumba/notes.txt` içinde düz metin olarak saklanır. Pano Geçmişi son 20 kopyanızı (metin, bağlantı, görsel ve dosya) yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; paneldeyken panonun değişip değişmediğini saniyede bir kontrol eder. "Yeni ekran görüntülerini ekle" açıksa ekran görüntüsü klasöründeki yeni ekran görüntülerini izler ve yalnızca konumlarını tutar. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.
+Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar ve Yapılacaklar, Mac'inizdeki Apple Notlar ve Apple Anımsatıcılar'ı okuyup yazar; hiçbir şey kopyalanmaz ya da gönderilmez. Önceki sürümlerin notu (`notes.txt`) bir kez Apple Notlar'a taşınır, dosya yerinde bırakılır. Pano Geçmişi son 20 kopyanızı (metin, bağlantı, görsel ve dosya) yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; sekmelerinizden birindeyken, bir kopyayı kaçırmamak için panel kapalıyken de panonun değişip değişmediğini saniyede bir kontrol eder. "Yeni ekran görüntülerini ekle" açıksa ekran görüntüsü klasöründeki yeni ekran görüntülerini izler ve yalnızca konumlarını tutar. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.
 
 Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca Cumba eklentisini kabul eder ve Anahtar Zinciri'nde saklanan kendi token'ını ister.
 
@@ -177,7 +179,7 @@ Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnız
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a scripts-token
    ```
-   Hook kurulumunda alınan Claude Code ayar yedekleri `~/.claude/settings.json.bak-…` adıyla yanında durur; saklayabilir ya da silebilirsiniz.
+   Hook kurulumunda alınan yedekler, yedeklenen dosyanın yanında `~/.claude/settings.json.bak-…` ve `~/.codex/hooks.json.bak-…` adıyla durur; saklayabilir ya da silebilirsiniz.
 
 ## Katkı
 

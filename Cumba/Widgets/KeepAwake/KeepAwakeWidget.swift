@@ -114,9 +114,7 @@ private struct KeepAwakeView: View {
   var body: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 8) {
-        Label("Keep Awake", systemImage: "cup.and.saucer")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("Keep Awake", symbol: "cup.and.saucer", color: .brown)
         if widget.isOn {
           Group {
             if let endsAt = widget.endsAt {

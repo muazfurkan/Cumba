@@ -7,6 +7,8 @@ import Observation
 @Observable
 final class LayoutStore {
   private(set) var layout = WidgetLayout(tabs: [])
+  /// Size units one tab holds on the current screen; the notch window sets it.
+  var unitsPerTab = WidgetLayout.unitsPerTab
 
   @ObservationIgnored private let fileURL: URL
   @ObservationIgnored private let knownKinds: [(kind: String, units: Int)]
@@ -51,13 +53,34 @@ final class LayoutStore {
 
   // MARK: - Edits
 
-  func add(_ kind: String, to tabID: String) {
+  /// Width of a kind in size units.
+  func units(of kind: String) -> Int {
+    knownKinds.first { $0.kind == kind }?.units ?? 1
+  }
+
+  /// Size units still free in a tab on the current screen.
+  func freeUnits(in tabID: String) -> Int {
+    let used = layout.tabs.first { $0.id == tabID }?.widgets.reduce(0) { $0 + units(of: $1) } ?? 0
+    return max(0, unitsPerTab - used)
+  }
+
+  /// Whether a kind fits in a tab, or is already there.
+  func fits(_ kind: String, in tabID: String) -> Bool {
+    layout.tabs.first { $0.id == tabID }?.widgets.contains(kind) == true
+      || units(of: kind) <= freeUnits(in: tabID)
+  }
+
+  /// Adds a kind to a tab when it fits there. Returns false when the tab is full.
+  @discardableResult
+  func add(_ kind: String, to tabID: String) -> Bool {
+    guard fits(kind, in: tabID) else { return false }
     edit { layout in
       guard let index = layout.tabs.firstIndex(where: { $0.id == tabID }),
         !layout.tabs[index].widgets.contains(kind)
       else { return }
       layout.tabs[index].widgets.append(kind)
     }
+    return true
   }
 
   /// Adds a kind to the first tab with room (or a new tab), e.g. once its feature is set up.
@@ -65,7 +88,7 @@ final class LayoutStore {
     let widths = Dictionary(
       knownKinds.map { ($0.kind, $0.units) }, uniquingKeysWith: { first, _ in first })
     edit { layout in
-      layout.place(kind, units: widths[kind] ?? 1, widths: widths)
+      layout.place(kind, units: widths[kind] ?? 1, widths: widths, capacity: unitsPerTab)
     }
   }
 

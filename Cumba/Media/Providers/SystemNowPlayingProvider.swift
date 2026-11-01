@@ -164,11 +164,15 @@ struct SystemNowPlayingMessage: Decodable, Equatable, Sendable {
     }
   }
 
+  /// Any app or web page can set these, so they're capped like the browser's.
   func nowPlaying(artwork: Data?, receivedAt now: Date) -> NowPlaying? {
-    guard let title = title?.nonEmpty else { return nil }
+    func capped(_ text: String?) -> String? {
+      text?.nonEmpty.map { String($0.prefix(BrowserMessage.maxTextLength)) }
+    }
+    guard let title = capped(title) else { return nil }
     return NowPlaying(
-      source: Self.source(forBundleID: bundleID), title: title, artist: artist?.nonEmpty,
-      album: album?.nonEmpty, artworkURL: nil, artworkData: artwork,
+      source: Self.source(forBundleID: bundleID), title: title, artist: capped(artist),
+      album: capped(album), artworkURL: nil, artworkData: artwork,
       duration: duration.flatMap { $0 > 0 ? $0 : nil }, position: elapsed,
       positionTimestamp: timestamp.map(Date.init(timeIntervalSince1970:)) ?? now,
       isPlaying: playing ?? false, appName: appName?.nonEmpty)

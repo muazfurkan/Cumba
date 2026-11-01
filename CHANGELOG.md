@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- A new Settings window, laid out like System Settings: a searchable sidebar with pages in three groups (General, Appearance, Displays, Behavior, Indicators and Permissions; Widgets, with a page for each widget that has settings; Agents and Connections). Each page starts with its icon, title and what it's for, rows explain themselves with an ⓘ, and switches sit on the right.
+- Notes is your Apple Notes: the most recent notes like Apple's Notes widget, a click opens one in Notes, and a new note can be typed in the panel. Cumba reads Notes through AppleScript (Automation access, asked once), starts Notes in the background when needed and never changes an existing note. The note kept by earlier versions moves to Apple Notes once.
+- A To-dos widget for Apple Reminders: a list's open reminders with round checkboxes, overdue dates in red, and a line to add one. Ticks and new reminders sync to your other devices through Reminders.
+- Widgets look like Apple's: each one's symbol and name in its own color above the content.
+- Widgets are set apart by a faint line instead of cards (Appearance > Widgets: Lines or Cards).
+- A tab holds as many widgets as fit on the screen: the panel grows wider instead of squeezing them, and only when the screen is full does it say there's no room, in the panel and in Settings alike. The panel also grows taller when a widget needs it, such as a long answer from an AI agent, and switching tabs animates both.
+- Settings > Behavior > Opening Tab: open the panel on a tab of your choice or the one it was left on, and choose whether it opens on the agents' tab while Claude Code or Codex works.
+- The first time Cumba starts, the notch opens and writes "hello" in one colorful stroke, like a new Mac, before the welcome window. Play it again from Settings > General > Hello animation. With Reduce Motion the word fades in.
+- Tab bar styles (Appearance > Tabs): Compact, a bar of its own under the panel with the open tab's name; Symbols; Dots; In the Panel; and At the Top. New installations use Compact; your earlier choice carries over. Themes and tab styles are picked from cards with a small preview.
+
 - Agent notifications: when Claude Code or Codex asks a question, wants a plan approved, needs permission, finishes or stops with an error, a notification opens under the notch. It shows the agent's mark with a badge, a title that says what happened ("Claude is asking a question"), the project, one line of detail and **Open**, which brings the app the agent runs in to the front (or opens the panel). It then folds into the agent's mark and a badge beside the notch; questions and requests stay there until answered. Resting the pointer on a notification keeps it open.
 - Clipboard History shows your recent copies as cards, like a clipboard manager: text, links, images and files, each with the app it came from and when. Click a card to copy it again; right-click to remove it. Optionally, new screenshots are added as macOS saves them (Settings > Widgets > Clipboard History > Add new screenshots; macOS asks once for access to the screenshot folder).
 - Volume and brightness levels have their own color in each theme: the theme's colors, white, blue, green, orange, pink or purple (Appearance > Colors > Volume and brightness). Classic, Glass and Midnight use white; Neon Tokyo, Sakura, Synthwave and Violet Night use their own colors.
@@ -20,7 +30,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Built-in themes can be changed again (material, colors, font, shape, animation). They keep their names, your changes are saved with them, and **Restore Defaults** brings back the original. They can't be deleted.
 - Volume and brightness changes beside the notch use a larger symbol and a longer bar.
 - Claude Code's pixel mascot replaces the sparkle for Claude sessions.
-- Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; click **Update** in Settings > Agents.
+- Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; Settings opens on Agents at launch, where **Update** fixes them.
+- When macOS asks for access to Desktop, Documents or Downloads (screenshots in Clipboard History, files on the Tray), it now says why.
+- The notch works in full screen apps too. Hiding it there is now off by default; turn on **Hide in full screen apps** in Settings > Displays to keep the old behavior. A choice you made earlier stays.
+- Allow from the notch now covers everything except shell commands by default (Claude Code's Bash and Codex's shell tools); choose All requests in Settings > Agents to allow those too. A choice you made earlier stays.
+
+### Fixed
+
+- In full screen apps the notch no longer hides behind the app's title bar when the menu bar slides down.
+- Live streams (a YouTube live broadcast, say) no longer stop Now Playing: their endless duration crashed the helper, and the media widget stayed empty until Cumba was restarted.
+- Opening the gallery or editing a tab no longer makes the panel narrower, which could leave the pointer outside and close it. The panel keeps its width until it closes or you switch tabs.
+- The Weather widget no longer asks for a forecast at launch when the panel is closed; it fetches only while it's on screen.
+- The backup of Codex's hooks is named `hooks.json.bak-…` instead of `settings.json.bak-…`.
+- The permission badge beside the closed notch shows again; it was drawn black on black.
+- In a narrow AI Agents widget, In Terminal moves to a second row instead of being cut off, and Progress no longer wraps.
+- The Turkish translation addresses you the same way everywhere.
+
+### Security
+
+- The Chrome extension's connection now runs on Apple's Network framework. With the previous HTTP library, the time to read a request grew with the square of its longest line, so one long request from an app on this Mac or a web page could keep a CPU core busy for minutes. Such requests are now dropped at once, messages are capped at 64 KB, and connections that don't finish the handshake and say hello within 2 seconds are closed.
+- When a permission request is longer than the card's box, Allow waits until you've scrolled to its end, and the scroll bar always shows.
+- Out-of-date hooks open Settings > Agents at launch. The HTTP hooks of v0.6.0 and v0.7.0 post to a local port another app could take and answer in Cumba's place, so they should be updated.
+- A permission request whose command hides behind a run of blank lines shows the run as "⟨n line breaks⟩" and can only be answered with Deny or In Terminal, like long runs of spaces. The project and tool names above the request are checked the same way.
+- The update check skips release tags that aren't versions; a mistyped tag would have crashed Cumba at launch.
+- A Reminders list name is shown as written, so a name that looks like a Markdown link doesn't become one.
+- Now Playing titles from other apps and web pages are cut at 300 characters, like the extension's.
+- Clipboard History also skips copies that password managers mark with older markers (1Password's and others).
+- Errors of the local servers no longer write the path of your home folder to the system log.
 
 ## [1.1.0] - 2026-11-01
 
@@ -50,7 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **ljaspNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
+- **cumbaNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
 - Tabs sit at the bottom of the panel by default (Settings > General > Tabs: at the bottom or at the top), with "+" to add a widget from a gallery and an Edit button. Editing a tab in the panel renames it, picks its symbol, moves it, adds or deletes tabs, and reorders or removes its widgets. Right-click a widget to remove it.
 - The panel's width follows the open tab: as wide as its widgets, with room for a detailed view when a tab has one widget.
@@ -109,7 +145,7 @@ Fixes from a security review of the code, done with AI assistance (not an extern
 
 - Claude Code hooks now reach the app through a Unix socket in a folder only your account can open, using `command` hooks with curl, instead of HTTP on a TCP port. Another user or a sandboxed app could otherwise have taken the port while the app was closed and approved commands. Update the hooks in Settings > Claude Code.
 - The permission card shows the full request, makes control, direction and zero-width characters and long space runs visible, offers no Allow button for suspicious requests, and arms its buttons only after a short delay.
-- The extension socket accepts only the ljaspNotch extension (fixed extension ID) and closes on anything but a valid hello; the extension keeps the token away from content scripts.
+- The extension socket accepts only the cumbaNotch extension (fixed extension ID) and closes on anything but a valid hello; the extension keeps the token away from content scripts.
 - Both local servers restart after a failure.
 - The hook installer recognizes only its own entries, resolves symlinks, refuses to touch a settings file it can't read, keeps backups private and masks the token in the diff.
 - The token is copied as concealed and cleared from the clipboard after a minute.

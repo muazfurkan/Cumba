@@ -4,6 +4,7 @@ import SwiftUI
 /// (~/.codex/hooks.json). Every change is shown as a diff and needs a confirmation; the old
 /// file is backed up first.
 struct ClaudeCodeSettingsView: View {
+  let info: SettingsPageInfo
   let server: LocalServer
   @Bindable var settings: AppSettings
   /// Called after hooks were installed, e.g. to put the Claude Code widget in the panel.
@@ -19,7 +20,7 @@ struct ClaudeCodeSettingsView: View {
   private var installer: HookInstaller { agent == .claude ? .standard : .codex }
 
   var body: some View {
-    Form {
+    SettingsForm(info: info) {
       Section {
         Picker("Agent", selection: $agent) {
           Text(verbatim: "Claude Code").tag(Agent.claude)
@@ -94,8 +95,6 @@ struct ClaudeCodeSettingsView: View {
         }
       }
     }
-    .formStyle(.grouped)
-    .frame(width: 520, height: 540)
     .task(id: agent) {
       message = nil
       await refresh()
