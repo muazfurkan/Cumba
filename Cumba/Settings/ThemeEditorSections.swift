@@ -94,30 +94,34 @@ struct ThemeEditorSections: View {
 /// The panel's size and text size, which stay when the theme changes.
 struct PanelSizeSection: View {
   @Binding var size: PanelSize
-  /// Called with true while a closed notch slider is dragged, so the preview can close.
-  var editingClosedNotch: (Bool) -> Void = { _ in }
+  /// Called while a slider for the closed notch or the space beside it is dragged, so the
+  /// preview can show that state, and with nil when it's let go.
+  var preview: (NotchPreview?) -> Void = { _ in }
 
   var body: some View {
     Section {
       ValueSlider(title: "Width", value: $size.width, range: PanelSize.widthRange)
       ValueSlider(title: "Height", value: $size.height, range: PanelSize.heightRange)
       ValueSlider(
-        title: "Indicator width", value: $size.indicatorWidth,
-        range: PanelSize.indicatorWidthRange)
+        title: "Width beside the notch", value: $size.indicatorWidth,
+        range: PanelSize.indicatorWidthRange
+      ) { preview($0 ? .peek : nil) }
       ValueSlider(
         title: "Text size", value: $size.textScale, range: PanelSize.textScaleRange,
         fractionDigits: 2)
       ValueSlider(
         title: "Closed notch width", value: $size.closedWidth,
-        range: PanelSize.closedWidthRange, onEditingChanged: editingClosedNotch)
+        range: PanelSize.closedWidthRange
+      ) { preview($0 ? .closed : nil) }
       ValueSlider(
         title: "Closed notch height", value: $size.closedHeight,
-        range: PanelSize.closedHeightRange, onEditingChanged: editingClosedNotch)
+        range: PanelSize.closedHeightRange
+      ) { preview($0 ? .closed : nil) }
     } header: {
       Text("Panel Size")
     } footer: {
       Text(
-        "The same for every theme. The closed notch values are how far it reaches past the camera; the panel closes while you drag them so you can see it."
+        "The same for every theme. Width beside the notch is the room for music, timers and other indicators on both sides of the camera; the closed notch values are how far it reaches past the camera. While you drag these three, the notch shows them."
       )
     }
   }

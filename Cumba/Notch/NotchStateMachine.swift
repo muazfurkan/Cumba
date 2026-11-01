@@ -35,9 +35,12 @@ struct NotchStateMachine: Sendable {
 
   private var hoverOpens: Bool { opensOnHover && !isShowingNotification }
 
+  /// While the closed notch's size is previewed, it rests closed even with a live activity.
+  var restsClosed = false
+
   /// Where the panel goes when it closes.
   private var restingState: NotchState {
-    hasLiveActivity ? .peek : .closed
+    hasLiveActivity && !restsClosed ? .peek : .closed
   }
 
   mutating func handle(_ event: Event) -> Effect {

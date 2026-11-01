@@ -1724,16 +1724,6 @@
         }
       }
     },
-    "Indicator width" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gösterge genişliği"
-          }
-        }
-      }
-    },
     "Indicators" : {
       "localizations" : {
         "tr" : {
@@ -3657,13 +3647,13 @@
         }
       }
     },
-    "The same for every theme. The closed notch values are how far it reaches past the camera; the panel closes while you drag them so you can see it." : {
+    "The same for every theme. Width beside the notch is the room for music, timers and other indicators on both sides of the camera; the closed notch values are how far it reaches past the camera. While you drag these three, the notch shows them." : {
       "comment" : "Footer of the Panel Size settings",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Her tema için aynıdır. Kapalı notch değerleri, notch'un kameranın ne kadar dışına taşacağını belirler; sürüklerken panel kapanır, böylece sonucu görürsünüz."
+            "value" : "Her tema için aynıdır. Notch'un yanındaki genişlik, kameranın iki yanında müzik, zamanlayıcı ve diğer göstergeler için ayrılan alandır; kapalı notch değerleri, notch'un kameranın ne kadar dışına taşacağını belirler. Bu üçünü sürüklerken notch bunları gösterir."
           }
         }
       }
@@ -4199,6 +4189,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Genişlik"
+          }
+        }
+      }
+    },
+    "Width beside the notch" : {
+      "comment" : "Settings slider: room for indicators on both sides of the camera",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'un yanındaki genişlik"
           }
         }
       }

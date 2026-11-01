@@ -16,8 +16,8 @@ struct AppearanceSettingsView: View {
 
   var body: some View {
     Form {
-      PanelSizeSection(size: Bindable(settings).panelSize) { editing in
-        settings.isPreviewingClosedNotch = editing
+      PanelSizeSection(size: Bindable(settings).panelSize) { preview in
+        settings.notchPreview = preview
       }
       Section("Theme") {
         Picker("Theme", selection: selection) {
@@ -66,7 +66,7 @@ struct AppearanceSettingsView: View {
     .onAppear { settings.isPreviewingAppearance = true }
     .onDisappear {
       settings.isPreviewingAppearance = false
-      settings.isPreviewingClosedNotch = false
+      settings.notchPreview = nil
     }
     .alert(
       "The theme file couldn't be used.",

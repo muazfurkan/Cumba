@@ -28,7 +28,7 @@ struct NotchRootView: View {
         } else if state == .peek, let activity = host.liveActivities.current {
           PeekView(
             activity: activity, notchWidth: geometry.notchRect.width,
-            sideWidth: geometry.layout.peekExtraWidth, height: geometry.peekRowHeight,
+            sideWidth: geometry.peekSideWidth, height: geometry.peekRowHeight,
             openPanel: { model.send(.clicked) }
           )
           .frame(height: geometry.shapeSize(for: .peek).height, alignment: .top)

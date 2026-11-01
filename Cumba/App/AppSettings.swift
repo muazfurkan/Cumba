@@ -164,9 +164,9 @@ final class AppSettings {
   /// True while the Appearance settings are visible; the panel stays open as a live preview.
   /// Not saved.
   var isPreviewingAppearance = false
-  /// True while a closed notch size is being changed; the preview closes the panel to show
-  /// it. Not saved.
-  var isPreviewingClosedNotch = false
+  /// While a size slider for the closed notch or the space beside it is dragged, the
+  /// preview shows that state instead of the open panel. Not saved.
+  var notchPreview: NotchPreview?
 
   /// Login item state as last reported by the system.
   private(set) var launchAtLogin: SMAppService.Status = .notRegistered
@@ -238,4 +238,12 @@ final class AppSettings {
   func refreshLaunchAtLogin() async {
     launchAtLogin = await Task.detached { SMAppService.mainApp.status }.value
   }
+}
+
+/// What the Appearance preview shows while a size slider is dragged.
+enum NotchPreview: Sendable {
+  /// The closed notch, even while something shows beside it.
+  case closed
+  /// Something beside the notch, a sample if nothing is there.
+  case peek
 }

@@ -91,8 +91,14 @@ struct NotchGeometry: Equatable, Sendable {
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
   }
 
-  /// Height of the peek's row of icons, without a notification.
-  var peekRowHeight: CGFloat { notchRect.height + NotchLayout.peekExtraHeight }
+  /// Width of each side of the peek; never narrower than the closed notch.
+  var peekSideWidth: CGFloat { max(layout.peekExtraWidth, layout.closedGrowth.width) }
+
+  /// Height of the peek's row of icons, without a notification; never shorter than the
+  /// closed notch.
+  var peekRowHeight: CGFloat {
+    notchRect.height + max(NotchLayout.peekExtraHeight, layout.closedGrowth.height)
+  }
 
   func shapeSize(for state: NotchState) -> CGSize {
     switch state {
@@ -103,7 +109,7 @@ struct NotchGeometry: Equatable, Sendable {
     case .peek:
       CGSize(
         width: max(
-          notchRect.width + layout.peekExtraWidth * 2,
+          notchRect.width + peekSideWidth * 2,
           layout.peekNotificationHeight > 0 ? NotchLayout.notificationWidth : 0),
         height: peekRowHeight + layout.peekNotificationHeight)
     case .expanded, .pinned:

@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 /// Owns the notch panel: places it on the right screen and connects it to the view model,
 /// the settings and the current theme.
@@ -18,6 +19,8 @@ final class NotchWindowController {
   /// A full screen app covers the panel's screen.
   private var isFullScreenActive = false
   private var isPreviewing = false
+  private var shownPreview: NotchPreview?
+  private static let previewActivityID = "preview"
   private var lastState = NotchState.closed
   /// A menu of this app is open (the notch's right-click menu or a widget's menu); leaving
   /// the notch then doesn't close the panel.
@@ -164,7 +167,7 @@ final class NotchWindowController {
       _ = settings.tabBarPosition
       _ = settings.panelSize
       _ = settings.isPreviewingAppearance
-      _ = settings.isPreviewingClosedNotch
+      _ = settings.notchPreview
       _ = themes.current
     } onChange: { [weak self] in
       Task { @MainActor in
@@ -302,13 +305,26 @@ final class NotchWindowController {
     updatePreview()
   }
 
-  /// Keeps the panel open while the Appearance settings are visible, except while a closed
-  /// notch size is being changed.
+  /// Keeps the panel open while the Appearance settings are visible. While a size slider
+  /// for the closed notch or the space beside it is dragged, shows that state instead.
   private func updatePreview() {
-    let wantsPreview = settings.isPreviewingAppearance && !settings.isPreviewingClosedNotch
-    guard wantsPreview != isPreviewing else { return }
-    isPreviewing = wantsPreview
-    if isPreviewing {
+    let preview = settings.isPreviewingAppearance ? settings.notchPreview : nil
+    let wantsOpen = settings.isPreviewingAppearance && preview == nil
+    guard wantsOpen != isPreviewing || preview != shownPreview else { return }
+    isPreviewing = wantsOpen
+    shownPreview = preview
+    model.restsClosed = preview == .closed
+    if preview == .peek && host.liveActivities.current == nil {
+      // A volume level as a sample of what shows beside the notch.
+      host.liveActivities.show(
+        LiveActivity(
+          id: Self.previewActivityID, priority: .volume,
+          leading: AnyView(LevelSymbol(name: "speaker.wave.2.fill", label: Text("Volume"))),
+          trailing: AnyView(LevelBar(level: 0.6, label: Text("Volume")))))
+    } else if preview != .peek {
+      host.liveActivities.dismiss(Self.previewActivityID)
+    }
+    if wantsOpen {
       model.send(.clicked)
       if model.state == .expanded {
         model.send(.pinToggled)
