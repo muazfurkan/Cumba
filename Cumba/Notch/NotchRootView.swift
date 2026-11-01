@@ -212,7 +212,7 @@ private struct ExpandedPanelView: View {
       TabEditor(host: host, secondary: secondary)
         .transition(.opacity)
     } else {
-      WidgetRow(host: host, secondary: secondary)
+      TabPager(host: host, secondary: secondary)
         .transition(.opacity)
     }
   }

@@ -66,10 +66,14 @@ final class NotchWindowController {
     tabSwipe.window = { [weak self] in self?.panel }
     tabSwipe.isEnabled = { [weak self] in
       guard let self else { return false }
-      return model.state.isOpen && !host.isShowingGallery
+      return model.state.isOpen && !host.isShowingGallery && !host.isEditing
+        && host.permissionBanner == nil
     }
-    tabSwipe.onStep = { [weak self] step in
-      guard let self, host.selectTab(offset: step), settings.hapticFeedback else { return }
+    tabSwipe.onDrag = { [weak self] travel in
+      self?.host.dragPages(to: travel)
+    }
+    tabSwipe.onEnd = { [weak self] travel in
+      guard let self, host.endPageDrag(travel: travel), settings.hapticFeedback else { return }
       NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
     }
     tabSwipe.start()
