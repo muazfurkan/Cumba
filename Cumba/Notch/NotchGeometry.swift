@@ -18,6 +18,11 @@ struct NotchLayout: Equatable, Sendable {
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
+  /// How far the closed shape reaches past the camera housing on each side and below it,
+  /// so the notch reads as part of the app instead of disappearing into the hardware.
+  static let closedGrowth = CGSize(width: 8, height: 5)
+  /// The peek's row is this much taller than the notch, for larger icons.
+  static let peekExtraHeight: CGFloat = 10
   static let bannerHeight: CGFloat = 26
 }
 
@@ -83,14 +88,19 @@ struct NotchGeometry: Equatable, Sendable {
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
   }
 
+  /// Height of the peek's row of icons, without a banner.
+  var peekRowHeight: CGFloat { notchRect.height + NotchLayout.peekExtraHeight }
+
   func shapeSize(for state: NotchState) -> CGSize {
     switch state {
     case .closed:
-      notchRect.size
+      CGSize(
+        width: notchRect.width + NotchLayout.closedGrowth.width * 2,
+        height: notchRect.height + NotchLayout.closedGrowth.height)
     case .peek:
       CGSize(
         width: notchRect.width + layout.peekExtraWidth * 2,
-        height: notchRect.height + layout.peekBannerHeight)
+        height: peekRowHeight + layout.peekBannerHeight)
     case .expanded, .pinned:
       CGSize(
         width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),

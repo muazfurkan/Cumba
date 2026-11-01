@@ -61,13 +61,19 @@ struct NotchGeometryTests {
     #expect(rect.midX == geometry.notchRect.midX)
   }
 
-  @Test func closedShapeCoversExactlyTheNotch() throws {
+  @Test func closedShapeReachesALittlePastTheNotch() throws {
     let geometry = try geometry()
-    #expect(geometry.shapeRect(for: .closed) == geometry.notchRect)
+    let closed = geometry.shapeRect(for: .closed)
+    let growth = NotchLayout.closedGrowth
+    #expect(closed.contains(geometry.notchRect))
+    #expect(closed.width == geometry.notchRect.width + growth.width * 2)
+    #expect(closed.minY == geometry.notchRect.minY - growth.height)
   }
 
-  @Test func peekAddsWidthOnBothSides() throws {
-    #expect(try geometry().shapeSize(for: .peek) == CGSize(width: 188 + 140, height: 32))
+  @Test func peekAddsWidthOnBothSidesAndARowBelowTheNotch() throws {
+    #expect(
+      try geometry().shapeSize(for: .peek)
+        == CGSize(width: 188 + 140, height: 32 + NotchLayout.peekExtraHeight))
   }
 
   @Test func hoverAreaIncludesTheTopEdge() throws {
