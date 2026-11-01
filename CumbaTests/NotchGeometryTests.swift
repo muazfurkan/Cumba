@@ -181,4 +181,16 @@ struct HelloShapeTests {
     #expect(bounds.width > rect.width * 0.75)
     #expect(bounds.height > rect.height * 0.6)
   }
+
+  @Test func thePenSlowsDownInTurns() throws {
+    let pace = HelloShape.pace()
+    #expect(pace.values.count == pace.times.count)
+    #expect(pace.values.first == 0 && pace.values.last == 1)
+    #expect(pace.times.first == 0 && pace.times.last == 1)
+    #expect(zip(pace.values, pace.values.dropFirst()).allSatisfy { $0 <= $1 })
+    #expect(zip(pace.times, pace.times.dropFirst()).allSatisfy { $0 < $1 })
+    // Turns take time of their own, so the pace isn't just the distance.
+    let largestGap = zip(pace.values, pace.times).map { abs($0 - $1) }.max() ?? 0
+    #expect(largestGap > 0.02)
+  }
 }
