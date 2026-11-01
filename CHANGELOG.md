@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-01
+
 ### Added
 
 - Volume and brightness changes show in the notch, on by default (Settings > General > Indicators). Either can also replace the system indicator, which needs Accessibility. Brightness uses the private DisplayServices framework, since Apple silicon has no public brightness API.
@@ -175,7 +177,8 @@ Fixes from a security review of the code, done with AI assistance (not an extern
 - CI workflow (build, test, swift-format lint) and a release workflow that publishes an ad-hoc signed zip.
 - Contributor docs: README in Turkish, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue and pull request templates.
 
-[Unreleased]: https://github.com/muazfurkan/Cumba/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/muazfurkan/Cumba/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/muazfurkan/Cumba/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/muazfurkan/Cumba/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/muazfurkan/Cumba/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/muazfurkan/Cumba/compare/v0.5.0...v0.6.0
