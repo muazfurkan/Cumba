@@ -24,6 +24,23 @@ struct NotchGeometryTests {
     #expect(try geometry().notchRect == CGRect(x: 662, y: 950, width: 188, height: 32))
   }
 
+  @Test func panelWidthNarrowsTheShapeButNotTheWindow() throws {
+    var layout = NotchLayout()
+    layout.panelWidth = 420
+    let narrow = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    #expect(narrow.shapeSize(for: .expanded).width == 420)
+    #expect(narrow.windowFrame == (try geometry().windowFrame))
+    layout.panelWidth = 5000
+    let wide = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    #expect(wide.shapeSize(for: .expanded).width == 640)
+  }
+
   @Test func windowIsCenteredUnderNotchAndTopAligned() throws {
     let frame = try geometry().windowFrame
     // 640 + 2 × 24 shadow margin wide, 190 + 24 tall.
@@ -76,11 +93,12 @@ struct NotchGeometryTests {
     #expect(geometry.shapeRect(for: .expanded).maxY == screen.maxY)
   }
 
-  @Test func layoutFollowsTheTheme() {
-    var theme = Theme.classic
-    theme.expandedSize = .init(width: 800, height: 300)
-    theme.peekExtraWidth = 40
-    let layout = NotchLayout(theme: theme)
+  @Test func layoutFollowsThePanelSize() {
+    var size = PanelSize()
+    size.width = 800
+    size.height = 300
+    size.indicatorWidth = 40
+    let layout = NotchLayout(size: size)
     #expect(layout.expandedSize == CGSize(width: 800, height: 300))
     #expect(layout.peekExtraWidth == 40)
   }

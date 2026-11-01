@@ -1,40 +1,30 @@
 import SwiftUI
 
-/// Empty room in a tab: a dashed tile that opens the widget gallery right in the panel.
-struct AddWidgetTile: View {
-  /// The whole tab is empty, so the tile says what it does.
-  let fillsTab: Bool
+/// An empty tab: a short note and a small button that opens the gallery.
+struct EmptyTabView: View {
+  let secondary: Color
   let action: () -> Void
-  @State private var isHovered = false
 
   var body: some View {
-    Button(action: action) {
-      VStack(spacing: 6) {
-        Image(systemName: "plus")
-          .font(.system(size: fillsTab ? 20 : 15, weight: .semibold))
-        if fillsTab {
-          Text("Add Widget")
-            .font(.callout)
-        }
+    VStack(spacing: 8) {
+      Text("This tab is empty.")
+        .panelFont(.callout)
+        .foregroundStyle(secondary)
+      Button(action: action) {
+        Label("Add Widget", systemImage: "plus")
+          .panelFont(.callout, weight: .medium)
+          .padding(.horizontal, 12)
+          .padding(.vertical, 6)
+          .background(.white.opacity(0.1), in: Capsule())
+          .contentShape(Capsule())
       }
-      .foregroundStyle(.white.opacity(isHovered ? 0.85 : 0.5))
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background {
-        RoundedRectangle(cornerRadius: 14, style: .continuous)
-          .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
-          .foregroundStyle(.white.opacity(isHovered ? 0.4 : 0.2))
-      }
-      .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+      .buttonStyle(.plain)
     }
-    .buttonStyle(.plain)
-    .onHover { isHovered = $0 }
-    .animation(.easeOut(duration: 0.15), value: isHovered)
-    .help(Text("Add Widget"))
-    .accessibilityLabel(Text("Add Widget"))
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }
 
-/// Every widget that isn't in the panel yet, to add to the open tab with one click.
+/// Every widget that isn't in the open tab yet, to add to it with one click.
 struct WidgetGallery: View {
   let host: WidgetHost
   let secondary: Color
@@ -75,7 +65,7 @@ private struct GalleryCard: View {
       VStack(alignment: .leading, spacing: 4) {
         HStack {
           Image(systemName: info.symbol)
-            .font(.title3)
+            .panelFont(.title3)
           Spacer()
           if fits {
             Image(systemName: "plus.circle.fill")
@@ -83,10 +73,10 @@ private struct GalleryCard: View {
           }
         }
         Text(info.title)
-          .font(.callout.weight(.semibold))
+          .panelFont(.callout, weight: .semibold)
           .lineLimit(1)
         Text(fits ? info.summary : String(localized: "No room in this tab"))
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(secondary)
           .lineLimit(2)
           .fixedSize(horizontal: false, vertical: true)

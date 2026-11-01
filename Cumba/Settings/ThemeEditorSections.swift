@@ -17,6 +17,10 @@ struct ThemeEditorSections: View {
       }
       if theme.material == .solid {
         ColorPicker("Background", selection: color(\.background), supportsOpacity: false)
+        Toggle("Gradient", isOn: optional(\.gradient, default: gradientStart))
+        if theme.gradient != nil {
+          ColorPicker("Bottom color", selection: color(\.gradient), supportsOpacity: false)
+        }
       }
     }
 
@@ -24,6 +28,11 @@ struct ThemeEditorSections: View {
       ColorPicker("Text", selection: color(\.foreground), supportsOpacity: false)
       ColorPicker("Secondary text", selection: color(\.secondary), supportsOpacity: false)
       ColorPicker("Accent", selection: color(\.accent), supportsOpacity: false)
+      Toggle("Neon edge", isOn: optional(\.glow, default: theme.accent))
+      if theme.glow != nil {
+        ColorPicker("Edge color", selection: color(\.glow), supportsOpacity: false)
+          .help(Text("The edge fades from this color into the accent."))
+      }
       Picker("Font", selection: $theme.fontDesign) {
         Text("Default").tag(Theme.FontDesign.default)
         Text("Rounded").tag(Theme.FontDesign.rounded)
@@ -32,13 +41,9 @@ struct ThemeEditorSections: View {
       }
     }
 
-    Section("Size") {
-      ValueSlider(title: "Width", value: $theme.expandedSize.width, range: Theme.widthRange)
-      ValueSlider(title: "Height", value: $theme.expandedSize.height, range: Theme.heightRange)
+    Section("Shape") {
       ValueSlider(
         title: "Corner radius", value: $theme.cornerRadius, range: Theme.cornerRadiusRange)
-      ValueSlider(
-        title: "Indicator width", value: $theme.peekExtraWidth, range: Theme.peekWidthRange)
       Toggle("Shadow", isOn: $theme.shadow)
     }
 
@@ -58,11 +63,53 @@ struct ThemeEditorSections: View {
       set: { theme[keyPath: keyPath] = HexColor($0) })
   }
 
+  private func color(_ keyPath: WritableKeyPath<Theme, HexColor?>) -> Binding<Color> {
+    Binding(
+      get: { (theme[keyPath: keyPath] ?? theme.background).color },
+      set: { theme[keyPath: keyPath] = HexColor($0) })
+  }
+
+  /// A first bottom color for a new gradient: the background with a hint of the accent.
+  private var gradientStart: HexColor {
+    HexColor(theme.background.color.mix(with: theme.accent.color, by: 0.3))
+  }
+
+  /// Turns an optional color on, starting from `default`, or off.
+  private func optional(_ keyPath: WritableKeyPath<Theme, HexColor?>, default value: HexColor)
+    -> Binding<Bool>
+  {
+    Binding(
+      get: { theme[keyPath: keyPath] != nil },
+      set: { theme[keyPath: keyPath] = $0 ? value : nil })
+  }
+
   /// Damping shown the other way round: 0 means no bounce.
   private var bounce: Binding<Double> {
     Binding(
       get: { 1 - theme.spring.damping },
       set: { theme.spring.damping = 1 - $0 })
+  }
+}
+
+/// The panel's size and text size, which stay when the theme changes.
+struct PanelSizeSection: View {
+  @Binding var size: PanelSize
+
+  var body: some View {
+    Section {
+      ValueSlider(title: "Width", value: $size.width, range: PanelSize.widthRange)
+      ValueSlider(title: "Height", value: $size.height, range: PanelSize.heightRange)
+      ValueSlider(
+        title: "Indicator width", value: $size.indicatorWidth,
+        range: PanelSize.indicatorWidthRange)
+      ValueSlider(
+        title: "Text size", value: $size.textScale, range: PanelSize.textScaleRange,
+        fractionDigits: 2)
+    } header: {
+      Text("Panel Size")
+    } footer: {
+      Text("The same for every theme.")
+    }
   }
 }
 

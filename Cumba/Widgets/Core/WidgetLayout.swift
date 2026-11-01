@@ -1,7 +1,8 @@
 import Foundation
 
-/// Tabs and the widgets in them, saved as layout.json. Each widget kind
-/// appears in at most one tab.
+/// Tabs and the widgets in them, saved as layout.json. A widget kind appears at most once
+/// per tab, but can be in several tabs; they share one instance, and only one tab is on
+/// screen at a time.
 struct WidgetLayout: Codable, Equatable, Sendable {
   struct Tab: Codable, Equatable, Identifiable, Sendable {
     var id: String
@@ -66,10 +67,10 @@ struct WidgetLayout: Codable, Equatable, Sendable {
     }
   }
 
-  /// Drops kinds this version doesn't know and duplicates across tabs.
+  /// Drops kinds this version doesn't know and duplicates within a tab.
   mutating func removeUnknown(knownKinds: [String]) {
-    var placed = Set<String>()
     for index in tabs.indices {
+      var placed = Set<String>()
       tabs[index].widgets = tabs[index].widgets.filter { kind in
         knownKinds.contains(kind) && placed.insert(kind).inserted
       }
@@ -78,10 +79,6 @@ struct WidgetLayout: Codable, Equatable, Sendable {
 
   func contains(_ kind: String) -> Bool {
     tabs.contains { $0.widgets.contains(kind) }
-  }
-
-  func tab(containing kind: String) -> Tab? {
-    tabs.first { $0.widgets.contains(kind) }
   }
 
   static func moreTab(number: Int, widgets: [String]) -> Tab {

@@ -4,21 +4,24 @@ import SwiftUI
 struct MediaWidgetView: View {
   let widget: MediaWidget
   @State private var glow: Color?
+  @Environment(\.showsDetailedWidget) private var isDetailed
 
   private var media: MediaCoordinator { widget.media }
 
   var body: some View {
     WidgetCard(tint: glow) {
-      if let nowPlaying = media.current {
+      if let nowPlaying = media.current, isDetailed {
+        detailed(nowPlaying)
+      } else if let nowPlaying = media.current {
         VStack(alignment: .leading, spacing: 6) {
           HStack(spacing: 8) {
-            ArtworkView(nowPlaying: nowPlaying, size: 40)
+            ArtworkView(nowPlaying: nowPlaying, size: 48, cornerRadius: 9)
             VStack(alignment: .leading, spacing: 1) {
               Text(nowPlaying.title)
-                .font(.callout.weight(.semibold))
+                .panelFont(.callout, weight: .semibold)
                 .lineLimit(1)
               Text(nowPlaying.artist ?? nowPlaying.sourceName)
-                .font(.caption)
+                .panelFont(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
             }
@@ -36,10 +39,10 @@ struct MediaWidgetView: View {
       } else {
         VStack(alignment: .leading, spacing: 6) {
           Label("Media", systemImage: "music.note")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           Text("Nothing is playing.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
         }
       }
@@ -50,6 +53,36 @@ struct MediaWidgetView: View {
         return
       }
       glow = await ArtworkCache.shared.load(for: nowPlaying)?.color
+    }
+  }
+
+  /// Alone in its tab: large artwork with the title, progress and controls beside it.
+  private func detailed(_ nowPlaying: NowPlaying) -> some View {
+    HStack(spacing: 16) {
+      ArtworkView(nowPlaying: nowPlaying, size: 112, cornerRadius: 14)
+      VStack(alignment: .leading, spacing: 4) {
+        HStack(alignment: .top) {
+          VStack(alignment: .leading, spacing: 2) {
+            Text(nowPlaying.title)
+              .panelFont(.title3, weight: .semibold)
+              .lineLimit(2)
+            Text([nowPlaying.artist, nowPlaying.album].compactMap { $0 }.joined(separator: " — "))
+              .panelFont(.callout)
+              .foregroundStyle(.secondary)
+              .lineLimit(1)
+          }
+          Spacer(minLength: 0)
+          sourceMenu(current: nowPlaying.source)
+        }
+        Spacer(minLength: 2)
+        ProgressBar(nowPlaying: nowPlaying) { position in
+          Task { await media.send(.seek(position)) }
+        }
+        controls(isPlaying: nowPlaying.isPlaying)
+        if let failure = media.failures[nowPlaying.source] {
+          FailureNote(failure: failure, source: nowPlaying.source) { widget.showSettings() }
+        }
+      }
     }
   }
 
@@ -76,7 +109,7 @@ struct MediaWidgetView: View {
       Task { await action() }
     } label: {
       Image(systemName: symbol)
-        .font(.body)
+        .panelFont(.body)
         .contentTransition(.symbolEffect(.replace))
     }
     .buttonStyle(PanelButtonStyle(size: 30))
@@ -129,7 +162,7 @@ private struct ProgressBar: View {
             Spacer()
             Text(Duration.seconds(duration), format: .time(pattern: .minuteSecond))
           }
-          .font(.system(size: 9).monospacedDigit())
+          .panelFont(size: 9, monospacedDigit: true)
           .foregroundStyle(.secondary)
         }
       }
@@ -154,12 +187,12 @@ private struct FailureNote: View {
       Text(
         "Cumba may not control \(source.displayName). Allow it in System Settings > Privacy & Security > Automation."
       )
-      .font(.caption2)
+      .panelFont(.caption2)
       .foregroundStyle(.orange)
       .fixedSize(horizontal: false, vertical: true)
     case .needsPermission:
       Button("Allow control in Settings", action: openSettings)
-        .font(.caption2)
+        .panelFont(.caption2)
         .buttonStyle(.link)
     case .notRunning, .scriptError:
       EmptyView()

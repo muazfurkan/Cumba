@@ -150,6 +150,28 @@ struct ClaudeCodeServiceTests {
     #expect(await decision == .deny)
     #expect(center.current?.priority != .claudePermission)
   }
+
+  @Test func questionsGoToClaudeCodeAndTheNotchSaysItWaits() async throws {
+    let center = LiveActivityCenter()
+    let service = ClaudeCodeService(liveActivities: center)
+    let question = try payload("permission-request-question")
+    #expect(question.isQuestion)
+    #expect(await service.requestPermission(question) == .askInTerminal)
+    #expect(service.permissions.pending.isEmpty)
+    #expect(service.sessions.first?.state == .waitingInput)
+    #expect(service.sessions.first?.detail == "Which theme should be the default?")
+    #expect(center.current?.priority == .claudeStatus)
+    // Claude Code's own notice for the same question doesn't replace it.
+    service.handle(try payload("notification-permission"))
+    #expect(service.sessions.first?.detail == "Which theme should be the default?")
+  }
+
+  @Test func mcpToolNamesAreShortBesideTheNotch() {
+    #expect(HookPayload.shortToolName("mcp__github__create_pull_request") == "create_pull_request")
+    #expect(HookPayload.shortToolName("Bash") == "Bash")
+    #expect(LiveActivity.sideWidth(for: "AskUserQuestion") > 70)
+    #expect(LiveActivity.sideWidth(for: String(repeating: "W", count: 80)) == 180)
+  }
 }
 
 @MainActor

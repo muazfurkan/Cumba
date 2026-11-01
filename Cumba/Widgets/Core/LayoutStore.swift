@@ -53,7 +53,8 @@ final class LayoutStore {
 
   func add(_ kind: String, to tabID: String) {
     edit { layout in
-      guard !layout.contains(kind), let index = layout.tabs.firstIndex(where: { $0.id == tabID })
+      guard let index = layout.tabs.firstIndex(where: { $0.id == tabID }),
+        !layout.tabs[index].widgets.contains(kind)
       else { return }
       layout.tabs[index].widgets.append(kind)
     }
@@ -68,11 +69,20 @@ final class LayoutStore {
     }
   }
 
+  /// Removes a kind from every tab.
   func remove(_ kind: String) {
     edit { layout in
       for index in layout.tabs.indices {
         layout.tabs[index].widgets.removeAll { $0 == kind }
       }
+    }
+  }
+
+  /// Removes a kind from one tab; it stays in the others.
+  func remove(_ kind: String, from tabID: String) {
+    edit { layout in
+      guard let index = layout.tabs.firstIndex(where: { $0.id == tabID }) else { return }
+      layout.tabs[index].widgets.removeAll { $0 == kind }
     }
   }
 
@@ -92,13 +102,16 @@ final class LayoutStore {
     return id
   }
 
-  /// Removes a tab; its widgets move to the first remaining tab. The last tab stays.
+  /// Removes a tab; its widgets move to the first remaining tab unless they're already
+  /// there. The last tab stays.
   func removeTab(_ tabID: String) {
     edit { layout in
       guard layout.tabs.count > 1, let index = layout.tabs.firstIndex(where: { $0.id == tabID })
       else { return }
       let widgets = layout.tabs.remove(at: index).widgets
-      layout.tabs[0].widgets.append(contentsOf: widgets)
+      for kind in widgets where !layout.tabs[0].widgets.contains(kind) {
+        layout.tabs[0].widgets.append(kind)
+      }
     }
   }
 

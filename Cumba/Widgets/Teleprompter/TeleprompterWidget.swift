@@ -116,7 +116,7 @@ private struct TeleprompterView: View {
       HStack(alignment: .top, spacing: 10) {
         if widget.text.isEmpty {
           Text("Add your script in Settings > Widgets.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         } else {
@@ -174,7 +174,7 @@ private struct TeleprompterSettingsView: View {
     VStack(alignment: .leading, spacing: 4) {
       Text("Script")
       TextEditor(text: $widget.text)
-        .font(.body)
+        .panelFont(.body)
         .frame(minHeight: 120)
         .scrollContentBackground(.hidden)
         .background(.background.secondary, in: RoundedRectangle(cornerRadius: 6))

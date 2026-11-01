@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// Installs or removes the Claude Code hooks in ~/.claude/settings.json. Every change is
-/// shown as a diff and needs a confirmation; the old file is backed up first.
+/// Installs or removes the hooks of Claude Code (~/.claude/settings.json) or Codex
+/// (~/.codex/hooks.json). Every change is shown as a diff and needs a confirmation; the old
+/// file is backed up first.
 struct ClaudeCodeSettingsView: View {
   let server: LocalServer
   @Bindable var settings: AppSettings
@@ -13,11 +14,20 @@ struct ClaudeCodeSettingsView: View {
   @State private var plan: HookInstaller.Plan?
   @State private var planInstalls = false
   @State private var message: String?
+  @State private var agent = Agent.claude
 
-  private let installer = HookInstaller.standard
+  private var installer: HookInstaller { agent == .claude ? .standard : .codex }
 
   var body: some View {
     Form {
+      Section {
+        Picker("Agent", selection: $agent) {
+          Text(verbatim: "Claude Code").tag(Agent.claude)
+          Text(verbatim: "Codex").tag(Agent.codex)
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+      }
       Section("Hooks") {
         LabeledContent("Status") { statusLabel }
         LabeledContent("Socket") { socketLabel }
@@ -34,6 +44,14 @@ struct ClaudeCodeSettingsView: View {
             .disabled(server.hookToken.isEmpty || status == .installed)
           Button("Remove…", role: .destructive) { review(install: false) }
             .disabled(status == .notInstalled || status == nil)
+        }
+        if agent == .codex {
+          Text(
+            "Codex runs new hooks only after you trust them: after installing, run /hooks in Codex once and trust Cumba's hooks."
+          )
+          .font(.callout)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
         }
         if let message {
           Text(message)
@@ -57,7 +75,9 @@ struct ClaudeCodeSettingsView: View {
       }
       Section {
         Text(
-          "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to Cumba through a private socket that only your user account can open. Permission requests then appear in the notch. When Cumba isn't running, Claude Code carries on as usual. Session data stays in memory."
+          agent == .claude
+            ? "Hooks send events from Claude Code in the terminal, IDE extensions and the Claude desktop app to Cumba through a private socket that only your user account can open. Permission requests then appear in the notch. When Cumba isn't running, Claude Code carries on as usual. Session data stays in memory."
+            : "Hooks send events from the Codex CLI to Cumba through the same private socket. Its steps and permission requests then appear in the notch. When Cumba isn't running, Codex carries on as usual. Session data stays in memory."
         )
         .font(.callout)
         .foregroundStyle(.secondary)
@@ -76,7 +96,10 @@ struct ClaudeCodeSettingsView: View {
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 540)
-    .task { await refresh() }
+    .task(id: agent) {
+      message = nil
+      await refresh()
+    }
     .sheet(item: $plan) { plan in
       DiffSheet(plan: plan) {
         self.plan = nil
@@ -115,20 +138,23 @@ struct ClaudeCodeSettingsView: View {
   private func refresh() async {
     let installer = installer
     let token = server.hookToken
-    let result = await Task.detached { () -> (HookInstaller.Status?, Bool) in
+    let result = await Task.detached { () -> (HookInstaller.Status?, Bool, Bool) in
       let status = try? installer.status(token: token)
       let disabled = (try? installer.hooksAreDisabled()) ?? false
-      return (status, disabled)
+      // The socket serves both agents, so it runs while either has hooks.
+      let anyInstalled = [HookInstaller.standard, .codex].contains {
+        (try? $0.status(token: token)).map { $0 != .notInstalled } ?? false
+      }
+      return (status, disabled, anyInstalled)
     }.value
     status = result.0
     hooksDisabled = result.1
-    // The socket runs only while hooks are installed.
-    if let installed = result.0 {
-      server.setHooksInstalled(installed != .notInstalled)
-    }
+    server.setHooksInstalled(result.2)
     if result.0 == nil {
       message = String(
-        localized: "~/.claude/settings.json isn't valid JSON. Fix it first; nothing was changed.")
+        localized:
+          "\(installer.settingsURL.lastPathComponent) isn't valid JSON. Fix it first; nothing was changed."
+      )
     }
   }
 

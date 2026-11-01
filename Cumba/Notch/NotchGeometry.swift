@@ -1,21 +1,31 @@
 import CoreGraphics
 
-/// Panel sizes. Themes provide these from Phase 2 on.
+/// Panel sizes, from `PanelSize` in the settings.
 struct NotchLayout: Equatable, Sendable {
   var expandedSize = CGSize(width: 640, height: 190)
   /// Width added on each side of the notch in the peek state.
   var peekExtraWidth: CGFloat = 70
+  /// Width of the expanded panel for what it shows now, at most `expandedSize.width`;
+  /// `nil` uses the full width. The window stays sized for the full width.
+  var panelWidth: CGFloat?
   /// Room for the expanded panel's shadow, part of the fixed window size.
   var shadowMargin: CGFloat = 24
   /// Extra horizontal room around the closed notch that still counts as hovering it.
   var hoverMargin: CGFloat = 8
+
+  /// Room under the closed notch for a live activity's banner line; 0 without one.
+  var peekBannerHeight: CGFloat = 0
+
+  /// Added to the panel's height when the tabs sit at its bottom.
+  static let bottomTabBarHeight: CGFloat = 36
+  static let bannerHeight: CGFloat = 26
 }
 
 extension NotchLayout {
-  init(theme: Theme) {
+  init(size: PanelSize) {
     self.init()
-    expandedSize = CGSize(width: theme.expandedSize.width, height: theme.expandedSize.height)
-    peekExtraWidth = theme.peekExtraWidth
+    expandedSize = CGSize(width: size.width, height: size.height)
+    peekExtraWidth = size.indicatorWidth
   }
 }
 
@@ -65,7 +75,7 @@ struct NotchGeometry: Equatable, Sendable {
   /// centered under the notch. State changes only animate the shape inside it.
   var windowFrame: CGRect {
     let largest = CGSize(
-      width: max(shapeSize(for: .expanded).width, shapeSize(for: .peek).width),
+      width: max(layout.expandedSize.width, notchRect.width, shapeSize(for: .peek).width),
       height: shapeSize(for: .expanded).height)
     let width = largest.width + layout.shadowMargin * 2
     let height = largest.height + layout.shadowMargin
@@ -78,10 +88,12 @@ struct NotchGeometry: Equatable, Sendable {
     case .closed:
       notchRect.size
     case .peek:
-      CGSize(width: notchRect.width + layout.peekExtraWidth * 2, height: notchRect.height)
+      CGSize(
+        width: notchRect.width + layout.peekExtraWidth * 2,
+        height: notchRect.height + layout.peekBannerHeight)
     case .expanded, .pinned:
       CGSize(
-        width: max(layout.expandedSize.width, notchRect.width),
+        width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),
         height: max(layout.expandedSize.height, notchRect.height))
     }
   }

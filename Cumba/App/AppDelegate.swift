@@ -76,15 +76,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       // The hook socket runs only while hooks are installed (or left over from an update).
       let token = server.hookToken
       let hooksPresent = await Task.detached {
-        (try? HookInstaller.standard.status(token: token)).map { $0 != .notInstalled } ?? false
+        [HookInstaller.standard, .codex].contains {
+          (try? $0.status(token: token)).map { $0 != .notInstalled } ?? false
+        }
       }.value
       server.setScriptsEnabled(settings.scriptActivitiesEnabled)
       server.setHooksInstalled(hooksPresent)
     }
     notchWindow.start()
     systemIndicators.start()
-    Task { [themes, layoutStore] in
+    Task { [themes, layoutStore, settings] in
       await themes.load()
+      settings.adoptLegacyPanelSize(themes.current.legacySize)
       await layoutStore.load()
     }
     welcomeWindow.showIfFirstLaunch()

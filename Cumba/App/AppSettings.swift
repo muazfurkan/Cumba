@@ -21,6 +21,8 @@ final class AppSettings {
     static let browserExtensionEnabled = "browserExtensionEnabled"
     static let notchApprovals = "notchApprovals"
     static let panelScreen = "panelScreen"
+    static let tabBarPosition = "tabBarPosition"
+    static let panelSize = "panelSize"
     static let showsVolumeChanges = "showsVolumeChanges"
     static let replacesVolumeIndicator = "replacesVolumeIndicator"
     static let showsBrightnessChanges = "showsBrightnessChanges"
@@ -34,6 +36,12 @@ final class AppSettings {
     case notched
     case main
     case pointer
+  }
+
+  /// Where the panel shows its tabs.
+  enum TabBarPosition: String, CaseIterable, Sendable {
+    case bottom
+    case top
   }
 
   @ObservationIgnored private let defaults: UserDefaults
@@ -64,6 +72,17 @@ final class AppSettings {
 
   var panelScreen: PanelScreen {
     didSet { defaults.set(panelScreen.rawValue, forKey: Key.panelScreen) }
+  }
+
+  var tabBarPosition: TabBarPosition {
+    didSet { defaults.set(tabBarPosition.rawValue, forKey: Key.tabBarPosition) }
+  }
+
+  /// The panel's size and text size, the same for every theme.
+  var panelSize: PanelSize {
+    didSet {
+      defaults.set(try? JSONEncoder().encode(panelSize), forKey: Key.panelSize)
+    }
   }
 
   /// Draws a notch on the main screen when no screen has one.
@@ -165,12 +184,26 @@ final class AppSettings {
       defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
     panelScreen =
       defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
+    tabBarPosition =
+      defaults.string(forKey: Key.tabBarPosition).flatMap(TabBarPosition.init(rawValue:))
+      ?? .bottom
+    panelSize =
+      defaults.data(forKey: Key.panelSize).flatMap {
+        try? JSONDecoder().decode(PanelSize.self, from: $0)
+      } ?? PanelSize()
     showsVolumeChanges = defaults.bool(forKey: Key.showsVolumeChanges)
     replacesVolumeIndicator = defaults.bool(forKey: Key.replacesVolumeIndicator)
     showsBrightnessChanges = defaults.bool(forKey: Key.showsBrightnessChanges)
     replacesBrightnessIndicator = defaults.bool(forKey: Key.replacesBrightnessIndicator)
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
     scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
+  }
+
+  /// Takes the size a theme file carried before size became a setting, once: only while no
+  /// size has been saved.
+  func adoptLegacyPanelSize(_ size: PanelSize?) {
+    guard let size, defaults.data(forKey: Key.panelSize) == nil else { return }
+    panelSize = size
   }
 
   /// Registers or removes the login item. Runs off the main thread because it

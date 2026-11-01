@@ -18,6 +18,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
 - A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
 - Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
+- Swipe sideways with two fingers on the open panel to move between tabs. A swipe over something that scrolls sideways, like the calendar's days, scrolls that instead.
+- Calendar: scroll the days or click one to see that day's events; alone in its tab, scroll up and down through the months and click a day. Click the month to go back to today. Resting the pointer on an event shows its location and notes, and events that are over are dimmed.
+- Weather: click one of the coming days to see it, and click it again to go back to now; alone in its tab, the hours scroll sideways through the next day or the day you picked.
+- AI Agents: with several sessions, click "+N" to step through them.
+- Four new built-in themes: Neon Tokyo (deep indigo with a pink to cyan neon edge and monospaced text), Sakura, Synthwave and Violet Night. Themes can now fade the background into a second color (Appearance > Material > Gradient) and draw a glowing neon edge around the open panel (Appearance > Colors > Neon edge).
 
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
 - Releases include a `.dmg` with an Applications shortcut next to the `.zip`.
@@ -31,10 +36,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **ljaspNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
-- Widgets can be added right in the panel: an empty tab, or the "+" tile where a tab has room, opens a gallery of the widgets not yet in the panel; one click adds one to the open tab. Right-click a widget to remove it.
-- While something plays, the closed notch shows larger artwork, a larger waveform and the title scrolling like a ticker. The Mirror widget turns the camera on only when you click it.
+- Tabs sit at the bottom of the panel by default (Settings > General > Tabs: at the bottom or at the top), with "+" to add a widget from a gallery and an Edit button. Editing a tab in the panel renames it, picks its symbol, moves it, adds or deletes tabs, and reorders or removes its widgets. Right-click a widget to remove it.
+- The panel's width follows the open tab: as wide as its widgets, with room for a detailed view when a tab has one widget.
+- The Claude Code widget is now AI Agents and also follows Codex (through its hooks in ~/.codex/hooks.json; trust them once with /hooks in Codex). It shows the session's title, what it's doing now ("Editing Notch.swift", "Running tests"), its last answer, and on a second page how full its context window is, read locally from the session transcript. While an agent works, a turning ring sits beside the closed notch, opening the panel shows the agent's tab, and a line under the notch shows the answer when it finishes. Installed Claude Code hooks show as out of date once, since two tool events were added; click Update in Settings > Agents.
+- Widgets alone in a tab show a detailed view, and a compact one beside others. Weather looks like Apple's widget (sky colors, place, high and low, the next days, and the next hours when alone) and is now two units wide. Calendar shows the month with a week strip and the next events, or the whole month beside the list when alone. Media shows large artwork with the title and controls when alone.
+- While something plays, the closed notch shows larger artwork and a larger waveform, sized to the notch. The Mirror widget turns the camera on only when you click it.
+- Text size for the panel (Appearance > Panel Size > Text size), larger by default.
+- A widget can be in several tabs; adding it to one tab no longer takes it out of another.
+- The closed notch is always black over the hardware notch, whatever the theme's background color.
+- The panel's width, height, indicator width and text size are set once in Appearance > Panel Size and stay when you switch themes; a theme sets only the look (material, colors, font, corner radius, shadow and animation). The size saved in an older custom theme carries over once, and theme files no longer store sizes.
 - Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
-- Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
+- Built-in themes keep their names and settings. **New Theme…** in Appearance makes your own theme from the selected one under a name you choose, and your themes can be renamed any time. The Settings window shows the open pane's name as its title.
 - Media reads whatever any app plays from the system's Now Playing: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. This uses the private MediaRemote framework through a small helper run by the system's perl; the README explains it. Turn off "Read media from every app" for the previous behavior. The YouTube extension is now optional.
 - New installations start with Media, Calendar and Timer; the other widgets, and widgets added in later versions, wait in the gallery. Installing the Claude Code hooks adds the Claude Code widget.
 - Dragging a window or a browser tab past the notch no longer opens the panel; dragging files still does.
@@ -47,6 +59,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- When Claude Code asks a question or wants a plan approved, the notch no longer shows it as a permission request with Allow and Deny; Claude Code asks it itself, and the notch shows that the session is waiting, with the question under the notch.
+- Long tool and project names, and the edges of icons, beside the closed notch are no longer cut off.
+- Notes were never saved: macOS 26.6 refuses writes with complete file protection. The note is now written atomically and readable only by you.
 - Context menus inside the panel (e.g. on files in the tray) now open; the notch's own menu used to replace them.
 
 ### Security

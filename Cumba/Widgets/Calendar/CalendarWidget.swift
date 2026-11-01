@@ -23,6 +23,11 @@ final class CalendarWidget: NotchWidget {
   static let reminderChoices = [0, 5, 10, 15]
 
   private(set) var events: [CalendarEvent] = []
+  /// A day other than today picked in the widget; nil shows today. Forgotten when the
+  /// widget leaves the screen.
+  private(set) var pickedDay: Date?
+  /// Events of `pickedDay`.
+  private(set) var pickedDayEvents: [CalendarEvent] = []
   private(set) var hasAccess = CalendarService.hasAccess
   /// Minutes before an event's start to show a countdown; 0 turns it off.
   var reminderMinutes: Int {
@@ -73,6 +78,8 @@ final class CalendarWidget: NotchWidget {
   }
 
   func deactivate() {
+    pickedDay = nil
+    pickedDayEvents = []
     if let changeObserver {
       NotificationCenter.default.removeObserver(changeObserver)
     }
@@ -88,6 +95,27 @@ final class CalendarWidget: NotchWidget {
     Task {
       events = await service.upcomingEvents()
       scheduleReminder()
+    }
+    loadPickedDay()
+  }
+
+  /// Shows a day's events; today shows the coming events of today and tomorrow.
+  func select(_ day: Date) {
+    let calendar = Calendar.current
+    let day: Date? = calendar.isDateInToday(day) ? nil : calendar.startOfDay(for: day)
+    guard day != pickedDay else { return }
+    pickedDay = day
+    pickedDayEvents = []
+    loadPickedDay()
+  }
+
+  private func loadPickedDay() {
+    guard hasAccess, let day = pickedDay else { return }
+    Task {
+      let events = await service.events(on: day)
+      if pickedDay == day {
+        pickedDayEvents = events
+      }
     }
   }
 
@@ -152,7 +180,7 @@ final class CalendarWidget: NotchWidget {
             .foregroundStyle(event.color?.color ?? .accentColor)),
         trailing: AnyView(
           Text(timerInterval: Date()...event.start, countsDown: true)
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .multilineTextAlignment(.trailing))))
   }
 
@@ -175,81 +203,41 @@ private struct CalendarWidgetView: View {
   let widget: CalendarWidget
 
   var body: some View {
+    if widget.hasAccess {
+      WidgetCard {
+        CalendarAgenda(
+          day: widget.pickedDay,
+          events: widget.pickedDay == nil ? widget.events : widget.pickedDayEvents,
+          select: widget.select)
+      }
+    } else {
+      accessCard
+    }
+  }
+
+  private var accessCard: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("Calendar", systemImage: "calendar")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         if !widget.hasAccess {
           if CalendarService.accessWasDenied {
             Text("Calendar access is off. You can allow it in System Settings.")
-              .font(.caption)
+              .panelFont(.caption)
               .fixedSize(horizontal: false, vertical: true)
             OpenPrivacySettings(pane: "Privacy_Calendars")
               .controlSize(.small)
           } else {
             Text("See today's and tomorrow's events here.")
-              .font(.caption)
+              .panelFont(.caption)
               .fixedSize(horizontal: false, vertical: true)
             Button("Allow Calendar Access") { widget.requestAccessFromPanel() }
               .controlSize(.small)
           }
-        } else if widget.events.isEmpty {
-          Text("Nothing planned for today and tomorrow.")
-            .font(.caption)
-            .foregroundStyle(.secondary)
-        } else {
-          ForEach(widget.events.prefix(3)) { event in
-            EventRow(event: event)
-          }
         }
       }
     }
-  }
-}
-
-private struct EventRow: View {
-  let event: CalendarEvent
-
-  var body: some View {
-    HStack(spacing: 6) {
-      Capsule()
-        .fill(event.color?.color ?? .accentColor)
-        .frame(width: 3, height: 26)
-      VStack(alignment: .leading, spacing: 0) {
-        Text(event.title)
-          .font(.caption.weight(.medium))
-          .lineLimit(1)
-        Text(timeText)
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-          .lineLimit(1)
-      }
-      if canJoin, let url = event.meetingURL {
-        Spacer(minLength: 4)
-        Button("Join") { NSWorkspace.shared.open(url) }
-          .controlSize(.mini)
-          .buttonStyle(.borderedProminent)
-          .help(Text(url.host() ?? ""))
-      }
-    }
-    .accessibilityElement(children: .combine)
-  }
-
-  /// Join appears from 15 minutes before the start until the end.
-  private var canJoin: Bool {
-    event.meetingURL != nil && event.start.addingTimeInterval(-15 * 60) <= .now && event.end > .now
-  }
-
-  private var timeText: String {
-    let day =
-      Calendar.current.isDateInToday(event.start)
-      ? String(localized: "Today") : String(localized: "Tomorrow")
-    if event.isAllDay {
-      return String(localized: "\(day), all day", comment: "Calendar event time")
-    }
-    let time = event.start.formatted(date: .omitted, time: .shortened)
-    return String(localized: "\(day), \(time)", comment: "Calendar event day and time")
   }
 }
 

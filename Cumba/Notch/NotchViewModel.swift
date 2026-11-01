@@ -9,6 +9,8 @@ final class NotchViewModel {
   /// Size of the hardware notch on the current screen; the view sizes its shapes from it.
   var geometry: NotchGeometry?
   var theme = Theme.classic
+  var textScale = PanelSize().textScale
+  var tabBarPosition = AppSettings.TabBarPosition.bottom
 
   /// Called after every state change, e.g. to update the hover area.
   @ObservationIgnored var onStateChange: ((NotchState) -> Void)?

@@ -65,13 +65,30 @@ struct ThemeTests {
 
   @Test func outOfRangeNumbersAreClamped() throws {
     let theme = try decode(
-      #"{ "cornerRadius": 900, "expandedSize": { "width": 10, "height": 5000 }, "animation": { "response": -1, "damping": 3 } }"#
+      #"{ "cornerRadius": 900, "expandedSize": { "width": 10, "height": 5000 }, "animation": { "response": -1, "damping": 3 }, "textScale": 9 }"#
     )
     #expect(theme.cornerRadius == Theme.cornerRadiusRange.upperBound)
-    #expect(theme.expandedSize.width == Theme.widthRange.lowerBound)
-    #expect(theme.expandedSize.height == Theme.heightRange.upperBound)
     #expect(theme.spring.response == Theme.responseRange.lowerBound)
     #expect(theme.spring.damping == Theme.dampingRange.upperBound)
+    let size = try #require(theme.legacySize)
+    #expect(size.width == PanelSize.widthRange.lowerBound)
+    #expect(size.height == PanelSize.heightRange.upperBound)
+    #expect(size.textScale == PanelSize.textScaleRange.upperBound)
+  }
+
+  @Test func readsTheSizeOfOlderThemeFilesButNeverSavesIt() throws {
+    let old = try decode(
+      #"{ "expandedSize": { "width": 720, "height": 220 }, "peekExtraWidth": 90 }"#)
+    var expected = PanelSize()
+    expected.width = 720
+    expected.height = 220
+    expected.indicatorWidth = 90
+    #expect(old.legacySize == expected)
+    let object = try #require(
+      try JSONSerialization.jsonObject(with: JSONEncoder().encode(old)) as? [String: Any])
+    #expect(object["expandedSize"] == nil)
+    #expect(object["legacySize"] == nil)
+    #expect(try decode(#"{ "id": "x" }"#).legacySize == nil)
   }
 
   @Test func notJSONObjectFails() {
@@ -82,6 +99,28 @@ struct ThemeTests {
   func builtInsRoundTrip(theme: Theme) throws {
     let data = try JSONEncoder().encode(theme)
     #expect(try JSONDecoder().decode(Theme.self, from: data) == theme)
+  }
+
+  @Test func gradientAndGlowAreOptional() throws {
+    let plain = try decode(#"{ "id": "x", "name": "X" }"#)
+    #expect(plain.gradient == nil)
+    #expect(plain.glow == nil)
+    let object = try #require(
+      try JSONSerialization.jsonObject(with: JSONEncoder().encode(plain)) as? [String: Any])
+    #expect(object["gradient"] == nil)
+    #expect(object["glow"] == nil)
+
+    let neon = try decode(##"{ "gradient": "#1C0B42", "glow": "#FF2E97" }"##)
+    #expect(neon.gradient?.hex == "#1C0B42")
+    #expect(neon.glow?.hex == "#FF2E97")
+    let invalid = try decode(#"{ "gradient": "purple", "glow": 7 }"#)
+    #expect(invalid.gradient == nil)
+    #expect(invalid.glow == nil)
+  }
+
+  @Test func builtInsHaveDistinctIDsAndNames() {
+    #expect(Set(Theme.builtIns.map(\.id)).count == Theme.builtIns.count)
+    #expect(Set(Theme.builtIns.map(\.displayName)).count == Theme.builtIns.count)
   }
 
   @Test func encodesAnimationUnderTheSpecKey() throws {

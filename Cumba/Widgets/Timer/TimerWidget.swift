@@ -110,7 +110,8 @@ final class TimerWidget: NotchWidget {
       LiveActivity(
         id: Self.finishedActivityID, priority: .timerFinished,
         leading: AnyView(Image(systemName: "timer").foregroundStyle(.orange)),
-        trailing: AnyView(Text("Done", comment: "Timer finished").font(.caption.bold()))),
+        trailing: AnyView(
+          Text("Done", comment: "Timer finished").panelFont(.caption, weight: .bold))),
       for: .seconds(10))
   }
 
@@ -121,7 +122,7 @@ final class TimerWidget: NotchWidget {
         leading: AnyView(Image(systemName: "timer")),
         trailing: AnyView(
           Text(timerInterval: Date()...endsAt, countsDown: true)
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .multilineTextAlignment(.trailing))))
   }
 }
@@ -133,10 +134,10 @@ private struct TimerWidgetView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 8) {
         Label("Timer", systemImage: "timer")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         countdown
-          .font(.system(size: 30, weight: .semibold).monospacedDigit())
+          .panelFont(size: 30, weight: .semibold, monospacedDigit: true)
         HStack(spacing: 6) {
           if timer.isActive {
             controlButton(
@@ -147,21 +148,12 @@ private struct TimerWidgetView: View {
             }
             controlButton("arrow.counterclockwise", label: Text("Reset")) { timer.reset() }
           } else {
-            ForEach(TimerWidget.presets, id: \.self) { minutes in
-              Button {
-                timer.select(minutes: minutes)
-              } label: {
-                Text("\(minutes)m", comment: "Timer preset in minutes")
-                  .font(.caption.monospacedDigit())
-                  .padding(.horizontal, 6)
-                  .padding(.vertical, 3)
-                  .background(
-                    timer.length == TimeInterval(minutes * 60) ? .white.opacity(0.2) : .clear,
-                    in: Capsule())
-              }
-              .buttonStyle(.plain)
+            // With large text the units don't fit; the bare numbers do.
+            ViewThatFits(in: .horizontal) {
+              presets(withUnit: true)
+              presets(withUnit: false)
             }
-            Spacer()
+            Spacer(minLength: 4)
             controlButton("play.fill", label: Text("Start")) { timer.start() }
           }
         }
@@ -171,6 +163,34 @@ private struct TimerWidgetView: View {
 
   private var isPaused: Bool {
     if case .paused = timer.phase { true } else { false }
+  }
+
+  private func presets(withUnit: Bool) -> some View {
+    HStack(spacing: 2) {
+      ForEach(TimerWidget.presets, id: \.self) { minutes in
+        Button {
+          timer.select(minutes: minutes)
+        } label: {
+          Group {
+            if withUnit {
+              Text("\(minutes)m", comment: "Timer preset in minutes")
+            } else {
+              Text(minutes, format: .number)
+            }
+          }
+          .panelFont(.caption, monospacedDigit: true)
+          .lineLimit(1)
+          .fixedSize()
+          .padding(.horizontal, 6)
+          .padding(.vertical, 3)
+          .background(
+            timer.length == TimeInterval(minutes * 60) ? .white.opacity(0.2) : .clear,
+            in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("\(minutes)m", comment: "Timer preset in minutes"))
+      }
+    }
   }
 
   @ViewBuilder private var countdown: some View {

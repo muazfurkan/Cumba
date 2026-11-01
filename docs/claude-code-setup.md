@@ -1,14 +1,14 @@
-# Claude Code setup
+# Claude Code and Codex setup
 
-Cumba receives [Claude Code hooks](https://code.claude.com/docs/en/hooks) on a private Unix socket. Permission requests then appear in the notch, and you see when a session finishes or fails. This works for Claude Code in the terminal, in IDE extensions and in the Claude desktop app, because they all read `~/.claude/settings.json`.
+Cumba receives [Claude Code hooks](https://code.claude.com/docs/en/hooks) on a private Unix socket. Permission requests then appear in the notch, the AI Agents widget shows what a session is doing, and you see when it finishes or fails. This works for Claude Code in the terminal, in IDE extensions and in the Claude desktop app, because they all read `~/.claude/settings.json`.
 
 ## The easy way
 
-Open **Cumba > Settings > Claude Code** and click **Install…**. You see the exact change to `~/.claude/settings.json` before anything is written (the token is masked in that view). The current file is backed up next to it as `settings.json.bak-YYYYMMDD-HHMMSS`, readable only by you. Your other settings and hooks are kept, and a symlinked `settings.json` stays a symlink.
+Open **Cumba > Settings > Agents**, choose Claude Code and click **Install…**. You see the exact change to `~/.claude/settings.json` before anything is written (the token is masked in that view). The current file is backed up next to it as `settings.json.bak-YYYYMMDD-HHMMSS`, readable only by you. Your other settings and hooks are kept, and a symlinked `settings.json` stays a symlink.
 
 **Remove…** deletes only Cumba's entries. If the status shows **Out of date** (for example after an update changed the hook format), click **Update…**.
 
-Cumba's socket runs only while hooks are installed. In **Settings > Claude Code** you also choose what can be allowed from the notch: everything, everything except shell commands, or nothing (only Deny and In Terminal). Allow in the notch is the same as Allow in Claude Code.
+Cumba's socket runs only while hooks are installed. In **Settings > Agents** you also choose what can be allowed from the notch: everything, everything except shell commands, or nothing (only Deny and In Terminal). Allow in the notch is the same as Allow in Claude Code.
 
 ## How it works
 
@@ -24,11 +24,13 @@ Each hook is a `command` hook that pipes the event to the app with curl:
 
 ## By hand
 
-Copy the token with **Copy Hook Token** in **Settings > Claude Code**. It's separate from the Chrome extension's token. After saving the file, open **Settings > Claude Code** once (or restart Cumba) so the socket starts. Then add one entry per event to `~/.claude/settings.json`, keeping anything already there. Use the command above with the matching timeout, and set curl's `--max-time` one second lower:
+Copy the token with **Copy Hook Token** in **Settings > Agents**. It's separate from the Chrome extension's token. After saving the file, open **Settings > Agents** once (or restart Cumba) so the socket starts. Then add one entry per event to `~/.claude/settings.json`, keeping anything already there. Use the command above with the matching timeout, and set curl's `--max-time` one second lower:
 
 | Event | `timeout` |
 |---|---|
 | `UserPromptSubmit` | 5 |
+| `PreToolUse` | 5 |
+| `PostToolUse` | 5 |
 | `PermissionRequest` | 300 |
 | `Notification` | 5 |
 | `Stop` | 5 |
@@ -56,7 +58,12 @@ Notes:
 3. **Allow** or **Deny** answers Claude Code. **In Terminal** answers with nothing, so Claude Code shows its own dialog. The buttons only work after the request has been on screen for a moment, so a stray or double click can't approve something you haven't seen.
 4. If the request contains hidden characters or is too long to show, only **Deny** and **In Terminal** are offered.
 5. If you don't answer within 290 seconds, Cumba hands the decision back to Claude Code's own dialog.
+6. Questions (`AskUserQuestion`) and plan approvals (`ExitPlanMode`) also arrive as permission requests, but Allow or Deny would answer neither. Cumba answers them at once with nothing, so Claude Code asks you itself, and the notch shows that the session is waiting, with the question under the notch.
+
+## Codex
+
+Choose Codex in **Settings > Agents** and click **Install…**. The hooks go to `~/.codex/hooks.json` and post to `http://localhost/codex/hook` on the same socket, with the same review, backup and token. Codex sends the same events except `Notification` and `StopFailure`. Codex runs new hooks only after you trust them: run `/hooks` in Codex once and trust Cumba's entries.
 
 ## Privacy
 
-Hook payloads (commands, file paths, messages) stay in memory and are never written to disk or logged.
+Hook payloads (commands, file paths, messages) stay in memory and are never written to disk or logged. For the context use and the session title, Cumba reads the last 256 KB of the session's transcript, and only transcripts under `~/.claude/projects`.

@@ -37,6 +37,15 @@ struct WeatherServiceTests {
     #expect(forecast.code == 2)
     #expect(forecast.isDay)
     #expect(forecast.unit == "°C")
+    // Hours from the current one on, skipping gaps; times in the place's own zone.
+    #expect(forecast.hours.count >= 6)
+    #expect(forecast.hours.first?.temperature == 18.4)
+    #expect(forecast.hours.first?.time == Date(timeIntervalSince1970: 1_793_469_600))
+    #expect(forecast.hours[1].isDay == false)
+    #expect(forecast.hours[5].temperature == 15.2)
+    #expect(forecast.days.count == 6)
+    #expect(forecast.days[1].code == 61)
+    #expect(forecast.days[1].low == 11.9)
   }
 
   @Test func parsesPlaces() throws {

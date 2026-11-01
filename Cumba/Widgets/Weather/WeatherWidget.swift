@@ -10,7 +10,7 @@ final class WeatherWidget: NotchWidget {
   static let kind = "weather"
   static var title: String { String(localized: "Weather", comment: "Widget name") }
   static let symbol = "cloud.sun"
-  static let size = WidgetSize.compact
+  static let size = WidgetSize.regular
   static var summary: String {
     String(
       localized: "Current weather where you are, or for a place you choose",
@@ -163,25 +163,32 @@ private struct WeatherView: View {
   let widget: WeatherWidget
 
   var body: some View {
+    if let place = widget.place, let forecast = widget.forecast {
+      WeatherCard(
+        place: place, forecast: forecast, isCurrentLocation: widget.usesCurrentLocation)
+    } else {
+      setupCard
+    }
+  }
+
+  private var setupCard: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 4) {
         if let place = widget.place {
           Text(place.name)
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
             .lineLimit(1)
-          if let forecast = widget.forecast {
-            ForecastView(forecast: forecast)
-          } else if widget.failed {
+          if widget.failed {
             Text("Weather is unavailable.")
-              .font(.caption)
+              .panelFont(.caption)
               .foregroundStyle(.secondary)
           } else {
             ProgressView().controlSize(.small)
           }
         } else {
           Label("Weather", systemImage: "cloud.sun")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           setup
         }
@@ -201,13 +208,13 @@ private struct WeatherView: View {
         chooseCity
       case .denied:
         Text("Location access is off.")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         chooseCity
       case .allowed:
         if widget.failed {
           Text("Your location couldn't be found.")
-            .font(.caption)
+            .panelFont(.caption)
             .foregroundStyle(.secondary)
           chooseCity
         } else {
@@ -220,33 +227,7 @@ private struct WeatherView: View {
   private var chooseCity: some View {
     Button("Choose a City") { widget.showSettings() }
       .buttonStyle(.plain)
-      .font(.caption2)
+      .panelFont(.caption2)
       .foregroundStyle(.secondary)
-  }
-}
-
-private struct ForecastView: View {
-  let forecast: WeatherService.Forecast
-
-  var body: some View {
-    let condition = WeatherService.condition(for: forecast.code, isDay: forecast.isDay)
-    Image(systemName: condition.symbol)
-      .symbolRenderingMode(.multicolor)
-      .font(.title2)
-      .accessibilityLabel(Text(condition.text))
-    Text(
-      Measurement(value: forecast.temperature, unit: unit),
-      format: .measurement(width: .narrow, numberFormatStyle: .number.precision(.fractionLength(0)))
-    )
-    .font(.system(size: 22, weight: .semibold).monospacedDigit())
-    if let high = forecast.high, let low = forecast.low {
-      Text("↑\(Int(high.rounded()))° ↓\(Int(low.rounded()))°")
-        .font(.caption2.monospacedDigit())
-        .foregroundStyle(.secondary)
-    }
-  }
-
-  private var unit: UnitTemperature {
-    forecast.unit.contains("F") ? .fahrenheit : .celsius
   }
 }

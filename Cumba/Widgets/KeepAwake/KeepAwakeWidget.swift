@@ -86,10 +86,10 @@ final class KeepAwakeWidget: NotchWidget {
       if let endsAt {
         AnyView(
           Text(timerInterval: Date()...endsAt, countsDown: true)
-            .font(.caption.monospacedDigit())
+            .panelFont(.caption, monospacedDigit: true)
             .multilineTextAlignment(.trailing))
       } else {
-        AnyView(Text("On", comment: "Keep Awake is on").font(.caption))
+        AnyView(Text("On", comment: "Keep Awake is on").panelFont(.caption))
       }
     liveActivities.show(
       LiveActivity(
@@ -115,7 +115,7 @@ private struct KeepAwakeView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 8) {
         Label("Keep Awake", systemImage: "cup.and.saucer")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         if widget.isOn {
           Group {
@@ -125,12 +125,12 @@ private struct KeepAwakeView: View {
               Text("On", comment: "Keep Awake is on")
             }
           }
-          .font(.system(size: 22, weight: .semibold).monospacedDigit())
+          .panelFont(size: 22, weight: .semibold, monospacedDigit: true)
           Button("Turn Off") { widget.turnOff() }
             .controlSize(.small)
         } else {
           Image(systemName: "moon.zzz")
-            .font(.title2)
+            .panelFont(.title2)
             .foregroundStyle(.secondary)
             .accessibilityHidden(true)
           Menu {

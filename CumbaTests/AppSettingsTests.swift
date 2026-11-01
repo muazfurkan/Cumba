@@ -16,6 +16,37 @@ struct AppSettingsTests {
     settings.isPaused = true
     #expect(AppSettings(defaults: defaults).isPaused)
   }
+
+  @Test func panelSizePersistsAndTakesAnOldThemeSizeOnce() throws {
+    let suiteName = "AppSettingsTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+
+    let settings = AppSettings(defaults: defaults)
+    #expect(settings.panelSize == PanelSize())
+    var old = PanelSize()
+    old.width = 800
+    settings.adoptLegacyPanelSize(old)
+    #expect(settings.panelSize.width == 800)
+
+    var other = PanelSize()
+    other.width = 500
+    settings.adoptLegacyPanelSize(other)
+    #expect(settings.panelSize.width == 800)
+
+    settings.panelSize.textScale = 1.4
+    let reloaded = AppSettings(defaults: defaults)
+    #expect(reloaded.panelSize.width == 800)
+    #expect(reloaded.panelSize.textScale == 1.4)
+  }
+
+  @Test func invalidPanelSizeValuesFallBack() throws {
+    let data = Data(#"{ "width": 5000, "height": "tall", "textScale": 0.1 }"#.utf8)
+    let size = try JSONDecoder().decode(PanelSize.self, from: data)
+    #expect(size.width == PanelSize.widthRange.upperBound)
+    #expect(size.height == PanelSize().height)
+    #expect(size.textScale == PanelSize.textScaleRange.lowerBound)
+  }
 }
 
 @MainActor

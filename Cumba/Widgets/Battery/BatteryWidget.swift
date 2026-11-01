@@ -92,7 +92,8 @@ final class BatteryWidget: NotchWidget {
         id: "battery", priority: .battery,
         leading: AnyView(Image(systemName: symbol).foregroundStyle(color)),
         trailing: AnyView(
-          Text(Double(status.percent) / 100, format: .percent).font(.caption.monospacedDigit()))),
+          Text(Double(status.percent) / 100, format: .percent).panelFont(
+            .caption, monospacedDigit: true))),
       for: .seconds(3))
   }
 
@@ -129,18 +130,18 @@ private struct BatteryWidgetView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         Label("Battery", systemImage: "battery.75percent")
-          .font(.caption)
+          .panelFont(.caption)
           .foregroundStyle(.secondary)
         if let status = battery.status {
           HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text(Double(status.percent) / 100, format: .percent)
-              .font(.system(size: 26, weight: .semibold).monospacedDigit())
+              .panelFont(size: 26, weight: .semibold, monospacedDigit: true)
             if status.isCharging {
               Image(systemName: "bolt.fill").foregroundStyle(.green)
             }
           }
           Image(systemName: symbol(for: status))
-            .font(.title2)
+            .panelFont(.title2)
             .foregroundStyle(status.percent <= BatteryWidget.lowBatteryPercent ? .red : .primary)
             .accessibilityHidden(true)
           if let minutes = status.minutesRemaining {
@@ -152,7 +153,7 @@ private struct BatteryWidgetView: View {
                 Text("\(time) left", comment: "Battery time remaining")
               }
             }
-            .font(.caption2)
+            .panelFont(.caption2)
             .foregroundStyle(.secondary)
           }
         } else {

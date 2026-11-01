@@ -1,0 +1,21 @@
+{
+  "session_id": "session-1",
+  "transcript_path": "/Users/example/.claude/projects/demo/session-1.jsonl",
+  "cwd": "/Users/example/Projects/demo",
+  "permission_mode": "default",
+  "hook_event_name": "PermissionRequest",
+  "tool_name": "AskUserQuestion",
+  "tool_input": {
+    "questions": [
+      {
+        "question": "Which theme should be the default?",
+        "header": "Theme",
+        "multiSelect": false,
+        "options": [
+          { "label": "Classic", "description": "Plain black" },
+          { "label": "Neon Tokyo", "description": "Pink and cyan neon" }
+        ]
+      }
+    ]
+  }
+}

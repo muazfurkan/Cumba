@@ -68,12 +68,8 @@ final class MediaWidget: NotchWidget {
       LiveActivity(
         id: Self.activityID, priority: .media,
         leading: AnyView(PeekArtwork(nowPlaying: nowPlaying)),
-        trailing: AnyView(PeekNowPlaying(nowPlaying: nowPlaying)),
-        sideWidth: Self.peekSideWidth))
+        trailing: AnyView(PeekWaveform())))
   }
-
-  /// Room on each side of the closed notch for the artwork and the scrolling title.
-  static let peekSideWidth: CGFloat = 130
 }
 
 /// The artwork beside the closed notch, as tall as the notch allows.
@@ -82,31 +78,19 @@ private struct PeekArtwork: View {
   @Environment(\.peekHeight) private var height
 
   var body: some View {
-    HStack {
-      ArtworkView(nowPlaying: nowPlaying, size: max(18, height - 10), cornerRadius: 6)
-      Spacer(minLength: 0)
-    }
-    .padding(.leading, 12)
+    ArtworkView(nowPlaying: nowPlaying, size: max(18, height - 10), cornerRadius: 6)
   }
 }
 
-/// The title and artist scrolling like a ticker, and a waveform, beside the closed notch.
-private struct PeekNowPlaying: View {
-  let nowPlaying: NowPlaying
+/// A playing waveform beside the closed notch, sized to it.
+private struct PeekWaveform: View {
   @Environment(\.peekHeight) private var height
 
   var body: some View {
-    HStack(spacing: 8) {
-      MarqueeText(
-        text: [nowPlaying.title, nowPlaying.artist].compactMap { $0 }.joined(separator: " · ")
-      )
-      .font(.system(size: max(11, height * 0.34), weight: .medium))
-      Image(systemName: "waveform")
-        .font(.system(size: max(13, height * 0.46), weight: .semibold))
-        .symbolEffect(.variableColor.iterative, options: .repeating)
-        .accessibilityLabel(Text("Playing"))
-    }
-    .padding(.trailing, 12)
+    Image(systemName: "waveform")
+      .font(.system(size: max(13, height * 0.5), weight: .semibold))
+      .symbolEffect(.variableColor.iterative, options: .repeating)
+      .accessibilityLabel(Text("Playing"))
   }
 }
 
@@ -166,7 +150,7 @@ private struct MediaSettingsView: View {
         Text("Only Spotify and Music, through AppleScript, and YouTube through the extension.")
       }
     }
-    .font(.caption)
+    .panelFont(.caption)
     .foregroundStyle(.secondary)
     .fixedSize(horizontal: false, vertical: true)
     ForEach(sources, id: \.self) { source in

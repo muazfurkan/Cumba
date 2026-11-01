@@ -12,6 +12,16 @@
         }
       }
     },
+    "%@ isn't valid JSON. Fix it first; nothing was changed." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ geçerli bir JSON değil. Önce düzeltin; hiçbir şey değiştirilmedi."
+          }
+        }
+      }
+    },
     "%@ left" : {
       "comment" : "Battery time remaining",
       "localizations" : {
@@ -19,6 +29,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ kaldı"
+          }
+        }
+      }
+    },
+    "%@ of the context window used" : {
+      "comment" : "How full an AI agent session's context is",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlam penceresinin %@ kadarı kullanıldı"
           }
         }
       }
@@ -124,6 +145,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "+%lld"
+          }
+        }
+      }
+    },
+    "+%lld more" : {
+      "comment" : "More calendar events than fit",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld etkinlik daha"
           }
         }
       }
@@ -254,6 +286,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widget'ları Ayarlar > Widget'lar'dan ekleyin, kaldırın ve sıralayın; Spotify, YouTube veya Claude Code'u bağlayın."
+          }
+        }
+      }
+    },
+    "Agent" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajan"
+          }
+        }
+      }
+    },
+    "Agents" : {
+      "comment" : "Settings tab for Claude Code and Codex",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajanlar"
+          }
+        }
+      }
+    },
+    "AI Agents" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapay Zeka Ajanları"
           }
         }
       }
@@ -429,6 +493,26 @@
         }
       }
     },
+    "At the bottom" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altta"
+          }
+        }
+      }
+    },
+    "At the top" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üstte"
+          }
+        }
+      }
+    },
     "Automation" : {
       "localizations" : {
         "tr" : {
@@ -480,6 +564,17 @@
         }
       }
     },
+    "Bottom color" : {
+      "comment" : "Theme editor: the color a gradient background fades into",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alt renk"
+          }
+        }
+      }
+    },
     "Bounce" : {
       "localizations" : {
         "tr" : {
@@ -521,12 +616,12 @@
         }
       }
     },
-    "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename." : {
+    "Built-in themes can't be changed. To make your own from this one, click New Theme." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hazır temalar olduğu gibi kalır. Aşağıda bir şeyi değiştirdiğinizde değişiklik, adını değiştirebileceğiniz bir kopya olarak kaydedilir."
+            "value" : "Hazır temalar değiştirilemez. Bu temadan kendi temanızı yapmak için Yeni Tema'ya tıklayın."
           }
         }
       }
@@ -567,6 +662,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamerayı kapatmak için tıklayın"
+          }
+        }
+      }
+    },
+    "Codex runs new hooks only after you trust them: after installing, run /hooks in Codex once and trust Cumba's hooks." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codex yeni hook'ları ancak onlara güvendiğinizde çalıştırır: kurduktan sonra Codex'te bir kez /hooks komutunu çalıştırıp Cumba'nın hook'larına güvenin."
+          }
+        }
+      }
+    },
+    "Context use shows after the first answer." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlam kullanımı ilk yanıttan sonra görünür."
           }
         }
       }
@@ -789,16 +904,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claude Code"
-          }
-        }
-      }
-    },
-    "Claude Code sessions and permission requests" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Claude Code oturumları ve izin istekleri"
           }
         }
       }
@@ -1056,6 +1161,27 @@
         }
       }
     },
+    "Create" : {
+      "comment" : "Creates the new theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oluştur"
+          }
+        }
+      }
+    },
+    "Current location" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anki konum"
+          }
+        }
+      }
+    },
     "Current weather where you are, or for a place you choose" : {
       "comment" : "Widget description",
       "localizations" : {
@@ -1093,6 +1219,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sil"
+          }
+        }
+      }
+    },
+    "Delete Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeyi Sil"
           }
         }
       }
@@ -1149,16 +1285,6 @@
         }
       }
     },
-    "Duplicate" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Çoğalt"
-          }
-        }
-      }
-    },
     "Duration" : {
       "localizations" : {
         "tr" : {
@@ -1169,12 +1295,44 @@
         }
       }
     },
+    "Edge color" : {
+      "comment" : "Theme editor: color of the neon edge",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kenar rengi"
+          }
+        }
+      }
+    },
     "Edit" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Düzen"
+          }
+        }
+      }
+    },
+    "Edit Tab" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekmeyi Düzenle"
+          }
+        }
+      }
+    },
+    "Editing %@" : {
+      "comment" : "An AI agent edits a file",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ düzenleniyor"
           }
         }
       }
@@ -1325,6 +1483,27 @@
         }
       }
     },
+    "Gradient" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renk geçişi"
+          }
+        }
+      }
+    },
+    "H:%@ L:%@" : {
+      "comment" : "Today's high and low",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y:%1$@ D:%2$@"
+          }
+        }
+      }
+    },
     "Haptic feedback when the panel opens" : {
       "localizations" : {
         "tr" : {
@@ -1413,6 +1592,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook'lar terminaldeki, IDE eklentilerindeki ve Claude masaüstü uygulamasındaki Claude Code olaylarını yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden Cumba'ya gönderir. İzin istekleri böylece notch'ta görünür. Cumba çalışmıyorsa Claude Code her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
+          }
+        }
+      }
+    },
+    "Hooks send events from the Codex CLI to Cumba through the same private socket. Its steps and permission requests then appear in the notch. When Cumba isn't running, Codex carries on as usual. Session data stays in memory." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hook'lar Codex CLI olaylarını aynı özel soket üzerinden Cumba'ya gönderir. Böylece adımları ve izin istekleri notch'ta görünür. Cumba çalışmıyorsa Codex her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
           }
         }
       }
@@ -1513,6 +1702,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İmleci uzaklaştırınca kapanır. Gecikmeyi değiştirmek veya yalnızca tıklamayla açmak için Ayarlar'a bakın."
+          }
+        }
+      }
+    },
+    "It starts from %@." : {
+      "comment" : "New theme: the theme it copies",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ temasından başlar."
           }
         }
       }
@@ -1781,6 +1981,26 @@
         }
       }
     },
+    "Move Left" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sola Taşı"
+          }
+        }
+      }
+    },
+    "Move Right" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağa Taşı"
+          }
+        }
+      }
+    },
     "Move Up" : {
       "localizations" : {
         "tr" : {
@@ -1844,6 +2064,28 @@
         }
       }
     },
+    "Neon edge" : {
+      "comment" : "Theme editor: a glowing line around the open panel",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neon kenar"
+          }
+        }
+      }
+    },
+    "Neon Tokyo" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neon Tokyo"
+          }
+        }
+      }
+    },
     "Never (only Deny and In Terminal)" : {
       "localizations" : {
         "tr" : {
@@ -1861,6 +2103,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yeni Sekme"
+          }
+        }
+      }
+    },
+    "New Theme" : {
+      "comment" : "Title of the prompt that names a new theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Tema"
+          }
+        }
+      }
+    },
+    "New Theme…" : {
+      "comment" : "Appearance settings: makes a user theme from the selected one",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Tema…"
           }
         }
       }
@@ -1895,12 +2159,12 @@
         }
       }
     },
-    "No sessions yet. Claude Code shows up here once its hooks are installed." : {
+    "No sessions yet. Claude Code and Codex show up here once their hooks are installed." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz oturum yok. Hook'lar kurulunca Claude Code burada görünür."
+            "value" : "Henüz oturum yok. Hook'ları kurulunca Claude Code ve Codex burada görünür."
           }
         }
       }
@@ -1911,6 +2175,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kısayol bulunamadı."
+          }
+        }
+      }
+    },
+    "None yet. Use + to add one." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz yok. Eklemek için + düğmesini kullanın."
           }
         }
       }
@@ -1955,12 +2229,34 @@
         }
       }
     },
+    "Nothing planned for this day." : {
+      "comment" : "Calendar: no events on the picked day",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu gün için plan yok."
+          }
+        }
+      }
+    },
     "Nothing planned for today and tomorrow." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bugün ve yarın için plan yok."
+          }
+        }
+      }
+    },
+    "Now" : {
+      "comment" : "Weather: the current hour",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi"
           }
         }
       }
@@ -2146,6 +2442,17 @@
         }
       }
     },
+    "Panel Size" : {
+      "comment" : "Appearance settings: section for the panel's width, height and text size",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel Boyutu"
+          }
+        }
+      }
+    },
     "Partly cloudy" : {
       "comment" : "Weather",
       "localizations" : {
@@ -2204,6 +2511,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paneli sabitle"
+          }
+        }
+      }
+    },
+    "Planning" : {
+      "comment" : "An AI agent updates its plan",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planlıyor"
           }
         }
       }
@@ -2279,6 +2597,16 @@
         }
       }
     },
+    "Progress" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlerleme"
+          }
+        }
+      }
+    },
     "Quit Cumba" : {
       "localizations" : {
         "tr" : {
@@ -2306,6 +2634,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medyayı her uygulamadan oku"
+          }
+        }
+      }
+    },
+    "Reading %@" : {
+      "comment" : "An AI agent reads a file",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ okunuyor"
           }
         }
       }
@@ -2481,12 +2820,45 @@
         }
       }
     },
+    "Running %@" : {
+      "comment" : "An AI agent runs a shell command",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalıştırıyor: %@"
+          }
+        }
+      }
+    },
+    "Running a subagent" : {
+      "comment" : "An AI agent starts a helper",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yardımcı ajan çalışıyor"
+          }
+        }
+      }
+    },
     "Running on port %@" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ portunda çalışıyor"
+          }
+        }
+      }
+    },
+    "Sakura" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sakura"
           }
         }
       }
@@ -2571,6 +2943,28 @@
         }
       }
     },
+    "Searching the code" : {
+      "comment" : "An AI agent searches files",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kodda arıyor"
+          }
+        }
+      }
+    },
+    "Searching the web" : {
+      "comment" : "An AI agent uses the web",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webde arıyor"
+          }
+        }
+      }
+    },
     "Secondary text" : {
       "localizations" : {
         "tr" : {
@@ -2631,6 +3025,17 @@
         }
       }
     },
+    "Session ended" : {
+      "comment" : "AI agent session closed",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oturum bitti"
+          }
+        }
+      }
+    },
     "Set Up…" : {
       "localizations" : {
         "tr" : {
@@ -2678,6 +3083,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gölge"
+          }
+        }
+      }
+    },
+    "Shape" : {
+      "comment" : "Theme editor: section with corner radius and shadow",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şekil"
           }
         }
       }
@@ -2763,6 +3179,17 @@
         }
       }
     },
+    "Show the next session" : {
+      "comment" : "AI Agents widget: steps to another session",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki oturumu göster"
+          }
+        }
+      }
+    },
     "Show volume changes in the notch" : {
       "localizations" : {
         "tr" : {
@@ -2800,16 +3227,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Denetim Merkezi gibi, hangi uygulama ne çalıyorsa gösterir: Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası; eklenti ya da Otomasyon izni gerekmez. Bunu küçük bir yardımcı, macOS'un kendi perl'ü üzerinden okur."
-          }
-        }
-      }
-    },
-    "Size" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boyut"
           }
         }
       }
@@ -2945,6 +3362,17 @@
         }
       }
     },
+    "Synthwave" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synthwave"
+          }
+        }
+      }
+    },
     "System" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -2962,6 +3390,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sekme"
+          }
+        }
+      }
+    },
+    "Tab name" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekme adı"
           }
         }
       }
@@ -3006,6 +3444,16 @@
         }
       }
     },
+    "Text size" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yazı boyutu"
+          }
+        }
+      }
+    },
     "That's the panel" : {
       "localizations" : {
         "tr" : {
@@ -3046,6 +3494,16 @@
         }
       }
     },
+    "The edge fades from this color into the accent." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kenar bu renkten vurgu rengine geçer."
+          }
+        }
+      }
+    },
     "The main display" : {
       "localizations" : {
         "tr" : {
@@ -3062,6 +3520,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Panel kısa bir an sonra açılır."
+          }
+        }
+      }
+    },
+    "The plan is ready for your review." : {
+      "comment" : "An AI agent waits for the user to approve its plan",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan incelemeni bekliyor."
+          }
+        }
+      }
+    },
+    "The same for every theme." : {
+      "comment" : "Appearance settings: the panel size doesn't change with the theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her temada aynı."
           }
         }
       }
@@ -3116,12 +3596,33 @@
         }
       }
     },
+    "Thinking…" : {
+      "comment" : "An AI agent is working on its answer",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düşünüyor…"
+          }
+        }
+      }
+    },
     "This request has hidden characters or is too long to show safely. Answer it in the terminal." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu istekte gizli karakterler var veya güvenle gösterilemeyecek kadar uzun. Terminalde yanıtlayın."
+          }
+        }
+      }
+    },
+    "This tab is empty." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sekme boş."
           }
         }
       }
@@ -3300,6 +3801,17 @@
         }
       }
     },
+    "Untitled Theme" : {
+      "comment" : "Theme without a name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adsız Tema"
+          }
+        }
+      }
+    },
     "Update Available: %@…" : {
       "comment" : "Menu item",
       "localizations" : {
@@ -3331,6 +3843,16 @@
         }
       }
     },
+    "Usage" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım"
+          }
+        }
+      }
+    },
     "Use my current location" : {
       "localizations" : {
         "tr" : {
@@ -3347,6 +3869,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konumumu Kullan"
+          }
+        }
+      }
+    },
+    "Using %@" : {
+      "comment" : "An AI agent uses a tool",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kullanıyor"
           }
         }
       }
@@ -3381,6 +3914,17 @@
         }
       }
     },
+    "Violet Night" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gece Moru"
+          }
+        }
+      }
+    },
     "Volume" : {
       "localizations" : {
         "tr" : {
@@ -3398,6 +3942,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bekliyor"
+          }
+        }
+      }
+    },
+    "Waiting for permission" : {
+      "comment" : "AI agent needs approval",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin bekliyor"
+          }
+        }
+      }
+    },
+    "Waiting for you" : {
+      "comment" : "AI agent needs input",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sizi bekliyor"
           }
         }
       }
@@ -3450,6 +4016,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cumba'ya hoş geldiniz"
+          }
+        }
+      }
+    },
+    "What Claude Code and Codex are doing, and their permission requests" : {
+      "comment" : "Widget description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code ve Codex'in ne yaptığı ve izin istekleri"
           }
         }
       }
@@ -3532,6 +4109,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalışıyor"
+          }
+        }
+      }
+    },
+    "Yesterday" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dün"
           }
         }
       }

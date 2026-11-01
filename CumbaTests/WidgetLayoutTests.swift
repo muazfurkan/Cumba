@@ -80,14 +80,14 @@ struct WidgetLayoutTests {
     #expect(layout.tabs[0].widgets == ["calendar"])
   }
 
-  @Test func unknownAndDuplicateKindsAreRemoved() {
+  @Test func unknownKindsAndDuplicatesWithinATabAreRemoved() {
     var layout = WidgetLayout(tabs: [
-      Tab(id: "a", title: "A", symbol: "star", widgets: ["timer", "warp-drive"]),
+      Tab(id: "a", title: "A", symbol: "star", widgets: ["timer", "warp-drive", "timer"]),
       Tab(id: "b", title: "B", symbol: "star", widgets: ["timer", "battery"]),
     ])
     layout.removeUnknown(knownKinds: ["timer", "battery"])
     #expect(layout.tabs[0].widgets == ["timer"])
-    #expect(layout.tabs[1].widgets == ["battery"])
+    #expect(layout.tabs[1].widgets == ["timer", "battery"])
   }
 }
 
@@ -118,7 +118,8 @@ struct LayoutStoreTests {
     defer { cleanUp() }
     let store = await makeStore()
     let tabID = store.addTab(title: "Work")
-    store.add("calendar", to: tabID)  // already placed in home; ignored
+    store.add("calendar", to: tabID)  // also stays in home
+    store.add("calendar", to: tabID)  // already in this tab; ignored
     store.remove("battery")
     store.add("battery", to: tabID)
     store.moveWidgets(in: "home", from: IndexSet(integer: 1), to: 0)
@@ -130,7 +131,7 @@ struct LayoutStoreTests {
     let reloaded = await makeStore()
     #expect(reloaded.layout.tabs.map(\.title) == [store.layout.tabs[0].title, "Work"])
     #expect(reloaded.layout.tabs[0].widgets == ["timer", "calendar"])
-    #expect(reloaded.layout.tabs[1].widgets == ["battery"])
+    #expect(reloaded.layout.tabs[1].widgets == ["calendar", "battery"])
   }
 
   @Test func removingATabMovesItsWidgetsToTheFirstTab() async {

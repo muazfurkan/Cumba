@@ -8,12 +8,15 @@ struct AppearanceSettingsView: View {
   let themes: ThemeStore
   let settings: AppSettings
   @State private var errorMessage: String?
+  @State private var isNamingTheme = false
+  @State private var newThemeName = ""
 
   private var current: Theme { themes.current }
   private var isBuiltIn: Bool { themes.isBuiltIn(current) }
 
   var body: some View {
     Form {
+      PanelSizeSection(size: Bindable(settings).panelSize)
       Section("Theme") {
         Picker("Theme", selection: selection) {
           ForEach(themes.themes) { theme in
@@ -21,8 +24,9 @@ struct AppearanceSettingsView: View {
           }
         }
         HStack {
-          Button("Duplicate") {
-            themes.duplicate(current, name: copyName)
+          Button("New Theme…") {
+            newThemeName = copyName
+            isNamingTheme = true
           }
           Button("Delete", role: .destructive) {
             themes.delete(current)
@@ -32,16 +36,22 @@ struct AppearanceSettingsView: View {
           Button("Import…", action: importTheme)
           Button("Export…", action: exportTheme)
         }
+        .alert("New Theme", isPresented: $isNamingTheme) {
+          TextField("Name", text: $newThemeName)
+          Button("Create", action: createTheme)
+          Button("Cancel", role: .cancel) {}
+        } message: {
+          Text("It starts from \(current.displayName).", comment: "New theme: the theme it copies")
+        }
         if isBuiltIn {
-          Text(
-            "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename."
-          )
-          .foregroundStyle(.secondary)
+          Text("Built-in themes can't be changed. To make your own from this one, click New Theme.")
+            .foregroundStyle(.secondary)
         } else {
           TextField("Name", text: themeBinding.name)
         }
       }
       ThemeEditorSections(theme: themeBinding)
+        .disabled(isBuiltIn)
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 620)
@@ -66,9 +76,15 @@ struct AppearanceSettingsView: View {
     String(localized: "\(current.displayName) Copy", comment: "Duplicated theme")
   }
 
-  /// Edits to a built-in theme go to a new copy, which is then selected.
+  /// Built-in themes are read-only; edits apply to the user's own themes.
   private var themeBinding: Binding<Theme> {
-    Binding(get: { themes.current }, set: { themes.edit($0, copyName: copyName) })
+    Binding(get: { themes.current }, set: { themes.update($0) })
+  }
+
+  /// Makes a user theme from the current one under the name typed in.
+  private func createTheme() {
+    let name = newThemeName.trimmingCharacters(in: .whitespacesAndNewlines)
+    themes.duplicate(current, name: name.isEmpty ? copyName : name)
   }
 
   private func importTheme() {

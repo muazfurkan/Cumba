@@ -11,6 +11,9 @@ struct CalendarEvent: Identifiable, Equatable, Sendable {
   let color: HexColor?
   /// Video call link found in the event's URL, location or notes.
   var meetingURL: URL?
+  var location: String?
+  /// The start of the event's notes, shown when the pointer rests on it.
+  var notes: String?
 }
 
 /// Finds a video call link in an event for the Join button. Only https links to known
@@ -76,13 +79,22 @@ actor CalendarService {
 
   /// Events from the start of today to the end of tomorrow that haven't ended yet.
   func upcomingEvents(now: Date = .now) -> [CalendarEvent] {
+    let start = Calendar.current.startOfDay(for: now)
+    guard let end = Calendar.current.date(byAdding: .day, value: 2, to: start) else { return [] }
+    return events(from: start, to: end).filter { $0.end > now }
+  }
+
+  /// Every event on one day, ended ones too, for looking at another day.
+  func events(on day: Date) -> [CalendarEvent] {
+    let start = Calendar.current.startOfDay(for: day)
+    guard let end = Calendar.current.date(byAdding: .day, value: 1, to: start) else { return [] }
+    return events(from: start, to: end)
+  }
+
+  private func events(from start: Date, to end: Date) -> [CalendarEvent] {
     guard Self.hasAccess else { return [] }
-    let calendar = Calendar.current
-    let start = calendar.startOfDay(for: now)
-    guard let end = calendar.date(byAdding: .day, value: 2, to: start) else { return [] }
     let predicate = store.predicateForEvents(withStart: start, end: end, calendars: nil)
     return store.events(matching: predicate)
-      .filter { $0.endDate > now }
       .sorted { $0.startDate < $1.startDate }
       .map { event in
         CalendarEvent(
@@ -92,8 +104,16 @@ actor CalendarService {
           end: event.endDate,
           isAllDay: event.isAllDay,
           color: event.calendar.flatMap { HexColor(cgColor: $0.cgColor) },
-          meetingURL: MeetingLink.find(url: event.url, texts: [event.location, event.notes]))
+          meetingURL: MeetingLink.find(url: event.url, texts: [event.location, event.notes]),
+          location: Self.trimmed(event.location, to: 120),
+          notes: Self.trimmed(event.notes, to: 300))
       }
+  }
+
+  private static func trimmed(_ text: String?, to length: Int) -> String? {
+    guard let text = text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty
+    else { return nil }
+    return text.count > length ? String(text.prefix(length - 1)) + "…" : text
   }
 }
 
