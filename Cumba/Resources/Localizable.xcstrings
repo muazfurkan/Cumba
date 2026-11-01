@@ -149,6 +149,17 @@
         }
       }
     },
+    "+%lld more" : {
+      "comment" : "More calendar events than fit",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld etkinlik daha"
+          }
+        }
+      }
+    },
     "1. Open chrome://extensions and turn on Developer mode.\n2. Click “Load unpacked” and choose the extension folder.\n3. Open the extension's options and paste the port and the token." : {
       "localizations" : {
         "tr" : {
@@ -2218,6 +2229,17 @@
         }
       }
     },
+    "Nothing planned for this day." : {
+      "comment" : "Calendar: no events on the picked day",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu gün için plan yok."
+          }
+        }
+      }
+    },
     "Nothing planned for today and tomorrow." : {
       "localizations" : {
         "tr" : {
@@ -4076,6 +4098,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalışıyor"
+          }
+        }
+      }
+    },
+    "Yesterday" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dün"
           }
         }
       }

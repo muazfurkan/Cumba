@@ -18,7 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
 - A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
 - Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
-- Swipe sideways with two fingers on the open panel to move between tabs.
+- Swipe sideways with two fingers on the open panel to move between tabs. A swipe over something that scrolls sideways, like the calendar's days, scrolls that instead.
+- Calendar: scroll the days or click one to see that day's events; alone in its tab, scroll up and down through the months and click a day. Click the month to go back to today. Resting the pointer on an event shows its location and notes, and events that are over are dimmed.
 - Four new built-in themes: Neon Tokyo (deep indigo with a pink to cyan neon edge and monospaced text), Sakura, Synthwave and Violet Night. Themes can now fade the background into a second color (Appearance > Material > Gradient) and draw a glowing neon edge around the open panel (Appearance > Colors > Neon edge).
 
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.

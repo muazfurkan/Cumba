@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import SwiftUI
 import Testing
 
 @testable import Cumba
@@ -66,5 +67,34 @@ struct TabSwipeHostTests {
     #expect(!host.selectTab(offset: 1))
     #expect(host.selectTab(offset: -1))
     #expect(host.selectedTab?.id == first)
+  }
+}
+
+@MainActor
+struct SidewaysScrollTests {
+  @Test func gesturesOverSidewaysScrollingContentAreLeftToIt() async throws {
+    let root = VStack(spacing: 0) {
+      ScrollView(.horizontal) {
+        LazyHStack(spacing: 0) {
+          ForEach(0..<50, id: \.self) { index in
+            Text(verbatim: "\(index)").frame(width: 40, height: 30)
+          }
+        }
+      }
+      .frame(width: 200, height: 40)
+      Text(verbatim: "below").frame(width: 200, height: 40)
+    }
+    let hosting = NSHostingView(rootView: root)
+    let window = NSWindow(
+      contentRect: NSRect(x: -5000, y: -5000, width: 200, height: 80), styleMask: .borderless,
+      backing: .buffered, defer: false)
+    window.contentView = hosting
+    window.orderBack(nil)
+    defer { window.orderOut(nil) }
+    try await Task.sleep(for: .milliseconds(300))
+    hosting.layoutSubtreeIfNeeded()
+
+    #expect(TabSwipeMonitor.scrollsSideways(at: NSPoint(x: 100, y: 60), in: window))
+    #expect(!TabSwipeMonitor.scrollsSideways(at: NSPoint(x: 100, y: 20), in: window))
   }
 }

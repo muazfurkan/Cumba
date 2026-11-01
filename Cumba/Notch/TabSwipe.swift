@@ -34,7 +34,9 @@ struct TabSwipeTracker {
 }
 
 /// Watches scroll events sent to the panel for a tab swipe. A local event monitor sees them
-/// before any scroll view in a widget does; the events still reach the widgets.
+/// before any scroll view in a widget does; the events still reach the widgets. A gesture
+/// that starts over content that scrolls sideways, like the calendar's days, belongs to
+/// that content.
 @MainActor
 final class TabSwipeMonitor {
   /// The panel's window; only its events count.
@@ -45,6 +47,7 @@ final class TabSwipeMonitor {
 
   private var monitor: Any?
   private var tracker = TabSwipeTracker()
+  private var gestureBelongsToContent = false
 
   func start() {
     guard monitor == nil else { return }
@@ -56,17 +59,42 @@ final class TabSwipeMonitor {
         let delta = CGSize(
           width: event.scrollingDeltaX * sign, height: event.scrollingDeltaY * sign)
         let window = event.window
-        MainActor.assumeIsolated { self?.handle(phase: phase, delta: delta, in: window) }
+        let point = event.locationInWindow
+        MainActor.assumeIsolated {
+          self?.handle(phase: phase, delta: delta, at: point, in: window)
+        }
       }
       return event
     }
   }
 
-  private func handle(phase: NSEvent.Phase, delta: CGSize, in eventWindow: NSWindow?) {
+  private func handle(
+    phase: NSEvent.Phase, delta: CGSize, at point: NSPoint, in eventWindow: NSWindow?
+  ) {
     guard let eventWindow, eventWindow === window(), isEnabled() else { return }
+    if phase.contains(.began) || phase.contains(.mayBegin) {
+      gestureBelongsToContent = Self.scrollsSideways(at: point, in: eventWindow)
+    }
+    guard !gestureBelongsToContent else { return }
     if let step = tracker.update(phase: phase, fingerDelta: delta) {
       onStep?(step)
     }
+  }
+}
+
+extension TabSwipeMonitor {
+  /// Whether the view under the point sits in a scroll view that can scroll sideways.
+  static func scrollsSideways(at point: NSPoint, in window: NSWindow) -> Bool {
+    var view = window.contentView?.hitTest(point)
+    while let current = view {
+      if let scrollView = current as? NSScrollView, let document = scrollView.documentView,
+        document.frame.width > scrollView.contentView.bounds.width + 1
+      {
+        return true
+      }
+      view = current.superview
+    }
+    return false
   }
 }
 
