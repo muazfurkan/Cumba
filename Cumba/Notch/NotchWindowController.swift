@@ -459,7 +459,7 @@ final class NotchWindowController {
   }
 
   private func makePanel() -> NotchPanel {
-    let panel = NotchPanel(showsInFullScreen: false)
+    let panel = NotchPanel(showsInFullScreen: true)
     let hostingView = NotchHostingView(rootView: NotchRootView(model: model, host: host))
     // The window size is fixed; SwiftUI must not resize it.
     hostingView.sizingOptions = []

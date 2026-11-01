@@ -28,7 +28,7 @@ macOS için ücretsiz ve açık kaynak bir notch uygulaması. MacBook notch'unu,
 - **İsteğe bağlı ekstralar** (siz açana kadar kapalı): paneli istediğiniz ekranda gösterme, sistemin ses ve parlaklık göstergeleri yerine notch, mikrofon veya kamera kullanılırken bir nokta, toplantılardan önce geri sayım, medya kaynağı seçimi ve [kendi script'leriniz için bir API](#scriptler).
 - **Canlı etkinlikler**: çalışan zamanlayıcı, çalışan bir yapay zeka ajanı, bekleyen bir istek, şarj, çalan şarkı ya da ses veya parlaklık değişikliği kapalı notch'un iki yanında görünür.
 - **Temalar**: düz siyah ve Liquid Glass'tan Neon Tokyo, Sakura ve Synthwave'e yedi hazır tema. Kendi temanızı yapın: cam, düz veya renkli cam, renk geçişli zemin, neon kenar, renkler, yazı tipi, köşe yuvarlaklığı, gölge ve animasyon. Panel boyutu ve yazı boyutu hangi temayı seçerseniz seçin aynı kalır. Temaları JSON olarak içe/dışa aktarın.
-- **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda gizlenir ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
+- **Yolunuza çıkmaz**: tıklamalar menü çubuğuna geçer, pencere sürüklerken panel açılmaz, tam ekran uygulamalarda da çalışır (isterseniz orada gizlenir) ve boşta CPU kullanımı sıfırdır. Ayarlar için notch'a sağ tıklayın.
 - Türkçe ve İngilizce arayüz.
 
 <a name="indirme"></a>

@@ -224,7 +224,7 @@ final class AppSettings {
     opensOnHover = defaults.object(forKey: Key.opensOnHover) as? Bool ?? true
     openDelay = defaults.object(forKey: Key.openDelay) as? Double ?? 0.15
     closeDelay = defaults.object(forKey: Key.closeDelay) as? Double ?? 0.4
-    hidesInFullScreen = defaults.object(forKey: Key.hidesInFullScreen) as? Bool ?? true
+    hidesInFullScreen = defaults.object(forKey: Key.hidesInFullScreen) as? Bool ?? false
     usesVirtualNotch = defaults.bool(forKey: Key.usesVirtualNotch)
     let port = defaults.integer(forKey: Key.serverPort)
     serverPort = (1024...65535).contains(port) ? UInt16(port) : LocalServer.defaultPort

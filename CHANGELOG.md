@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Volume and brightness changes beside the notch use a larger symbol and a longer bar.
 - Claude Code's pixel mascot replaces the sparkle for Claude sessions.
 - Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; click **Update** in Settings > Agents.
+- The notch works in full screen apps too. Hiding it there is now off by default; turn on **Hide in full screen apps** in Settings > Displays to keep the old behavior. A choice you made earlier stays.
 
 ## [1.1.0] - 2026-11-01
 

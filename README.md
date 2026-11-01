@@ -28,7 +28,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 - **Optional extras**, off until you turn them on: show the panel on any display, the notch in place of the system volume and brightness indicators, a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
 - **Live activities**: a running timer, a working AI agent, a pending request, charging, the current song or a volume or brightness change appear on both sides of the closed notch.
 - **Themes**: seven built in, from plain black and Liquid Glass to Neon Tokyo, Sakura and Synthwave. Make your own: glass, solid or tinted, a gradient background, a neon edge, colors, font, corner radius, shadow and animation. Panel size and text size stay the same whichever theme you pick. Import and export themes as JSON.
-- **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
+- **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, it works in full screen apps too (or hides there, if you like), and idle CPU use is zero. Right-click the notch for Settings.
 - English and Turkish interface.
 
 ## Download and install
