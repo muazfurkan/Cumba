@@ -61,6 +61,39 @@ struct HookPayload: Decodable, Sendable {
     return try? JSONDecoder().decode(HookPayload.self, from: data)
   }
 
+  /// Tools that ask the user something instead of asking to do something. Claude Code shows
+  /// the question or the plan itself; Allow or Deny from the notch would answer neither.
+  static let questionTools: Set<String> = ["AskUserQuestion", "ExitPlanMode"]
+
+  var isQuestion: Bool {
+    toolName.map(Self.questionTools.contains) ?? false
+  }
+
+  /// What a question tool asks, for the notch's waiting line.
+  var questionText: String? {
+    switch toolName {
+    case "AskUserQuestion":
+      guard case .array(let questions)? = toolInput?["questions"],
+        case .object(let first)? = questions.first
+      else { return nil }
+      return first["question"]?.string
+    case "ExitPlanMode":
+      return String(
+        localized: "The plan is ready for your review.",
+        comment: "An AI agent waits for the user to approve its plan")
+    default:
+      return nil
+    }
+  }
+
+  /// A tool's name short enough for beside the notch: an MCP tool without its server.
+  static func shortToolName(_ name: String) -> String {
+    guard name.hasPrefix("mcp__"), let tool = name.components(separatedBy: "__").last,
+      !tool.isEmpty
+    else { return name }
+    return tool
+  }
+
   /// What the permission request would do, in full and safe to show: the command for
   /// Bash, the file for edits, the URL for fetches, otherwise the whole tool input as JSON.
   var permissionDetail: SafeText {

@@ -3491,6 +3491,17 @@
         }
       }
     },
+    "The plan is ready for your review." : {
+      "comment" : "An AI agent waits for the user to approve its plan",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan incelemeni bekliyor."
+          }
+        }
+      }
+    },
     "The same for every theme." : {
       "comment" : "Appearance settings: the panel size doesn't change with the theme",
       "localizations" : {

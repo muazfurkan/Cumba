@@ -56,6 +56,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- When Claude Code asks a question or wants a plan approved, the notch no longer shows it as a permission request with Allow and Deny; Claude Code asks it itself, and the notch shows that the session is waiting, with the question under the notch.
+- Long tool and project names beside the closed notch are no longer cut off.
 - Notes were never saved: macOS 26.6 refuses writes with complete file protection. The note is now written atomically and readable only by you.
 - Context menus inside the panel (e.g. on files in the tray) now open; the notch's own menu used to replace them.
 

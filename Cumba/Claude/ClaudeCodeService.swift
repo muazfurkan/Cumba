@@ -79,8 +79,11 @@ final class ClaudeCodeService {
       update(id, payload, state: .working, step: AgentStep.thinking)
       refreshTranscript(of: id, path: payload.transcriptPath, force: false)
     case .notification:
-      // A pending request already shows; skip the duplicate "needs permission" notice.
-      if payload.notificationType == "permission_prompt" && permissions.hasPending(in: id) {
+      // A pending request or a question already shows; skip the duplicate notice.
+      if payload.notificationType == "permission_prompt",
+        permissions.hasPending(in: id)
+          || sessions.first(where: { $0.id == id })?.state == .waitingInput
+      {
         return
       }
       update(id, payload, state: .waitingInput, detail: payload.message)
@@ -119,6 +122,10 @@ final class ClaudeCodeService {
   func requestPermission(_ payload: HookPayload, agent: Agent = .claude) async
     -> PermissionBroker.Decision
   {
+    if payload.isQuestion {
+      showQuestion(payload, agent: agent)
+      return .askInTerminal
+    }
     let detail = payload.permissionDetail
     let toolName = SafeText(payload.toolName ?? "?").text
     let request = PermissionBroker.Request(
@@ -135,6 +142,19 @@ final class ClaudeCodeService {
       updateWorkingActivity()
     }
     return decision
+  }
+
+  /// A question or a plan to approve: Claude Code asks it in its own window, and the notch
+  /// says the session is waiting, with the question under the notch.
+  private func showQuestion(_ payload: HookPayload, agent: Agent) {
+    let question = payload.questionText.map { SafeText($0).text }
+    update(payload.sessionID, payload, state: .waitingInput, detail: question)
+    tag(payload.sessionID, with: agent)
+    updateWorkingActivity()
+    showStatus(
+      symbol: "questionmark.bubble.fill", color: .orange, project: payload.project,
+      text: String(localized: "Waiting for you", comment: "AI agent needs input"),
+      banner: question)
   }
 
   func answer(_ request: PermissionBroker.Request, with decision: PermissionBroker.Decision) {
@@ -219,13 +239,14 @@ final class ClaudeCodeService {
       return
     }
     let count = permissions.pending.count
+    let tool = HookPayload.truncate(HookPayload.shortToolName(first.toolName), to: 24)
+    let label = count > 1 ? "\(tool) +\(count - 1)" : tool
     liveActivities.show(
       LiveActivity(
         id: Self.permissionActivityID, priority: .claudePermission,
         leading: AnyView(Image(systemName: "hand.raised.fill").foregroundStyle(.orange)),
-        trailing: AnyView(
-          Text(count > 1 ? "\(first.toolName) +\(count - 1)" : first.toolName)
-            .font(.caption.weight(.semibold)))))
+        trailing: AnyView(Text(verbatim: label).font(.caption.weight(.semibold))),
+        sideWidth: LiveActivity.sideWidth(for: label)))
   }
 
   /// A short status beside the notch, with a line under it when there's something to say.
@@ -240,6 +261,7 @@ final class ClaudeCodeService {
         trailing: AnyView(
           Text(project).font(.caption.weight(.medium)).help(text).accessibilityLabel(
             Text("\(project): \(text)"))),
+        sideWidth: LiveActivity.sideWidth(for: project),
         banner: line.map { line in
           AnyView(
             Text(line)

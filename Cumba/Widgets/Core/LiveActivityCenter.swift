@@ -33,6 +33,16 @@ struct LiveActivity: Identifiable {
   var sideWidth: CGFloat? = nil
   /// A line shown under the notch, e.g. an agent's answer when it finishes.
   var banner: AnyView? = nil
+
+  /// Side width that fits a short label in the peek's caption font, so it isn't cut off;
+  /// at most 180 points.
+  @MainActor
+  static func sideWidth(for label: String) -> CGFloat {
+    let size = NSFont.preferredFont(forTextStyle: .caption1).pointSize
+    let font = NSFont.systemFont(ofSize: size, weight: .semibold)
+    let width = (label as NSString).size(withAttributes: [.font: font]).width
+    return min(ceil(width) + 20, 180)
+  }
   var startedAt = Date()
 }
 
