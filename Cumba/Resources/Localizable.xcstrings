@@ -2787,6 +2787,28 @@
         }
       }
     },
+    "Open on" : {
+      "comment" : "Settings row: which tab the panel opens on",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şurada aç"
+          }
+        }
+      }
+    },
+    "Open on the agents' tab while one works" : {
+      "comment" : "Settings toggle",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir ajan çalışırken ajanların sekmesinde aç"
+          }
+        }
+      }
+    },
     "Open Privacy Settings" : {
       "localizations" : {
         "tr" : {
@@ -2844,6 +2866,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Açılış"
+          }
+        }
+      }
+    },
+    "Opening Tab" : {
+      "comment" : "Settings section",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açılış Sekmesi"
           }
         }
       }
@@ -4170,6 +4203,28 @@
         }
       }
     },
+    "The tab it was left on" : {
+      "comment" : "Settings: which tab the panel opens on",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En son açık kalan sekme"
+          }
+        }
+      }
+    },
+    "The tab the panel shows each time it opens." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel her açıldığında gösterilecek sekme."
+          }
+        }
+      }
+    },
     "The theme file couldn't be used." : {
       "localizations" : {
         "tr" : {
@@ -4741,6 +4796,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Açık paneldeki sekmelerin yeri ve görünüşü."
+          }
+        }
+      }
+    },
+    "While Claude Code or Codex works, the panel opens on the tab with the AI Agents widget instead." : {
+      "comment" : "Help for a setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code ya da Codex çalışırken panel, Yapay Zeka Ajanları widget'ının olduğu sekmede açılır."
           }
         }
       }

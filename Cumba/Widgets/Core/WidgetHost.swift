@@ -24,6 +24,11 @@ final class WidgetHost {
   /// that way.
   private(set) var pageDirection = 1
 
+  /// The tab the panel opens on, from Settings; nil opens the tab it was left on.
+  @ObservationIgnored var openingTab: String?
+  /// While an agent works, the panel opens on the tab with its widget.
+  @ObservationIgnored var opensAgentTab = true
+
   @ObservationIgnored private var activeKinds: Set<String> = []
   @ObservationIgnored private var isPanelOpen = false
 
@@ -61,6 +66,18 @@ final class WidgetHost {
     updateActivation()
   }
 
+  /// The tab opening the panel shows: the agents' tab while one works (if wanted), else the
+  /// chosen opening tab; nil keeps the tab it was left on.
+  var tabToOpen: String? {
+    if opensAgentTab, claude.sessions.contains(where: \.isActive),
+      let tab = tabs.first(where: { $0.widgets.contains(ClaudeCodeWidget.kind) })
+    {
+      return tab.id
+    }
+    guard let openingTab, tabs.contains(where: { $0.id == openingTab }) else { return nil }
+    return openingTab
+  }
+
   /// The tab a swipe in progress is revealing, beside the open one.
   var swipeNeighbor: WidgetLayout.Tab? {
     guard pageDrag != 0, let index = tabs.firstIndex(where: { $0.id == selectedTab?.id })
@@ -71,12 +88,8 @@ final class WidgetHost {
 
   func panelOpenChanged(_ isOpen: Bool) {
     isPanelOpen = isOpen
-    // While an agent works, opening the panel shows the tab with its widget.
-    if isOpen, claude.sessions.contains(where: \.isActive),
-      selectedTab?.widgets.contains(ClaudeCodeWidget.kind) != true,
-      let tab = tabs.first(where: { $0.widgets.contains(ClaudeCodeWidget.kind) })
-    {
-      selectedTabID = tab.id
+    if isOpen, let tab = tabToOpen {
+      selectedTabID = tab
     }
     if !isOpen {
       isShowingGallery = false

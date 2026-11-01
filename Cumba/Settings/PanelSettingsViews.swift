@@ -39,6 +39,18 @@ struct DisplaysSettingsView: View {
 struct BehaviorSettingsView: View {
   let info: SettingsPageInfo
   @Bindable var settings: AppSettings
+  let layoutStore: LayoutStore
+
+  /// A tab that was deleted since reads as the tab it was left on.
+  private var openingTab: Binding<String?> {
+    Binding(
+      get: {
+        settings.openingTab.flatMap { id in
+          layoutStore.layout.tabs.contains { $0.id == id } ? id : nil
+        }
+      },
+      set: { settings.openingTab = $0 })
+  }
 
   var body: some View {
     SettingsForm(info: info) {
@@ -58,6 +70,24 @@ struct BehaviorSettingsView: View {
         }
         DelaySlider(
           title: "Close delay", value: $settings.closeDelay, range: AppSettings.closeDelayRange)
+      }
+      Section("Opening Tab") {
+        Picker(selection: openingTab) {
+          Text("The tab it was left on").tag(String?.none)
+          Divider()
+          ForEach(layoutStore.layout.tabs) { tab in
+            Label(tab.title, systemImage: tab.symbol).tag(Optional(tab.id))
+          }
+        } label: {
+          InfoLabel("Open on", help: "The tab the panel shows each time it opens.")
+        }
+        Toggle(isOn: $settings.opensAgentTab) {
+          InfoLabel(
+            "Open on the agents' tab while one works",
+            help:
+              "While Claude Code or Codex works, the panel opens on the tab with the AI Agents widget instead."
+          )
+        }
       }
       Section("Feedback") {
         Toggle(isOn: $settings.hapticFeedback) {

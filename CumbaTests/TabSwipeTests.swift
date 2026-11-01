@@ -83,6 +83,12 @@ struct TabSwipeHostTests {
     host.dragPages(to: -120)
     #expect(host.endPageDrag(travel: -120))
     #expect(host.selectedTab?.id == second)
+    // The panel opens on the chosen tab, or the one it was left on.
+    #expect(host.tabToOpen == nil)
+    host.openingTab = first
+    #expect(host.tabToOpen == first)
+    host.openingTab = "deleted"
+    #expect(host.tabToOpen == nil)
     // Past the last tab the pages only give a little.
     host.dragPages(to: -80)
     #expect(host.swipeNeighbor == nil)

@@ -22,6 +22,8 @@ final class AppSettings {
     static let notchApprovals = "notchApprovals"
     static let panelScreen = "panelScreen"
     static let tabBarStyle = "tabBarStyle"
+    static let openingTab = "openingTab"
+    static let opensAgentTab = "opensAgentTab"
     /// Before tab bar styles: "bottom" or "top".
     static let tabBarPosition = "tabBarPosition"
     static let panelSize = "panelSize"
@@ -96,6 +98,16 @@ final class AppSettings {
 
   var tabBarStyle: TabBarStyle {
     didSet { defaults.set(tabBarStyle.rawValue, forKey: Key.tabBarStyle) }
+  }
+
+  /// The tab the panel opens on; nil opens the tab it was left on.
+  var openingTab: String? {
+    didSet { defaults.set(openingTab, forKey: Key.openingTab) }
+  }
+
+  /// While an agent works, the panel opens on the tab with the AI Agents widget instead.
+  var opensAgentTab: Bool {
+    didSet { defaults.set(opensAgentTab, forKey: Key.opensAgentTab) }
   }
 
   /// The panel's size and text size, the same for every theme.
@@ -215,6 +227,8 @@ final class AppSettings {
     tabBarStyle =
       defaults.string(forKey: Key.tabBarStyle).flatMap(TabBarStyle.init(rawValue:))
       ?? Self.legacyTabBarStyle(defaults.string(forKey: Key.tabBarPosition))
+    openingTab = defaults.string(forKey: Key.openingTab)
+    opensAgentTab = defaults.object(forKey: Key.opensAgentTab) as? Bool ?? true
     panelSize =
       defaults.data(forKey: Key.panelSize).flatMap {
         try? JSONDecoder().decode(PanelSize.self, from: $0)

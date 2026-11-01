@@ -165,6 +165,8 @@ final class NotchWindowController {
       _ = settings.usesVirtualNotch
       _ = settings.panelScreen
       _ = settings.tabBarStyle
+      _ = settings.openingTab
+      _ = settings.opensAgentTab
       _ = settings.panelSize
       _ = settings.isPreviewingAppearance
       _ = settings.notchPreview
@@ -298,6 +300,8 @@ final class NotchWindowController {
     model.theme = themes.current
     model.textScale = settings.panelSize.textScale
     model.tabBarStyle = settings.tabBarStyle
+    host.openingTab = settings.openingTab
+    host.opensAgentTab = settings.opensAgentTab
     model.opensOnHover = settings.opensOnHover
     model.openDelay = .milliseconds(Int(settings.openDelay * 1000))
     model.closeDelay = .milliseconds(Int(settings.closeDelay * 1000))

@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - A new Settings window, laid out like System Settings: a searchable sidebar with pages in three groups (General, Appearance, Displays, Behavior, Indicators and Permissions; Widgets, with a page for each widget that has settings; Agents and Connections). Each page starts with its icon, title and what it's for, rows explain themselves with an ⓘ, and switches sit on the right.
+- Settings > Behavior > Opening Tab: open the panel on a tab of your choice or the one it was left on, and choose whether it opens on the agents' tab while Claude Code or Codex works.
 - Tab bar styles (Appearance > Tabs): Compact, a bar of its own under the panel with the open tab's name; Symbols; Dots; In the Panel; and At the Top. New installations use Compact; your earlier choice carries over. Themes and tab styles are picked from cards with a small preview.
 
 - Agent notifications: when Claude Code or Codex asks a question, wants a plan approved, needs permission, finishes or stops with an error, a notification opens under the notch. It shows the agent's mark with a badge, a title that says what happened ("Claude is asking a question"), the project, one line of detail and **Open**, which brings the app the agent runs in to the front (or opens the panel). It then folds into the agent's mark and a badge beside the notch; questions and requests stay there until answered. Resting the pointer on a notification keeps it open.

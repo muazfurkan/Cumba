@@ -102,7 +102,7 @@ struct SettingsRootView: View {
     case .displays:
       DisplaysSettingsView(info: info, settings: settings)
     case .behavior:
-      BehaviorSettingsView(info: info, settings: settings)
+      BehaviorSettingsView(info: info, settings: settings, layoutStore: layoutStore)
     case .indicators:
       IndicatorsSettingsView(info: info, settings: settings)
     case .permissions:
