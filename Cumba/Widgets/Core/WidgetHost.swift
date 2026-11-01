@@ -15,6 +15,14 @@ final class WidgetHost {
   private(set) var isShowingGallery = false
   /// The open tab's editor shows instead of its widgets.
   private(set) var isEditing = false
+  /// How far a two-finger swipe has dragged the pages; 0 while no swipe is under way.
+  var pageDrag: CGFloat = 0
+  /// A page sliding off to one side after a tab change or a swipe let go too early, until
+  /// its animation ends.
+  var leavingPage: LeavingPage?
+  /// +1 when the last tab change went to a later tab, -1 to an earlier one; pages slide
+  /// that way.
+  private(set) var pageDirection = 1
 
   @ObservationIgnored private var activeKinds: Set<String> = []
   @ObservationIgnored private var isPanelOpen = false
@@ -43,9 +51,22 @@ final class WidgetHost {
   }
 
   func select(_ tabID: String) {
+    if let from = tabs.firstIndex(where: { $0.id == selectedTab?.id }),
+      let to = tabs.firstIndex(where: { $0.id == tabID }), from != to
+    {
+      pageDirection = to > from ? 1 : -1
+    }
     selectedTabID = tabID
     isShowingGallery = false
     updateActivation()
+  }
+
+  /// The tab a swipe in progress is revealing, beside the open one.
+  var swipeNeighbor: WidgetLayout.Tab? {
+    guard pageDrag != 0, let index = tabs.firstIndex(where: { $0.id == selectedTab?.id })
+    else { return nil }
+    let neighbor = index + (pageDrag < 0 ? 1 : -1)
+    return tabs.indices.contains(neighbor) ? tabs[neighbor] : nil
   }
 
   func panelOpenChanged(_ isOpen: Bool) {
@@ -60,6 +81,8 @@ final class WidgetHost {
     if !isOpen {
       isShowingGallery = false
       isEditing = false
+      pageDrag = 0
+      leavingPage = nil
     }
     updateActivation()
   }
@@ -160,8 +183,10 @@ final class WidgetHost {
     updateActivation()
   }
 
-  private func updateActivation() {
-    let visible = isPanelOpen ? Set(selectedTab?.widgets ?? []) : []
+  /// The open tab's widgets are active, and while a swipe reveals a neighbor, its widgets too.
+  func updateActivation() {
+    let shown = (selectedTab?.widgets ?? []) + (swipeNeighbor?.widgets ?? [])
+    let visible = isPanelOpen ? Set(shown) : []
     for kind in activeKinds.subtracting(visible) {
       registry.widget(kind)?.deactivate()
     }
@@ -182,9 +207,7 @@ struct WidgetTabBar: View {
         ForEach(host.tabs) { tab in
           let isSelected = tab.id == host.selectedTab?.id
           Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-              host.select(tab.id)
-            }
+            host.slide(to: tab.id)
           } label: {
             Image(systemName: tab.symbol)
               .symbolVariant(isSelected ? .fill : .none)
@@ -223,14 +246,14 @@ struct WidgetTabBar: View {
   }
 }
 
-/// The widgets of the selected tab side by side, sized by their units. An empty tab offers
-/// to add one.
+/// A tab's widgets side by side, sized by their units. An empty tab offers to add one.
 struct WidgetRow: View {
   let host: WidgetHost
+  let tab: WidgetLayout.Tab?
   let secondary: Color
 
   var body: some View {
-    let kinds = (host.selectedTab?.widgets ?? []).filter { host.registry.widget($0) != nil }
+    let kinds = (tab?.widgets ?? []).filter { host.registry.widget($0) != nil }
     if kinds.isEmpty {
       EmptyTabView(secondary: secondary) {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
@@ -263,54 +286,4 @@ struct WidgetRow: View {
       }
     }
   }
-}
-
-/// Live activity on both sides of the closed notch.
-struct PeekView: View {
-  let activity: LiveActivity
-  let notchWidth: CGFloat
-  let sideWidth: CGFloat
-  let height: CGFloat
-
-  var body: some View {
-    VStack(spacing: 0) {
-      row
-        .frame(height: height)
-      if let banner = activity.banner {
-        banner
-          .padding(.horizontal, 16)
-          .frame(height: NotchLayout.bannerHeight)
-      }
-    }
-    .panelFont(.caption)
-    .environment(\.peekHeight, height)
-    // Beside the notch there is no room to grow, so the text size setting doesn't apply.
-    .environment(\.panelTextScale, 1)
-    .accessibilityElement(children: .combine)
-  }
-
-  private var row: some View {
-    HStack(spacing: 0) {
-      // Clipped to the side, so nothing can slide under the camera housing where it can't
-      // be seen; the full height keeps strokes and glyph edges whole.
-      activity.leading
-        .frame(width: sideWidth, height: height)
-        .clipped()
-      Color.clear
-        .frame(width: notchWidth)
-      activity.trailing
-        .lineLimit(1)
-        .minimumScaleFactor(0.7)
-        .frame(width: sideWidth, height: height)
-        .clipped()
-    }
-  }
-}
-
-extension EnvironmentValues {
-  /// Height of the closed notch, so live activities can size their content to it.
-  @Entry var peekHeight: CGFloat = 32
-  /// The widget is alone in its tab and has room for its detailed view; with others it
-  /// shows a compact summary.
-  @Entry var showsDetailedWidget = false
 }

@@ -28,6 +28,23 @@ struct ThemeTests {
     try JSONDecoder().decode(Theme.self, from: Data(json.utf8))
   }
 
+  @Test func volumeAndBrightnessAreWhiteInClassicThemesAndTheThemesOwnInTheOthers() throws {
+    for theme in [Theme.classic, .glass, .midnight] {
+      #expect(theme.indicatorColor == .white)
+      #expect(theme.indicatorColors == [.white])
+    }
+    for theme in [Theme.neonTokyo, .sakura, .synthwave, .violetNight] {
+      #expect(theme.indicatorColor == .theme)
+    }
+    #expect(Theme.neonTokyo.indicatorColors.count == 2)
+    // Older theme files have no indicator color and get white.
+    #expect(try decode(#"{"id":"x","name":"X"}"#).indicatorColor == .white)
+    var theme = Theme.classic
+    theme.indicatorColor = .pink
+    let data = try JSONEncoder().encode(theme)
+    #expect(try JSONDecoder().decode(Theme.self, from: data).indicatorColor == .pink)
+  }
+
   @Test func decodesTheSpecExample() throws {
     let theme = try decode(
       """

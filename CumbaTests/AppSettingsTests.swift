@@ -27,12 +27,24 @@ struct AppSettingsTests {
     #expect(settings.showsBrightnessChanges)
     #expect(settings.replacesVolumeIndicator == false)
     #expect(settings.replacesBrightnessIndicator == false)
+    #expect(settings.showsLowBattery)
 
     settings.showsVolumeChanges = false
     settings.showsBrightnessChanges = false
     let reloaded = AppSettings(defaults: defaults)
     #expect(reloaded.showsVolumeChanges == false)
     #expect(reloaded.showsBrightnessChanges == false)
+  }
+
+  @Test(arguments: [
+    (20, false, true), (21, false, false), (5, true, false), (100, false, false),
+  ])
+  func batteryIsLowOnlyOnBatteryAtTwentyPercentOrLess(
+    percent: Int, isPluggedIn: Bool, expected: Bool
+  ) {
+    let status = BatteryWidget.Status(
+      percent: percent, isCharging: isPluggedIn, isPluggedIn: isPluggedIn)
+    #expect(status.isLow == expected)
   }
 
   @Test func panelSizePersistsAndTakesAnOldThemeSizeOnce() throws {

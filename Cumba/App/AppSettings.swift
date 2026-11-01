@@ -28,6 +28,7 @@ final class AppSettings {
     static let showsBrightnessChanges = "showsBrightnessChanges"
     static let replacesBrightnessIndicator = "replacesBrightnessIndicator"
     static let showsPrivacyIndicators = "showsPrivacyIndicators"
+    static let showsLowBattery = "showsLowBattery"
     static let scriptActivitiesEnabled = "scriptActivitiesEnabled"
   }
 
@@ -145,6 +146,11 @@ final class AppSettings {
     didSet { defaults.set(showsPrivacyIndicators, forKey: Key.showsPrivacyIndicators) }
   }
 
+  /// Shows the battery beside the notch while it's low and the charger isn't plugged in.
+  var showsLowBattery: Bool {
+    didSet { defaults.set(showsLowBattery, forKey: Key.showsLowBattery) }
+  }
+
   /// Lets local scripts show activities through `/activity` on the private socket.
   var scriptActivitiesEnabled: Bool {
     didSet { defaults.set(scriptActivitiesEnabled, forKey: Key.scriptActivitiesEnabled) }
@@ -158,6 +164,9 @@ final class AppSettings {
   /// True while the Appearance settings are visible; the panel stays open as a live preview.
   /// Not saved.
   var isPreviewingAppearance = false
+  /// While a size slider for the closed notch or the space beside it is dragged, the
+  /// preview shows that state instead of the open panel. Not saved.
+  var notchPreview: NotchPreview?
 
   /// Login item state as last reported by the system.
   private(set) var launchAtLogin: SMAppService.Status = .notRegistered
@@ -196,6 +205,7 @@ final class AppSettings {
     showsBrightnessChanges = defaults.object(forKey: Key.showsBrightnessChanges) as? Bool ?? true
     replacesBrightnessIndicator = defaults.bool(forKey: Key.replacesBrightnessIndicator)
     showsPrivacyIndicators = defaults.bool(forKey: Key.showsPrivacyIndicators)
+    showsLowBattery = defaults.object(forKey: Key.showsLowBattery) as? Bool ?? true
     scriptActivitiesEnabled = defaults.bool(forKey: Key.scriptActivitiesEnabled)
   }
 
@@ -228,4 +238,12 @@ final class AppSettings {
   func refreshLaunchAtLogin() async {
     launchAtLogin = await Task.detached { SMAppService.mainApp.status }.value
   }
+}
+
+/// What the Appearance preview shows while a size slider is dragged.
+enum NotchPreview: Sendable {
+  /// The closed notch, even while something shows beside it.
+  case closed
+  /// Something beside the notch, a sample if nothing is there.
+  case peek
 }

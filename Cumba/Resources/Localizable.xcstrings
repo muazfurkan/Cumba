@@ -12,6 +12,50 @@
         }
       }
     },
+    "%@ has a plan for you to review" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ planını onayına sunuyor"
+          }
+        }
+      }
+    },
+    "%@ is asking a question" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bir soru soruyor"
+          }
+        }
+      }
+    },
+    "%@ is done" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bitirdi"
+          }
+        }
+      }
+    },
+    "%@ is waiting for you" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ seni bekliyor"
+          }
+        }
+      }
+    },
     "%@ isn't valid JSON. Fix it first; nothing was changed." : {
       "localizations" : {
         "tr" : {
@@ -33,6 +77,17 @@
         }
       }
     },
+    "%@ needs your permission" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ izin istiyor"
+          }
+        }
+      }
+    },
     "%@ of the context window used" : {
       "comment" : "How full an AI agent session's context is",
       "localizations" : {
@@ -40,6 +95,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bağlam penceresinin %@ kadarı kullanıldı"
+          }
+        }
+      }
+    },
+    "%@ stopped with an error" : {
+      "comment" : "Notification title; the argument is an AI agent's name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bir hatayla durdu"
           }
         }
       }
@@ -94,6 +160,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@: %@"
+          }
+        }
+      }
+    },
+    "%lld Files" : {
+      "comment" : "Clipboard item kind",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Dosya"
           }
         }
       }
@@ -236,6 +313,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widget Ekle"
+          }
+        }
+      }
+    },
+    "Add new screenshots" : {
+      "comment" : "Clipboard History setting",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni ekran görüntülerini ekle"
           }
         }
       }
@@ -564,6 +652,17 @@
         }
       }
     },
+    "Blue" : {
+      "comment" : "Indicator color",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mavi"
+          }
+        }
+      }
+    },
     "Bottom color" : {
       "comment" : "Theme editor: the color a gradient background fades into",
       "localizations" : {
@@ -616,12 +715,13 @@
         }
       }
     },
-    "Built-in themes can't be changed. To make your own from this one, click New Theme." : {
+    "Built-in themes keep their name. Your changes are saved with them." : {
+      "comment" : "Appearance settings, shown for a built-in theme",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hazır temalar değiştirilemez. Bu temadan kendi temanızı yapmak için Yeni Tema'ya tıklayın."
+            "value" : "Hazır temaların adı değişmez; yaptığınız değişiklikler onlarla birlikte kaydedilir."
           }
         }
       }
@@ -666,12 +766,45 @@
         }
       }
     },
+    "Closed notch height" : {
+      "comment" : "Settings slider: how far the closed notch reaches below the camera",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı notch yüksekliği"
+          }
+        }
+      }
+    },
+    "Closed notch width" : {
+      "comment" : "Settings slider: how far the closed notch reaches past the camera on each side",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı notch genişliği"
+          }
+        }
+      }
+    },
     "Codex runs new hooks only after you trust them: after installing, run /hooks in Codex once and trust Cumba's hooks." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Codex yeni hook'ları ancak onlara güvendiğinizde çalıştırır: kurduktan sonra Codex'te bir kez /hooks komutunu çalıştırıp Cumba'nın hook'larına güvenin."
+          }
+        }
+      }
+    },
+    "Color of the volume and brightness levels beside the notch." : {
+      "comment" : "Theme editor help",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'un yanındaki ses ve parlaklık göstergelerinin rengi."
           }
         }
       }
@@ -1051,16 +1184,6 @@
         }
       }
     },
-    "Copied texts appear here." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kopyaladığınız metinler burada görünür."
-          }
-        }
-      }
-    },
     "Copied. It contains no personal data." : {
       "localizations" : {
         "tr" : {
@@ -1168,6 +1291,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oluştur"
+          }
+        }
+      }
+    },
+    "Cumba can't read that folder. Allow it in Privacy & Security > Files and Folders." : {
+      "comment" : "Clipboard History setting, when the screenshot folder can't be read",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumba bu klasörü okuyamıyor. Gizlilik ve Güvenlik > Dosyalar ve Klasörler'den izin verin."
           }
         }
       }
@@ -1348,17 +1482,6 @@
         }
       }
     },
-    "Error" : {
-      "comment" : "Claude Code stopped with an error",
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hata"
-          }
-        }
-      }
-    },
     "Error: %@" : {
       "comment" : "Claude Code error",
       "localizations" : {
@@ -1386,6 +1509,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dışa Aktar…"
+          }
+        }
+      }
+    },
+    "File" : {
+      "comment" : "Clipboard item kind",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosya"
           }
         }
       }
@@ -1489,6 +1623,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renk geçişi"
+          }
+        }
+      }
+    },
+    "Green" : {
+      "comment" : "Indicator color",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeşil"
           }
         }
       }
@@ -1606,6 +1751,17 @@
         }
       }
     },
+    "Image" : {
+      "comment" : "Clipboard item kind",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görsel"
+          }
+        }
+      }
+    },
     "Import…" : {
       "localizations" : {
         "tr" : {
@@ -1642,16 +1798,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ön sürümleri dahil et"
-          }
-        }
-      }
-    },
-    "Indicator width" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gösterge genişliği"
           }
         }
       }
@@ -1767,6 +1913,17 @@
         }
       }
     },
+    "Link" : {
+      "comment" : "Clipboard item kind",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlantı"
+          }
+        }
+      }
+    },
     "Liquid Glass" : {
       "localizations" : {
         "tr" : {
@@ -1833,6 +1990,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uzun Mola"
+          }
+        }
+      }
+    },
+    "Low battery" : {
+      "comment" : "Accessibility label of the low battery percentage beside the notch",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pil zayıf"
           }
         }
       }
@@ -2411,6 +2579,17 @@
         }
       }
     },
+    "Orange" : {
+      "comment" : "Indicator color",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turuncu"
+          }
+        }
+      }
+    },
     "Other Apps" : {
       "comment" : "Media source",
       "localizations" : {
@@ -2515,6 +2694,17 @@
         }
       }
     },
+    "Pink" : {
+      "comment" : "Indicator color",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pembe"
+          }
+        }
+      }
+    },
     "Planning" : {
       "comment" : "An AI agent updates its plan",
       "localizations" : {
@@ -2603,6 +2793,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İlerleme"
+          }
+        }
+      }
+    },
+    "Purple" : {
+      "comment" : "Indicator color",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mor"
           }
         }
       }
@@ -2770,12 +2971,34 @@
         }
       }
     },
+    "Restore Defaults" : {
+      "comment" : "Button: undoes the changes to a built-in theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılanlara Dön"
+          }
+        }
+      }
+    },
     "Resume" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Devam Et"
+          }
+        }
+      }
+    },
+    "Review" : {
+      "comment" : "Notification button: opens the request",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İncele"
           }
         }
       }
@@ -2899,6 +3122,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kaydetmek dosyayı standart bir biçimde de yeniden yazar (anahtarlar sıralı, iki boşluk girinti). İçerik yalnızca aşağıda gösterildiği kadar değişir."
+          }
+        }
+      }
+    },
+    "Screenshot" : {
+      "comment" : "Clipboard item kind",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran görüntüsü"
+          }
+        }
+      }
+    },
+    "Screenshots saved to %@ are added as they appear; only their location is kept. macOS asks once for access to that folder." : {
+      "comment" : "Clipboard History setting; the argument is a folder name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ klasörüne kaydedilen ekran görüntüleri kaydedildikçe eklenir; yalnızca konumları tutulur. macOS bu klasöre erişim için bir kez izin ister."
           }
         }
       }
@@ -3125,6 +3370,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Göster"
+          }
+        }
+      }
+    },
+    "Show a low battery in the notch" : {
+      "comment" : "Settings toggle",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düşük pili notch'ta göster"
           }
         }
       }
@@ -3535,13 +3791,13 @@
         }
       }
     },
-    "The same for every theme." : {
-      "comment" : "Appearance settings: the panel size doesn't change with the theme",
+    "The same for every theme. Width beside the notch is the room for music, timers and other indicators on both sides of the camera; the closed notch values are how far it reaches past the camera. While you drag these three, the notch shows them." : {
+      "comment" : "Footer of the Panel Size settings",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Her temada aynı."
+            "value" : "Her tema için aynıdır. Notch'un yanındaki genişlik, kameranın iki yanında müzik, zamanlayıcı ve diğer göstergeler için ayrılan alandır; kapalı notch değerleri, notch'un kameranın ne kadar dışına taşacağını belirler. Bu üçünü sürüklerken notch bunları gösterir."
           }
         }
       }
@@ -3592,6 +3848,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tema"
+          }
+        }
+      }
+    },
+    "Theme colors" : {
+      "comment" : "Indicator color: the theme's own",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tema renkleri"
           }
         }
       }
@@ -3935,13 +4202,13 @@
         }
       }
     },
-    "Waiting" : {
-      "comment" : "Claude Code is waiting for the user",
+    "Volume and brightness" : {
+      "comment" : "Theme editor: color of the volume and brightness levels",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bekliyor"
+            "value" : "Ses ve parlaklık"
           }
         }
       }
@@ -4031,6 +4298,28 @@
         }
       }
     },
+    "What you copied lately: text, links, images and files, kept in memory only" : {
+      "comment" : "Widget description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son kopyaladıklarınız: metin, bağlantı, görsel ve dosyalar; yalnızca bellekte tutulur"
+          }
+        }
+      }
+    },
+    "What you copy appears here." : {
+      "comment" : "Clipboard History, empty",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopyaladıklarınız burada görünür."
+          }
+        }
+      }
+    },
     "When the pointer rests on the notch" : {
       "localizations" : {
         "tr" : {
@@ -4041,12 +4330,24 @@
         }
       }
     },
-    "While this widget is in the panel, Cumba checks once a second whether the clipboard changed and keeps your last %lld copied texts in memory. Passwords and other items apps mark as private are skipped, and nothing is saved to disk. macOS may ask once whether Cumba may read what you copy." : {
+    "While this widget is in the panel, Cumba checks once a second whether the clipboard changed and keeps your last %lld copies (text, links, images and files) in memory. Passwords and other items apps mark as private are skipped, and nothing is saved to disk. macOS may ask once whether Cumba may read what you copy." : {
+      "comment" : "Clipboard History settings",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu widget paneldeyken Cumba panonun değişip değişmediğini saniyede bir kontrol eder ve kopyaladığınız son %lld metni bellekte tutar. Parolalar ve uygulamaların gizli olarak işaretlediği öğeler alınmaz, diske hiçbir şey kaydedilmez. macOS, Cumba'nın kopyaladıklarınızı okuyup okuyamayacağını bir kez sorabilir."
+            "value" : "Bu widget paneldeyken Cumba panonun değişip değişmediğine saniyede bir bakar ve son %lld kopyanızı (metin, bağlantı, görsel ve dosya) bellekte tutar. Parolalar ve uygulamaların özel olarak işaretlediği öğeler alınmaz, diske hiçbir şey kaydedilmez. macOS, Cumba'nın kopyaladıklarınızı okuyup okuyamayacağını bir kez sorabilir."
+          }
+        }
+      }
+    },
+    "White" : {
+      "comment" : "Indicator color",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beyaz"
           }
         }
       }
@@ -4092,6 +4393,17 @@
         }
       }
     },
+    "Width beside the notch" : {
+      "comment" : "Settings slider: room for indicators on both sides of the camera",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch'un yanındaki genişlik"
+          }
+        }
+      }
+    },
     "Window" : {
       "localizations" : {
         "tr" : {
@@ -4129,16 +4441,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kameranız hızlı bir ayna olarak"
-          }
-        }
-      }
-    },
-    "Your last copied texts, kept in memory only" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Son kopyaladığınız metinler, yalnızca bellekte"
           }
         }
       }

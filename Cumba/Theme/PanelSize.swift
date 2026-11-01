@@ -9,6 +9,10 @@ struct PanelSize: Codable, Equatable, Sendable {
   var indicatorWidth = 70.0
   /// Size of text in the panel, as a factor of the macOS text styles.
   var textScale = 1.2
+  /// How far the closed notch reaches past the camera housing on each side.
+  var closedWidth = 8.0
+  /// How far the closed notch reaches below the camera housing.
+  var closedHeight = 5.0
 
   init() {}
 
@@ -19,6 +23,8 @@ struct PanelSize: Codable, Equatable, Sendable {
     size.height = height.clamped(to: Self.heightRange)
     size.indicatorWidth = indicatorWidth.clamped(to: Self.indicatorWidthRange)
     size.textScale = textScale.clamped(to: Self.textScaleRange)
+    size.closedWidth = closedWidth.clamped(to: Self.closedWidthRange)
+    size.closedHeight = closedHeight.clamped(to: Self.closedHeightRange)
     return size
   }
 
@@ -26,11 +32,13 @@ struct PanelSize: Codable, Equatable, Sendable {
   static let heightRange = 120.0...480
   static let indicatorWidthRange = 0.0...200
   static let textScaleRange = 0.9...1.6
+  static let closedWidthRange = 0.0...30
+  static let closedHeightRange = 0.0...20
 }
 
 extension PanelSize {
   private enum CodingKeys: String, CodingKey {
-    case width, height, indicatorWidth, textScale
+    case width, height, indicatorWidth, textScale, closedWidth, closedHeight
   }
 
   init(from decoder: Decoder) throws {
@@ -45,6 +53,8 @@ extension PanelSize {
     height = value(.height, height)
     indicatorWidth = value(.indicatorWidth, indicatorWidth)
     textScale = value(.textScale, textScale)
+    closedWidth = value(.closedWidth, closedWidth)
+    closedHeight = value(.closedHeight, closedHeight)
     self = normalized()
   }
 }

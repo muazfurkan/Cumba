@@ -6,34 +6,37 @@ import Testing
 @testable import Cumba
 
 struct TabSwipeTrackerTests {
-  private func run(_ moves: [(NSEvent.Phase, CGFloat, CGFloat)]) -> [Int] {
+  private func run(_ moves: [(NSEvent.Phase, CGFloat, CGFloat)]) -> [TabSwipeTracker.Update] {
     var tracker = TabSwipeTracker()
     return moves.compactMap {
       tracker.update(phase: $0.0, fingerDelta: CGSize(width: $0.1, height: $0.2))
     }
   }
 
-  @Test func fingersMovingLeftOpenTheNextTabOnce() {
-    let steps = run([
+  @Test func pagesFollowTheFingersAndLettingGoFarEnoughOpensTheNextTab() {
+    let updates = run([
       (.began, 0, 0), (.changed, -25, 2), (.changed, -25, 0), (.changed, -60, 0), (.ended, 0, 0),
     ])
-    #expect(steps == [1])
+    #expect(updates == [.drag(-25), .drag(-50), .drag(-110), .end(-110)])
+    #expect(TabSwipeTracker.step(forTravel: -110) == 1)
   }
 
-  @Test func fingersMovingRightOpenThePreviousTab() {
-    #expect(run([(.began, 0, 0), (.changed, 45, 0), (.ended, 0, 0)]) == [-1])
+  @Test func fingersMovingRightLeadToThePreviousTab() {
+    #expect(run([(.began, 0, 0), (.changed, 55, 0), (.ended, 0, 0)]) == [.drag(55), .end(55)])
+    #expect(TabSwipeTracker.step(forTravel: 55) == -1)
   }
 
-  @Test func shortOrVerticalMovesDoNothing() {
-    #expect(run([(.began, 0, 0), (.changed, -30, 0), (.ended, 0, 0)]).isEmpty)
-    #expect(run([(.began, 0, 0), (.changed, -45, 40), (.ended, 0, 0)]).isEmpty)
+  @Test func shortMovesSettleBackAndVerticalOnesNeverDrag() {
+    #expect(TabSwipeTracker.step(forTravel: -30) == nil)
+    #expect(run([(.began, 0, 0), (.changed, -10, 40), (.changed, -80, 0), (.ended, 0, 0)]).isEmpty)
+    #expect(run([(.began, 0, 0), (.changed, -3, 0), (.ended, 0, 0)]).isEmpty)
   }
 
-  @Test func eachGestureStepsAgain() {
+  @Test func eachGestureStartsOver() {
     let gesture: [(NSEvent.Phase, CGFloat, CGFloat)] = [
       (.began, 0, 0), (.changed, -50, 0), (.ended, 0, 0),
     ]
-    #expect(run(gesture + gesture) == [1, 1])
+    #expect(run(gesture + gesture) == [.drag(-50), .end(-50), .drag(-50), .end(-50)])
   }
 }
 
@@ -64,9 +67,27 @@ struct TabSwipeHostTests {
     #expect(!host.selectTab(offset: -1))
     #expect(host.selectTab(offset: 1))
     #expect(host.selectedTab?.id == second)
+    #expect(host.pageDirection == 1)
     #expect(!host.selectTab(offset: 1))
     #expect(host.selectTab(offset: -1))
     #expect(host.selectedTab?.id == first)
+    #expect(host.pageDirection == -1)
+
+    // Dragging left reveals the next tab; letting go early settles back.
+    host.dragPages(to: -30)
+    #expect(host.swipeNeighbor?.id == second)
+    #expect(!host.endPageDrag(travel: -30))
+    #expect(host.selectedTab?.id == first)
+    #expect(host.pageDrag == 0)
+    // Far enough opens it.
+    host.dragPages(to: -120)
+    #expect(host.endPageDrag(travel: -120))
+    #expect(host.selectedTab?.id == second)
+    // Past the last tab the pages only give a little.
+    host.dragPages(to: -80)
+    #expect(host.swipeNeighbor == nil)
+    #expect(host.pageDrag == -20)
+    #expect(!host.endPageDrag(travel: -80))
   }
 }
 

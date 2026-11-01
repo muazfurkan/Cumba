@@ -61,13 +61,40 @@ struct NotchGeometryTests {
     #expect(rect.midX == geometry.notchRect.midX)
   }
 
-  @Test func closedShapeCoversExactlyTheNotch() throws {
+  @Test func closedShapeReachesALittlePastTheNotch() throws {
     let geometry = try geometry()
-    #expect(geometry.shapeRect(for: .closed) == geometry.notchRect)
+    let closed = geometry.shapeRect(for: .closed)
+    let growth = geometry.layout.closedGrowth
+    #expect(growth == CGSize(width: 8, height: 5))
+    #expect(closed.contains(geometry.notchRect))
+    #expect(closed.width == geometry.notchRect.width + growth.width * 2)
+    #expect(closed.minY == geometry.notchRect.minY - growth.height)
   }
 
-  @Test func peekAddsWidthOnBothSides() throws {
-    #expect(try geometry().shapeSize(for: .peek) == CGSize(width: 188 + 140, height: 32))
+  @Test func closedSizeComesFromThePanelSize() throws {
+    var size = PanelSize()
+    size.closedWidth = 0
+    size.closedHeight = 12
+    let geometry = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: NotchLayout(size: size)))
+    #expect(geometry.shapeSize(for: .closed) == CGSize(width: 188, height: 44))
+    // Beside the notch, things are as tall as the closed notch; at zero, as the notch itself.
+    #expect(geometry.peekRowHeight == 44)
+    size.closedHeight = 0
+    let flat = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: NotchLayout(size: size)))
+    #expect(flat.shapeSize(for: .closed) == CGSize(width: 188, height: 32))
+    #expect(flat.peekRowHeight == 32)
+  }
+
+  @Test func peekAddsWidthOnBothSidesAndARowBelowTheNotch() throws {
+    #expect(
+      try geometry().shapeSize(for: .peek)
+        == CGSize(width: 188 + 140, height: 32 + NotchLayout().closedGrowth.height))
   }
 
   @Test func hoverAreaIncludesTheTopEdge() throws {

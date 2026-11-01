@@ -16,7 +16,9 @@ struct AppearanceSettingsView: View {
 
   var body: some View {
     Form {
-      PanelSizeSection(size: Bindable(settings).panelSize)
+      PanelSizeSection(size: Bindable(settings).panelSize) { preview in
+        settings.notchPreview = preview
+      }
       Section("Theme") {
         Picker("Theme", selection: selection) {
           ForEach(themes.themes) { theme in
@@ -28,10 +30,12 @@ struct AppearanceSettingsView: View {
             newThemeName = copyName
             isNamingTheme = true
           }
-          Button("Delete", role: .destructive) {
-            themes.delete(current)
+          // Built-in themes can't be deleted, only changed and restored.
+          if !isBuiltIn {
+            Button("Delete", role: .destructive) {
+              themes.delete(current)
+            }
           }
-          .disabled(isBuiltIn)
           Spacer()
           Button("Import…", action: importTheme)
           Button("Export…", action: exportTheme)
@@ -44,19 +48,28 @@ struct AppearanceSettingsView: View {
           Text("It starts from \(current.displayName).", comment: "New theme: the theme it copies")
         }
         if isBuiltIn {
-          Text("Built-in themes can't be changed. To make your own from this one, click New Theme.")
-            .foregroundStyle(.secondary)
+          HStack {
+            Text("Built-in themes keep their name. Your changes are saved with them.")
+              .foregroundStyle(.secondary)
+            Spacer()
+            Button("Restore Defaults") {
+              themes.restoreDefaults(current)
+            }
+            .disabled(!themes.isChanged(current))
+          }
         } else {
           TextField("Name", text: themeBinding.name)
         }
       }
       ThemeEditorSections(theme: themeBinding)
-        .disabled(isBuiltIn)
     }
     .formStyle(.grouped)
     .frame(width: 520, height: 620)
     .onAppear { settings.isPreviewingAppearance = true }
-    .onDisappear { settings.isPreviewingAppearance = false }
+    .onDisappear {
+      settings.isPreviewingAppearance = false
+      settings.notchPreview = nil
+    }
     .alert(
       "The theme file couldn't be used.",
       isPresented: Binding(
@@ -76,7 +89,7 @@ struct AppearanceSettingsView: View {
     String(localized: "\(current.displayName) Copy", comment: "Duplicated theme")
   }
 
-  /// Built-in themes are read-only; edits apply to the user's own themes.
+  /// Edits apply live; a built-in theme keeps its name.
   private var themeBinding: Binding<Theme> {
     Binding(get: { themes.current }, set: { themes.update($0) })
   }

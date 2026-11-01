@@ -1,11 +1,15 @@
 import Foundation
 import Observation
 
-/// Built-in and user themes, and which one is active. File I/O runs off the main thread.
+/// Built-in and user themes, and which one is active. Built-in themes keep their names but
+/// can be changed; the change is saved under the built-in's id and can be undone with
+/// `restoreDefaults`. File I/O runs off the main thread.
 @MainActor
 @Observable
 final class ThemeStore {
   private(set) var userThemes: [Theme] = []
+  /// The user's changes to built-in themes, by the built-in's id.
+  private(set) var changedBuiltIns: [String: Theme] = [:]
   private(set) var selectedID: String
 
   @ObservationIgnored private let files: ThemeFiles
@@ -20,7 +24,7 @@ final class ThemeStore {
     selectedID = defaults.string(forKey: Self.selectedKey) ?? Theme.classic.id
   }
 
-  var themes: [Theme] { Theme.builtIns + userThemes }
+  var themes: [Theme] { Theme.builtIns.map { changedBuiltIns[$0.id] ?? $0 } + userThemes }
 
   var current: Theme {
     themes.first { $0.id == selectedID } ?? .classic
@@ -30,9 +34,19 @@ final class ThemeStore {
     Theme.builtIns.contains { $0.id == theme.id }
   }
 
+  /// Whether a built-in theme has the user's changes.
+  func isChanged(_ theme: Theme) -> Bool {
+    changedBuiltIns[theme.id] != nil
+  }
+
   func load() async {
     let files = files
-    userThemes = await Task.detached { files.loadAll() }.value
+    let loaded = await Task.detached { files.loadAll() }.value
+    let builtInIDs = Set(Theme.builtIns.map(\.id))
+    userThemes = loaded.filter { !builtInIDs.contains($0.id) }
+    changedBuiltIns = Dictionary(
+      loaded.filter { builtInIDs.contains($0.id) }.map { ($0.id, $0) },
+      uniquingKeysWith: { first, _ in first })
   }
 
   func select(_ id: String) {
@@ -55,22 +69,40 @@ final class ThemeStore {
   /// Applies an edit right away (the panel previews it live) and saves it shortly after,
   /// so dragging a slider doesn't write a file for every step.
   func update(_ theme: Theme) {
+    if let builtIn = Theme.builtIns.first(where: { $0.id == theme.id }) {
+      var changed = theme.normalized()
+      changed.name = builtIn.name
+      changedBuiltIns[theme.id] = changed
+      scheduleSave(changed, after: .milliseconds(500))
+      return
+    }
     guard let index = userThemes.firstIndex(where: { $0.id == theme.id }) else { return }
     userThemes[index] = theme.normalized()
     scheduleSave(userThemes[index], after: .milliseconds(500))
   }
 
+  /// Takes back the user's changes to a built-in theme.
+  func restoreDefaults(_ theme: Theme) {
+    guard changedBuiltIns.removeValue(forKey: theme.id) != nil else { return }
+    removeFile(of: theme.id)
+  }
+
   func delete(_ theme: Theme) {
     guard !isBuiltIn(theme) else { return }
     userThemes.removeAll { $0.id == theme.id }
-    saveTasks[theme.id]?.cancel()
     if selectedID == theme.id {
       select(Theme.classic.id)
     }
+    removeFile(of: theme.id)
+  }
+
+  private func removeFile(of id: String) {
+    saveTasks[id]?.cancel()
+    saveTasks[id] = nil
     let files = files
     Task.detached {
       do {
-        try files.delete(id: theme.id)
+        try files.delete(id: id)
       } catch {
         Log.theme.error("Deleting theme failed: \(error.localizedDescription, privacy: .public)")
       }

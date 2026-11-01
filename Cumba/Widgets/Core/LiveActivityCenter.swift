@@ -6,6 +6,8 @@ struct LiveActivity: Identifiable {
   /// Higher wins when several activities are active at once.
   enum Priority: Int, Comparable, Sendable {
     case media
+    /// Stays while the battery is low, above music but below anything that comes and goes.
+    case lowBattery
     case keepAwake
     case timerRunning
     case battery
@@ -31,8 +33,8 @@ struct LiveActivity: Identifiable {
   let trailing: AnyView
   /// Width of each side when it needs more room than the theme gives, e.g. for a title.
   var sideWidth: CGFloat? = nil
-  /// A line shown under the notch, e.g. an agent's answer when it finishes.
-  var banner: AnyView? = nil
+  /// Opens under the notch for a while, then folds into `leading` and `trailing`.
+  var notification: LiveNotification? = nil
 
   /// Side width that fits a short label in the peek's caption font, so it isn't cut off;
   /// at most 180 points.
@@ -51,7 +53,9 @@ struct LiveActivity: Identifiable {
 @Observable
 final class LiveActivityCenter {
   private(set) var activities: [String: LiveActivity] = [:]
-  @ObservationIgnored private var expirations: [String: Task<Void, Never>] = [:]
+  @ObservationIgnored private var timers: [String: Task<Void, Never>] = [:]
+  /// While the pointer rests on the notch, an open notification stays open.
+  @ObservationIgnored var isPointerOver = false
 
   /// Highest priority wins; among equals the most recent one.
   var current: LiveActivity? {
@@ -60,25 +64,37 @@ final class LiveActivityCenter {
     }
   }
 
-  /// Shows or replaces an activity. With a duration it disappears on its own.
+  /// Shows or replaces an activity. Its notification folds after its own duration; with a
+  /// duration the activity then disappears that much later.
   func show(_ activity: LiveActivity, for duration: Duration? = nil) {
     activities[activity.id] = activity
-    expirations[activity.id]?.cancel()
-    expirations[activity.id] = nil
-    guard let duration else { return }
-    expirations[activity.id] = Task { [weak self] in
+    timers[activity.id]?.cancel()
+    timers[activity.id] = nil
+    let fold = activity.notification?.duration
+    guard fold != nil || duration != nil else { return }
+    timers[activity.id] = Task { [weak self] in
       do {
-        try await Task.sleep(for: duration)
+        if let fold {
+          try await Task.sleep(for: fold)
+          // Checked once a second, and only while the pointer is on the open notification.
+          while self?.isPointerOver == true {
+            try await Task.sleep(for: .seconds(1))
+          }
+          self?.activities[activity.id]?.notification = nil
+        }
+        if let duration {
+          try await Task.sleep(for: duration)
+          self?.dismiss(activity.id)
+        }
       } catch {
         return
       }
-      self?.dismiss(activity.id)
     }
   }
 
   func dismiss(_ id: String) {
-    expirations[id]?.cancel()
-    expirations[id] = nil
+    timers[id]?.cancel()
+    timers[id] = nil
     activities[id] = nil
   }
 

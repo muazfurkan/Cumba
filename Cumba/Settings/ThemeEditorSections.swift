@@ -33,6 +33,16 @@ struct ThemeEditorSections: View {
         ColorPicker("Edge color", selection: color(\.glow), supportsOpacity: false)
           .help(Text("The edge fades from this color into the accent."))
       }
+      Picker("Volume and brightness", selection: $theme.indicatorColor) {
+        Text("Theme colors").tag(Theme.IndicatorColor.theme)
+        Text("White").tag(Theme.IndicatorColor.white)
+        Text("Blue").tag(Theme.IndicatorColor.blue)
+        Text("Green").tag(Theme.IndicatorColor.green)
+        Text("Orange").tag(Theme.IndicatorColor.orange)
+        Text("Pink").tag(Theme.IndicatorColor.pink)
+        Text("Purple").tag(Theme.IndicatorColor.purple)
+      }
+      .help(Text("Color of the volume and brightness levels beside the notch."))
       Picker("Font", selection: $theme.fontDesign) {
         Text("Default").tag(Theme.FontDesign.default)
         Text("Rounded").tag(Theme.FontDesign.rounded)
@@ -94,21 +104,35 @@ struct ThemeEditorSections: View {
 /// The panel's size and text size, which stay when the theme changes.
 struct PanelSizeSection: View {
   @Binding var size: PanelSize
+  /// Called while a slider for the closed notch or the space beside it is dragged, so the
+  /// preview can show that state, and with nil when it's let go.
+  var preview: (NotchPreview?) -> Void = { _ in }
 
   var body: some View {
     Section {
       ValueSlider(title: "Width", value: $size.width, range: PanelSize.widthRange)
       ValueSlider(title: "Height", value: $size.height, range: PanelSize.heightRange)
       ValueSlider(
-        title: "Indicator width", value: $size.indicatorWidth,
-        range: PanelSize.indicatorWidthRange)
+        title: "Width beside the notch", value: $size.indicatorWidth,
+        range: PanelSize.indicatorWidthRange
+      ) { preview($0 ? .peek : nil) }
       ValueSlider(
         title: "Text size", value: $size.textScale, range: PanelSize.textScaleRange,
         fractionDigits: 2)
+      ValueSlider(
+        title: "Closed notch width", value: $size.closedWidth,
+        range: PanelSize.closedWidthRange
+      ) { preview($0 ? .closed : nil) }
+      ValueSlider(
+        title: "Closed notch height", value: $size.closedHeight,
+        range: PanelSize.closedHeightRange
+      ) { preview($0 ? .closed : nil) }
     } header: {
       Text("Panel Size")
     } footer: {
-      Text("The same for every theme.")
+      Text(
+        "The same for every theme. Width beside the notch is the room for music, timers and other indicators on both sides of the camera; the closed notch values are how far it reaches past the camera. While you drag these three, the notch shows them."
+      )
     }
   }
 }
@@ -119,11 +143,12 @@ private struct ValueSlider: View {
   @Binding var value: Double
   let range: ClosedRange<Double>
   var fractionDigits = 0
+  var onEditingChanged: (Bool) -> Void = { _ in }
 
   var body: some View {
     LabeledContent(title) {
       HStack {
-        Slider(value: $value, in: range)
+        Slider(value: $value, in: range, onEditingChanged: onEditingChanged)
         Text(value, format: .number.precision(.fractionLength(fractionDigits)))
           .monospacedDigit()
           .frame(width: 44, alignment: .trailing)

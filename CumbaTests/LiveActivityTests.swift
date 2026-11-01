@@ -28,6 +28,21 @@ struct LiveActivityCenterTests {
     #expect(center.current == nil)
   }
 
+  @Test func notificationsFoldIntoTheActivityAndStayWhileThePointerRests() async throws {
+    let center = LiveActivityCenter()
+    var shown = activity("agent", .claudeStatus)
+    shown.notification = LiveNotification(
+      icon: AnyView(EmptyView()), title: "Done", duration: .milliseconds(20))
+    center.isPointerOver = true
+    center.show(shown)
+    try await Task.sleep(for: .milliseconds(200))
+    #expect(center.current?.notification != nil)
+    center.isPointerOver = false
+    try await Task.sleep(for: .milliseconds(1300))
+    #expect(center.current?.id == "agent")
+    #expect(center.current?.notification == nil)
+  }
+
   @Test func showingAgainCancelsTheOldExpiry() async throws {
     let center = LiveActivityCenter()
     center.show(activity("battery", .battery), for: .milliseconds(20))

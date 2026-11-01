@@ -30,6 +30,16 @@ final class NotchViewModel {
     set { machine.opensOnHover = newValue }
   }
 
+  var isShowingNotification: Bool {
+    get { machine.isShowingNotification }
+    set { machine.isShowingNotification = newValue }
+  }
+
+  var restsClosed: Bool {
+    get { machine.restsClosed }
+    set { machine.restsClosed = newValue }
+  }
+
   func send(_ event: NotchStateMachine.Event) {
     switch machine.handle(event) {
     case .none:

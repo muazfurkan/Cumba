@@ -13,12 +13,17 @@ struct NotchLayout: Equatable, Sendable {
   /// Extra horizontal room around the closed notch that still counts as hovering it.
   var hoverMargin: CGFloat = 8
 
-  /// Room under the closed notch for a live activity's banner line; 0 without one.
-  var peekBannerHeight: CGFloat = 0
+  /// Room under the closed notch for a live activity's notification; 0 without one.
+  var peekNotificationHeight: CGFloat = 0
+  /// How far the closed shape reaches past the camera housing on each side and below it,
+  /// so the notch reads as part of the app instead of disappearing into the hardware.
+  var closedGrowth = CGSize(width: 8, height: 5)
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
-  static let bannerHeight: CGFloat = 26
+  static let notificationHeight: CGFloat = 62
+  /// The peek is at least this wide while a notification is open.
+  static let notificationWidth: CGFloat = 440
 }
 
 extension NotchLayout {
@@ -26,6 +31,7 @@ extension NotchLayout {
     self.init()
     expandedSize = CGSize(width: size.width, height: size.height)
     peekExtraWidth = size.indicatorWidth
+    closedGrowth = CGSize(width: size.closedWidth, height: size.closedHeight)
   }
 }
 
@@ -83,14 +89,27 @@ struct NotchGeometry: Equatable, Sendable {
       x: notchRect.midX - width / 2, y: screenFrame.maxY - height, width: width, height: height)
   }
 
+  /// Width of each side of the peek; never narrower than the closed notch.
+  var peekSideWidth: CGFloat { max(layout.peekExtraWidth, layout.closedGrowth.width) }
+
+  /// Height of the peek's row of icons, without a notification: as tall as the closed
+  /// notch, so at zero both are exactly the camera housing's height.
+  var peekRowHeight: CGFloat {
+    notchRect.height + layout.closedGrowth.height
+  }
+
   func shapeSize(for state: NotchState) -> CGSize {
     switch state {
     case .closed:
-      notchRect.size
+      CGSize(
+        width: notchRect.width + layout.closedGrowth.width * 2,
+        height: notchRect.height + layout.closedGrowth.height)
     case .peek:
       CGSize(
-        width: notchRect.width + layout.peekExtraWidth * 2,
-        height: notchRect.height + layout.peekBannerHeight)
+        width: max(
+          notchRect.width + peekSideWidth * 2,
+          layout.peekNotificationHeight > 0 ? NotchLayout.notificationWidth : 0),
+        height: peekRowHeight + layout.peekNotificationHeight)
     case .expanded, .pinned:
       CGSize(
         width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),

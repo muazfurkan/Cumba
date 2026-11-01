@@ -70,6 +70,7 @@ struct GeneralSettingsView: View {
             OpenPrivacySettings(pane: "Privacy_Accessibility")
           }
         }
+        Toggle("Show a low battery in the notch", isOn: $settings.showsLowBattery)
         Toggle(
           "Show when the microphone or camera is in use", isOn: $settings.showsPrivacyIndicators)
       }

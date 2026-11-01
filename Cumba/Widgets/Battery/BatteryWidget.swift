@@ -3,7 +3,7 @@ import Observation
 import SwiftUI
 
 /// Battery level from IOKit power source notifications (no polling). Plugging in the
-/// charger and a low battery show as short live activities.
+/// charger shows as a short live activity; a low battery is one of the system indicators.
 @MainActor
 @Observable
 final class BatteryWidget: NotchWidget {
@@ -23,7 +23,7 @@ final class BatteryWidget: NotchWidget {
     var minutesRemaining: Int?
   }
 
-  static let lowBatteryPercent = 20
+  nonisolated static let lowBatteryPercent = 20
 
   /// Nil on Macs without a battery.
   private(set) var status: Status?
@@ -79,10 +79,6 @@ final class BatteryWidget: NotchWidget {
     guard let old, let new else { return }
     if new.isPluggedIn && !old.isPluggedIn {
       showActivity(new, symbol: "bolt.fill", color: .green)
-    } else if !new.isPluggedIn && new.percent <= Self.lowBatteryPercent
-      && old.percent > Self.lowBatteryPercent
-    {
-      showActivity(new, symbol: "battery.25percent", color: .red)
     }
   }
 

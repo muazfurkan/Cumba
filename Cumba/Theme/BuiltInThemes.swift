@@ -37,6 +37,7 @@ extension Theme {
     theme.cornerRadius = 16
     theme.spring = Spring(response: 0.32, damping: 0.9)
     theme.fontDesign = .monospaced
+    theme.indicatorColor = .theme
     return theme
   }()
 
@@ -52,6 +53,7 @@ extension Theme {
     theme.cornerRadius = 30
     theme.spring = Spring(response: 0.42, damping: 0.85)
     theme.fontDesign = .rounded
+    theme.indicatorColor = .theme
     return theme
   }()
 
@@ -66,6 +68,7 @@ extension Theme {
     theme.glow = HexColor(red: 0xFF, green: 0x2B, blue: 0xD6)
     theme.cornerRadius = 22
     theme.spring = Spring(response: 0.38, damping: 0.88)
+    theme.indicatorColor = .theme
     return theme
   }()
 
@@ -80,6 +83,7 @@ extension Theme {
     theme.glow = HexColor(red: 0xFF, green: 0x7A, blue: 0xC8)
     theme.cornerRadius = 22
     theme.fontDesign = .rounded
+    theme.indicatorColor = .theme
     return theme
   }()
 

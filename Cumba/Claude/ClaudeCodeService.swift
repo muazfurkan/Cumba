@@ -30,6 +30,8 @@ final class ClaudeCodeService {
     /// How full the context window was at the last answer, 0...1.
     var contextFraction: Double?
     var agent = Agent.claude
+    /// Bundle identifier of the app the session runs in, from its hooks.
+    var app: String?
 
     var isActive: Bool {
       state == .working || state == .waitingPermission
@@ -42,12 +44,14 @@ final class ClaudeCodeService {
   /// From Settings > Claude Code; applies to requests that arrive afterwards.
   var notchApprovals = NotchApprovals.all
 
-  @ObservationIgnored private let liveActivities: LiveActivityCenter
+  @ObservationIgnored let liveActivities: LiveActivityCenter
   @ObservationIgnored private var removalTasks: [String: Task<Void, Never>] = [:]
   @ObservationIgnored private var transcriptReads: [String: Date] = [:]
+  /// The session and notice the status activity shows.
+  @ObservationIgnored var shownNotice: (session: String, notice: AgentNotice)?
 
-  private static let permissionActivityID = "claude.permission"
-  private static let statusActivityID = "claude.status"
+  static let permissionActivityID = "claude.permission"
+  static let statusActivityID = "claude.status"
   private static let workingActivityID = "claude.working"
 
   init(liveActivities: LiveActivityCenter, permissions: PermissionBroker = PermissionBroker()) {
@@ -59,7 +63,8 @@ final class ClaudeCodeService {
   }
 
   /// Handles every event except permission requests, which `requestPermission` handles.
-  func handle(_ payload: HookPayload, agent: Agent = .claude) {
+  /// - Parameter app: Bundle identifier of the app the agent runs in, when the hook sent it.
+  func handle(_ payload: HookPayload, agent: Agent = .claude, app: String? = nil) {
     guard let event = payload.event else { return }
     let id = payload.sessionID
     switch event {
@@ -87,26 +92,19 @@ final class ClaudeCodeService {
         return
       }
       update(id, payload, state: .waitingInput, detail: payload.message)
-      showStatus(
-        symbol: "bubble.left.fill", color: .orange, project: payload.project,
-        text: String(localized: "Waiting", comment: "Claude Code is waiting for the user"),
-        banner: payload.message)
+      notify(
+        .waiting, session: id, agent: agent, project: payload.project, message: payload.message)
     case .stop:
       permissions.resolveAll(in: id)
       let summary = payload.lastAssistantMessage.map { HookPayload.truncate($0, to: 280) }
       update(id, payload, state: .done, detail: summary)
       refreshTranscript(of: id, path: payload.transcriptPath, force: true)
-      showStatus(
-        symbol: "checkmark.circle.fill", color: .green, project: payload.project,
-        text: String(localized: "Done", comment: "Claude Code finished"), banner: summary)
+      notify(.done, session: id, agent: agent, project: payload.project, message: summary)
     case .stopFailure:
       permissions.resolveAll(in: id)
       let error = payload.error ?? "unknown"
       update(id, payload, state: .failed(error), detail: payload.lastAssistantMessage)
-      showStatus(
-        symbol: "exclamationmark.triangle.fill", color: .red, project: payload.project,
-        text: String(localized: "Error", comment: "Claude Code stopped with an error"),
-        banner: error)
+      notify(.failed, session: id, agent: agent, project: payload.project, message: error)
     case .sessionEnd:
       permissions.resolveAll(in: id)
       update(id, payload, state: .ended)
@@ -114,16 +112,16 @@ final class ClaudeCodeService {
     case .permissionRequest:
       break
     }
-    tag(id, with: agent)
+    tag(id, with: agent, app: app)
     updateWorkingActivity()
   }
 
   /// Shows the request in the notch and waits for the user's decision.
-  func requestPermission(_ payload: HookPayload, agent: Agent = .claude) async
-    -> PermissionBroker.Decision
+  func requestPermission(_ payload: HookPayload, agent: Agent = .claude, app: String? = nil)
+    async -> PermissionBroker.Decision
   {
     if payload.isQuestion {
-      showQuestion(payload, agent: agent)
+      showQuestion(payload, agent: agent, app: app)
       return .askInTerminal
     }
     let detail = payload.permissionDetail
@@ -134,7 +132,7 @@ final class ClaudeCodeService {
       canAllow: !detail.isSuspicious && notchApprovals.allows(toolName: toolName),
       receivedAt: Date())
     update(payload.sessionID, payload, state: .waitingPermission)
-    tag(payload.sessionID, with: agent)
+    tag(payload.sessionID, with: agent, app: app)
     updateWorkingActivity()
     let decision = await permissions.decide(request)
     if !permissions.hasPending(in: payload.sessionID) {
@@ -145,16 +143,15 @@ final class ClaudeCodeService {
   }
 
   /// A question or a plan to approve: Claude Code asks it in its own window, and the notch
-  /// says the session is waiting, with the question under the notch.
-  private func showQuestion(_ payload: HookPayload, agent: Agent) {
+  /// says so until it's answered.
+  private func showQuestion(_ payload: HookPayload, agent: Agent, app: String?) {
     let question = payload.questionText.map { SafeText($0).text }
     update(payload.sessionID, payload, state: .waitingInput, detail: question)
-    tag(payload.sessionID, with: agent)
+    tag(payload.sessionID, with: agent, app: app)
+    notify(
+      payload.toolName == "ExitPlanMode" ? .plan : .question, session: payload.sessionID,
+      agent: agent, project: payload.project, message: question)
     updateWorkingActivity()
-    showStatus(
-      symbol: "questionmark.bubble.fill", color: .orange, project: payload.project,
-      text: String(localized: "Waiting for you", comment: "AI agent needs input"),
-      banner: question)
   }
 
   func answer(_ request: PermissionBroker.Request, with decision: PermissionBroker.Decision) {
@@ -201,14 +198,22 @@ final class ClaudeCodeService {
     }
   }
 
-  private func tag(_ id: String, with agent: Agent) {
+  private func tag(_ id: String, with agent: Agent, app: String?) {
     if let index = sessions.firstIndex(where: { $0.id == id }) {
       sessions[index].agent = agent
+      sessions[index].app = app ?? sessions[index].app
     }
   }
 
-  /// A ring beside the notch while any session works.
+  /// A ring beside the notch while any session works. A question stays beside the notch
+  /// until its session moves on.
   private func updateWorkingActivity() {
+    if let shown = shownNotice, shown.notice.waitsForUser,
+      sessions.first(where: { $0.id == shown.session })?.state != .waitingInput
+    {
+      liveActivities.dismiss(Self.statusActivityID)
+      shownNotice = nil
+    }
     guard let working = sessions.first(where: { $0.state == .working }) else {
       liveActivities.dismiss(Self.workingActivityID)
       return
@@ -231,44 +236,5 @@ final class ClaudeCodeService {
       self?.sessions.removeAll { $0.id == id && $0.state == .ended }
       self?.removalTasks[id] = nil
     }
-  }
-
-  private func updatePermissionActivity() {
-    guard let first = permissions.pending.first else {
-      liveActivities.dismiss(Self.permissionActivityID)
-      return
-    }
-    let count = permissions.pending.count
-    let tool = HookPayload.truncate(HookPayload.shortToolName(first.toolName), to: 24)
-    let label = count > 1 ? "\(tool) +\(count - 1)" : tool
-    liveActivities.show(
-      LiveActivity(
-        id: Self.permissionActivityID, priority: .claudePermission,
-        leading: AnyView(Image(systemName: "hand.raised.fill").foregroundStyle(.orange)),
-        trailing: AnyView(Text(verbatim: label).font(.caption.weight(.semibold))),
-        sideWidth: LiveActivity.sideWidth(for: label)))
-  }
-
-  /// A short status beside the notch, with a line under it when there's something to say.
-  private func showStatus(
-    symbol: String, color: Color, project: String, text: String, banner: String? = nil
-  ) {
-    let line = banner.map { HookPayload.truncate($0, to: 120) }
-    liveActivities.show(
-      LiveActivity(
-        id: Self.statusActivityID, priority: .claudeStatus,
-        leading: AnyView(Image(systemName: symbol).foregroundStyle(color)),
-        trailing: AnyView(
-          Text(project).font(.caption.weight(.medium)).help(text).accessibilityLabel(
-            Text("\(project): \(text)"))),
-        sideWidth: LiveActivity.sideWidth(for: project),
-        banner: line.map { line in
-          AnyView(
-            Text(line)
-              .font(.caption)
-              .foregroundStyle(.white.opacity(0.85))
-              .lineLimit(1))
-        }),
-      for: .seconds(line == nil ? 4 : 7))
   }
 }

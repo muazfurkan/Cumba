@@ -15,11 +15,12 @@ Cumba's socket runs only while hooks are installed. In **Settings > Agents** you
 Each hook is a `command` hook that pipes the event to the app with curl:
 
 ```
-/usr/bin/curl -sf --max-time 299 --unix-socket '/Users/<you>/Library/Application Support/Cumba/hook.sock' -H 'X-Cumba-Token: <TOKEN>' -H 'Content-Type: application/json' --data-binary @- http://localhost/claude/hook || true
+/usr/bin/curl -sf --max-time 299 --unix-socket '/Users/<you>/Library/Application Support/Cumba/hook.sock' -H 'X-Cumba-Token: <TOKEN>' -H 'Content-Type: application/json' -H "X-Cumba-App: ${__CFBundleIdentifier:-}" --data-binary @- http://localhost/claude/hook || true
 ```
 
 - **Why a Unix socket and not a TCP port:** the socket's folder can be opened only by your user account. A TCP port on 127.0.0.1 could be taken by another user on the same Mac, or by a sandboxed app, while Cumba isn't running. That process could then answer Claude Code's permission requests, so Cumba doesn't use one for hooks.
 - **When Cumba is closed**, curl fails, `-sf` keeps it quiet and `|| true` makes the hook succeed with no output. Claude Code carries on with its own permission dialog.
+- **`X-Cumba-App`** is the bundle identifier of the app Claude Code runs in (Terminal, iTerm, VS Code, the Claude app), which macOS puts in `__CFBundleIdentifier`. **Open** in a notification brings that app forward; Cumba only activates an app that's already running and never starts one. Hooks from before this header show as out of date once; click **Update** in **Settings > Agents**.
 - **The token is written as plain text** on purpose. Apps started from the Dock don't inherit variables from your shell profile, so a `$VAR` would be empty in the Claude desktop app.
 
 ## By hand
@@ -40,7 +41,7 @@ Copy the token with **Copy Hook Token** in **Settings > Agents**. It's separate 
 ```json
 {
   "hooks": {
-    "PermissionRequest": [{ "hooks": [{ "type": "command", "timeout": 300, "command": "/usr/bin/curl -sf --max-time 299 --unix-socket '…/hook.sock' -H 'X-Cumba-Token: <TOKEN>' -H 'Content-Type: application/json' --data-binary @- http://localhost/claude/hook || true" }] }]
+    "PermissionRequest": [{ "hooks": [{ "type": "command", "timeout": 300, "command": "/usr/bin/curl -sf --max-time 299 --unix-socket '…/hook.sock' -H 'X-Cumba-Token: <TOKEN>' -H 'Content-Type: application/json' -H \"X-Cumba-App: ${__CFBundleIdentifier:-}\" --data-binary @- http://localhost/claude/hook || true" }] }]
   }
 }
 ```
@@ -58,7 +59,7 @@ Notes:
 3. **Allow** or **Deny** answers Claude Code. **In Terminal** answers with nothing, so Claude Code shows its own dialog. The buttons only work after the request has been on screen for a moment, so a stray or double click can't approve something you haven't seen.
 4. If the request contains hidden characters or is too long to show, only **Deny** and **In Terminal** are offered.
 5. If you don't answer within 290 seconds, Cumba hands the decision back to Claude Code's own dialog.
-6. Questions (`AskUserQuestion`) and plan approvals (`ExitPlanMode`) also arrive as permission requests, but Allow or Deny would answer neither. Cumba answers them at once with nothing, so Claude Code asks you itself, and the notch shows that the session is waiting, with the question under the notch.
+6. Questions (`AskUserQuestion`) and plan approvals (`ExitPlanMode`) also arrive as permission requests, but Allow or Deny would answer neither. Cumba answers them at once with nothing, so Claude Code asks you itself. A notification under the notch says the agent is asking (with the question and **Open**), and the agent's mark with a question badge stays beside the notch until you answer.
 
 ## Codex
 

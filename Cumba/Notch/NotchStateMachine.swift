@@ -29,10 +29,18 @@ struct NotchStateMachine: Sendable {
   private(set) var hasLiveActivity = false
   /// When false only a click opens the panel.
   var opensOnHover = true
+  /// While a notification is open under the notch, resting on it doesn't open the panel,
+  /// so its button can be clicked.
+  var isShowingNotification = false
+
+  private var hoverOpens: Bool { opensOnHover && !isShowingNotification }
+
+  /// While the closed notch's size is previewed, it rests closed even with a live activity.
+  var restsClosed = false
 
   /// Where the panel goes when it closes.
   private var restingState: NotchState {
-    hasLiveActivity ? .peek : .closed
+    hasLiveActivity && !restsClosed ? .peek : .closed
   }
 
   mutating func handle(_ event: Event) -> Effect {
@@ -40,7 +48,7 @@ struct NotchStateMachine: Sendable {
     case .pointerEntered:
       isPointerInside = true
       switch state {
-      case .closed, .peek: return opensOnHover ? .startOpenTimer : .none
+      case .closed, .peek: return hoverOpens ? .startOpenTimer : .none
       case .expanded: return .cancelTimer
       case .pinned: return .none
       }
@@ -54,7 +62,7 @@ struct NotchStateMachine: Sendable {
       }
 
     case .pointerMoved:
-      return isPointerInside && !state.isOpen && opensOnHover ? .startOpenTimer : .none
+      return isPointerInside && !state.isOpen && hoverOpens ? .startOpenTimer : .none
 
     case .clicked:
       guard !state.isOpen else { return .none }

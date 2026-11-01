@@ -69,6 +69,28 @@ struct NotchStateMachineTests {
     #expect(machine.handle(.pointerExited) == .startCloseTimer)
   }
 
+  @Test func anOpenNotificationKeepsHoverFromOpeningThePanel() {
+    var machine = NotchStateMachine()
+    _ = machine.handle(.liveActivityChanged(true))
+    machine.isShowingNotification = true
+    #expect(machine.handle(.pointerEntered) == .none)
+    #expect(machine.handle(.pointerMoved) == .none)
+    machine.isShowingNotification = false
+    #expect(machine.handle(.pointerMoved) == .startOpenTimer)
+  }
+
+  @Test func previewingTheClosedSizeRestsClosedDespiteALiveActivity() {
+    var machine = NotchStateMachine()
+    _ = machine.handle(.liveActivityChanged(true))
+    #expect(machine.state == .peek)
+    machine.restsClosed = true
+    _ = machine.handle(.reset)
+    #expect(machine.state == .closed)
+    machine.restsClosed = false
+    _ = machine.handle(.reset)
+    #expect(machine.state == .peek)
+  }
+
   @Test func clickOpensImmediately() {
     var machine = machine(after: [.pointerEntered])
     #expect(machine.handle(.clicked) == .cancelTimer)
