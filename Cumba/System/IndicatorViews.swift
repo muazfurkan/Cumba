@@ -1,18 +1,33 @@
 import SwiftUI
 
 extension EnvironmentValues {
-  /// The theme's accent, or its neon edge colors when it has them, for what shows beside the
-  /// closed notch.
-  @Entry var accentColors: [Color] = [.white]
+  /// Colors of the volume and brightness levels beside the notch, from the theme.
+  @Entry var indicatorColors: [Color] = [.white]
+}
+
+extension Theme {
+  /// The chosen indicator color, or the theme's own: its neon edge fading into the accent,
+  /// or just the accent.
+  var indicatorColors: [Color] {
+    switch indicatorColor {
+    case .theme: glow.map { [$0.color, accent.color] } ?? [accent.color]
+    case .white: [.white]
+    case .blue: [.blue]
+    case .green: [.green]
+    case .orange: [.orange]
+    case .pink: [.pink]
+    case .purple: [.purple]
+    }
+  }
 }
 
 /// A volume or brightness symbol beside the closed notch, as large as the notch allows, in
-/// the theme's accent.
+/// the theme's indicator color.
 struct LevelSymbol: View {
   let name: String
   let label: Text
   @Environment(\.peekHeight) private var height
-  @Environment(\.accentColors) private var colors
+  @Environment(\.indicatorColors) private var colors
 
   var body: some View {
     Image(systemName: name)
@@ -26,11 +41,11 @@ struct LevelSymbol: View {
 }
 
 /// A volume or brightness level as a bar beside the closed notch, filled in the theme's
-/// accent.
+/// indicator color.
 struct LevelBar: View {
   let level: Float
   let label: Text
-  @Environment(\.accentColors) private var colors
+  @Environment(\.indicatorColors) private var colors
 
   var body: some View {
     let fraction = CGFloat(min(max(level, 0), 1))

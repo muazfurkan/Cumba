@@ -1,3 +1,4 @@
+import AppKit
 import CoreLocation
 import Foundation
 import Testing
@@ -79,22 +80,85 @@ struct ClipboardHistoryTests {
   @Test func keepsNewestFirstWithoutDuplicates() {
     let widget = ClipboardHistoryWidget(context: makeContext())
     defer { widget.shutdown() }
-    widget.record("one")
-    widget.record("  two \n")
-    widget.record("one")
-    widget.record("   ")
-    #expect(widget.entries.map(\.text) == ["one", "two"])
+    widget.record(.text("one"), from: nil)
+    widget.record(.text("two"), from: "com.apple.Notes")
+    widget.record(.text("one"), from: nil)
+    #expect(widget.items.map(\.content) == [.text("one"), .text("two")])
+    #expect(widget.items[1].appBundleID == "com.apple.Notes")
   }
 
   @Test func staysWithinTheLimits() {
     let widget = ClipboardHistoryWidget(context: makeContext())
     defer { widget.shutdown() }
     for index in 0..<(ClipboardHistoryWidget.maxEntries + 5) {
-      widget.record("item \(index)")
+      widget.record(.text("item \(index)"), from: nil)
     }
-    widget.record(String(repeating: "x", count: ClipboardHistoryWidget.maxLength + 10))
-    #expect(widget.entries.count == ClipboardHistoryWidget.maxEntries)
-    #expect(widget.entries[0].text.count == ClipboardHistoryWidget.maxLength)
+    #expect(widget.items.count == ClipboardHistoryWidget.maxEntries)
+    let long = ClipboardItem.content(
+      of: String(repeating: "x", count: ClipboardItem.maxLength + 10))
+    #expect(long == .text(String(repeating: "x", count: ClipboardItem.maxLength)))
+  }
+
+  @Test func singleWebAddressesAreLinks() throws {
+    let url = try #require(URL(string: "https://example.com/a?b=1"))
+    #expect(ClipboardItem.content(of: "  https://example.com/a?b=1 \n") == .link(url))
+    #expect(
+      ClipboardItem.content(of: "see https://example.com") == .text("see https://example.com"))
+    #expect(ClipboardItem.content(of: "file:///etc/hosts") == .text("file:///etc/hosts"))
+    #expect(ClipboardItem.content(of: "   ") == nil)
+  }
+
+  @Test func readsFilesTextAndImagesAndSkipsPrivateItems() throws {
+    let pasteboard = NSPasteboard(name: .init("CumbaTests-\(UUID().uuidString)"))
+    defer { pasteboard.releaseGlobally() }
+    pasteboard.clearContents()
+    pasteboard.setString("hello", forType: .string)
+    #expect(ClipboardItem.read(from: pasteboard) == .text("hello"))
+
+    let file = URL(filePath: "/tmp/report.pdf")
+    pasteboard.clearContents()
+    pasteboard.writeObjects([file as NSURL])
+    pasteboard.setString("report.pdf", forType: .string)
+    #expect(ClipboardItem.read(from: pasteboard) == .files([file]))
+
+    let bitmap = try #require(
+      NSBitmapImageRep(
+        bitmapDataPlanes: nil, pixelsWide: 4, pixelsHigh: 3, bitsPerSample: 8,
+        samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB,
+        bytesPerRow: 0, bitsPerPixel: 0))
+    let png = try #require(bitmap.representation(using: .png, properties: [:]))
+    pasteboard.clearContents()
+    pasteboard.setData(png, forType: .png)
+    #expect(ClipboardItem.read(from: pasteboard) == .image(png, .png))
+
+    pasteboard.clearContents()
+    pasteboard.setString("hunter2", forType: .string)
+    pasteboard.setData(Data(), forType: .init("org.nspasteboard.ConcealedType"))
+    #expect(ClipboardItem.read(from: pasteboard) == nil)
+  }
+
+  @Test func onlyFilesMarkedAsScreenCapturesCount() throws {
+    let folder = FileManager.default.temporaryDirectory
+      .appending(path: "ScreenshotTests-\(UUID().uuidString)", directoryHint: .isDirectory)
+    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let shot = folder.appending(path: "Screenshot 1.png")
+    let other = folder.appending(path: "photo.png")
+    let recording = folder.appending(path: "Recording.mov")
+    for url in [shot, other, recording] {
+      try Data([0]).write(to: url)
+    }
+    for url in [shot, recording] {
+      let value: [UInt8] = [1]
+      #expect(
+        setxattr(
+          url.path(percentEncoded: false), "com.apple.metadata:kMDItemIsScreenCapture", value,
+          value.count, 0, 0) == 0)
+    }
+    #expect(
+      ScreenshotWatcher.screenshots(in: folder, excluding: []).map(\.lastPathComponent)
+        == [shot.lastPathComponent])
+    #expect(ScreenshotWatcher.screenshots(in: folder, excluding: [shot.lastPathComponent]).isEmpty)
   }
 }
 

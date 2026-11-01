@@ -17,6 +17,13 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
     case `default`, rounded, monospaced, serif
   }
 
+  /// Color of the volume and brightness levels beside the notch.
+  enum IndicatorColor: String, Codable, CaseIterable, Sendable {
+    /// The theme's own: its accent, or its neon edge colors.
+    case theme
+    case white, blue, green, orange, pink, purple
+  }
+
   struct Spring: Codable, Equatable, Sendable {
     var response: Double
     var damping: Double
@@ -39,6 +46,7 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   var shadow = true
   /// A neon line around the open panel that fades from this color into the accent.
   var glow: HexColor?
+  var indicatorColor = IndicatorColor.white
   /// Panel size from a theme file saved before size became an app setting. Read once to
   /// carry it over; never saved.
   var legacySize: PanelSize?
@@ -66,7 +74,7 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
 extension Theme {
   private enum CodingKeys: String, CodingKey {
     case id, name, material, tint, background, gradient, foreground, secondary, accent,
-      cornerRadius, fontDesign, shadow, glow
+      cornerRadius, fontDesign, shadow, glow, indicatorColor
     case spring = "animation"
   }
 
@@ -102,6 +110,7 @@ extension Theme {
     fontDesign = value(.fontDesign, defaults.fontDesign)
     shadow = value(.shadow, defaults.shadow)
     glow = value(.glow, defaults.glow)
+    indicatorColor = value(.indicatorColor, defaults.indicatorColor)
     legacySize = Self.legacySize(from: decoder)
     self = normalized()
   }

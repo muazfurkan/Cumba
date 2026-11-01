@@ -33,6 +33,16 @@ struct ThemeEditorSections: View {
         ColorPicker("Edge color", selection: color(\.glow), supportsOpacity: false)
           .help(Text("The edge fades from this color into the accent."))
       }
+      Picker("Volume and brightness", selection: $theme.indicatorColor) {
+        Text("Theme colors").tag(Theme.IndicatorColor.theme)
+        Text("White").tag(Theme.IndicatorColor.white)
+        Text("Blue").tag(Theme.IndicatorColor.blue)
+        Text("Green").tag(Theme.IndicatorColor.green)
+        Text("Orange").tag(Theme.IndicatorColor.orange)
+        Text("Pink").tag(Theme.IndicatorColor.pink)
+        Text("Purple").tag(Theme.IndicatorColor.purple)
+      }
+      .help(Text("Color of the volume and brightness levels beside the notch."))
       Picker("Font", selection: $theme.fontDesign) {
         Text("Default").tag(Theme.FontDesign.default)
         Text("Rounded").tag(Theme.FontDesign.rounded)

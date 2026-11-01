@@ -30,10 +30,12 @@ struct AppearanceSettingsView: View {
             newThemeName = copyName
             isNamingTheme = true
           }
-          Button("Delete", role: .destructive) {
-            themes.delete(current)
+          // Built-in themes can't be deleted, only changed and restored.
+          if !isBuiltIn {
+            Button("Delete", role: .destructive) {
+              themes.delete(current)
+            }
           }
-          .disabled(isBuiltIn)
           Spacer()
           Button("Import…", action: importTheme)
           Button("Export…", action: exportTheme)

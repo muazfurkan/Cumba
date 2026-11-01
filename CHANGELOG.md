@@ -9,14 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Agent notifications: when Claude Code or Codex asks a question, wants a plan approved, needs permission, finishes or stops with an error, a notification opens under the notch. It shows the agent's mark with a badge, a title that says what happened ("Claude is asking a question"), the project, one line of detail and **Open**, which brings the app the agent runs in to the front (or opens the panel). It then folds into the agent's mark and a badge beside the notch; questions and requests stay there until answered. Resting the pointer on a notification keeps it open.
+- Clipboard History shows your recent copies as cards, like a clipboard manager: text, links, images and files, each with the app it came from and when. Click a card to copy it again; right-click to remove it. Optionally, new screenshots are added as macOS saves them (Settings > Widgets > Clipboard History > Add new screenshots; macOS asks once for access to the screenshot folder).
+- Volume and brightness levels have their own color in each theme: the theme's colors, white, blue, green, orange, pink or purple (Appearance > Colors > Volume and brightness). Classic, Glass and Midnight use white; Neon Tokyo, Sakura, Synthwave and Violet Night use their own colors.
 - A low battery (20% or less, on battery) stays beside the notch as a red ring and the percentage until the charger is plugged in. Turn it off in Settings > General > Indicators.
 
 ### Changed
 
 - Tabs slide like pages: a two-finger swipe drags the open tab with your fingers while the next one comes in beside it, the page being left fades, and letting go far enough opens the next tab. Clicking a tab slides the pages the same way.
 - The closed notch reaches a little past the camera housing, so you can see it's there. Set how far in Appearance > Panel Size (Closed notch width and height); the panel closes while you drag them, so you see the result.
-- Built-in themes can be changed again (material, colors, font, shape, animation). They keep their names, your changes are saved with them, and **Restore Defaults** brings back the original.
-- Volume and brightness changes beside the notch use a larger symbol and a longer bar in the theme's accent colors.
+- Built-in themes can be changed again (material, colors, font, shape, animation). They keep their names, your changes are saved with them, and **Restore Defaults** brings back the original. They can't be deleted.
+- Volume and brightness changes beside the notch use a larger symbol and a longer bar.
 - Claude Code's pixel mascot replaces the sparkle for Claude sessions.
 - Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; click **Update** in Settings > Agents.
 
