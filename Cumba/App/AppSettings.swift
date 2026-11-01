@@ -164,6 +164,9 @@ final class AppSettings {
   /// True while the Appearance settings are visible; the panel stays open as a live preview.
   /// Not saved.
   var isPreviewingAppearance = false
+  /// True while a closed notch size is being changed; the preview closes the panel to show
+  /// it. Not saved.
+  var isPreviewingClosedNotch = false
 
   /// Login item state as last reported by the system.
   private(set) var launchAtLogin: SMAppService.Status = .notRegistered

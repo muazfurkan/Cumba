@@ -94,6 +94,8 @@ struct ThemeEditorSections: View {
 /// The panel's size and text size, which stay when the theme changes.
 struct PanelSizeSection: View {
   @Binding var size: PanelSize
+  /// Called with true while a closed notch slider is dragged, so the preview can close.
+  var editingClosedNotch: (Bool) -> Void = { _ in }
 
   var body: some View {
     Section {
@@ -105,10 +107,18 @@ struct PanelSizeSection: View {
       ValueSlider(
         title: "Text size", value: $size.textScale, range: PanelSize.textScaleRange,
         fractionDigits: 2)
+      ValueSlider(
+        title: "Closed notch width", value: $size.closedWidth,
+        range: PanelSize.closedWidthRange, onEditingChanged: editingClosedNotch)
+      ValueSlider(
+        title: "Closed notch height", value: $size.closedHeight,
+        range: PanelSize.closedHeightRange, onEditingChanged: editingClosedNotch)
     } header: {
       Text("Panel Size")
     } footer: {
-      Text("The same for every theme.")
+      Text(
+        "The same for every theme. The closed notch values are how far it reaches past the camera; the panel closes while you drag them so you can see it."
+      )
     }
   }
 }
@@ -119,11 +129,12 @@ private struct ValueSlider: View {
   @Binding var value: Double
   let range: ClosedRange<Double>
   var fractionDigits = 0
+  var onEditingChanged: (Bool) -> Void = { _ in }
 
   var body: some View {
     LabeledContent(title) {
       HStack {
-        Slider(value: $value, in: range)
+        Slider(value: $value, in: range, onEditingChanged: onEditingChanged)
         Text(value, format: .number.precision(.fractionLength(fractionDigits)))
           .monospacedDigit()
           .frame(width: 44, alignment: .trailing)

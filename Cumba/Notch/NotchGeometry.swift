@@ -15,12 +15,12 @@ struct NotchLayout: Equatable, Sendable {
 
   /// Room under the closed notch for a live activity's notification; 0 without one.
   var peekNotificationHeight: CGFloat = 0
+  /// How far the closed shape reaches past the camera housing on each side and below it,
+  /// so the notch reads as part of the app instead of disappearing into the hardware.
+  var closedGrowth = CGSize(width: 8, height: 5)
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
-  /// How far the closed shape reaches past the camera housing on each side and below it,
-  /// so the notch reads as part of the app instead of disappearing into the hardware.
-  static let closedGrowth = CGSize(width: 8, height: 5)
   /// The peek's row is this much taller than the notch, for larger icons.
   static let peekExtraHeight: CGFloat = 10
   static let notificationHeight: CGFloat = 62
@@ -33,6 +33,7 @@ extension NotchLayout {
     self.init()
     expandedSize = CGSize(width: size.width, height: size.height)
     peekExtraWidth = size.indicatorWidth
+    closedGrowth = CGSize(width: size.closedWidth, height: size.closedHeight)
   }
 }
 
@@ -97,8 +98,8 @@ struct NotchGeometry: Equatable, Sendable {
     switch state {
     case .closed:
       CGSize(
-        width: notchRect.width + NotchLayout.closedGrowth.width * 2,
-        height: notchRect.height + NotchLayout.closedGrowth.height)
+        width: notchRect.width + layout.closedGrowth.width * 2,
+        height: notchRect.height + layout.closedGrowth.height)
     case .peek:
       CGSize(
         width: max(

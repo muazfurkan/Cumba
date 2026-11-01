@@ -64,10 +64,22 @@ struct NotchGeometryTests {
   @Test func closedShapeReachesALittlePastTheNotch() throws {
     let geometry = try geometry()
     let closed = geometry.shapeRect(for: .closed)
-    let growth = NotchLayout.closedGrowth
+    let growth = geometry.layout.closedGrowth
+    #expect(growth == CGSize(width: 8, height: 5))
     #expect(closed.contains(geometry.notchRect))
     #expect(closed.width == geometry.notchRect.width + growth.width * 2)
     #expect(closed.minY == geometry.notchRect.minY - growth.height)
+  }
+
+  @Test func closedSizeComesFromThePanelSize() throws {
+    var size = PanelSize()
+    size.closedWidth = 0
+    size.closedHeight = 12
+    let geometry = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: NotchLayout(size: size)))
+    #expect(geometry.shapeSize(for: .closed) == CGSize(width: 188, height: 44))
   }
 
   @Test func peekAddsWidthOnBothSidesAndARowBelowTheNotch() throws {

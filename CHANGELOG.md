@@ -14,7 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - Tabs slide like pages: a two-finger swipe drags the open tab with your fingers while the next one comes in beside it, the page being left fades, and letting go far enough opens the next tab. Clicking a tab slides the pages the same way.
-- The closed notch reaches a little past the camera housing, so you can see it's there.
+- The closed notch reaches a little past the camera housing, so you can see it's there. Set how far in Appearance > Panel Size (Closed notch width and height); the panel closes while you drag them, so you see the result.
+- Built-in themes can be changed again (material, colors, font, shape, animation). They keep their names, your changes are saved with them, and **Restore Defaults** brings back the original.
 - Volume and brightness changes beside the notch use a larger symbol and a longer bar in the theme's accent colors.
 - Claude Code's pixel mascot replaces the sparkle for Claude sessions.
 - Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; click **Update** in Settings > Agents.

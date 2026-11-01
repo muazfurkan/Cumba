@@ -164,6 +164,7 @@ final class NotchWindowController {
       _ = settings.tabBarPosition
       _ = settings.panelSize
       _ = settings.isPreviewingAppearance
+      _ = settings.isPreviewingClosedNotch
       _ = themes.current
     } onChange: { [weak self] in
       Task { @MainActor in
@@ -301,10 +302,12 @@ final class NotchWindowController {
     updatePreview()
   }
 
-  /// Keeps the panel open while the Appearance settings are visible.
+  /// Keeps the panel open while the Appearance settings are visible, except while a closed
+  /// notch size is being changed.
   private func updatePreview() {
-    guard settings.isPreviewingAppearance != isPreviewing else { return }
-    isPreviewing = settings.isPreviewingAppearance
+    let wantsPreview = settings.isPreviewingAppearance && !settings.isPreviewingClosedNotch
+    guard wantsPreview != isPreviewing else { return }
+    isPreviewing = wantsPreview
     if isPreviewing {
       model.send(.clicked)
       if model.state == .expanded {

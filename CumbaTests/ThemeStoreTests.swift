@@ -27,15 +27,27 @@ struct ThemeStoreTests {
     #expect(store.themes.count == Theme.builtIns.count)
   }
 
-  @Test func builtInThemesKeepTheirNamesAndUserThemesTakeAnyName() throws {
+  @Test func builtInThemesKeepTheirNamesAndUserThemesTakeAnyName() async throws {
     defer { cleanUp() }
     let store = try makeStore()
     var renamed = Theme.neonTokyo
     renamed.name = "Mine"
     renamed.cornerRadius += 4
     store.update(renamed)
+    // The change is kept, the name isn't, and no new theme appears.
     #expect(store.userThemes.isEmpty)
-    #expect(store.themes.contains(.neonTokyo))
+    let changed = try #require(store.themes.first { $0.id == Theme.neonTokyo.id })
+    #expect(changed.cornerRadius == Theme.neonTokyo.cornerRadius + 4)
+    #expect(changed.name == Theme.neonTokyo.name)
+    #expect(store.isChanged(changed))
+    try await Task.sleep(for: .milliseconds(800))
+    let reloaded = try makeStore()
+    await reloaded.load()
+    #expect(reloaded.themes.first { $0.id == Theme.neonTokyo.id } == changed)
+    #expect(reloaded.userThemes.isEmpty)
+    reloaded.restoreDefaults(changed)
+    #expect(reloaded.themes.contains(.neonTokyo))
+    #expect(!reloaded.isChanged(.neonTokyo))
 
     let copy = store.duplicate(.neonTokyo, name: "Gece Mavisi")
     #expect(store.current.id == copy.id)

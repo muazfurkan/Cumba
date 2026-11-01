@@ -682,12 +682,13 @@
         }
       }
     },
-    "Built-in themes can't be changed. To make your own from this one, click New Theme." : {
+    "Built-in themes keep their name. Your changes are saved with them." : {
+      "comment" : "Appearance settings, shown for a built-in theme",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hazır temalar değiştirilemez. Bu temadan kendi temanızı yapmak için Yeni Tema'ya tıklayın."
+            "value" : "Hazır temaların adı değişmez; yaptığınız değişiklikler onlarla birlikte kaydedilir."
           }
         }
       }
@@ -728,6 +729,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamerayı kapatmak için tıklayın"
+          }
+        }
+      }
+    },
+    "Closed notch height" : {
+      "comment" : "Settings slider: how far the closed notch reaches below the camera",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı notch yüksekliği"
+          }
+        }
+      }
+    },
+    "Closed notch width" : {
+      "comment" : "Settings slider: how far the closed notch reaches past the camera on each side",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı notch genişliği"
           }
         }
       }
@@ -2836,6 +2859,17 @@
         }
       }
     },
+    "Restore Defaults" : {
+      "comment" : "Button: undoes the changes to a built-in theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılanlara Dön"
+          }
+        }
+      }
+    },
     "Resume" : {
       "localizations" : {
         "tr" : {
@@ -3623,13 +3657,13 @@
         }
       }
     },
-    "The same for every theme." : {
-      "comment" : "Appearance settings: the panel size doesn't change with the theme",
+    "The same for every theme. The closed notch values are how far it reaches past the camera; the panel closes while you drag them so you can see it." : {
+      "comment" : "Footer of the Panel Size settings",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Her temada aynı."
+            "value" : "Her tema için aynıdır. Kapalı notch değerleri, notch'un kameranın ne kadar dışına taşacağını belirler; sürüklerken panel kapanır, böylece sonucu görürsünüz."
           }
         }
       }
