@@ -60,16 +60,6 @@ final class ThemeStore {
     scheduleSave(userThemes[index], after: .milliseconds(500))
   }
 
-  /// Applies an edit from the theme editor. A built-in theme is copied first, so editing
-  /// it just works and the original stays as it was.
-  func edit(_ theme: Theme, copyName: String) {
-    if isBuiltIn(theme) {
-      duplicate(theme.normalized(), name: copyName)
-    } else {
-      update(theme)
-    }
-  }
-
   func delete(_ theme: Theme) {
     guard !isBuiltIn(theme) else { return }
     userThemes.removeAll { $0.id == theme.id }
@@ -137,7 +127,8 @@ extension Theme {
     case Theme.synthwave.id: String(localized: "Synthwave", comment: "Built-in theme name")
     case Theme.violetNight.id:
       String(localized: "Violet Night", comment: "Built-in theme name")
-    default: name
+    default:
+      name.isEmpty ? String(localized: "Untitled Theme", comment: "Theme without a name") : name
     }
   }
 }

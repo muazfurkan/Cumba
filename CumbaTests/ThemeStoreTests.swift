@@ -27,23 +27,27 @@ struct ThemeStoreTests {
     #expect(store.themes.count == Theme.builtIns.count)
   }
 
-  @Test func editingABuiltInThemeEditsACopy() throws {
+  @Test func builtInThemesKeepTheirNamesAndUserThemesTakeAnyName() throws {
     defer { cleanUp() }
     let store = try makeStore()
-    var edited = store.current
-    edited.cornerRadius += 4
-    store.edit(edited, copyName: "Classic Copy")
-    #expect(store.userThemes.count == 1)
-    #expect(store.current.name == "Classic Copy")
-    #expect(store.current.cornerRadius == Theme.classic.cornerRadius + 4)
-    #expect(store.isBuiltIn(store.current) == false)
-    #expect(store.themes.contains(.classic))
+    var renamed = Theme.neonTokyo
+    renamed.name = "Mine"
+    renamed.cornerRadius += 4
+    store.update(renamed)
+    #expect(store.userThemes.isEmpty)
+    #expect(store.themes.contains(.neonTokyo))
 
-    var again = store.current
-    again.cornerRadius += 2
-    store.edit(again, copyName: "Classic Copy")
-    #expect(store.userThemes.count == 1)
-    #expect(store.current.cornerRadius == Theme.classic.cornerRadius + 6)
+    let copy = store.duplicate(.neonTokyo, name: "Gece Mavisi")
+    #expect(store.current.id == copy.id)
+    #expect(store.current.glow == Theme.neonTokyo.glow)
+    var edited = store.current
+    edited.name = "Tokyo Gecesi"
+    store.update(edited)
+    #expect(store.current.displayName == "Tokyo Gecesi")
+    edited.name = ""
+    store.update(edited)
+    #expect(store.current.displayName.isEmpty == false)
+    #expect(Theme.neonTokyo.displayName == String(localized: "Neon Tokyo"))
   }
 
   @Test func corruptFilesAreSkipped() async throws {

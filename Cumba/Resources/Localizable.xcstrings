@@ -605,12 +605,12 @@
         }
       }
     },
-    "Built-in themes stay as they are. Change anything below and it's saved as a copy you can rename." : {
+    "Built-in themes can't be changed. To make your own from this one, click New Theme." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hazır temalar olduğu gibi kalır. Aşağıda bir şeyi değiştirdiğinizde değişiklik, adını değiştirebileceğiniz bir kopya olarak kaydedilir."
+            "value" : "Hazır temalar değiştirilemez. Bu temadan kendi temanızı yapmak için Yeni Tema'ya tıklayın."
           }
         }
       }
@@ -1150,6 +1150,17 @@
         }
       }
     },
+    "Create" : {
+      "comment" : "Creates the new theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oluştur"
+          }
+        }
+      }
+    },
     "Current location" : {
       "localizations" : {
         "tr" : {
@@ -1259,16 +1270,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dosyaları buraya bırakın"
-          }
-        }
-      }
-    },
-    "Duplicate" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Çoğalt"
           }
         }
       }
@@ -1694,6 +1695,17 @@
         }
       }
     },
+    "It starts from %@." : {
+      "comment" : "New theme: the theme it copies",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ temasından başlar."
+          }
+        }
+      }
+    },
     "Join" : {
       "localizations" : {
         "tr" : {
@@ -2080,6 +2092,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yeni Sekme"
+          }
+        }
+      }
+    },
+    "New Theme" : {
+      "comment" : "Title of the prompt that names a new theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Tema"
+          }
+        }
+      }
+    },
+    "New Theme…" : {
+      "comment" : "Appearance settings: makes a user theme from the selected one",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Tema…"
           }
         }
       }
@@ -3719,6 +3753,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kapatılana Kadar"
+          }
+        }
+      }
+    },
+    "Untitled Theme" : {
+      "comment" : "Theme without a name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adsız Tema"
           }
         }
       }
