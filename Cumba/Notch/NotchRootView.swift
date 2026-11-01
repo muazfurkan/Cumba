@@ -58,7 +58,7 @@ struct NotchRootView: View {
       .foregroundStyle(theme.foreground.color)
       .tint(theme.accent.color)
       .fontDesign(theme.fontDesign.swiftUI)
-      .environment(\.panelTextScale, theme.textScale)
+      .environment(\.panelTextScale, model.textScale)
       .animation(animation(for: state, theme: theme), value: state)
       .animation(.smooth(duration: 0.25), value: theme)
       .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)

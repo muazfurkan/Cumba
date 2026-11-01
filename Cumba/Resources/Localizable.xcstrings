@@ -2386,6 +2386,17 @@
         }
       }
     },
+    "Panel Size" : {
+      "comment" : "Appearance settings: section for the panel's width, height and text size",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel Boyutu"
+          }
+        }
+      }
+    },
     "Partly cloudy" : {
       "comment" : "Weather",
       "localizations" : {
@@ -3020,6 +3031,17 @@
         }
       }
     },
+    "Shape" : {
+      "comment" : "Theme editor: section with corner radius and shadow",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şekil"
+          }
+        }
+      }
+    },
     "Short Break" : {
       "localizations" : {
         "tr" : {
@@ -3138,16 +3160,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Denetim Merkezi gibi, hangi uygulama ne çalıyorsa gösterir: Safari, Chrome, YouTube, Spotify, Müzik, podcast'ler ve daha fazlası; eklenti ya da Otomasyon izni gerekmez. Bunu küçük bir yardımcı, macOS'un kendi perl'ü üzerinden okur."
-          }
-        }
-      }
-    },
-    "Size" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boyut"
           }
         }
       }
@@ -3441,6 +3453,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Panel kısa bir an sonra açılır."
+          }
+        }
+      }
+    },
+    "The same for every theme." : {
+      "comment" : "Appearance settings: the panel size doesn't change with the theme",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her temada aynı."
           }
         }
       }

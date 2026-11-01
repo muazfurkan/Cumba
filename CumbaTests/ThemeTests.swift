@@ -68,11 +68,27 @@ struct ThemeTests {
       #"{ "cornerRadius": 900, "expandedSize": { "width": 10, "height": 5000 }, "animation": { "response": -1, "damping": 3 }, "textScale": 9 }"#
     )
     #expect(theme.cornerRadius == Theme.cornerRadiusRange.upperBound)
-    #expect(theme.expandedSize.width == Theme.widthRange.lowerBound)
-    #expect(theme.expandedSize.height == Theme.heightRange.upperBound)
     #expect(theme.spring.response == Theme.responseRange.lowerBound)
     #expect(theme.spring.damping == Theme.dampingRange.upperBound)
-    #expect(theme.textScale == Theme.textScaleRange.upperBound)
+    let size = try #require(theme.legacySize)
+    #expect(size.width == PanelSize.widthRange.lowerBound)
+    #expect(size.height == PanelSize.heightRange.upperBound)
+    #expect(size.textScale == PanelSize.textScaleRange.upperBound)
+  }
+
+  @Test func readsTheSizeOfOlderThemeFilesButNeverSavesIt() throws {
+    let old = try decode(
+      #"{ "expandedSize": { "width": 720, "height": 220 }, "peekExtraWidth": 90 }"#)
+    var expected = PanelSize()
+    expected.width = 720
+    expected.height = 220
+    expected.indicatorWidth = 90
+    #expect(old.legacySize == expected)
+    let object = try #require(
+      try JSONSerialization.jsonObject(with: JSONEncoder().encode(old)) as? [String: Any])
+    #expect(object["expandedSize"] == nil)
+    #expect(object["legacySize"] == nil)
+    #expect(try decode(#"{ "id": "x" }"#).legacySize == nil)
   }
 
   @Test func notJSONObjectFails() {

@@ -39,18 +39,11 @@ struct ThemeEditorSections: View {
         Text("Monospaced").tag(Theme.FontDesign.monospaced)
         Text("Serif").tag(Theme.FontDesign.serif)
       }
-      ValueSlider(
-        title: "Text size", value: $theme.textScale, range: Theme.textScaleRange,
-        fractionDigits: 2)
     }
 
-    Section("Size") {
-      ValueSlider(title: "Width", value: $theme.expandedSize.width, range: Theme.widthRange)
-      ValueSlider(title: "Height", value: $theme.expandedSize.height, range: Theme.heightRange)
+    Section("Shape") {
       ValueSlider(
         title: "Corner radius", value: $theme.cornerRadius, range: Theme.cornerRadiusRange)
-      ValueSlider(
-        title: "Indicator width", value: $theme.peekExtraWidth, range: Theme.peekWidthRange)
       Toggle("Shadow", isOn: $theme.shadow)
     }
 
@@ -95,6 +88,28 @@ struct ThemeEditorSections: View {
     Binding(
       get: { 1 - theme.spring.damping },
       set: { theme.spring.damping = 1 - $0 })
+  }
+}
+
+/// The panel's size and text size, which stay when the theme changes.
+struct PanelSizeSection: View {
+  @Binding var size: PanelSize
+
+  var body: some View {
+    Section {
+      ValueSlider(title: "Width", value: $size.width, range: PanelSize.widthRange)
+      ValueSlider(title: "Height", value: $size.height, range: PanelSize.heightRange)
+      ValueSlider(
+        title: "Indicator width", value: $size.indicatorWidth,
+        range: PanelSize.indicatorWidthRange)
+      ValueSlider(
+        title: "Text size", value: $size.textScale, range: PanelSize.textScaleRange,
+        fractionDigits: 2)
+    } header: {
+      Text("Panel Size")
+    } footer: {
+      Text("The same for every theme.")
+    }
   }
 }
 

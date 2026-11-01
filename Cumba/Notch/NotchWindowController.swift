@@ -10,6 +10,7 @@ final class NotchWindowController {
   private let panelControl: PanelControl
   private let model = NotchViewModel()
   private let hoverTracker = HoverTracker()
+  private let tabSwipe = TabSwipeMonitor()
   private var panel: NotchPanel?
   private var observers: [NSObjectProtocol] = []
   private var isObservingMenus = false
@@ -47,6 +48,7 @@ final class NotchWindowController {
     model.onStateChange = { [weak self] state in
       self?.stateChanged(to: state)
     }
+    startTabSwipes()
     connectPanelControl()
     observeSystemEvents()
     observeSettings()
@@ -56,6 +58,21 @@ final class NotchWindowController {
     #if DEBUG
       observeDebugCommands()
     #endif
+  }
+
+  /// Two fingers sliding sideways on the open panel move between tabs, with the same light
+  /// tap as opening it. Not while the gallery, which scrolls sideways, is open.
+  private func startTabSwipes() {
+    tabSwipe.window = { [weak self] in self?.panel }
+    tabSwipe.isEnabled = { [weak self] in
+      guard let self else { return false }
+      return model.state.isOpen && !host.isShowingGallery
+    }
+    tabSwipe.onStep = { [weak self] step in
+      guard let self, host.selectTab(offset: step), settings.hapticFeedback else { return }
+      NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+    }
+    tabSwipe.start()
   }
 
   private func stateChanged(to state: NotchState) {
@@ -141,6 +158,7 @@ final class NotchWindowController {
       _ = settings.usesVirtualNotch
       _ = settings.panelScreen
       _ = settings.tabBarPosition
+      _ = settings.panelSize
       _ = settings.isPreviewingAppearance
       _ = themes.current
     } onChange: { [weak self] in
@@ -269,6 +287,7 @@ final class NotchWindowController {
 
   private func applySettings() {
     model.theme = themes.current
+    model.textScale = settings.panelSize.textScale
     model.tabBarPosition = settings.tabBarPosition
     model.opensOnHover = settings.opensOnHover
     model.openDelay = .milliseconds(Int(settings.openDelay * 1000))
@@ -294,7 +313,7 @@ final class NotchWindowController {
   /// The screen chosen in Settings. "Notched" falls back to the main screen with the virtual
   /// notch setting; the other choices draw a virtual notch where there is no real one.
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
-    var layout = NotchLayout(theme: themes.current)
+    var layout = NotchLayout(size: settings.panelSize)
     // Tabs at the bottom get their own strip below the widgets.
     if settings.tabBarPosition == .bottom {
       layout.expandedSize.height += NotchLayout.bottomTabBarHeight

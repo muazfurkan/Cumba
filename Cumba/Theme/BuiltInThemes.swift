@@ -37,7 +37,6 @@ extension Theme {
     theme.cornerRadius = 16
     theme.spring = Spring(response: 0.32, damping: 0.9)
     theme.fontDesign = .monospaced
-    theme.textScale = 1.1
     return theme
   }()
 

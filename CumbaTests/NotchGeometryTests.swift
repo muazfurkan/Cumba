@@ -93,11 +93,12 @@ struct NotchGeometryTests {
     #expect(geometry.shapeRect(for: .expanded).maxY == screen.maxY)
   }
 
-  @Test func layoutFollowsTheTheme() {
-    var theme = Theme.classic
-    theme.expandedSize = .init(width: 800, height: 300)
-    theme.peekExtraWidth = 40
-    let layout = NotchLayout(theme: theme)
+  @Test func layoutFollowsThePanelSize() {
+    var size = PanelSize()
+    size.width = 800
+    size.height = 300
+    size.indicatorWidth = 40
+    let layout = NotchLayout(size: size)
     #expect(layout.expandedSize == CGSize(width: 800, height: 300))
     #expect(layout.peekExtraWidth == 40)
   }

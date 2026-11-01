@@ -1,6 +1,6 @@
 import CoreGraphics
 
-/// Panel sizes. Themes provide these from Phase 2 on.
+/// Panel sizes, from `PanelSize` in the settings.
 struct NotchLayout: Equatable, Sendable {
   var expandedSize = CGSize(width: 640, height: 190)
   /// Width added on each side of the notch in the peek state.
@@ -22,10 +22,10 @@ struct NotchLayout: Equatable, Sendable {
 }
 
 extension NotchLayout {
-  init(theme: Theme) {
+  init(size: PanelSize) {
     self.init()
-    expandedSize = CGSize(width: theme.expandedSize.width, height: theme.expandedSize.height)
-    peekExtraWidth = theme.peekExtraWidth
+    expandedSize = CGSize(width: size.width, height: size.height)
+    peekExtraWidth = size.indicatorWidth
   }
 }
 

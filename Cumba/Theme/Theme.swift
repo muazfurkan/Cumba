@@ -1,7 +1,8 @@
 import Foundation
 
-/// Look of the notch panel. Decoding is tolerant: unknown keys are ignored and
-/// missing or invalid values fall back to defaults, so older theme files keep working.
+/// Look of the notch panel; its size is `PanelSize`, the same for every theme. Decoding is
+/// tolerant: unknown keys are ignored and missing or invalid values fall back to defaults,
+/// so older theme files keep working.
 struct Theme: Codable, Equatable, Identifiable, Sendable {
   enum Material: String, Codable, CaseIterable, Sendable {
     /// Liquid Glass.
@@ -14,11 +15,6 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
 
   enum FontDesign: String, Codable, CaseIterable, Sendable {
     case `default`, rounded, monospaced, serif
-  }
-
-  struct Size: Codable, Equatable, Sendable {
-    var width: Double
-    var height: Double
   }
 
   struct Spring: Codable, Equatable, Sendable {
@@ -37,16 +33,15 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   var secondary = HexColor(red: 0x9C, green: 0xA3, blue: 0xAF)
   var accent = HexColor(red: 0x3B, green: 0x82, blue: 0xF6)
   var cornerRadius = 24.0
-  var expandedSize = Size(width: 640, height: 190)
-  var peekExtraWidth = 70.0
   /// Saved as `animation`; renamed in Swift because `Binding` has an `animation` method.
   var spring = Spring(response: 0.36, damping: 1)
   var fontDesign = FontDesign.default
-  /// Size of text in the panel, as a factor of the macOS text styles.
-  var textScale = 1.2
   var shadow = true
   /// A neon line around the open panel that fades from this color into the accent.
   var glow: HexColor?
+  /// Panel size from a theme file saved before size became an app setting. Read once to
+  /// carry it over; never saved.
+  var legacySize: PanelSize?
 
   init(id: String, name: String) {
     self.id = id
@@ -57,30 +52,32 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   func normalized() -> Theme {
     var theme = self
     theme.cornerRadius = cornerRadius.clamped(to: Self.cornerRadiusRange)
-    theme.expandedSize.width = expandedSize.width.clamped(to: Self.widthRange)
-    theme.expandedSize.height = expandedSize.height.clamped(to: Self.heightRange)
-    theme.peekExtraWidth = peekExtraWidth.clamped(to: Self.peekWidthRange)
     theme.spring.response = spring.response.clamped(to: Self.responseRange)
     theme.spring.damping = spring.damping.clamped(to: Self.dampingRange)
-    theme.textScale = textScale.clamped(to: Self.textScaleRange)
     return theme
   }
 
   static let cornerRadiusRange = 0.0...60
-  static let widthRange = 360.0...1000
-  static let heightRange = 120.0...480
-  static let peekWidthRange = 0.0...200
   static let responseRange = 0.1...1.2
   /// Below 0.7 the panel wobbles past the notch, which reads as cheap rather than lively.
   static let dampingRange = 0.7...1.0
-  static let textScaleRange = 0.9...1.6
 }
 
 extension Theme {
   private enum CodingKeys: String, CodingKey {
     case id, name, material, tint, background, gradient, foreground, secondary, accent,
-      cornerRadius, expandedSize, peekExtraWidth, fontDesign, textScale, shadow, glow
+      cornerRadius, fontDesign, shadow, glow
     case spring = "animation"
+  }
+
+  /// Size keys of theme files from before `PanelSize`.
+  private enum LegacyKeys: String, CodingKey {
+    case expandedSize, peekExtraWidth, textScale
+  }
+
+  private struct LegacyExpandedSize: Decodable {
+    var width: Double
+    var height: Double
   }
 
   init(from decoder: Decoder) throws {
@@ -101,14 +98,30 @@ extension Theme {
     secondary = value(.secondary, defaults.secondary)
     accent = value(.accent, defaults.accent)
     cornerRadius = value(.cornerRadius, defaults.cornerRadius)
-    expandedSize = value(.expandedSize, defaults.expandedSize)
-    peekExtraWidth = value(.peekExtraWidth, defaults.peekExtraWidth)
     spring = value(.spring, defaults.spring)
     fontDesign = value(.fontDesign, defaults.fontDesign)
-    textScale = value(.textScale, defaults.textScale)
     shadow = value(.shadow, defaults.shadow)
     glow = value(.glow, defaults.glow)
+    legacySize = Self.legacySize(from: decoder)
     self = normalized()
+  }
+
+  private static func legacySize(from decoder: Decoder) -> PanelSize? {
+    guard let container = try? decoder.container(keyedBy: LegacyKeys.self),
+      !container.allKeys.isEmpty
+    else { return nil }
+    var size = PanelSize()
+    if let expanded = try? container.decode(LegacyExpandedSize.self, forKey: .expandedSize) {
+      size.width = expanded.width
+      size.height = expanded.height
+    }
+    if let width = try? container.decode(Double.self, forKey: .peekExtraWidth) {
+      size.indicatorWidth = width
+    }
+    if let scale = try? container.decode(Double.self, forKey: .textScale) {
+      size.textScale = scale
+    }
+    return size.normalized()
   }
 }
 

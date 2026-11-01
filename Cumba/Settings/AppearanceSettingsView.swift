@@ -14,6 +14,7 @@ struct AppearanceSettingsView: View {
 
   var body: some View {
     Form {
+      PanelSizeSection(size: Bindable(settings).panelSize)
       Section("Theme") {
         Picker("Theme", selection: selection) {
           ForEach(themes.themes) { theme in

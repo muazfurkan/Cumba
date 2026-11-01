@@ -85,8 +85,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     notchWindow.start()
     systemIndicators.start()
-    Task { [themes, layoutStore] in
+    Task { [themes, layoutStore, settings] in
       await themes.load()
+      settings.adoptLegacyPanelSize(themes.current.legacySize)
       await layoutStore.load()
     }
     welcomeWindow.showIfFirstLaunch()

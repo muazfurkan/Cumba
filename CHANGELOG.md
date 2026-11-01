@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
 - A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
 - Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
+- Swipe sideways with two fingers on the open panel to move between tabs.
 - Four new built-in themes: Neon Tokyo (deep indigo with a pink to cyan neon edge and monospaced text), Sakura, Synthwave and Violet Night. Themes can now fade the background into a second color (Appearance > Material > Gradient) and draw a glowing neon edge around the open panel (Appearance > Colors > Neon edge).
 
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
@@ -37,9 +38,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The Claude Code widget is now AI Agents and also follows Codex (through its hooks in ~/.codex/hooks.json; trust them once with /hooks in Codex). It shows the session's title, what it's doing now ("Editing Notch.swift", "Running tests"), its last answer, and on a second page how full its context window is, read locally from the session transcript. While an agent works, a turning ring sits beside the closed notch, opening the panel shows the agent's tab, and a line under the notch shows the answer when it finishes. Installed Claude Code hooks show as out of date once, since two tool events were added; click Update in Settings > Agents.
 - Widgets alone in a tab show a detailed view, and a compact one beside others. Weather looks like Apple's widget (sky colors, place, high and low, the next days, and the next hours when alone) and is now two units wide. Calendar shows the month with a week strip and the next events, or the whole month beside the list when alone. Media shows large artwork with the title and controls when alone.
 - While something plays, the closed notch shows larger artwork and a larger waveform, sized to the notch. The Mirror widget turns the camera on only when you click it.
-- Text size for the panel (Appearance > Colors > Text size), larger by default.
+- Text size for the panel (Appearance > Panel Size > Text size), larger by default.
 - A widget can be in several tabs; adding it to one tab no longer takes it out of another.
 - The closed notch is always black over the hardware notch, whatever the theme's background color.
+- The panel's width, height, indicator width and text size are set once in Appearance > Panel Size and stay when you switch themes; a theme sets only the look (material, colors, font, corner radius, shadow and animation). The size saved in an older custom theme carries over once, and theme files no longer store sizes.
 - Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
 - Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
 - Media reads whatever any app plays from the system's Now Playing: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. This uses the private MediaRemote framework through a small helper run by the system's perl; the README explains it. Turn off "Read media from every app" for the previous behavior. The YouTube extension is now optional.
