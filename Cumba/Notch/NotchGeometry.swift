@@ -21,8 +21,6 @@ struct NotchLayout: Equatable, Sendable {
 
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
-  /// The peek's row is this much taller than the notch, for larger icons.
-  static let peekExtraHeight: CGFloat = 10
   static let notificationHeight: CGFloat = 62
   /// The peek is at least this wide while a notification is open.
   static let notificationWidth: CGFloat = 440
@@ -94,10 +92,10 @@ struct NotchGeometry: Equatable, Sendable {
   /// Width of each side of the peek; never narrower than the closed notch.
   var peekSideWidth: CGFloat { max(layout.peekExtraWidth, layout.closedGrowth.width) }
 
-  /// Height of the peek's row of icons, without a notification; never shorter than the
-  /// closed notch.
+  /// Height of the peek's row of icons, without a notification: as tall as the closed
+  /// notch, so at zero both are exactly the camera housing's height.
   var peekRowHeight: CGFloat {
-    notchRect.height + max(NotchLayout.peekExtraHeight, layout.closedGrowth.height)
+    notchRect.height + layout.closedGrowth.height
   }
 
   func shapeSize(for state: NotchState) -> CGSize {

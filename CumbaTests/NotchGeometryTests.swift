@@ -80,12 +80,21 @@ struct NotchGeometryTests {
         screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
         layout: NotchLayout(size: size)))
     #expect(geometry.shapeSize(for: .closed) == CGSize(width: 188, height: 44))
+    // Beside the notch, things are as tall as the closed notch; at zero, as the notch itself.
+    #expect(geometry.peekRowHeight == 44)
+    size.closedHeight = 0
+    let flat = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: NotchLayout(size: size)))
+    #expect(flat.shapeSize(for: .closed) == CGSize(width: 188, height: 32))
+    #expect(flat.peekRowHeight == 32)
   }
 
   @Test func peekAddsWidthOnBothSidesAndARowBelowTheNotch() throws {
     #expect(
       try geometry().shapeSize(for: .peek)
-        == CGSize(width: 188 + 140, height: 32 + NotchLayout.peekExtraHeight))
+        == CGSize(width: 188 + 140, height: 32 + NotchLayout().closedGrowth.height))
   }
 
   @Test func hoverAreaIncludesTheTopEdge() throws {
