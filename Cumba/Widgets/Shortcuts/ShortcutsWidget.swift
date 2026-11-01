@@ -123,9 +123,7 @@ private struct ShortcutsView: View {
   var body: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
-        Label("Shortcuts", systemImage: "square.stack.3d.up")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("Shortcuts", symbol: "square.stack.3d.up", color: .pink)
         if widget.favorites.isEmpty {
           Button("Choose Shortcuts") { widget.showSettings() }
             .controlSize(.small)

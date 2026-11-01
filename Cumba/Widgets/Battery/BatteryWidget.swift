@@ -125,9 +125,7 @@ private struct BatteryWidgetView: View {
   var body: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
-        Label("Battery", systemImage: "battery.75percent")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("Battery", symbol: "battery.75percent", color: .green)
         if let status = battery.status {
           HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text(Double(status.percent) / 100, format: .percent)

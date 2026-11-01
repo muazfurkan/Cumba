@@ -187,9 +187,7 @@ private struct WeatherView: View {
             ProgressView().controlSize(.small)
           }
         } else {
-          Label("Weather", systemImage: "cloud.sun")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
+          WidgetHeader("Weather", symbol: "cloud.sun", color: .blue)
           setup
         }
       }

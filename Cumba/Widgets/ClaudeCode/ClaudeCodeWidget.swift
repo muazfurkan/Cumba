@@ -64,9 +64,7 @@ private struct ClaudeCodeWidgetView: View {
       } else {
         VStack(alignment: .leading, spacing: 6) {
           if service.sessions.isEmpty {
-            Label("AI Agents", systemImage: "sparkle")
-              .panelFont(.caption)
-              .foregroundStyle(.secondary)
+            WidgetHeader("AI Agents", symbol: "sparkle", color: .purple)
             Text(
               "No sessions yet. Claude Code and Codex show up here once their hooks are installed."
             )

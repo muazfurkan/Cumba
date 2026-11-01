@@ -825,6 +825,17 @@
         }
       }
     },
+    "Click to edit" : {
+      "comment" : "Notes widget help",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düzenlemek için tıklayın"
+          }
+        }
+      }
+    },
     "Click to Show the Camera" : {
       "localizations" : {
         "tr" : {

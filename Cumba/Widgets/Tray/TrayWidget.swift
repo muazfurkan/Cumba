@@ -78,9 +78,7 @@ private struct TrayView: View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
         HStack {
-          Label("Tray", systemImage: "tray")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
+          WidgetHeader("Tray", symbol: "tray", color: .blue)
           Spacer()
           if !tray.items.isEmpty {
             Button {

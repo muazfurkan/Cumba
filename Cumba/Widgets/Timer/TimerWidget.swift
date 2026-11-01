@@ -133,9 +133,7 @@ private struct TimerWidgetView: View {
   var body: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 8) {
-        Label("Timer", systemImage: "timer")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("Timer", symbol: "timer", color: .orange)
         countdown
           .panelFont(size: 30, weight: .semibold, monospacedDigit: true)
         HStack(spacing: 6) {

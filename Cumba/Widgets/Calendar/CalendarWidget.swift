@@ -218,9 +218,7 @@ private struct CalendarWidgetView: View {
   private var accessCard: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
-        Label("Calendar", systemImage: "calendar")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("Calendar", symbol: "calendar", color: .red)
         if !widget.hasAccess {
           if CalendarService.accessWasDenied {
             Text("Calendar access is off. You can allow it in System Settings.")

@@ -9,9 +9,7 @@ struct ClipboardView: View {
   var body: some View {
     WidgetCard {
       VStack(alignment: .leading, spacing: 6) {
-        Label("Clipboard", systemImage: "doc.on.clipboard")
-          .panelFont(.caption)
-          .foregroundStyle(.secondary)
+        WidgetHeader("Clipboard", symbol: "doc.on.clipboard", color: .teal)
         if widget.items.isEmpty {
           Text("What you copy appears here.")
             .panelFont(.caption)
