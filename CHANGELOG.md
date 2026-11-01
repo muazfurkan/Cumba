@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; Settings opens on Agents at launch, where **Update** fixes them.
 - When macOS asks for access to Desktop, Documents or Downloads (screenshots in Clipboard History, files on the Tray), it now says why.
 - The notch works in full screen apps too. Hiding it there is now off by default; turn on **Hide in full screen apps** in Settings > Displays to keep the old behavior. A choice you made earlier stays.
+- Allow from the notch now covers everything except shell commands by default (Claude Code's Bash and Codex's shell tools); choose All requests in Settings > Agents to allow those too. A choice you made earlier stays.
 
 ### Fixed
 
@@ -41,9 +42,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Opening the gallery or editing a tab no longer makes the panel narrower, which could leave the pointer outside and close it. The panel keeps its width until it closes or you switch tabs.
 - The Weather widget no longer asks for a forecast at launch when the panel is closed; it fetches only while it's on screen.
 - The backup of Codex's hooks is named `hooks.json.bak-…` instead of `settings.json.bak-…`.
+- The permission badge beside the closed notch shows again; it was drawn black on black.
+- In a narrow AI Agents widget, In Terminal moves to a second row instead of being cut off, and Progress no longer wraps.
+- The Turkish translation addresses you the same way everywhere.
 
 ### Security
 
+- The Chrome extension's connection now runs on Apple's Network framework. With the previous HTTP library, the time to read a request grew with the square of its longest line, so one long request from an app on this Mac or a web page could keep a CPU core busy for minutes. Such requests are now dropped at once, messages are capped at 64 KB, and connections that don't finish the handshake and say hello within 2 seconds are closed.
+- When a permission request is longer than the card's box, Allow waits until you've scrolled to its end, and the scroll bar always shows.
 - Out-of-date hooks open Settings > Agents at launch. The HTTP hooks of v0.6.0 and v0.7.0 post to a local port another app could take and answer in Cumba's place, so they should be updated.
 - A permission request whose command hides behind a run of blank lines shows the run as "⟨n line breaks⟩" and can only be answered with Deny or In Terminal, like long runs of spaces. The project and tool names above the request are checked the same way.
 - The update check skips release tags that aren't versions; a mistyped tag would have crashed Cumba at launch.
@@ -80,7 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **ljaspNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
+- **cumbaNotch is now Cumba**, made by LJASP. The app, the disk image, the Chrome extension and the repository use the new name; the bundle identifier stays, so settings and Keychain tokens carry over. The app moves its folder in Application Support from `ljaspNotch` to `Cumba` on first launch. Claude Code hooks from earlier versions show as out of date: click **Update…** once in Settings > Claude Code. Load the Chrome extension again from the new app. The hook and script token header is now `X-Cumba-Token`.
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
 - Tabs sit at the bottom of the panel by default (Settings > General > Tabs: at the bottom or at the top), with "+" to add a widget from a gallery and an Edit button. Editing a tab in the panel renames it, picks its symbol, moves it, adds or deletes tabs, and reorders or removes its widgets. Right-click a widget to remove it.
 - The panel's width follows the open tab: as wide as its widgets, with room for a detailed view when a tab has one widget.
@@ -139,7 +145,7 @@ Fixes from a security review of the code, done with AI assistance (not an extern
 
 - Claude Code hooks now reach the app through a Unix socket in a folder only your account can open, using `command` hooks with curl, instead of HTTP on a TCP port. Another user or a sandboxed app could otherwise have taken the port while the app was closed and approved commands. Update the hooks in Settings > Claude Code.
 - The permission card shows the full request, makes control, direction and zero-width characters and long space runs visible, offers no Allow button for suspicious requests, and arms its buttons only after a short delay.
-- The extension socket accepts only the ljaspNotch extension (fixed extension ID) and closes on anything but a valid hello; the extension keeps the token away from content scripts.
+- The extension socket accepts only the cumbaNotch extension (fixed extension ID) and closes on anything but a valid hello; the extension keeps the token away from content scripts.
 - Both local servers restart after a failure.
 - The hook installer recognizes only its own entries, resolves symlinks, refuses to touch a settings file it can't read, keeps backups private and masks the token in the diff.
 - The token is copied as concealed and cleared from the clipboard after a minute.

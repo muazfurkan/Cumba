@@ -58,14 +58,23 @@ struct AgentPanel: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       HStack(spacing: 6) {
-        Label {
-          page == .progress ? Text("Progress") : Text("Usage")
-        } icon: {
-          Image(systemName: page == .progress ? "list.bullet" : "gauge.with.dots.needle.33percent")
+        let title = page == .progress ? Text("Progress") : Text("Usage")
+        let icon = Image(
+          systemName: page == .progress ? "list.bullet" : "gauge.with.dots.needle.33percent")
+        // In a narrow widget the name gives way to its symbol instead of wrapping.
+        ViewThatFits(in: .horizontal) {
+          Label {
+            title
+          } icon: {
+            icon
+          }
+          .fixedSize()
+          icon
+            .accessibilityLabel(title)
         }
         .panelFont(.caption)
         .foregroundStyle(.secondary)
-        Spacer()
+        Spacer(minLength: 0)
         let others = service.sessions.count - 1
         if others > 0 {
           Button(action: showNextSession) {

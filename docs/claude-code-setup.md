@@ -8,7 +8,7 @@ Open **Cumba > Settings > Agents**, choose Claude Code and click **Install…**.
 
 **Remove…** deletes only Cumba's entries. If the status shows **Out of date** (for example after an update changed the hook format), click **Update…**.
 
-Cumba's socket runs only while hooks are installed. In **Settings > Agents** you also choose what can be allowed from the notch: everything, everything except shell commands, or nothing (only Deny and In Terminal). Allow in the notch is the same as Allow in Claude Code.
+Cumba's socket runs only while hooks are installed. In **Settings > Agents** you also choose what can be allowed from the notch: everything except shell commands (the default), everything, or nothing (only Deny and In Terminal). Allow in the notch is the same as Allow in Claude Code. When a request is longer than the card's box, Allow waits until you've scrolled to its end.
 
 ## How it works
 

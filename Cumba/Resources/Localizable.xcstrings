@@ -18,7 +18,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ planını onayına sunuyor"
+            "value" : "%@ planını onayınıza sunuyor"
           }
         }
       }
@@ -51,7 +51,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ seni bekliyor"
+            "value" : "%@ sizi bekliyor"
           }
         }
       }
@@ -3726,6 +3726,17 @@
         }
       }
     },
+    "Scroll to the end to allow it." : {
+      "comment" : "Permission card: Allow waits until a long request has been scrolled to its end",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin vermek için sonuna kadar kaydırın."
+          }
+        }
+      }
+    },
     "Scrolls your script under the camera while you talk" : {
       "localizations" : {
         "tr" : {
@@ -4444,7 +4455,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plan incelemeni bekliyor."
+            "value" : "Plan incelemenizi bekliyor."
           }
         }
       }

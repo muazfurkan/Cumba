@@ -87,8 +87,9 @@ private struct ClaudeCodeWidgetView: View {
 ///
 /// Safety: the full request is shown, escaped (`SafeText`). Buttons stay disabled for a
 /// moment whenever a new request appears, so a click aimed at something else or a double
-/// click can't approve it unseen. Suspicious requests, and tools Settings exclude, get no
-/// Allow button at all.
+/// click can't approve it unseen. When the request is longer than its box, Allow waits until
+/// the end has been scrolled into view. Suspicious requests, and tools Settings exclude, get
+/// no Allow button at all.
 struct PermissionCard: View {
   let request: PermissionBroker.Request
   /// Requests waiting behind this one.
@@ -98,6 +99,20 @@ struct PermissionCard: View {
 
   static let armingDelay = Duration.milliseconds(750)
   @State private var isArmed = false
+  @State private var box = DetailBox()
+
+  /// What the detail box showed of a request.
+  private struct DetailBox: Equatable {
+    var request: UUID?
+    var overflows = false
+    var hasSeenEnd = false
+  }
+
+  /// Until the box has measured this request, Allow waits too.
+  private var mustScrollToEnd: Bool {
+    guard box.request == request.id else { return true }
+    return box.overflows && !box.hasSeenEnd
+  }
 
   var body: some View {
     VStack(alignment: .leading, spacing: compact ? 4 : 6) {
@@ -122,6 +137,18 @@ struct PermissionCard: View {
           .textSelection(.enabled)
           .frame(maxWidth: .infinity, alignment: .leading)
       }
+      .scrollIndicators(.visible)
+      .onScrollGeometryChange(for: [Bool].self) { geometry in
+        [
+          geometry.contentSize.height > geometry.containerSize.height + 1,
+          geometry.visibleRect.maxY >= geometry.contentSize.height - 1,
+        ]
+      } action: { _, new in
+        let seen = box.request == request.id && box.hasSeenEnd
+        box = DetailBox(request: request.id, overflows: new[0], hasSeenEnd: seen || new[1])
+      }
+      // A new request starts at the top, measured afresh.
+      .id(request.id)
       .frame(maxHeight: compact ? 44 : 64)
       .padding(6)
       .background(.black.opacity(0.25), in: RoundedRectangle(cornerRadius: 6))
@@ -138,18 +165,22 @@ struct PermissionCard: View {
           .panelFont(.caption2)
           .foregroundStyle(.secondary)
           .fixedSize(horizontal: false, vertical: true)
+      } else if mustScrollToEnd && box.request == request.id {
+        Label("Scroll to the end to allow it.", systemImage: "arrow.down")
+          .panelFont(.caption2)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
       }
-      HStack(spacing: 6) {
-        if request.canAllow {
-          Button("Allow") { answer(.allow) }
-            .buttonStyle(.borderedProminent)
-            .tint(.green)
+      // In a narrow widget, In Terminal moves to a second row instead of being cut off.
+      ViewThatFits(in: .horizontal) {
+        HStack(spacing: 6) {
+          allowAndDeny
+          inTerminal
         }
-        Button("Deny") { answer(.deny) }
-          .buttonStyle(.bordered)
-        Button("In Terminal") { answer(.askInTerminal) }
-          .buttonStyle(.bordered)
-          .help(Text("Answer in Claude Code instead"))
+        VStack(alignment: .leading, spacing: 4) {
+          HStack(spacing: 6) { allowAndDeny }
+          inTerminal
+        }
       }
       .controlSize(.small)
       .disabled(!isArmed)
@@ -159,5 +190,22 @@ struct PermissionCard: View {
       try? await Task.sleep(for: Self.armingDelay)
       isArmed = true
     }
+  }
+
+  @ViewBuilder private var allowAndDeny: some View {
+    if request.canAllow {
+      Button("Allow") { answer(.allow) }
+        .buttonStyle(.borderedProminent)
+        .tint(.green)
+        .disabled(mustScrollToEnd)
+    }
+    Button("Deny") { answer(.deny) }
+      .buttonStyle(.bordered)
+  }
+
+  private var inTerminal: some View {
+    Button("In Terminal") { answer(.askInTerminal) }
+      .buttonStyle(.bordered)
+      .help(Text("Answer in Claude Code instead"))
   }
 }

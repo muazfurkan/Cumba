@@ -2,7 +2,7 @@
 
 <h1 align="center">Cumba</h1>
 
-<p align="center"><sub>by LJASP · formerly ljaspNotch</sub></p>
+<p align="center"><sub>by LJASP · formerly cumbaNotch</sub></p>
 
 <p align="center">
   <a href="https://github.com/muazfurkan/Cumba/releases/latest"><img src="https://img.shields.io/github/v/release/muazfurkan/Cumba?label=download&color=DCB669" alt="Latest release"></a>
@@ -54,7 +54,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 
 **Updates:** the app tells you when a new version is out; it never downloads or installs anything itself. Release builds are signed ad hoc, so after an update macOS asks again for the permissions you gave (Automation, Calendar, Location, Camera) and for Keychain access to Cumba's tokens. Check the new download first, then allow.
 
-**Coming from ljaspNotch?** Cumba is the same app under a new name. Quit ljaspNotch, move `ljaspNotch.app` to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Agents. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
+**Coming from cumbaNotch?** Cumba is the same app under a new name. Quit cumbaNotch, move the old app to the Trash and install Cumba; your settings, layout, notes and themes carry over. If you use Claude Code hooks, click **Update…** once in Settings > Agents. If you use the Chrome extension, remove it in `chrome://extensions`, load it again from the new app as in [YouTube and YouTube Music](#youtube-and-youtube-music) and paste the token.
 
 ## Requirements
 
@@ -130,7 +130,7 @@ The AI Agents widget shows what a session is doing right now ("Editing Notch.swi
 
 **Codex** works the same way: install its hooks in **Settings > Agents > Codex** (they go to `~/.codex/hooks.json`), then run `/hooks` in Codex once and trust them, since Codex runs new hooks only after that.
 
-**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Agents you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
+**Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** By default, shell commands are answered in the terminal and everything else can be allowed from the notch; in Settings > Agents you can allow everything, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button, and when a request is longer than its box, Allow waits until you've scrolled to its end. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 
 ## Scripts
 

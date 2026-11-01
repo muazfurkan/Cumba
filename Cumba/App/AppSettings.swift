@@ -234,7 +234,8 @@ final class AppSettings {
     hasSeenWelcome = defaults.bool(forKey: Key.hasSeenWelcome)
     browserExtensionEnabled = defaults.bool(forKey: Key.browserExtensionEnabled)
     notchApprovals =
-      defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:)) ?? .all
+      defaults.string(forKey: Key.notchApprovals).flatMap(NotchApprovals.init(rawValue:))
+      ?? .exceptShell
     panelScreen =
       defaults.string(forKey: Key.panelScreen).flatMap(PanelScreen.init(rawValue:)) ?? .notched
     tabBarStyle =
