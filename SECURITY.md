@@ -1,6 +1,6 @@
 # Security Policy
 
-Cumba runs a local HTTP/WebSocket server on `127.0.0.1` and receives Claude Code and Codex hook events, so security reports are taken seriously.
+Cumba runs a local WebSocket server on `127.0.0.1` for its Chrome extension and receives Claude Code and Codex hook events on a private socket, so security reports are taken seriously.
 
 ## Reporting a vulnerability
 
@@ -70,7 +70,7 @@ The security-relevant code is small. Start here:
 
 | Area | Files |
 |---|---|
-| Local servers, tokens | `Cumba/Server/` (`LocalServer`, `RequestGuard`, `MediaSocket`, `TokenStore`, `ScriptActivityRoute`) |
+| Local servers, tokens | `Cumba/Server/` (`LocalServer`, `RequestGuard`, `MediaSocket`, `MediaSocketServer`, `TokenStore`, `ScriptActivityRoute`) |
 | Media key tap, brightness, microphone/camera indicator | `Cumba/System/` |
 | System Now Playing helper (private MediaRemote) | `NowPlayingHelper/`, `Cumba/Resources/now-playing.pl`, `Cumba/Media/Providers/SystemNowPlayingProvider.swift` |
 | Claude Code and Codex hooks, permission flow, transcript reading | `Cumba/Claude/` (`ClaudeHookRoute`, `PermissionBroker`, `NotchApprovals`, `SafeText`, `HookInstaller`, `AgentProgress`) |
@@ -81,7 +81,7 @@ The security-relevant code is small. Start here:
 | Entitlements, Info.plist | `Cumba/Resources/`, `project.yml` |
 | Release pipeline | `.github/workflows/release.yml` |
 
-The only third-party dependency is [FlyingFox](https://github.com/swhitty/FlyingFox) (MIT), pinned to a commit in `project.yml`.
+The only third-party dependency is [FlyingFox](https://github.com/swhitty/FlyingFox) (MIT), pinned to a commit in `project.yml`. It serves only the private hook socket, which only your user account can open; the extension's port, which web pages can reach too, runs on Apple's Network framework.
 
 ## Supported versions
 

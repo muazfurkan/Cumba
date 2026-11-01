@@ -1,40 +1,36 @@
-import FlyingFox
 import Foundation
 
-/// `GET /media`: WebSocket for the Chrome extension. The handshake needs our extension's
-/// Origin and a loopback Host; the first message must be a `hello` with the token, sent
-/// within 5 seconds. Anything else closes the connection at once.
-struct MediaSocketRoute: HTTPHandler {
-  let port: UInt16
-  let token: String
-  let hub: BrowserMediaHub
-
-  func handleRequest(_ request: HTTPRequest) async throws -> HTTPResponse {
-    if RequestGuard.checkHost(request.headers[.host], port: port) != nil
-      || RequestGuard.checkSocketOrigin(request.headers[HTTPHeader("Origin")]) != nil
-    {
-      return HTTPResponse(statusCode: .forbidden)
-    }
-    let socket = WebSocketHTTPHandler.webSocket(MediaSocketHandler(token: token, hub: hub))
-    return try await socket.handleRequest(request)
-  }
+/// A WebSocket message to or from the Chrome extension.
+enum MediaSocketMessage: Equatable, Sendable {
+  case text(String)
+  /// Close the connection: it broke the rules (policy violation).
+  case close
 }
 
-struct MediaSocketHandler: WSMessageHandler {
+/// The media socket's rules, apart from the transport (`MediaSocketServer`): the first message
+/// must be a `hello` with the token, sent within 2 seconds (the extension sends it as soon as
+/// it connects). Anything else closes the connection at once.
+struct MediaSocketHandler {
   let token: String
   let hub: BrowserMediaHub
 
-  func makeMessages(for client: AsyncStream<WSMessage>) async throws -> AsyncStream<WSMessage> {
-    let (outbound, continuation) = AsyncStream.makeStream(of: WSMessage.self)
+  static let helloTimeout = Duration.seconds(2)
+
+  /// Reads the extension's messages from `client` and returns the app's messages to it.
+  func makeMessages(for client: AsyncStream<MediaSocketMessage>) -> AsyncStream<
+    MediaSocketMessage
+  > {
+    let (outbound, continuation) = AsyncStream.makeStream(of: MediaSocketMessage.self)
     let id = UUID()
     let token = token
     let hub = hub
 
-    // Close connections that don't say hello in time.
+    // Close connections that don't say hello in time, including handshakes that were turned
+    // away: Network keeps those open without telling.
     Task {
-      try? await Task.sleep(for: .seconds(5))
+      try? await Task.sleep(for: Self.helloTimeout)
       if await !hub.isConnected(id) {
-        continuation.yield(.close(.policyViolation))
+        continuation.yield(.close)
         continuation.finish()
       }
     }
@@ -49,7 +45,7 @@ struct MediaSocketHandler: WSMessageHandler {
             RequestGuard.checkToken(provided, expected: token) == nil
           else {
             Log.media.error("Rejected a browser connection without a valid token")
-            continuation.yield(.close(.policyViolation))
+            continuation.yield(.close)
             break
           }
           authenticated = true
