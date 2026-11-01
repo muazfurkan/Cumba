@@ -136,6 +136,10 @@ struct NotesTests {
     let again = NotesWidget(fileURL: url, panel: PanelControl())
     await again.load()
     #expect(again.text == "Buy milk")
+    let permissions =
+      try FileManager.default.attributesOfItem(atPath: url.path(percentEncoded: false))[
+        .posixPermissions] as? Int
+    #expect(permissions == 0o600)
   }
 }
 

@@ -9,6 +9,8 @@ import Foundation
 struct ClaudeHookRoute: HTTPHandler {
   let token: String
   let service: ClaudeCodeService
+  /// `/claude/hook` or `/codex/hook`: Codex hooks send the same events in the same shape.
+  var agent = Agent.claude
 
   func handleRequest(_ request: HTTPRequest) async throws -> HTTPResponse {
     if request.headers[HTTPHeader("Origin")] != nil {
@@ -27,7 +29,7 @@ struct ClaudeHookRoute: HTTPHandler {
 
     switch event {
     case .permissionRequest:
-      let decision = await service.requestPermission(payload)
+      let decision = await service.requestPermission(payload, agent: agent)
       let body = PermissionBroker.responseBody(for: decision)
       // An empty 200 lets Claude Code show its own dialog.
       return HTTPResponse(
@@ -35,7 +37,7 @@ struct ClaudeHookRoute: HTTPHandler {
         body: body)
     default:
       // UserPromptSubmit blocks the model, so answer before doing any work.
-      Task { @MainActor in service.handle(payload) }
+      Task { @MainActor [agent] in service.handle(payload, agent: agent) }
       return HTTPResponse(statusCode: .ok)
     }
   }

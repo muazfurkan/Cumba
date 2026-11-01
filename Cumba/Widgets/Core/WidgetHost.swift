@@ -50,6 +50,13 @@ final class WidgetHost {
 
   func panelOpenChanged(_ isOpen: Bool) {
     isPanelOpen = isOpen
+    // While an agent works, opening the panel shows the tab with its widget.
+    if isOpen, claude.sessions.contains(where: \.isActive),
+      selectedTab?.widgets.contains(ClaudeCodeWidget.kind) != true,
+      let tab = tabs.first(where: { $0.widgets.contains(ClaudeCodeWidget.kind) })
+    {
+      selectedTabID = tab.id
+    }
     if !isOpen {
       isShowingGallery = false
       isEditing = false
@@ -266,6 +273,23 @@ struct PeekView: View {
   let height: CGFloat
 
   var body: some View {
+    VStack(spacing: 0) {
+      row
+        .frame(height: height)
+      if let banner = activity.banner {
+        banner
+          .padding(.horizontal, 16)
+          .frame(height: NotchLayout.bannerHeight)
+      }
+    }
+    .panelFont(.caption)
+    .environment(\.peekHeight, height)
+    // Beside the notch there is no room to grow, so the text size setting doesn't apply.
+    .environment(\.panelTextScale, 1)
+    .accessibilityElement(children: .combine)
+  }
+
+  private var row: some View {
     HStack(spacing: 0) {
       // Clipped, so nothing can slide under the camera housing where it can't be seen.
       activity.leading
@@ -279,11 +303,6 @@ struct PeekView: View {
         .frame(width: sideWidth)
         .clipped()
     }
-    .panelFont(.caption)
-    .environment(\.peekHeight, height)
-    // Beside the notch there is no room to grow, so the text size setting doesn't apply.
-    .environment(\.panelTextScale, 1)
-    .accessibilityElement(children: .combine)
   }
 }
 

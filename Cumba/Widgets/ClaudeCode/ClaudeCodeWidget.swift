@@ -1,16 +1,19 @@
 import Observation
 import SwiftUI
 
-/// Claude Code sessions and pending permission requests.
+/// Claude Code and Codex sessions and pending permission requests. The kind keeps its
+/// first name so saved layouts still find it.
 @MainActor
 @Observable
 final class ClaudeCodeWidget: NotchWidget {
   static let kind = "claude-code"
-  static let title = "Claude Code"
+  static var title: String { String(localized: "AI Agents", comment: "Widget name") }
   static let symbol = "terminal"
   static let size = WidgetSize.regular
   static var summary: String {
-    String(localized: "Claude Code sessions and permission requests", comment: "Widget description")
+    String(
+      localized: "What Claude Code and Codex are doing, and their permission requests",
+      comment: "Widget description")
   }
 
   let service: ClaudeCodeService
@@ -41,83 +44,23 @@ private struct ClaudeCodeWidgetView: View {
         .id(request.id)
       } else {
         VStack(alignment: .leading, spacing: 6) {
-          Label("Claude Code", systemImage: "terminal")
-            .panelFont(.caption)
-            .foregroundStyle(.secondary)
           if service.sessions.isEmpty {
-            Text("No sessions yet. Claude Code shows up here once its hooks are installed.")
+            Label("AI Agents", systemImage: "sparkle")
               .panelFont(.caption)
               .foregroundStyle(.secondary)
-              .fixedSize(horizontal: false, vertical: true)
+            Text(
+              "No sessions yet. Claude Code and Codex show up here once their hooks are installed."
+            )
+            .panelFont(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
             Button("Set Up…", action: setUp)
               .controlSize(.small)
           } else {
-            ScrollView {
-              VStack(alignment: .leading, spacing: 6) {
-                ForEach(service.sessions) { session in
-                  SessionRow(session: session)
-                }
-              }
-            }
-            .scrollIndicators(.never)
+            AgentPanel(service: service)
           }
         }
       }
-    }
-  }
-}
-
-private struct SessionRow: View {
-  let session: ClaudeCodeService.Session
-
-  var body: some View {
-    HStack(spacing: 6) {
-      Image(systemName: symbol)
-        .foregroundStyle(color)
-        .frame(width: 14)
-      VStack(alignment: .leading, spacing: 0) {
-        Text(session.project)
-          .panelFont(.caption, weight: .medium)
-          .lineLimit(1)
-        Text(session.detail ?? stateText)
-          .panelFont(.caption2)
-          .foregroundStyle(.secondary)
-          .lineLimit(1)
-      }
-    }
-    .accessibilityElement(children: .combine)
-  }
-
-  private var symbol: String {
-    switch session.state {
-    case .working: "ellipsis.circle"
-    case .waitingPermission: "hand.raised.fill"
-    case .waitingInput: "bubble.left.fill"
-    case .done: "checkmark.circle.fill"
-    case .failed: "exclamationmark.triangle.fill"
-    case .ended: "moon.zzz"
-    }
-  }
-
-  private var color: Color {
-    switch session.state {
-    case .working: .secondary
-    case .waitingPermission, .waitingInput: .orange
-    case .done: .green
-    case .failed: .red
-    case .ended: .secondary
-    }
-  }
-
-  private var stateText: String {
-    switch session.state {
-    case .working: String(localized: "Working", comment: "Claude Code session state")
-    case .waitingPermission:
-      String(localized: "Needs permission", comment: "Claude Code session state")
-    case .waitingInput: String(localized: "Waiting", comment: "Claude Code is waiting for the user")
-    case .done: String(localized: "Done", comment: "Claude Code finished")
-    case .failed(let error): String(localized: "Error: \(error)", comment: "Claude Code error")
-    case .ended: String(localized: "Ended", comment: "Claude Code session state")
     }
   }
 }

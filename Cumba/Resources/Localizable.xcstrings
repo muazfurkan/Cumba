@@ -12,6 +12,16 @@
         }
       }
     },
+    "%@ isn't valid JSON. Fix it first; nothing was changed." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ geçerli bir JSON değil. Önce düzeltin; hiçbir şey değiştirilmedi."
+          }
+        }
+      }
+    },
     "%@ left" : {
       "comment" : "Battery time remaining",
       "localizations" : {
@@ -19,6 +29,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ kaldı"
+          }
+        }
+      }
+    },
+    "%@ of the context window used" : {
+      "comment" : "How full an AI agent session's context is",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlam penceresinin %@ kadarı kullanıldı"
           }
         }
       }
@@ -254,6 +275,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widget'ları Ayarlar > Widget'lar'dan ekleyin, kaldırın ve sıralayın; Spotify, YouTube veya Claude Code'u bağlayın."
+          }
+        }
+      }
+    },
+    "Agent" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajan"
+          }
+        }
+      }
+    },
+    "Agents" : {
+      "comment" : "Settings tab for Claude Code and Codex",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajanlar"
+          }
+        }
+      }
+    },
+    "AI Agents" : {
+      "comment" : "Widget name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapay Zeka Ajanları"
           }
         }
       }
@@ -591,6 +644,26 @@
         }
       }
     },
+    "Codex runs new hooks only after you trust them: after installing, run /hooks in Codex once and trust Cumba's hooks." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codex yeni hook'ları ancak onlara güvendiğinizde çalıştırır: kurduktan sonra Codex'te bir kez /hooks komutunu çalıştırıp Cumba'nın hook'larına güvenin."
+          }
+        }
+      }
+    },
+    "Context use shows after the first answer." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlam kullanımı ilk yanıttan sonra görünür."
+          }
+        }
+      }
+    },
     "CPU" : {
       "localizations" : {
         "tr" : {
@@ -809,16 +882,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claude Code"
-          }
-        }
-      }
-    },
-    "Claude Code sessions and permission requests" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Claude Code oturumları ve izin istekleri"
           }
         }
       }
@@ -1229,6 +1292,17 @@
         }
       }
     },
+    "Editing %@" : {
+      "comment" : "An AI agent edits a file",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ düzenleniyor"
+          }
+        }
+      }
+    },
     "Ended" : {
       "comment" : "Claude Code session state",
       "localizations" : {
@@ -1474,6 +1548,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hook'lar terminaldeki, IDE eklentilerindeki ve Claude masaüstü uygulamasındaki Claude Code olaylarını yalnızca sizin kullanıcı hesabınızın açabildiği özel bir soket üzerinden Cumba'ya gönderir. İzin istekleri böylece notch'ta görünür. Cumba çalışmıyorsa Claude Code her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
+          }
+        }
+      }
+    },
+    "Hooks send events from the Codex CLI to Cumba through the same private socket. Its steps and permission requests then appear in the notch. When Cumba isn't running, Codex carries on as usual. Session data stays in memory." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hook'lar Codex CLI olaylarını aynı özel soket üzerinden Cumba'ya gönderir. Böylece adımları ve izin istekleri notch'ta görünür. Cumba çalışmıyorsa Codex her zamanki gibi devam eder. Oturum verileri yalnızca bellekte tutulur."
           }
         }
       }
@@ -1976,12 +2060,12 @@
         }
       }
     },
-    "No sessions yet. Claude Code shows up here once its hooks are installed." : {
+    "No sessions yet. Claude Code and Codex show up here once their hooks are installed." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz oturum yok. Hook'lar kurulunca Claude Code burada görünür."
+            "value" : "Henüz oturum yok. Hook'ları kurulunca Claude Code ve Codex burada görünür."
           }
         }
       }
@@ -2310,6 +2394,17 @@
         }
       }
     },
+    "Planning" : {
+      "comment" : "An AI agent updates its plan",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planlıyor"
+          }
+        }
+      }
+    },
     "Play" : {
       "localizations" : {
         "tr" : {
@@ -2381,6 +2476,16 @@
         }
       }
     },
+    "Progress" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlerleme"
+          }
+        }
+      }
+    },
     "Quit Cumba" : {
       "localizations" : {
         "tr" : {
@@ -2408,6 +2513,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medyayı her uygulamadan oku"
+          }
+        }
+      }
+    },
+    "Reading %@" : {
+      "comment" : "An AI agent reads a file",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ okunuyor"
           }
         }
       }
@@ -2583,6 +2699,28 @@
         }
       }
     },
+    "Running %@" : {
+      "comment" : "An AI agent runs a shell command",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalıştırıyor: %@"
+          }
+        }
+      }
+    },
+    "Running a subagent" : {
+      "comment" : "An AI agent starts a helper",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yardımcı ajan çalışıyor"
+          }
+        }
+      }
+    },
     "Running on port %@" : {
       "localizations" : {
         "tr" : {
@@ -2673,6 +2811,28 @@
         }
       }
     },
+    "Searching the code" : {
+      "comment" : "An AI agent searches files",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kodda arıyor"
+          }
+        }
+      }
+    },
+    "Searching the web" : {
+      "comment" : "An AI agent uses the web",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webde arıyor"
+          }
+        }
+      }
+    },
     "Secondary text" : {
       "localizations" : {
         "tr" : {
@@ -2729,6 +2889,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tırnaklı"
+          }
+        }
+      }
+    },
+    "Session ended" : {
+      "comment" : "AI agent session closed",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oturum bitti"
           }
         }
       }
@@ -3238,6 +3409,17 @@
         }
       }
     },
+    "Thinking…" : {
+      "comment" : "An AI agent is working on its answer",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düşünüyor…"
+          }
+        }
+      }
+    },
     "This request has hidden characters or is too long to show safely. Answer it in the terminal." : {
       "localizations" : {
         "tr" : {
@@ -3463,6 +3645,16 @@
         }
       }
     },
+    "Usage" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım"
+          }
+        }
+      }
+    },
     "Use my current location" : {
       "localizations" : {
         "tr" : {
@@ -3479,6 +3671,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konumumu Kullan"
+          }
+        }
+      }
+    },
+    "Using %@" : {
+      "comment" : "An AI agent uses a tool",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kullanıyor"
           }
         }
       }
@@ -3534,6 +3737,28 @@
         }
       }
     },
+    "Waiting for permission" : {
+      "comment" : "AI agent needs approval",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin bekliyor"
+          }
+        }
+      }
+    },
+    "Waiting for you" : {
+      "comment" : "AI agent needs input",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sizi bekliyor"
+          }
+        }
+      }
+    },
     "Weather" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -3582,6 +3807,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cumba'ya hoş geldiniz"
+          }
+        }
+      }
+    },
+    "What Claude Code and Codex are doing, and their permission requests" : {
+      "comment" : "Widget description",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code ve Codex'in ne yaptığı ve izin istekleri"
           }
         }
       }

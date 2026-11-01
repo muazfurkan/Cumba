@@ -303,6 +303,9 @@ final class NotchWindowController {
     if let sideWidth = host.liveActivities.current?.sideWidth {
       layout.peekExtraWidth = max(layout.peekExtraWidth, sideWidth)
     }
+    if host.liveActivities.current?.banner != nil {
+      layout.peekBannerHeight = NotchLayout.bannerHeight
+    }
     layout.panelWidth = host.preferredPanelWidth(maxWidth: layout.expandedSize.width)
     let chosen: NSScreen?
     switch settings.panelScreen {

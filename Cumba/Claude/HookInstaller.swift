@@ -47,12 +47,24 @@ struct HookInstaller: Sendable {
   /// Events, with timeouts in seconds. SessionEnd needs an explicit timeout;
   /// without one Claude Code gives all SessionEnd hooks 1.5 s together.
   static let events: [(name: String, timeout: Int)] = [
-    ("UserPromptSubmit", 5), ("PermissionRequest", 300), ("Notification", 5), ("Stop", 5),
-    ("StopFailure", 5), ("SessionEnd", 2),
+    ("UserPromptSubmit", 5), ("PreToolUse", 5), ("PostToolUse", 5), ("PermissionRequest", 300),
+    ("Notification", 5), ("Stop", 5), ("StopFailure", 5), ("SessionEnd", 2),
   ]
+
+  /// Codex lists its hooks the same way in ~/.codex/hooks.json, without Notification and
+  /// StopFailure.
+  static let codexEvents: [(name: String, timeout: Int)] = [
+    ("UserPromptSubmit", 5), ("PreToolUse", 5), ("PostToolUse", 5), ("PermissionRequest", 300),
+    ("Stop", 5), ("SessionEnd", 2),
+  ]
+
+  static func events(for agent: Agent) -> [(name: String, timeout: Int)] {
+    agent == .claude ? events : codexEvents
+  }
 
   let settingsURL: URL
   let socketPath: String
+  var agent = Agent.claude
 
   static var standard: HookInstaller {
     HookInstaller(
@@ -61,13 +73,20 @@ struct HookInstaller: Sendable {
       socketPath: LocalServer.hookSocketURL.path(percentEncoded: false))
   }
 
+  static var codex: HookInstaller {
+    HookInstaller(
+      settingsURL: FileManager.default.homeDirectoryForCurrentUser
+        .appending(path: ".codex/hooks.json"),
+      socketPath: LocalServer.hookSocketURL.path(percentEncoded: false), agent: .codex)
+  }
+
   /// Settings path with symlinks resolved, so dotfile setups keep their link.
   private var resolvedURL: URL { settingsURL.resolvingSymlinksInPath() }
 
   // MARK: - File access
 
   func status(token: String) throws(Failure) -> Status {
-    Self.status(of: try readSettings(), socketPath: socketPath, token: token)
+    Self.status(of: try readSettings(), socketPath: socketPath, token: token, agent: agent)
   }
 
   /// True when `disableAllHooks` is set, so Claude Code ignores every hook.
@@ -79,12 +98,13 @@ struct HookInstaller: Sendable {
     let (text, settings) = try readFile()
     return Self.plan(
       file: text, from: settings,
-      to: Self.installing(socketPath: socketPath, token: token, into: settings))
+      to: Self.installing(socketPath: socketPath, token: token, into: settings, agent: agent))
   }
 
   func planUninstall() throws(Failure) -> Plan {
     let (text, settings) = try readFile()
-    return Self.plan(file: text, from: settings, to: Self.removingOurs(from: settings))
+    return Self.plan(
+      file: text, from: settings, to: Self.removingOurs(from: settings, agent: agent))
   }
 
   /// Writes the reviewed plan. Backs up the old file first; returns the backup's URL.
@@ -150,13 +170,15 @@ struct HookInstaller: Sendable {
 
   /// The shell command of one hook. curl fails quietly (`-sf`, `|| true`) when the app isn't
   /// running, and gives up a second before Claude Code's own timeout.
-  static func command(socketPath: String, token: String, timeout: Int) -> String {
+  static func command(
+    socketPath: String, token: String, timeout: Int, agent: Agent = .claude
+  ) -> String {
     let header = "\(RequestGuard.tokenHeader): \(token)"
     return [
       "/usr/bin/curl -sf --max-time \(max(1, timeout - 1))",
       "--unix-socket \(shellQuoted(socketPath))",
       "-H \(shellQuoted(header)) -H 'Content-Type: application/json'",
-      "--data-binary @- http://localhost/claude/hook || true",
+      "--data-binary @- http://localhost\(agent.hookRoute) || true",
     ].joined(separator: " ")
   }
 
@@ -170,16 +192,16 @@ struct HookInstaller: Sendable {
   /// Ours: a command hook that posts to our socket, or an HTTP hook from earlier versions
   /// that carries our token header. Both also under the app's former name, so updating
   /// replaces them. Hooks of other tools on the same path are left alone.
-  static func isOurs(_ hook: Any) -> Bool {
+  static func isOurs(_ hook: Any, agent: Agent = .claude) -> Bool {
     guard let hook = hook as? [String: Any] else { return false }
     switch hook["type"] as? String {
     case "command":
       guard let command = hook["command"] as? String else { return false }
       let socketPaths = [AppFolder.name, AppFolder.legacyName].map { "\($0)/hook.sock" }
       return command.contains("--unix-socket") && socketPaths.contains { command.contains($0) }
-        && command.contains("/claude/hook")
+        && command.contains(agent.hookRoute)
     case "http":
-      guard let url = hook["url"] as? String,
+      guard agent == .claude, let url = hook["url"] as? String,
         url.range(
           of: #"^http://(127\.0\.0\.1|localhost):\d+/claude/hook$"#, options: .regularExpression)
           != nil
@@ -191,7 +213,7 @@ struct HookInstaller: Sendable {
     }
   }
 
-  static func removingOurs(from settings: [String: Any]) -> [String: Any] {
+  static func removingOurs(from settings: [String: Any], agent: Agent = .claude) -> [String: Any] {
     guard var hooks = settings["hooks"] as? [String: Any] else { return settings }
     for (event, value) in hooks {
       guard let groups = value as? [Any] else { continue }
@@ -199,7 +221,7 @@ struct HookInstaller: Sendable {
         guard var group = group as? [String: Any], let entries = group["hooks"] as? [Any] else {
           return group
         }
-        let kept = entries.filter { !isOurs($0) }
+        let kept = entries.filter { !isOurs($0, agent: agent) }
         if kept.isEmpty && !entries.isEmpty {
           return nil
         }
@@ -213,18 +235,19 @@ struct HookInstaller: Sendable {
     return result
   }
 
-  static func installing(socketPath: String, token: String, into settings: [String: Any])
-    -> [String: Any]
-  {
-    var result = removingOurs(from: settings)
+  static func installing(
+    socketPath: String, token: String, into settings: [String: Any], agent: Agent = .claude
+  ) -> [String: Any] {
+    var result = removingOurs(from: settings, agent: agent)
     var hooks = result["hooks"] as? [String: Any] ?? [:]
-    for (event, timeout) in events {
+    for (event, timeout) in events(for: agent) {
       var groups = hooks[event] as? [Any] ?? []
       groups.append([
         "hooks": [
           [
             "type": "command",
-            "command": command(socketPath: socketPath, token: token, timeout: timeout),
+            "command": command(
+              socketPath: socketPath, token: token, timeout: timeout, agent: agent),
             "timeout": timeout,
           ]
         ]
@@ -235,19 +258,21 @@ struct HookInstaller: Sendable {
     return result
   }
 
-  static func status(of settings: [String: Any], socketPath: String, token: String) -> Status {
+  static func status(
+    of settings: [String: Any], socketPath: String, token: String, agent: Agent = .claude
+  ) -> Status {
     let hooks = settings["hooks"] as? [String: Any] ?? [:]
     var found = 0
     var current = 0
-    for (event, timeout) in events {
+    for (event, timeout) in events(for: agent) {
       let entries = (hooks[event] as? [Any] ?? [])
         .compactMap { ($0 as? [String: Any])?["hooks"] as? [Any] }
         .flatMap { $0 }
-        .filter(isOurs)
+        .filter { isOurs($0, agent: agent) }
         .compactMap { $0 as? [String: Any] }
       guard !entries.isEmpty else { continue }
       found += 1
-      let expected = command(socketPath: socketPath, token: token, timeout: timeout)
+      let expected = command(socketPath: socketPath, token: token, timeout: timeout, agent: agent)
       let matches = entries.contains { entry in
         entry["command"] as? String == expected && entry["timeout"] as? Int == timeout
       }
@@ -258,7 +283,7 @@ struct HookInstaller: Sendable {
     if found == 0 {
       return .notInstalled
     }
-    return current == events.count ? .installed : .outdated
+    return current == events(for: agent).count ? .installed : .outdated
   }
 
   static func render(_ settings: [String: Any]) -> String {

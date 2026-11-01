@@ -79,7 +79,7 @@ final class SettingsWindowController {
         ClaudeCodeSettingsView(
           server: server, settings: settings,
           onHooksInstalled: { [layoutStore] in layoutStore.addAnywhere(ClaudeCodeWidget.kind) }),
-        label: "Claude Code",
+        label: String(localized: "Agents", comment: "Settings tab for Claude Code and Codex"),
         symbol: "terminal"))
     tabs.addTabViewItem(
       tab(

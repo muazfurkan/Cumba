@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - New app icon and menu bar icon: the notch resting on the brackets of a cumba, gold on deep navy.
 - Tabs sit at the bottom of the panel by default (Settings > General > Tabs: at the bottom or at the top), with "+" to add a widget from a gallery and an Edit button. Editing a tab in the panel renames it, picks its symbol, moves it, adds or deletes tabs, and reorders or removes its widgets. Right-click a widget to remove it.
 - The panel's width follows the open tab: as wide as its widgets, with room for a detailed view when a tab has one widget.
+- The Claude Code widget is now AI Agents and also follows Codex (through its hooks in ~/.codex/hooks.json; trust them once with /hooks in Codex). It shows the session's title, what it's doing now ("Editing Notch.swift", "Running tests"), its last answer, and on a second page how full its context window is, read locally from the session transcript. While an agent works, a turning ring sits beside the closed notch, opening the panel shows the agent's tab, and a line under the notch shows the answer when it finishes. Installed Claude Code hooks show as out of date once, since two tool events were added; click Update in Settings > Agents.
 - Widgets alone in a tab show a detailed view, and a compact one beside others. Weather looks like Apple's widget (sky colors, place, high and low, the next days, and the next hours when alone) and is now two units wide. Calendar shows the month with a week strip and the next events, or the whole month beside the list when alone. Media shows large artwork with the title and controls when alone.
 - While something plays, the closed notch shows larger artwork and a larger waveform, sized to the notch. The Mirror widget turns the camera on only when you click it.
 - Text size for the panel (Appearance > Colors > Text size), larger by default.
@@ -51,6 +52,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- Notes were never saved: macOS 26.6 refuses writes with complete file protection. The note is now written atomically and readable only by you.
 - Context menus inside the panel (e.g. on files in the tray) now open; the notch's own menu used to replace them.
 
 ### Security

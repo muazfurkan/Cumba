@@ -30,7 +30,7 @@ struct NotchRootView: View {
             activity: activity, notchWidth: geometry.notchRect.width,
             sideWidth: geometry.layout.peekExtraWidth, height: geometry.notchRect.height
           )
-          .frame(height: geometry.notchRect.height)
+          .frame(height: geometry.shapeSize(for: .peek).height, alignment: .top)
           .transition(.opacity.combined(with: .scale(scale: 0.8)))
         }
       }

@@ -13,8 +13,12 @@ struct NotchLayout: Equatable, Sendable {
   /// Extra horizontal room around the closed notch that still counts as hovering it.
   var hoverMargin: CGFloat = 8
 
+  /// Room under the closed notch for a live activity's banner line; 0 without one.
+  var peekBannerHeight: CGFloat = 0
+
   /// Added to the panel's height when the tabs sit at its bottom.
   static let bottomTabBarHeight: CGFloat = 36
+  static let bannerHeight: CGFloat = 26
 }
 
 extension NotchLayout {
@@ -84,7 +88,9 @@ struct NotchGeometry: Equatable, Sendable {
     case .closed:
       notchRect.size
     case .peek:
-      CGSize(width: notchRect.width + layout.peekExtraWidth * 2, height: notchRect.height)
+      CGSize(
+        width: notchRect.width + layout.peekExtraWidth * 2,
+        height: notchRect.height + layout.peekBannerHeight)
     case .expanded, .pinned:
       CGSize(
         width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),

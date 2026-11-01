@@ -6,6 +6,8 @@ import Foundation
 struct HookPayload: Decodable, Sendable {
   enum Event: String, Sendable {
     case userPromptSubmit = "UserPromptSubmit"
+    case preToolUse = "PreToolUse"
+    case postToolUse = "PostToolUse"
     case permissionRequest = "PermissionRequest"
     case notification = "Notification"
     case stop = "Stop"
@@ -21,6 +23,10 @@ struct HookPayload: Decodable, Sendable {
   var message: String?
   var notificationType: String?
   var lastAssistantMessage: String?
+  /// The prompt, on UserPromptSubmit.
+  var prompt: String?
+  /// The session transcript (JSON lines under ~/.claude/projects).
+  var transcriptPath: String?
   var error: String?
   var reason: String?
 
@@ -41,6 +47,8 @@ struct HookPayload: Decodable, Sendable {
     case message
     case notificationType = "notification_type"
     case lastAssistantMessage = "last_assistant_message"
+    case prompt
+    case transcriptPath = "transcript_path"
     case error
     case reason
   }

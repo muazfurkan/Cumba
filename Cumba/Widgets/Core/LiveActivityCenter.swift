@@ -31,6 +31,8 @@ struct LiveActivity: Identifiable {
   let trailing: AnyView
   /// Width of each side when it needs more room than the theme gives, e.g. for a title.
   var sideWidth: CGFloat? = nil
+  /// A line shown under the notch, e.g. an agent's answer when it finishes.
+  var banner: AnyView? = nil
   var startedAt = Date()
 }
 

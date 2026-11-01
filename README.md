@@ -22,7 +22,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 ## Features
 
 - **Media**: whatever any app plays (Safari, Chrome, YouTube, Spotify, Music, podcasts and more) in one mini player with artwork, progress, seeking and controls, with no extension or setup. A small waveform beside the notch shows what's playing.
-- **Claude Code**: permission requests from the terminal, IDE extensions or the Claude desktop app show up in the notch with **Allow**, **Deny** and **In Terminal**. You also see when a session is done or fails.
+- **AI agents (Claude Code and Codex)**: what the agent is doing right now, its last answer and how full its context window is, with a ring beside the notch while it works and a line under it when it's done. Permission requests show up with **Allow**, **Deny** and **In Terminal**.
 - **Widgets in tabs**: calendar with a Join button for video calls, timer, Pomodoro, notes, clipboard history, keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Pick them from a gallery in Settings and drag to reorder; a new installation starts with just three.
 - **Optional extras**, off until you turn them on: show the panel on any display, volume and brightness levels in the notch (optionally instead of the system indicators), a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
 - **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
@@ -88,7 +88,8 @@ Everything below is off or unused until you turn on the feature that needs it. S
 | Camera | Mirror widget | Only while the panel shows it; nothing is recorded |
 | Local server on `127.0.0.1` | Optional YouTube extension connection | Only after you turn it on in Settings > Connections |
 | Private Unix socket | Claude Code hooks and [script activities](#scripts) | Only while the hooks are installed or script activities are on |
-| `~/.claude/settings.json` | Installing and removing the hooks | Only after you review the change; a backup is kept |
+| `~/.claude/settings.json`, `~/.codex/hooks.json` | Installing and removing the Claude Code and Codex hooks | Only after you review the change; a backup is kept |
+| Claude Code transcripts in `~/.claude/projects` | Context use and session title in the AI Agents widget | Read on this Mac only, the last 256 KB, while a session runs |
 | Accessibility | Handling the volume or brightness keys | Only if you turn on "Replace the system volume indicator" or "…brightness indicator" |
 | Clipboard | Clipboard History widget | Only while that widget is in the panel |
 | Login item | Launch at login | Off until you turn it on |
@@ -122,6 +123,8 @@ Chrome will say the extension can read and change your data on `youtube.com` and
 ## Claude Code
 
 Permission requests from Claude Code (terminal, IDE extensions and the Claude desktop app) appear in the notch with **Allow**, **Deny** and **In Terminal**, and you see when a session finishes or fails. The card shows the full request with hidden characters made visible. Install the hooks in **Settings > Claude Code**; you review the change to `~/.claude/settings.json` first and a backup is made. Hooks reach the app through a private socket that only your user account can open, so nothing else can answer Claude Code in its place; they use their own token, separate from the extension's.
+
+**Codex** works the same way: install its hooks in **Settings > Agents > Codex** (they go to `~/.codex/hooks.json`), then run `/hooks` in Codex once and trust them, since Codex runs new hooks only after that.
 
 **Allow in the notch is the same as Allow in Claude Code: the tool runs right away.** In Settings > Claude Code you can allow everything except shell commands from the notch, or turn Allow off and keep only Deny and In Terminal. Requests with hidden characters never get an Allow button. See [docs/claude-code-setup.md](docs/claude-code-setup.md) for details and manual setup.
 

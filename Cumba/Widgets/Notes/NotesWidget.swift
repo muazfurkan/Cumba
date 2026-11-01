@@ -89,7 +89,11 @@ final class NotesWidget: NotchWidget {
       do {
         try FileManager.default.createDirectory(
           at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try Data(snapshot.utf8).write(to: url, options: [.atomic, .completeFileProtection])
+        // Only this user may read it. (Data protection classes fail with EPERM on macOS
+        // 26.6, so the note was never saved with `.completeFileProtection`.)
+        try Data(snapshot.utf8).write(to: url, options: .atomic)
+        try FileManager.default.setAttributes(
+          [.posixPermissions: 0o600], ofItemAtPath: url.path(percentEncoded: false))
       } catch {
         Log.widgets.error(
           "Saving notes failed: \(error.localizedDescription, privacy: .public)")
