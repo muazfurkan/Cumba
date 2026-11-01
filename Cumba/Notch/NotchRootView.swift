@@ -73,6 +73,7 @@ struct NotchRootView: View {
       .animation(.smooth(duration: 0.3), value: geometry.layout.peekExtraWidth)
       .animation(.smooth(duration: 0.35), value: geometry.layout.peekNotificationHeight)
       .animation(.smooth(duration: 0.3), value: geometry.layout.panelWidth)
+      .animation(.smooth(duration: 0.3), value: geometry.layout.panelHeight)
       .environment(\.colorScheme, .dark)
     }
   }

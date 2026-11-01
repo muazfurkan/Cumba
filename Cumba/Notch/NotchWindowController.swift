@@ -188,6 +188,8 @@ final class NotchWindowController {
       _ = host.isShowingGallery
       _ = host.isEditing
       _ = host.permissionBanner?.id
+      // What an agent shows can make its tab taller.
+      _ = host.claude.sessions
     } onChange: { [weak self] in
       Task { @MainActor in
         guard let self else { return }
@@ -338,43 +340,13 @@ final class NotchWindowController {
     }
   }
 
-  /// The screen chosen in Settings. "Notched" falls back to the main screen with the virtual
-  /// notch setting; the other choices draw a virtual notch where there is no real one.
   private func targetScreen() -> (screen: NSScreen, geometry: NotchGeometry)? {
-    var layout = NotchLayout(size: settings.panelSize)
-    // Tabs at the bottom get their own strip below the widgets.
-    switch settings.tabBarStyle {
-    case .inPanel: layout.expandedSize.height += NotchLayout.bottomTabBarHeight
-    case .compact, .icons, .dots: layout.tabBarRoom = NotchLayout.floatingTabBarRoom
-    case .top: break
-    }
-    // A live activity can ask for wider sides.
-    if let sideWidth = host.liveActivities.current?.sideWidth {
-      layout.peekExtraWidth = max(layout.peekExtraWidth, sideWidth)
-    }
-    if host.liveActivities.current?.notification != nil {
-      layout.peekNotificationHeight = NotchLayout.notificationHeight
-    }
-    layout.panelWidth = host.preferredPanelWidth(maxWidth: layout.expandedSize.width)
-    let chosen: NSScreen?
-    switch settings.panelScreen {
-    case .notched: chosen = nil
-    case .main: chosen = NSScreen.screens.first
-    case .pointer: chosen = Self.screenUnderPointer
-    }
-    if let chosen {
-      return (
-        chosen, chosen.notchGeometry(layout: layout) ?? chosen.virtualNotchGeometry(layout: layout)
-      )
-    }
-    if let screen = NSScreen.notched, let geometry = screen.notchGeometry(layout: layout) {
-      return (screen, geometry)
-    }
-    guard settings.usesVirtualNotch, let screen = NSScreen.screens.first else { return nil }
-    return (screen, screen.virtualNotchGeometry(layout: layout))
+    NotchScreenLayout.target(
+      settings: settings, host: host, layoutStore: host.layoutStore,
+      screenUnderPointer: Self.screenUnderPointer)
   }
 
-  private static var screenUnderPointer: NSScreen? {
+  static var screenUnderPointer: NSScreen? {
     let location = NSEvent.mouseLocation
     return NSScreen.screens.first { NSMouseInRect(location, $0.frame, false) }
   }

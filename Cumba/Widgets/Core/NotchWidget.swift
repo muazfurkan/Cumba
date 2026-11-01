@@ -36,6 +36,8 @@ protocol NotchWidget: AnyObject {
 
   func makeView() -> AnyView
   func makeSettingsView() -> AnyView?
+  /// Height the view needs for what it shows now at this width; nil fits any height.
+  func preferredContentHeight(width: CGFloat, textScale: CGFloat, isDetailed: Bool) -> CGFloat?
 
   /// Called while the widget is on screen. Cameras, sampling and similar resources are
   /// only used between `activate()` and `deactivate()`.
@@ -51,6 +53,11 @@ extension NotchWidget {
 }
 
 extension NotchWidget {
+  /// Height the widget's view needs for what it shows now at this width, when the panel's
+  /// own height may be too short; nil fits any height.
+  func preferredContentHeight(width: CGFloat, textScale: CGFloat, isDetailed: Bool) -> CGFloat? {
+    nil
+  }
   func makeSettingsView() -> AnyView? { nil }
   func activate() {}
   func deactivate() {}

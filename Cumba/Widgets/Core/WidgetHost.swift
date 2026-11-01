@@ -146,29 +146,58 @@ final class WidgetHost {
       in: tab.id, from: IndexSet(integer: index), to: offset > 0 ? target + 1 : target)
   }
 
-  /// Width of the expanded panel for the open tab, up to the theme's width: a tab is as wide
-  /// as its widgets, a single widget gets room for its detailed view, and the gallery, the
-  /// editor and permission requests use the full width.
-  func preferredPanelWidth(maxWidth: CGFloat) -> CGFloat {
-    let padding: CGFloat = 56
-    let spacing: CGFloat = 10
-    let units = WidgetLayout.unitsPerTab
-    guard !isShowingGallery, !isEditing, permissionBanner == nil, let tab = selectedTab else {
-      return maxWidth
-    }
-    let unitWidth = (maxWidth - padding - spacing * CGFloat(units - 1)) / CGFloat(units)
+  /// The gallery, the editor and permission requests use the panel's own size.
+  private var showsTab: Bool {
+    !isShowingGallery && !isEditing && permissionBanner == nil
+  }
+
+  /// Width of the expanded panel for a tab: as wide as its widgets, each size unit as wide as
+  /// in a panel `baseWidth` wide, and a single widget gets room for its detailed view. Past
+  /// six units it grows up to `maxWidth`.
+  func preferredPanelWidth(
+    for tab: WidgetLayout.Tab?, baseWidth: CGFloat, maxWidth: CGFloat
+  ) -> CGFloat {
+    guard showsTab, let tab else { return baseWidth }
+    let unitWidth = WidgetLayout.unitWidth(panelWidth: baseWidth)
     let kinds = tab.widgets.filter { registry.info(for: $0) != nil }
     let used = kinds.compactMap { registry.info(for: $0)?.size.units }.reduce(0, +)
     let shown = kinds.count > 1 ? used : max(used, 4)
     let width =
-      padding + unitWidth * CGFloat(shown) + spacing * CGFloat(max(kinds.count - 1, shown - 1))
-    return min(max(width, 360), maxWidth)
+      WidgetLayout.panelPadding + unitWidth * CGFloat(shown)
+      + WidgetLayout.widgetSpacing * CGFloat(max(kinds.count - 1, shown - 1))
+    return min(max(width, 360), max(baseWidth, maxWidth))
   }
 
-  /// Size units still free in the open tab.
+  /// Height of the expanded panel for a tab: its own height, or taller when a widget needs
+  /// more room for what it shows now (a long agent answer, say), up to `maxHeight`.
+  /// - Parameter chrome: Height of the panel around the widgets: the band beside the camera,
+  ///   the padding and any tab bar inside it.
+  func preferredPanelHeight(
+    for tab: WidgetLayout.Tab?, width: CGFloat, baseHeight: CGFloat, maxHeight: CGFloat,
+    chrome: CGFloat, textScale: CGFloat
+  ) -> CGFloat {
+    guard showsTab, let tab else { return baseHeight }
+    let kinds = tab.widgets.filter { registry.widget($0) != nil }
+    let units = kinds.compactMap { registry.info(for: $0)?.size.units }.reduce(0, +)
+    guard units > 0 else { return baseHeight }
+    let rowWidth =
+      width - WidgetLayout.panelPadding - WidgetLayout.widgetSpacing * CGFloat(kinds.count - 1)
+    let unitWidth = rowWidth / CGFloat(units)
+    let needed = kinds.compactMap { kind -> CGFloat? in
+      guard let widget = registry.widget(kind), let info = registry.info(for: kind) else {
+        return nil
+      }
+      return widget.preferredContentHeight(
+        width: unitWidth * CGFloat(info.size.units), textScale: textScale,
+        isDetailed: kinds.count == 1)
+    }.max()
+    guard let needed else { return baseHeight }
+    return min(max(baseHeight, chrome + needed), max(baseHeight, maxHeight))
+  }
+
+  /// Size units still free in the open tab on the current screen.
   var freeUnits: Int {
-    let used = (selectedTab?.widgets ?? []).compactMap { registry.info(for: $0)?.size.units }
-    return max(0, WidgetLayout.unitsPerTab - used.reduce(0, +))
+    selectedTab.map { layoutStore.freeUnits(in: $0.id) } ?? 0
   }
 
   /// Widgets that aren't in the open tab yet; they may be in other tabs.
@@ -183,10 +212,9 @@ final class WidgetHost {
     layoutStore.remove(kind, from: tab.id)
   }
 
-  /// Adds a widget to the open tab and closes the gallery.
+  /// Adds a widget to the open tab, when it fits, and closes the gallery.
   func add(_ kind: String) {
-    guard let tab = selectedTab else { return }
-    layoutStore.add(kind, to: tab.id)
+    guard let tab = selectedTab, layoutStore.add(kind, to: tab.id) else { return }
     isShowingGallery = false
   }
 

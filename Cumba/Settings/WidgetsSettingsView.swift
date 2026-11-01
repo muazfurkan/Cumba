@@ -77,6 +77,7 @@ struct WidgetsSettingsView: View {
             GalleryCard(
               info: info,
               tabTitle: tab.flatMap { $0.widgets.contains(info.kind) ? $0.title : nil },
+              fits: tab.map { layoutStore.fits(info.kind, in: $0.id) } ?? false,
               add: {
                 if let tab {
                   layoutStore.add(info.kind, to: tab.id)
@@ -152,6 +153,8 @@ private struct GalleryCard: View {
   let info: WidgetInfo
   /// The tab that shows it, or nil when it isn't in the panel.
   let tabTitle: String?
+  /// There is room for it in the tab.
+  let fits: Bool
   let add: () -> Void
   let remove: () -> Void
 
@@ -181,7 +184,13 @@ private struct GalleryCard: View {
         .foregroundStyle(.secondary)
         .lineLimit(2, reservesSpace: true)
       if tabTitle == nil {
-        Button("Add", action: add)
+        if fits {
+          Button("Add", action: add)
+        } else {
+          Text("No room in this tab")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
       } else {
         Button("Remove", role: .destructive, action: remove)
       }

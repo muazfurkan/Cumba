@@ -27,6 +27,25 @@ final class ClaudeCodeWidget: NotchWidget {
   func makeView() -> AnyView {
     AnyView(ClaudeCodeWidgetView(service: service) { [openSettings] in openSettings(.agents) })
   }
+
+  /// Tall enough for the shown session's last answer in its bubble, so a long answer makes
+  /// the tab taller instead of being cut off.
+  func preferredContentHeight(width: CGFloat, textScale: CGFloat, isDetailed: Bool) -> CGFloat? {
+    let session =
+      service.sessions.first(where: \.isActive) ?? service.sessions.first
+    guard let detail = session?.detail, !detail.isEmpty else { return nil }
+    // The card's padding, the page row and the gap under it.
+    let frame: CGFloat = 20 + 24 + 8
+    // Name, status and project.
+    let column = 62 * textScale
+    let bubbleWidth = (isDetailed ? min(260, width * 0.5) : width - 20) - 20
+    let font = NSFont.systemFont(ofSize: PanelFont.pointSize(of: .callout) * textScale)
+    let text = (detail as NSString).boundingRect(
+      with: CGSize(width: max(bubbleWidth, 40), height: .greatestFiniteMagnitude),
+      options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: font])
+    let bubble = ceil(text.height) + 12
+    return frame + (isDetailed ? max(column, bubble) : column + 6 + bubble)
+  }
 }
 
 private struct ClaudeCodeWidgetView: View {

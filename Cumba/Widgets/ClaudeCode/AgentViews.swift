@@ -127,22 +127,23 @@ struct AgentPanel: View {
           .foregroundStyle(.secondary)
           .lineLimit(1)
         if !isDetailed, let detail = session.detail {
-          bubble(detail, lines: 2)
+          bubble(detail)
         }
       }
       if isDetailed, let detail = session.detail {
         Spacer(minLength: 0)
-        bubble(detail, lines: 4)
+        bubble(detail)
           .frame(maxWidth: 260, alignment: .trailing)
       }
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
 
-  private func bubble(_ text: String, lines: Int) -> some View {
+  /// The answer as tall as the panel allows; the tab grows for it up to a limit, and
+  /// whatever doesn't fit then is cut off at the end.
+  private func bubble(_ text: String) -> some View {
     Text(text)
       .panelFont(.callout)
-      .lineLimit(lines)
       .padding(.horizontal, 10)
       .padding(.vertical, 6)
       .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))

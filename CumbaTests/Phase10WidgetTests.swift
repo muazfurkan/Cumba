@@ -392,14 +392,17 @@ struct WidgetGalleryTests {
       claude: ClaudeCodeService(liveActivities: center))
 
     // A full tab uses the whole width; a single widget gets four units.
-    #expect(host.preferredPanelWidth(maxWidth: 640) == 640)
+    func width() -> CGFloat {
+      host.preferredPanelWidth(for: host.selectedTab, baseWidth: 640, maxWidth: 1600)
+    }
+    #expect(width() == 640)
     host.addTab()
     let single = host.selectedTab?.id
     host.add(TimerWidget.kind)
     let unit = (640.0 - 56 - 50) / 6
-    #expect(abs(host.preferredPanelWidth(maxWidth: 640) - (56 + unit * 4 + 30)) < 0.01)
+    #expect(abs(width() - (56 + unit * 4 + 30)) < 0.01)
     host.showGallery(true)
-    #expect(host.preferredPanelWidth(maxWidth: 640) == 640)
+    #expect(width() == 640)
     host.showGallery(false)
 
     host.moveSelectedTab(by: -1)

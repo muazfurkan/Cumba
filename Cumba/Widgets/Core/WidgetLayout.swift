@@ -28,8 +28,27 @@ struct WidgetLayout: Codable, Equatable, Sendable {
     "camera", "cloud.sun", "square.grid.2x2",
   ]
 
-  /// Width a tab holds before new widgets go to another tab, in size units.
+  /// Size units a tab holds at the panel's own width. A tab can hold more while the panel
+  /// can grow wider on the screen; see `capacity(panelWidth:screenWidth:)`.
   static let unitsPerTab = 6
+  /// The open panel's side padding, and the gap between widgets.
+  static let panelPadding: CGFloat = 56
+  static let widgetSpacing: CGFloat = 10
+  /// Room kept free on each side of the screen when the panel grows past its own width.
+  static let screenMargin: CGFloat = 40
+
+  /// Width of one size unit in a panel `panelWidth` wide.
+  static func unitWidth(panelWidth: CGFloat) -> CGFloat {
+    (panelWidth - panelPadding - widgetSpacing * CGFloat(unitsPerTab - 1)) / CGFloat(unitsPerTab)
+  }
+
+  /// Units side by side that fit on a screen: each keeps its width, and the panel grows up to
+  /// the screen's width less a margin on each side. Never fewer than `unitsPerTab`.
+  static func capacity(panelWidth: CGFloat, screenWidth: CGFloat) -> Int {
+    let unit = unitWidth(panelWidth: panelWidth)
+    let room = screenWidth - screenMargin * 2 - panelPadding + widgetSpacing
+    return max(unitsPerTab, Int((room / (unit + widgetSpacing)).rounded(.down)))
+  }
 
   /// Places kinds this layout hasn't seen before: those in `defaults` (all when `nil`) go to
   /// the first tab with room, or to a new "More" tab; the rest only become known, so they
@@ -52,7 +71,9 @@ struct WidgetLayout: Codable, Equatable, Sendable {
   }
 
   /// Puts a kind in the first tab with room, or in a new "More" tab.
-  mutating func place(_ kind: String, units: Int, widths: [String: Int]) {
+  mutating func place(
+    _ kind: String, units: Int, widths: [String: Int], capacity: Int = unitsPerTab
+  ) {
     guard !contains(kind) else { return }
     func used(_ tab: Tab) -> Int {
       tab.widgets.reduce(0) { $0 + (widths[$1] ?? 1) }
@@ -60,7 +81,7 @@ struct WidgetLayout: Codable, Equatable, Sendable {
     if tabs.isEmpty {
       tabs.append(Self.homeTab(widgets: []))
     }
-    if let index = tabs.firstIndex(where: { used($0) + units <= Self.unitsPerTab }) {
+    if let index = tabs.firstIndex(where: { used($0) + units <= capacity }) {
       tabs[index].widgets.append(kind)
     } else {
       tabs.append(Self.moreTab(number: tabs.count, widgets: [kind]))

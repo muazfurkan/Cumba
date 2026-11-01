@@ -24,7 +24,7 @@ struct NotchGeometryTests {
     #expect(try geometry().notchRect == CGRect(x: 662, y: 950, width: 188, height: 32))
   }
 
-  @Test func panelWidthNarrowsTheShapeButNotTheWindow() throws {
+  @Test func panelSizeSetsTheShapeAndTheLargestTabSetsTheWindow() throws {
     var layout = NotchLayout()
     layout.panelWidth = 420
     let narrow = try #require(
@@ -33,12 +33,23 @@ struct NotchGeometryTests {
         layout: layout))
     #expect(narrow.shapeSize(for: .expanded).width == 420)
     #expect(narrow.windowFrame == (try geometry().windowFrame))
-    layout.panelWidth = 5000
+    // A tab with many widgets or a long text makes the panel larger, and the window with it.
+    layout.panelWidth = 900
+    layout.panelHeight = 320
     let wide = try #require(
       NotchGeometry(
         screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
         layout: layout))
-    #expect(wide.shapeSize(for: .expanded).width == 640)
+    #expect(wide.shapeSize(for: .expanded) == CGSize(width: 900, height: 320))
+    #expect(wide.windowFrame.contains(wide.shapeRect(for: .expanded)))
+    // The window is sized for the largest tab, so switching tabs doesn't resize it.
+    layout.panelWidth = 420
+    layout.largestPanel = CGSize(width: 900, height: 320)
+    let sized = try #require(
+      NotchGeometry(
+        screenFrame: screen, safeAreaTop: 32, leftAreaWidth: 662, rightAreaWidth: 662,
+        layout: layout))
+    #expect(sized.windowFrame.width == wide.windowFrame.width)
   }
 
   @Test func windowIsCenteredUnderNotchAndTopAligned() throws {

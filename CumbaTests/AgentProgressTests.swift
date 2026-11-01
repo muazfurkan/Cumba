@@ -112,3 +112,40 @@ struct CodexSessionTests {
     #expect(service.sessions.first?.agent == .codex)
   }
 }
+
+@MainActor
+struct AgentTabHeightTests {
+  @Test func aLongAnswerMakesTheAgentsTabTaller() async throws {
+    let file = FileManager.default.temporaryDirectory
+      .appending(path: "AgentHeight-\(UUID().uuidString).json")
+    defer { try? FileManager.default.removeItem(at: file) }
+    let center = LiveActivityCenter()
+    let service = ClaudeCodeService(liveActivities: center)
+    let context = WidgetContext(
+      liveActivities: center, media: MediaCoordinator(providers: []), claude: service,
+      panel: PanelControl(), openSettings: { _ in })
+    let registry = WidgetRegistry(context: context, types: [ClaudeCodeWidget.self])
+    let store = LayoutStore(
+      fileURL: file, knownKinds: registry.infos.map { ($0.kind, $0.size.units) },
+      defaultKinds: [ClaudeCodeWidget.kind])
+    await store.load()
+    registry.sync(with: store.layout)
+    let host = WidgetHost(
+      layoutStore: store, registry: registry, liveActivities: center, claude: service)
+    func height() -> CGFloat {
+      host.preferredPanelHeight(
+        for: host.selectedTab, width: 640, baseHeight: 190, maxHeight: 600, chrome: 60,
+        textScale: 1.2)
+    }
+    #expect(height() == 190)
+    let answer = String(repeating: "The notch now grows with what it shows. ", count: 12)
+    service.handle(
+      try #require(
+        HookPayload.decode(
+          Data(
+            #"{"session_id":"s","hook_event_name":"Stop","cwd":"/r/Cumba","last_assistant_message":"\#(answer)"}"#
+              .utf8))))
+    #expect(height() > 190)
+    #expect(height() <= 600)
+  }
+}

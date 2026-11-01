@@ -5,9 +5,12 @@ struct NotchLayout: Equatable, Sendable {
   var expandedSize = CGSize(width: 640, height: 190)
   /// Width added on each side of the notch in the peek state.
   var peekExtraWidth: CGFloat = 70
-  /// Width of the expanded panel for what it shows now, at most `expandedSize.width`;
-  /// `nil` uses the full width. The window stays sized for the full width.
+  /// Size of the expanded panel for what it shows now; `nil` uses `expandedSize`. A tab with
+  /// many widgets or a long text can make it larger than `expandedSize`.
   var panelWidth: CGFloat?
+  var panelHeight: CGFloat?
+  /// The largest panel any tab asks for, so the window doesn't change size between tabs.
+  var largestPanel: CGSize?
   /// Room for the expanded panel's shadow, part of the fixed window size.
   var shadowMargin: CGFloat = 24
   /// Room under the open panel for a tab bar of its own; 0 when the tabs are inside it.
@@ -84,9 +87,12 @@ struct NotchGeometry: Equatable, Sendable {
   /// The window never changes size: it fits the largest shape plus its shadow and is
   /// centered under the notch. State changes only animate the shape inside it.
   var windowFrame: CGRect {
+    let expanded = shapeSize(for: .expanded)
     let largest = CGSize(
-      width: max(layout.expandedSize.width, notchRect.width, shapeSize(for: .peek).width),
-      height: shapeSize(for: .expanded).height)
+      width: max(
+        layout.expandedSize.width, expanded.width, layout.largestPanel?.width ?? 0,
+        notchRect.width, shapeSize(for: .peek).width),
+      height: max(expanded.height, layout.largestPanel?.height ?? 0))
     let width = largest.width + layout.shadowMargin * 2
     let height = largest.height + max(layout.shadowMargin, layout.tabBarRoom)
     return CGRect(
@@ -116,8 +122,8 @@ struct NotchGeometry: Equatable, Sendable {
         height: peekRowHeight + layout.peekNotificationHeight)
     case .expanded, .pinned:
       CGSize(
-        width: max(min(layout.panelWidth ?? .infinity, layout.expandedSize.width), notchRect.width),
-        height: max(layout.expandedSize.height, notchRect.height))
+        width: max(layout.panelWidth ?? layout.expandedSize.width, notchRect.width),
+        height: max(layout.panelHeight ?? layout.expandedSize.height, notchRect.height))
     }
   }
 
