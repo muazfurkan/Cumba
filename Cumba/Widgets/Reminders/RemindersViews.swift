@@ -13,8 +13,8 @@ struct RemindersView: View {
       VStack(alignment: .leading, spacing: 6) {
         if widget.hasAccess {
           WidgetHeader(
-            LocalizedStringKey(widget.list?.title ?? RemindersWidget.title), symbol: "checklist",
-            color: color
+            verbatim: widget.list?.title ?? RemindersWidget.title,
+            symbol: "checklist", color: color
           ) {
             if !widget.items.isEmpty {
               Text(verbatim: "\(widget.items.count)")

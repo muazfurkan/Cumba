@@ -75,6 +75,9 @@ targets:
         NSAppleEventsUsageDescription: Cumba reads what Spotify and Music are playing and sends play, pause, next and seek commands to them, and shows your recent Apple Notes and makes new ones.
         NSRemindersFullAccessUsageDescription: The To-dos widget shows your reminders and lets you tick them off and add new ones. Nothing leaves your Mac.
         NSRemindersUsageDescription: The To-dos widget shows your reminders and lets you tick them off and add new ones. Nothing leaves your Mac.
+        NSDesktopFolderUsageDescription: The Clipboard History widget shows new screenshots saved to your Desktop, and the Tray widget shows files you put on it. Nothing leaves your Mac.
+        NSDocumentsFolderUsageDescription: The Tray widget shows the files you put on it. Nothing leaves your Mac.
+        NSDownloadsFolderUsageDescription: The Tray widget shows the files you put on it. Nothing leaves your Mac.
         NSCameraUsageDescription: The Mirror widget shows your camera while the panel is open. Nothing is recorded or sent.
         NSLocationUsageDescription: The Weather widget shows the weather where you are. Your location is rounded to about 10 km first.
         NSLocationWhenInUseUsageDescription: The Weather widget shows the weather where you are. Your location is rounded to about 10 km first.

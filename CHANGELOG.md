@@ -30,7 +30,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Built-in themes can be changed again (material, colors, font, shape, animation). They keep their names, your changes are saved with them, and **Restore Defaults** brings back the original. They can't be deleted.
 - Volume and brightness changes beside the notch use a larger symbol and a longer bar.
 - Claude Code's pixel mascot replaces the sparkle for Claude sessions.
-- Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; click **Update** in Settings > Agents.
+- Hooks now also send the bundle identifier of the app the agent runs in. Installed hooks show as out of date once; Settings opens on Agents at launch, where **Update** fixes them.
+- When macOS asks for access to Desktop, Documents or Downloads (screenshots in Clipboard History, files on the Tray), it now says why.
 - The notch works in full screen apps too. Hiding it there is now off by default; turn on **Hide in full screen apps** in Settings > Displays to keep the old behavior. A choice you made earlier stays.
 
 ### Fixed
@@ -38,6 +39,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - In full screen apps the notch no longer hides behind the app's title bar when the menu bar slides down.
 - Live streams (a YouTube live broadcast, say) no longer stop Now Playing: their endless duration crashed the helper, and the media widget stayed empty until Cumba was restarted.
 - Opening the gallery or editing a tab no longer makes the panel narrower, which could leave the pointer outside and close it. The panel keeps its width until it closes or you switch tabs.
+- The Weather widget no longer asks for a forecast at launch when the panel is closed; it fetches only while it's on screen.
+- The backup of Codex's hooks is named `hooks.json.bak-…` instead of `settings.json.bak-…`.
+
+### Security
+
+- Out-of-date hooks open Settings > Agents at launch. The HTTP hooks of v0.6.0 and v0.7.0 post to a local port another app could take and answer in Cumba's place, so they should be updated.
+- A permission request whose command hides behind a run of blank lines shows the run as "⟨n line breaks⟩" and can only be answered with Deny or In Terminal, like long runs of spaces. The project and tool names above the request are checked the same way.
+- The update check skips release tags that aren't versions; a mistyped tag would have crashed Cumba at launch.
+- A Reminders list name is shown as written, so a name that looks like a Markdown link doesn't become one.
+- Now Playing titles from other apps and web pages are cut at 300 characters, like the extension's.
+- Clipboard History also skips copies that password managers mark with older markers (1Password's and others).
+- Errors of the local servers no longer write the path of your home folder to the system log.
 
 ## [1.1.0] - 2026-11-01
 

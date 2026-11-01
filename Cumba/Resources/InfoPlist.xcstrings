@@ -55,6 +55,60 @@
         }
       }
     },
+    "NSDesktopFolderUsageDescription" : {
+      "comment" : "Privacy - Desktop Folder Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The Clipboard History widget shows new screenshots saved to your Desktop, and the Tray widget shows files you put on it. Nothing leaves your Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pano Geçmişi widget'ı Masaüstü'ne kaydedilen yeni ekran görüntülerini, Raf widget'ı da üzerine bıraktığınız dosyaları gösterir. Hiçbir şey Mac'inizden çıkmaz."
+          }
+        }
+      }
+    },
+    "NSDocumentsFolderUsageDescription" : {
+      "comment" : "Privacy - Documents Folder Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The Tray widget shows the files you put on it. Nothing leaves your Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raf widget'ı üzerine bıraktığınız dosyaları gösterir. Hiçbir şey Mac'inizden çıkmaz."
+          }
+        }
+      }
+    },
+    "NSDownloadsFolderUsageDescription" : {
+      "comment" : "Privacy - Downloads Folder Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The Tray widget shows the files you put on it. Nothing leaves your Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raf widget'ı üzerine bıraktığınız dosyaları gösterir. Hiçbir şey Mac'inizden çıkmaz."
+          }
+        }
+      }
+    },
     "NSLocationUsageDescription" : {
       "comment" : "Privacy - Location Usage Description",
       "extractionState" : "extracted_with_value",

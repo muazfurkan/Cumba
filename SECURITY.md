@@ -75,8 +75,8 @@ The security-relevant code is small. Start here:
 | System Now Playing helper (private MediaRemote) | `NowPlayingHelper/`, `Cumba/Resources/now-playing.pl`, `Cumba/Media/Providers/SystemNowPlayingProvider.swift` |
 | Claude Code and Codex hooks, permission flow, transcript reading | `Cumba/Claude/` (`ClaudeHookRoute`, `PermissionBroker`, `NotchApprovals`, `SafeText`, `HookInstaller`, `AgentProgress`) |
 | Permission card | `Cumba/Widgets/ClaudeCode/ClaudeCodeWidget.swift` (`PermissionCard`) |
-| AppleScript | `Cumba/Media/AppleScriptRunner.swift`, `Cumba/Media/Providers/` |
-| Network requests | `Cumba/Widgets/Media/ArtworkCache.swift`, `Cumba/Widgets/Weather/WeatherService.swift`, `Cumba/App/Updates/UpdateChecker.swift` |
+| AppleScript | `Cumba/Media/AppleScriptRunner.swift`, `Cumba/Media/Providers/`, `Cumba/Widgets/Notes/AppleNotes.swift` |
+| Network requests | `Cumba/Widgets/Media/ArtworkCache.swift`, `Cumba/Widgets/Weather/WeatherService.swift`, `Cumba/Widgets/Weather/LocationProvider.swift` (Apple Maps), `Cumba/App/Updates/UpdateChecker.swift` |
 | Chrome extension | `extensions/chrome/` |
 | Entitlements, Info.plist | `Cumba/Resources/`, `project.yml` |
 | Release pipeline | `.github/workflows/release.yml` |

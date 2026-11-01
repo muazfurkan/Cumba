@@ -151,12 +151,12 @@ No telemetry. Everything stays on your Mac. These features make network requests
 
 | Feature | Request |
 |---|---|
-| Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`) |
-| Media widget with YouTube | Thumbnails from YouTube's image servers (the URL the page itself uses) |
-| Weather widget | Your location rounded to about 10 km (or the coordinates of the city you choose) to `api.open-meteo.com`; with your location, the same rounded coordinates to Apple Maps for the city name; a city you search for to `geocoding-api.open-meteo.com` |
-| Update check | The list of releases from `api.github.com` at launch and once a day; turn it off in Settings > General |
+| Media widget with Spotify | Album artwork from Spotify's image server (`i.scdn.co`), for the panel and the closed notch |
+| Media widget with YouTube | Thumbnails from YouTube's image servers (`*.ytimg.com`, `*.googleusercontent.com`, `*.ggpht.com`; the URL the page itself uses), for the panel and the closed notch |
+| Weather widget | Your location rounded to about 10 km (or the coordinates of the city you choose) to `api.open-meteo.com`; with your location, the same rounded coordinates to Apple Maps for the city name; a city you search for, with your language, to `geocoding-api.open-meteo.com`. Only while the widget is on screen, at most every 15 minutes |
+| Update check | The list of releases from `api.github.com` at launch and once a day, with Cumba's version as the user agent; turn it off in Settings > General |
 
-The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes and To-dos read and write Apple Notes and Apple Reminders on your Mac; nothing is copied or sent anywhere. The note of earlier versions (`notes.txt`) is moved to Apple Notes once, and the file is left in place. Clipboard History keeps your last 20 copies (text, links, images and files) in memory only and skips items apps mark as passwords; while it's in the panel it checks once a second whether the clipboard changed. With "Add new screenshots" on, it watches the screenshot folder for new screenshots and keeps only their location. The microphone and camera indicator reads only whether a device is in use, never audio or video.
+The camera (Mirror widget) runs only while the panel shows it, and nothing is recorded. The Tray keeps only file paths on your Mac. Notes and To-dos read and write Apple Notes and Apple Reminders on your Mac; nothing is copied or sent anywhere. The note of earlier versions (`notes.txt`) is moved to Apple Notes once, and the file is left in place. Clipboard History keeps your last 20 copies (text, links, images and files) in memory only and skips items apps mark as passwords; while it's in one of your tabs it checks once a second whether the clipboard changed, even with the panel closed, so it doesn't miss a copy. With "Add new screenshots" on, it watches the screenshot folder for new screenshots and keeps only their location. The microphone and camera indicator reads only whether a device is in use, never audio or video.
 
 When turned on, the extension server listens only on `127.0.0.1`, accepts only the Cumba extension and requires its own token, stored in your Keychain.
 
@@ -173,7 +173,7 @@ When turned on, the extension server listens only on `127.0.0.1`, accepts only t
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a scripts-token
    ```
-   Backups of your Claude Code settings made during hook setup are next to it as `~/.claude/settings.json.bak-…`; keep or delete them.
+   Backups made during hook setup are next to the files they back up, as `~/.claude/settings.json.bak-…` and `~/.codex/hooks.json.bak-…`; keep or delete them.
 
 ## Contributing
 

@@ -191,7 +191,11 @@ final class LocalServer {
           return
         } catch {
           guard !Task.isCancelled else { return }
-          Log.server.error("Server failed: \(String(describing: error), privacy: .public)")
+          // Errors from preparing the socket's folder hold its path, with the user name.
+          let code = error as NSError
+          Log.server.error(
+            "Server failed: \(code.domain, privacy: .public) \(code.code, privacy: .public) \(String(describing: error), privacy: .private)"
+          )
           update(.failed(failure))
         }
         do {

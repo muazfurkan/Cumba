@@ -113,8 +113,8 @@ final class NotchWindowController {
   }
 
   #if DEBUG
-    /// Debug builds only: lets scripts open and close the panel for performance and leak
-    /// checks (`scripts/` posts these distributed notifications).
+    /// Debug builds only: lets a local script open and close the panel for performance and
+    /// leak checks by posting these distributed notifications.
     private func observeDebugCommands() {
       let center = DistributedNotificationCenter.default()
       observers.append(

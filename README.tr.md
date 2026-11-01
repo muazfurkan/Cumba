@@ -157,12 +157,12 @@ Telemetri yok. Her şey Mac'inizde kalır. Şu özellikler ağ isteği yapar, ya
 
 | Özellik | İstek |
 |---|---|
-| Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) kapak görseli |
-| YouTube ile medya widget'ı | YouTube'un görsel sunucularından küçük resim (sayfanın kendi kullandığı adres) |
-| Hava durumu widget'ı | Yaklaşık 10 km'ye yuvarlanmış konumunuz (ya da seçtiğiniz şehrin koordinatları) `api.open-meteo.com`'a; konumunuzla birlikte şehir adı için aynı yuvarlanmış koordinatlar Apple Haritalar'a; aradığınız şehir adı `geocoding-api.open-meteo.com`'a |
-| Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi; Ayarlar > Genel'den kapatılabilir |
+| Spotify ile medya widget'ı | Spotify'ın görsel sunucusundan (`i.scdn.co`) panel ve kapalı notch için kapak görseli |
+| YouTube ile medya widget'ı | YouTube'un görsel sunucularından (`*.ytimg.com`, `*.googleusercontent.com`, `*.ggpht.com`; sayfanın kendi kullandığı adres) panel ve kapalı notch için küçük resim |
+| Hava durumu widget'ı | Yaklaşık 10 km'ye yuvarlanmış konumunuz (ya da seçtiğiniz şehrin koordinatları) `api.open-meteo.com`'a; konumunuzla birlikte şehir adı için aynı yuvarlanmış koordinatlar Apple Haritalar'a; aradığınız şehir adı, dilinizle birlikte `geocoding-api.open-meteo.com`'a. Yalnızca widget ekrandayken, en fazla 15 dakikada bir |
+| Güncelleme denetimi | Açılışta ve günde bir kez `api.github.com`'dan sürüm listesi, kullanıcı aracısı olarak Cumba'nın sürümüyle; Ayarlar > Genel'den kapatılabilir |
 
-Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar ve Yapılacaklar, Mac'inizdeki Apple Notlar ve Apple Anımsatıcılar'ı okuyup yazar; hiçbir şey kopyalanmaz ya da gönderilmez. Önceki sürümlerin notu (`notes.txt`) bir kez Apple Notlar'a taşınır, dosya yerinde bırakılır. Pano Geçmişi son 20 kopyanızı (metin, bağlantı, görsel ve dosya) yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; paneldeyken panonun değişip değişmediğini saniyede bir kontrol eder. "Yeni ekran görüntülerini ekle" açıksa ekran görüntüsü klasöründeki yeni ekran görüntülerini izler ve yalnızca konumlarını tutar. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.
+Kamera (Ayna widget'ı) yalnızca panel onu gösterirken çalışır ve hiçbir şey kaydedilmez. Raf yalnızca dosya yollarını Mac'inizde tutar. Notlar ve Yapılacaklar, Mac'inizdeki Apple Notlar ve Apple Anımsatıcılar'ı okuyup yazar; hiçbir şey kopyalanmaz ya da gönderilmez. Önceki sürümlerin notu (`notes.txt`) bir kez Apple Notlar'a taşınır, dosya yerinde bırakılır. Pano Geçmişi son 20 kopyanızı (metin, bağlantı, görsel ve dosya) yalnızca bellekte tutar ve uygulamaların parola olarak işaretlediği öğeleri almaz; sekmelerinizden birindeyken, bir kopyayı kaçırmamak için panel kapalıyken de panonun değişip değişmediğini saniyede bir kontrol eder. "Yeni ekran görüntülerini ekle" açıksa ekran görüntüsü klasöründeki yeni ekran görüntülerini izler ve yalnızca konumlarını tutar. Mikrofon ve kamera göstergesi yalnızca bir cihazın kullanımda olup olmadığını okur; sese veya görüntüye asla erişmez.
 
 Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnızca Cumba eklentisini kabul eder ve Anahtar Zinciri'nde saklanan kendi token'ını ister.
 
@@ -179,7 +179,7 @@ Açıldığında eklenti sunucusu yalnızca `127.0.0.1` adresini dinler, yalnız
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a extension-token
    security delete-generic-password -s io.github.muazfurkan.ljaspnotch.server -a scripts-token
    ```
-   Hook kurulumunda alınan Claude Code ayar yedekleri `~/.claude/settings.json.bak-…` adıyla yanında durur; saklayabilir ya da silebilirsiniz.
+   Hook kurulumunda alınan yedekler, yedeklenen dosyanın yanında `~/.claude/settings.json.bak-…` ve `~/.codex/hooks.json.bak-…` adıyla durur; saklayabilir ya da silebilirsiniz.
 
 ## Katkı
 

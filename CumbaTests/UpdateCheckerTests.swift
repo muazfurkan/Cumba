@@ -7,7 +7,7 @@ struct UpdateCheckerTests {
   @Test(arguments: [
     ("1.0.0", "0.9.9", true), ("1.0.0", "1.0.0", false), ("1.10.0", "1.9.0", true),
     ("1.0.0", "1.0.0-rc1", true), ("1.0.0-rc2", "1.0.0-rc1", true), ("0.7.0", "0.7", false),
-    ("2", "1.9.9", true),
+    ("2", "1.9.9", true), ("1.0.0", "", true), ("", "1.0.0", false), ("-", "", false),
   ])
   func comparesVersions(newer: String, older: String, expected: Bool) {
     #expect(UpdateChecker.isVersion(newer, newerThan: older) == expected)
@@ -19,7 +19,9 @@ struct UpdateCheckerTests {
         { "tag_name": "v1.1.0-beta", "html_url": "https://github.com/muazfurkan/Cumba/releases/tag/v1.1.0-beta", "prerelease": true, "draft": false },
         { "tag_name": "v1.0.1", "html_url": "https://github.com/muazfurkan/Cumba/releases/tag/v1.0.1", "prerelease": false, "draft": false },
         { "tag_name": "v0.9.0", "html_url": "https://github.com/muazfurkan/Cumba/releases/tag/v0.9.0", "prerelease": true },
-        { "tag_name": "v9.9.9", "html_url": "https://evil.example/download", "prerelease": false }
+        { "tag_name": "v9.9.9", "html_url": "https://evil.example/download", "prerelease": false },
+        { "tag_name": "v", "html_url": "https://github.com/muazfurkan/Cumba/releases/tag/v", "prerelease": false },
+        { "tag_name": "latest", "html_url": "https://github.com/muazfurkan/Cumba/releases/tag/latest", "prerelease": false }
       ]
       """
     let releases = try UpdateChecker.parse(Data(json.utf8))

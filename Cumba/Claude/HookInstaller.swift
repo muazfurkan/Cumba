@@ -120,7 +120,7 @@ struct HookInstaller: Sendable {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyyMMdd-HHmmss"
         let folder = target.deletingLastPathComponent()
-        let stamp = "settings.json.bak-\(formatter.string(from: now))"
+        let stamp = "\(target.lastPathComponent).bak-\(formatter.string(from: now))"
         // Two saves within a second get "-2", "-3" … instead of failing.
         var url = folder.appending(path: stamp)
         var counter = 2
