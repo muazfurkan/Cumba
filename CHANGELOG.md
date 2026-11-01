@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Right-click the notch for Settings, Reset Panel and Quit, so they're reachable even when the menu bar icon hides behind the notch.
 - A widget gallery in Settings > Widgets: every widget with a short description and an Add or Remove button. Widgets in a tab reorder by dragging.
 - Settings > Permissions shows the live state of every permission, with one button to ask or to open System Settings.
+- Four new built-in themes: Neon Tokyo (deep indigo with a pink to cyan neon edge and monospaced text), Sakura, Synthwave and Violet Night. Themes can now fade the background into a second color (Appearance > Material > Gradient) and draw a glowing neon edge around the open panel (Appearance > Colors > Neon edge).
 
 - A welcome window on first launch: how to open the panel, where Settings are, how to connect apps, and a Launch at login switch. It asks you to move the app to Applications when it runs from somewhere else.
 - Releases include a `.dmg` with an Applications shortcut next to the `.zip`.
@@ -38,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - While something plays, the closed notch shows larger artwork and a larger waveform, sized to the notch. The Mirror widget turns the camera on only when you click it.
 - Text size for the panel (Appearance > Colors > Text size), larger by default.
 - A widget can be in several tabs; adding it to one tab no longer takes it out of another.
+- The closed notch is always black over the hardware notch, whatever the theme's background color.
 - Weather shows the weather where you are by default (Location Services, rounded to about 10 km); choosing a city still works. Calendar and Weather ask for access with one click right in the widget.
 - Changing a built-in theme saves the change as a copy instead of being locked. The Settings window shows the open pane's name as its title.
 - Media reads whatever any app plays from the system's Now Playing: Safari, Chrome, YouTube, Spotify, Music, podcasts and more, with no extension or Automation access. This uses the private MediaRemote framework through a small helper run by the system's perl; the README explains it. Turn off "Read media from every app" for the previous behavior. The YouTube extension is now optional.

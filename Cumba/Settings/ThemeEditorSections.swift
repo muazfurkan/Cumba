@@ -17,6 +17,10 @@ struct ThemeEditorSections: View {
       }
       if theme.material == .solid {
         ColorPicker("Background", selection: color(\.background), supportsOpacity: false)
+        Toggle("Gradient", isOn: optional(\.gradient, default: gradientStart))
+        if theme.gradient != nil {
+          ColorPicker("Bottom color", selection: color(\.gradient), supportsOpacity: false)
+        }
       }
     }
 
@@ -24,6 +28,11 @@ struct ThemeEditorSections: View {
       ColorPicker("Text", selection: color(\.foreground), supportsOpacity: false)
       ColorPicker("Secondary text", selection: color(\.secondary), supportsOpacity: false)
       ColorPicker("Accent", selection: color(\.accent), supportsOpacity: false)
+      Toggle("Neon edge", isOn: optional(\.glow, default: theme.accent))
+      if theme.glow != nil {
+        ColorPicker("Edge color", selection: color(\.glow), supportsOpacity: false)
+          .help(Text("The edge fades from this color into the accent."))
+      }
       Picker("Font", selection: $theme.fontDesign) {
         Text("Default").tag(Theme.FontDesign.default)
         Text("Rounded").tag(Theme.FontDesign.rounded)
@@ -59,6 +68,26 @@ struct ThemeEditorSections: View {
     Binding(
       get: { theme[keyPath: keyPath].color },
       set: { theme[keyPath: keyPath] = HexColor($0) })
+  }
+
+  private func color(_ keyPath: WritableKeyPath<Theme, HexColor?>) -> Binding<Color> {
+    Binding(
+      get: { (theme[keyPath: keyPath] ?? theme.background).color },
+      set: { theme[keyPath: keyPath] = HexColor($0) })
+  }
+
+  /// A first bottom color for a new gradient: the background with a hint of the accent.
+  private var gradientStart: HexColor {
+    HexColor(theme.background.color.mix(with: theme.accent.color, by: 0.3))
+  }
+
+  /// Turns an optional color on, starting from `default`, or off.
+  private func optional(_ keyPath: WritableKeyPath<Theme, HexColor?>, default value: HexColor)
+    -> Binding<Bool>
+  {
+    Binding(
+      get: { theme[keyPath: keyPath] != nil },
+      set: { theme[keyPath: keyPath] = $0 ? value : nil })
   }
 
   /// Damping shown the other way round: 0 means no bounce.

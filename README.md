@@ -26,7 +26,7 @@ A *cumba* is the small bay window that juts out from the upper floor of old Turk
 - **Widgets in tabs**: calendar with a Join button for video calls, timer, Pomodoro, notes, clipboard history, keep awake, teleprompter, battery, file tray with AirDrop, camera mirror, weather, Shortcuts and a CPU/memory graph. Pick them from a gallery in Settings and drag to reorder; a new installation starts with just three.
 - **Optional extras**, off until you turn them on: show the panel on any display, volume and brightness levels in the notch (optionally instead of the system indicators), a dot while the microphone or camera is in use, a countdown before meetings, a choice of media sources, and an [API for your own scripts](#scripts).
 - **Live activities**: a running timer, a pending Claude request, charging or the current song appear on both sides of the closed notch.
-- **Themes**: Liquid Glass, solid black or tinted glass; colors, font, panel size, corner radius, shadow and animation. Import and export themes as JSON.
+- **Themes**: seven built in, from plain black and Liquid Glass to Neon Tokyo, Sakura and Synthwave. Make your own: glass, solid or tinted, a gradient background, a neon edge, colors, font, text size, panel size, corner radius, shadow and animation. Import and export themes as JSON.
 - **Stays out of the way**: clicks pass through to the menu bar, dragging windows past the notch doesn't open it, the panel hides in full screen apps, and idle CPU use is zero. Right-click the notch for Settings.
 - English and Turkish interface.
 

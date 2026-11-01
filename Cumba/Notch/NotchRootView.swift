@@ -18,7 +18,7 @@ struct NotchRootView: View {
       let shape = NotchShape(
         topRadius: state.isOpen ? 14 : 6, bottomRadius: state.isOpen ? theme.cornerRadius : 10)
       // Over the hardware notch the closed shape is plain black so it blends in.
-      let material = state == .closed && !geometry.isVirtual ? .solid : theme.material
+      let isBlended = state == .closed && !geometry.isVirtual
 
       ZStack(alignment: .top) {
         if state.isOpen {
@@ -38,13 +38,18 @@ struct NotchRootView: View {
       .clipShape(shape)
       .overlay {
         if state.isOpen {
-          PanelEdge(shape: shape)
-            .transition(.opacity)
+          if let glow = theme.glow {
+            NeonEdge(shape: shape, colors: [glow.color, theme.accent.color])
+              .transition(.opacity)
+          } else {
+            PanelEdge(shape: shape)
+              .transition(.opacity)
+          }
         }
       }
       .background {
         PanelBackground(
-          shape: shape, material: material, theme: theme,
+          shape: shape, theme: theme, isBlended: isBlended,
           shadowOpacity: theme.shadow && state.isOpen ? 0.45 : 0)
       }
       .contentShape(shape)
@@ -82,17 +87,26 @@ struct NotchRootView: View {
 /// Fill of the panel shape for the theme's material.
 private struct PanelBackground: View {
   let shape: NotchShape
-  let material: Theme.Material
   let theme: Theme
+  /// Plain black, to blend into the hardware notch.
+  let isBlended: Bool
   let shadowOpacity: Double
   /// Reduce Transparency replaces glass with an opaque fill of the same character.
   @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
+  /// Top and bottom of a solid fill; the same color twice without a gradient.
+  private var solidColors: [Color] {
+    if isBlended {
+      return [.black, .black]
+    }
+    return [theme.background.color, (theme.gradient ?? theme.background).color]
+  }
+
   var body: some View {
     Group {
-      switch material {
+      switch isBlended ? .solid : theme.material {
       case .solid:
-        shape.fill(theme.background.color)
+        shape.fill(LinearGradient(colors: solidColors, startPoint: .top, endPoint: .bottom))
       case .glass where reduceTransparency:
         shape.fill(Color(white: 0.11))
       case .tinted where reduceTransparency:

@@ -132,6 +132,11 @@ extension Theme {
     case Theme.classic.id: String(localized: "Classic", comment: "Built-in theme name")
     case Theme.glass.id: String(localized: "Glass", comment: "Built-in theme name")
     case Theme.midnight.id: String(localized: "Midnight", comment: "Built-in theme name")
+    case Theme.neonTokyo.id: String(localized: "Neon Tokyo", comment: "Built-in theme name")
+    case Theme.sakura.id: String(localized: "Sakura", comment: "Built-in theme name")
+    case Theme.synthwave.id: String(localized: "Synthwave", comment: "Built-in theme name")
+    case Theme.violetNight.id:
+      String(localized: "Violet Night", comment: "Built-in theme name")
     default: name
     }
   }

@@ -31,6 +31,8 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   var material = Material.solid
   var tint = HexColor(red: 0x1E, green: 0x3A, blue: 0x8A)
   var background = HexColor(red: 0x00, green: 0x00, blue: 0x00)
+  /// With a solid material, the background fades into this color towards the bottom.
+  var gradient: HexColor?
   var foreground = HexColor(red: 0xFF, green: 0xFF, blue: 0xFF)
   var secondary = HexColor(red: 0x9C, green: 0xA3, blue: 0xAF)
   var accent = HexColor(red: 0x3B, green: 0x82, blue: 0xF6)
@@ -43,6 +45,8 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
   /// Size of text in the panel, as a factor of the macOS text styles.
   var textScale = 1.2
   var shadow = true
+  /// A neon line around the open panel that fades from this color into the accent.
+  var glow: HexColor?
 
   init(id: String, name: String) {
     self.id = id
@@ -74,8 +78,8 @@ struct Theme: Codable, Equatable, Identifiable, Sendable {
 
 extension Theme {
   private enum CodingKeys: String, CodingKey {
-    case id, name, material, tint, background, foreground, secondary, accent, cornerRadius,
-      expandedSize, peekExtraWidth, fontDesign, textScale, shadow
+    case id, name, material, tint, background, gradient, foreground, secondary, accent,
+      cornerRadius, expandedSize, peekExtraWidth, fontDesign, textScale, shadow, glow
     case spring = "animation"
   }
 
@@ -92,6 +96,7 @@ extension Theme {
     material = value(.material, defaults.material)
     tint = value(.tint, defaults.tint)
     background = value(.background, defaults.background)
+    gradient = value(.gradient, defaults.gradient)
     foreground = value(.foreground, defaults.foreground)
     secondary = value(.secondary, defaults.secondary)
     accent = value(.accent, defaults.accent)
@@ -102,6 +107,7 @@ extension Theme {
     fontDesign = value(.fontDesign, defaults.fontDesign)
     textScale = value(.textScale, defaults.textScale)
     shadow = value(.shadow, defaults.shadow)
+    glow = value(.glow, defaults.glow)
     self = normalized()
   }
 }

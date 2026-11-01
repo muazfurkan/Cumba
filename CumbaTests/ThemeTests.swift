@@ -85,6 +85,28 @@ struct ThemeTests {
     #expect(try JSONDecoder().decode(Theme.self, from: data) == theme)
   }
 
+  @Test func gradientAndGlowAreOptional() throws {
+    let plain = try decode(#"{ "id": "x", "name": "X" }"#)
+    #expect(plain.gradient == nil)
+    #expect(plain.glow == nil)
+    let object = try #require(
+      try JSONSerialization.jsonObject(with: JSONEncoder().encode(plain)) as? [String: Any])
+    #expect(object["gradient"] == nil)
+    #expect(object["glow"] == nil)
+
+    let neon = try decode(##"{ "gradient": "#1C0B42", "glow": "#FF2E97" }"##)
+    #expect(neon.gradient?.hex == "#1C0B42")
+    #expect(neon.glow?.hex == "#FF2E97")
+    let invalid = try decode(#"{ "gradient": "purple", "glow": 7 }"#)
+    #expect(invalid.gradient == nil)
+    #expect(invalid.glow == nil)
+  }
+
+  @Test func builtInsHaveDistinctIDsAndNames() {
+    #expect(Set(Theme.builtIns.map(\.id)).count == Theme.builtIns.count)
+    #expect(Set(Theme.builtIns.map(\.displayName)).count == Theme.builtIns.count)
+  }
+
   @Test func encodesAnimationUnderTheSpecKey() throws {
     let data = try JSONEncoder().encode(Theme.midnight)
     let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])

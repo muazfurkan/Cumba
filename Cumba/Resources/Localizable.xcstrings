@@ -553,6 +553,17 @@
         }
       }
     },
+    "Bottom color" : {
+      "comment" : "Theme editor: the color a gradient background fades into",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alt renk"
+          }
+        }
+      }
+    },
     "Bounce" : {
       "localizations" : {
         "tr" : {
@@ -1272,6 +1283,17 @@
         }
       }
     },
+    "Edge color" : {
+      "comment" : "Theme editor: color of the neon edge",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kenar rengi"
+          }
+        }
+      }
+    },
     "Edit" : {
       "localizations" : {
         "tr" : {
@@ -1445,6 +1467,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cam"
+          }
+        }
+      }
+    },
+    "Gradient" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renk geçişi"
           }
         }
       }
@@ -2005,6 +2037,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İzin bekliyor"
+          }
+        }
+      }
+    },
+    "Neon edge" : {
+      "comment" : "Theme editor: a glowing line around the open panel",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neon kenar"
+          }
+        }
+      }
+    },
+    "Neon Tokyo" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neon Tokyo"
           }
         }
       }
@@ -2731,6 +2785,17 @@
         }
       }
     },
+    "Sakura" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sakura"
+          }
+        }
+      }
+    },
     "Save" : {
       "localizations" : {
         "tr" : {
@@ -3218,6 +3283,17 @@
         }
       }
     },
+    "Synthwave" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synthwave"
+          }
+        }
+      }
+    },
     "System" : {
       "comment" : "Widget name",
       "localizations" : {
@@ -3335,6 +3411,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İmlecin olduğu ekran"
+          }
+        }
+      }
+    },
+    "The edge fades from this color into the accent." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kenar bu renkten vurgu rengine geçer."
           }
         }
       }
@@ -3712,6 +3798,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ sürümü çıktı"
+          }
+        }
+      }
+    },
+    "Violet Night" : {
+      "comment" : "Built-in theme name",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gece Moru"
           }
         }
       }

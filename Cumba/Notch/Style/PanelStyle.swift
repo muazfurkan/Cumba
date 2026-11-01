@@ -80,3 +80,27 @@ struct PanelEdge: View {
       .allowsHitTesting(false)
   }
 }
+
+/// A theme's neon line around the open panel: a crisp stroke over a soft glow, its color
+/// running from one side to the other. Like the hairline it fades out towards the top.
+struct NeonEdge: View {
+  let shape: NotchShape
+  let colors: [Color]
+
+  var body: some View {
+    let gradient = LinearGradient(colors: colors, startPoint: .leading, endPoint: .trailing)
+    ZStack {
+      shape.stroke(gradient, lineWidth: 5).blur(radius: 9).opacity(0.75)
+      shape.stroke(gradient, lineWidth: 1.5)
+    }
+    .mask {
+      LinearGradient(
+        stops: [.init(color: .clear, location: 0.05), .init(color: .black, location: 0.35)],
+        startPoint: .top, endPoint: .bottom
+      )
+      // Room for the glow outside the shape.
+      .padding(-20)
+    }
+    .allowsHitTesting(false)
+  }
+}
