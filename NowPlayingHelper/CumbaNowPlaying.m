@@ -32,6 +32,17 @@ static BOOL updateScheduled;
 
 static id orNull(id value) { return value ?: NSNull.null; }
 
+// JSON has no room for anything else: a live stream reports an infinite duration, and an
+// odd player could put anything in these fields.
+static id stringOrNull(id value) {
+  return [value isKindOfClass:NSString.class] ? value : NSNull.null;
+}
+
+static id finiteOrNull(id value) {
+  return [value isKindOfClass:NSNumber.class] && isfinite([value doubleValue]) ? value
+                                                                               : NSNull.null;
+}
+
 // FNV-1a, so changed artwork is sent once instead of with every update.
 static uint64_t fingerprint(NSData *data) {
   uint64_t hash = 0xcbf29ce484222325ULL;
@@ -43,6 +54,7 @@ static uint64_t fingerprint(NSData *data) {
 }
 
 static void writeLine(NSDictionary *object) {
+  if (![NSJSONSerialization isValidJSONObject:object]) return;
   NSData *json = [NSJSONSerialization dataWithJSONObject:object
                                                  options:NSJSONWritingSortedKeys
                                                    error:nil];
@@ -63,10 +75,10 @@ static void report(NSDictionary *info, int pid, BOOL playing) {
     out[@"bundleID"] = orNull(app.bundleIdentifier);
     out[@"appName"] = orNull(app.localizedName);
     out[@"title"] = title;
-    out[@"artist"] = orNull(info[@"kMRMediaRemoteNowPlayingInfoArtist"]);
-    out[@"album"] = orNull(info[@"kMRMediaRemoteNowPlayingInfoAlbum"]);
-    out[@"duration"] = orNull(info[@"kMRMediaRemoteNowPlayingInfoDuration"]);
-    out[@"elapsed"] = orNull(info[@"kMRMediaRemoteNowPlayingInfoElapsedTime"]);
+    out[@"artist"] = stringOrNull(info[@"kMRMediaRemoteNowPlayingInfoArtist"]);
+    out[@"album"] = stringOrNull(info[@"kMRMediaRemoteNowPlayingInfoAlbum"]);
+    out[@"duration"] = finiteOrNull(info[@"kMRMediaRemoteNowPlayingInfoDuration"]);
+    out[@"elapsed"] = finiteOrNull(info[@"kMRMediaRemoteNowPlayingInfoElapsedTime"]);
     out[@"timestamp"] = [timestamp isKindOfClass:NSDate.class]
                             ? @(timestamp.timeIntervalSince1970)
                             : NSNull.null;
@@ -77,6 +89,7 @@ static void report(NSDictionary *info, int pid, BOOL playing) {
   uint64_t artworkID = artwork.length > 0 ? fingerprint(artwork) : 0;
   out[@"artworkID"] = [NSString stringWithFormat:@"%016llx", artworkID];
   // Several notifications arrive for one change; report each state once.
+  if (![NSJSONSerialization isValidJSONObject:out]) return;
   NSData *comparable = [NSJSONSerialization dataWithJSONObject:out
                                                        options:NSJSONWritingSortedKeys
                                                          error:nil];
